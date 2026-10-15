@@ -100,15 +100,16 @@ public class MavenSkeletonProject extends Task {
         }
         Path pseudoMavendirectory = Files.createDirectory(pseudoMaven);
         Path parentPom = Files.createFile(pseudoMavendirectory.resolve("pom.xml"));
-        Files.write(parentPom, ("""
-                                <project>
-                                  <modelVersion>4.0.0</modelVersion>
-                                  <groupId>pseudo.org.netbeans</groupId>
-                                  <artifactId>netbeans</artifactId>
-                                  <version>1</version>
-                                  <packaging>pom</packaging><distributionManagement>
-                                    <site><id>dummy</id><url>https://netbeans.apache.org/dummy</url><name>dummy</name></site>
-                                  </distributionManagement>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        Files.write(parentPom, (
+                                "<project>\n"+
+                                "  <modelVersion>4.0.0</modelVersion>\n"+
+                                "  <groupId>pseudo.org.netbeans</groupId>\n"+
+                                "  <artifactId>netbeans</artifactId>\n"+
+                                "  <version>1</version>\n"+
+                                "  <packaging>pom</packaging><distributionManagement>\n"+
+                                "    <site><id>dummy</id><url>https://netbeans.apache.org/dummy</url><name>dummy</name></site>\n"+
+                                "  </distributionManagement>\n"
+                                ).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         Files.write(parentPom, "\n  <modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         // scan module with external folder
         Map<String,Set<String>> clusters = new HashMap<>();
@@ -129,13 +130,13 @@ public class MavenSkeletonProject extends Task {
                 clusterfolder = Files.createDirectories(pseudoMavendirectory.resolve(clusterName).resolve(moduleName));
                 // write pom for the module in clusterfolder/modulefolder/pom.xml
                 Path moduleparentPom = Files.createFile(clusterfolder.resolve("pom.xml"));
-                Files.write(moduleparentPom, ("""
-                                              <project>
-                                                <modelVersion>4.0.0</modelVersion>
-                                                <parent><groupId>pseudo.org.netbeans</groupId><artifactId>%s</artifactId><version>1</version></parent>
-                                                <groupId>%s</groupId>
-                                                <artifactId>%s</artifactId>
-                                                <version>1</version>""".formatted(clusterName,clusterName,moduleName)).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(moduleparentPom, (String.format(
+                                              "<project>\n"+
+                                              "  <modelVersion>4.0.0</modelVersion>\n"+
+                                              "  <parent><groupId>pseudo.org.netbeans</groupId><artifactId>%s</artifactId><version>1</version></parent>\n"+
+                                              "  <groupId>%s</groupId>\n"+
+                                              "  <artifactId>%s</artifactId>\n"+
+                                              "  <version>1</version>", clusterName, clusterName, moduleName)).getBytes("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 Files.write(moduleparentPom, "\n  <dependencies>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
                 File list = new File(d, "binaries-list");
@@ -187,11 +188,11 @@ public class MavenSkeletonProject extends Task {
             Files.write(parentPom, ("\n    <module>" + clusterName + "</module>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
             Path clusterparentPom = Files.createFile(clusterFolder.resolve("pom.xml"));
-            Files.write(clusterparentPom, ("""
-                                              <project>
-                                                <modelVersion>4.0.0</modelVersion>
-                                                <parent><groupId>pseudo.org.netbeans</groupId><artifactId>netbeans</artifactId><version>1</version></parent>
-                                                <artifactId>""" + clusterName + "</artifactId><packaging>pom</packaging>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            Files.write(clusterparentPom, ("\n"+
+                                           "   <project>\n"+
+                                           "     <modelVersion>4.0.0</modelVersion>\n"+
+                                           "     <parent><groupId>pseudo.org.netbeans</groupId><artifactId>netbeans</artifactId><version>1</version></parent>\n"+
+                                           "     <artifactId>" + clusterName + "</artifactId><packaging>pom</packaging>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             if (!clusterEntry.getValue().isEmpty()) {
                 Files.write(clusterparentPom, "\n  <modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                 for (String module : clusterEntry.getValue()) {
@@ -204,44 +205,52 @@ public class MavenSkeletonProject extends Task {
         }
         // parent pom with plugin for report owasp
         Files.write(parentPom, "\n  </modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-        Files.write(parentPom, ("""
-                                  <build>
-                                        <pluginManagement>
-                                            <plugins>
-                                                <plugin>
-                                                    <artifactId>maven-site-plugin</artifactId>
-                                                    <version>3.22.0</version>
-                                                </plugin>
-                                            </plugins>
-                                        </pluginManagement>
-                                  </build>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(parentPom, ("\n"+
+                                "  <build>\n"+
+                                "        <pluginManagement>\n"+
+                                "            <plugins>\n"+
+                                "                <plugin>\n"+
+                                "                    <artifactId>maven-site-plugin</artifactId>\n"+
+                                "                    <version>3.22.0</version>\n"+
+                                "                </plugin>\n"+
+                                "            </plugins>\n"+
+                                "        </pluginManagement>\n"+
+                                "  </build>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
-        Files.write(parentPom, ("""
-                                  <reporting>
-                                    <plugins>
-                                      <plugin>
-                                        <groupId>org.owasp</groupId>
-                                        <artifactId>dependency-check-maven</artifactId>
-                                        <version>13.0.0</version>
-                                        <configuration>
-                                          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                                          <failOnError>false</failOnError>
-                                        </configuration>
-                                        <reportSets>
-                                          <reportSet>
-                                            <reports>
-                                              <report>aggregate</report>
-                                            </reports>
-                                          </reportSet>
-                                        </reportSets>
-                                      </plugin>
-                                    </plugins>
-                                  </reporting>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(parentPom, ("\n"+
+                                "  <reporting>\n"+
+                                "    <plugins>\n"+
+                                "      <plugin>\n"+
+                                "        <groupId>org.owasp</groupId>\n"+
+                                "        <artifactId>dependency-check-maven</artifactId>\n"+
+                                "        <version>13.0.0</version>\n"+
+                                "        <configuration>\n"+
+                                "          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>\n"+
+                                "          <failOnError>false</failOnError>\n"+
+                                "        </configuration>\n"+
+                                "        <reportSets>\n"+
+                                "          <reportSet>\n"+
+                                "            <reports>\n"+
+                                "              <report>aggregate</report>\n"+
+                                "            </reports>\n"+
+                                "          </reportSet>\n"+
+                                "        </reportSets>\n"+
+                                "      </plugin>\n"+
+                                "    </plugins>\n"+
+                                "  </reporting>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         Files.write(parentPom, "</project>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
     }
 
-    record MavenGA(String groupId, String artifactId) {
+    private static class MavenGA {
+
+        private final String groupId;
+        private final String artifactId;
+        
+        MavenGA(String groupId, String artifactId) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+        }
 
         private static MavenGA from(MavenCoordinate coordinate) {
             return new MavenGA(coordinate.getGroupId(), coordinate.getArtifactId());

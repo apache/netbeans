@@ -25,7 +25,21 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-record MavenCoordinate(String groupId, String artifactId, String version, String extension, String classifier) {
+class MavenCoordinate {
+
+    private final String groupId;
+    private final String artifactId;
+    private final String version;
+    private final String extension;
+    private final String classifier;
+
+    private MavenCoordinate(String groupId, String artifactId, String version, String extension, String classifier) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.extension = extension;
+        this.classifier = classifier;
+    }
 
     public boolean hasClassifier() {
         return !classifier.isEmpty();

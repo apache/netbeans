@@ -20,7 +20,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -83,6 +83,23 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="fallback-project">
+            <api name="general"/>
+            <summary>findProjectOrFallback</summary>
+            <version major="1" minor="111"/>
+            <date day="8" month="10" year="2026"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>
+                        <a href="@TOP@org/netbeans/api/project/ProjectManager.html#findProjectOrFallback(org.openide.filesystems.FileObject)">ProjectManager.findProjectOrFallack</a>
+                    </code>
+                    was introduced in order to allow any folder to be treated as a project, when needed.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectManager"/>
+        </change>
         <change id="run-test-in-parallel-action">
             <api name="general"/>
             <summary>Added action for running tests in parallel</summary>
@@ -177,7 +194,7 @@ is the proper place.
             <description>
                 <p>
                     In presence of multiple source roots, e.g. several source folders, or test folders, some of them may be more
-                    related to the 
+                    related to the
                 </p>
             </description>
             <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
@@ -242,7 +259,7 @@ is the proper place.
             <description>
                 <p>
                     Newly introduced interfaces <code>DependencyProjectProvider</code> and <code>ProjectContainerProvider</code> are meant as less general replacement for <code>SubprojectProvider</code>
-                    as they explicitly declaring their contract 
+                    as they explicitly declaring their contract
                     (<code>DependencyProjectProvider</code> the project's dependency projects and <code>ProjectContainerProvider</code> projects that are build as part of this project). Code using <code>SubprojectProvider</code> currently
                     should evaluate if <code>DependencyProjectProvider</code> or <code>ProjectContainerProvider</code> contracts suit their usage better. Please note that the new interfaces are not
                     mandatory for project types to implement and if it's missing, <code>SubprojectProvider</code> should be used.
@@ -253,7 +270,7 @@ is the proper place.
             <class package="org.netbeans.api.project" name="ProjectUtils"/>
             <issue number="210465"/>
         </change>
-        
+
         <change id="LookupProviderSupport.multi">
             <api name="general"/>
             <summary>New method createCompositeLookup(Lookup, Lookup) in LookupProviderSupport</summary>
@@ -263,7 +280,7 @@ is the proper place.
             <compatibility addition="yes"/>
             <description>
                 <p>
-                    Introducing method <code>LookupProviderSupport.createCompositeLookup(Lookup, Lookup)</code> which is a more freeform variant of 
+                    Introducing method <code>LookupProviderSupport.createCompositeLookup(Lookup, Lookup)</code> which is a more freeform variant of
                     already existing method. The first parameter is expected to be the base lookup containing instances to be found in project lookup,
                     the second parameter is a lookup containing just <code>LookupProvider</code>s.
                 </p>
@@ -271,7 +288,7 @@ is the proper place.
             <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
             <issue number="200711"/>
         </change>
-        
+
         <change id="FOQ.UNOWNED">
             <api name="general"/>
             <summary>New constant UNOWNED in FileOwnerQuery to mark a folder as definitely not owned by any project.</summary>
@@ -282,10 +299,10 @@ is the proper place.
             <description>
                 <p>
                     Introducing constant <code>FileOwnerQuery.UNOWNED</code>, a pseudoproject indicating just that a directory is definitely unowned. May
-                     be returned by either 
+                     be returned by either
                      <code>FileOwnerQueryImplementation.getOwner</code>, in which case null is returned from
                      <code>FileOwnerQuery.getOwner</code>. May also be passed to either
-                    <code>FileOwnerQuery.markExternalOwner</code> overload, in which case the standard directory search will be pruned at this point with no result. 
+                    <code>FileOwnerQuery.markExternalOwner</code> overload, in which case the standard directory search will be pruned at this point with no result.
                 </p>
             </description>
             <class package="org.netbeans.api.project" name="FileOwnerQuery"/>
@@ -301,9 +318,9 @@ is the proper place.
             <description>
                 <p>
                     In order to be able to fully integrate the profiler with the project infrastructure
-                    it is necessary to add three new constants to 
+                    it is necessary to add three new constants to
                     <code>ActionProvider</code> SPI for profiling a project, profiling a single file and
-                    profiling a test for single file. 
+                    profiling a test for single file.
                 </p>
             </description>
             <class package="org.netbeans.spi.project" name="ActionProvider"/>
@@ -569,7 +586,7 @@ is the proper place.
             <class package="org.netbeans.spi.project" name="AuxiliaryProperties"/>
             <issue number="134580"/>
         </change>
-        
+
         <change id="lookup-provider">
             <api name="general"/>
             <summary>Added support for composing project's lookup from multiple sources.</summary>
@@ -581,7 +598,7 @@ is the proper place.
             <description>
 	        <p>
                     Added interfaces and support classes that can be used to compose the project's lookup
-                    from multiple 3rd party sources. Framework for creating merged instances included. 
+                    from multiple 3rd party sources. Framework for creating merged instances included.
                     <code>LookupMerger</code> implementation for <code>Sources</code> added.
 		</p>
             </description>
@@ -590,7 +607,7 @@ is the proper place.
             <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
             <issue number="83343"/>
         </change>
-        
+
         <change id="ProjectConfigurationProvider">
             <api name="general"/>
             <summary>Added support for project configurations</summary>
@@ -629,7 +646,7 @@ is the proper place.
             </description>
             <issue number="61546"/>
         </change>
-        
+
         <change id="markExternal-for-file-and-URIs">
             <api name="general"/>
             <summary>The FileOwnerQuery.markExternalOwner allows registration of individal files and URIs</summary>
@@ -653,7 +670,7 @@ is the proper place.
             </description>
             <issue number="58313"/>
         </change>
-        
+
         <change id="rel-vers-1">
             <api name="general"/>
             <summary>Switched to major release version 1</summary>

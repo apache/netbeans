@@ -42,7 +42,7 @@ import javax.swing.ListModel;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 import static org.netbeans.modules.maven.graph.Bundle.*;
 import org.openide.util.NbBundle.Messages;
 import org.netbeans.modules.java.graph.GraphNodeImplementation;

@@ -63,7 +63,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
         Project fallback = FallbackFactory.findProjectOrFallback(dir);
         Project real = ProjectManager.mutex().writeAccess((Mutex.ExceptionAction<Project>) () -> {
             dir.createFolder("testproject");
-            pm.clearNonProjectCache();
+            FallbackFactory.clear(dir);
             return pm.findProject(dir);
         });
         assertNotSame("Metadata must be recognized before leaving the write lock", fallback, real);
@@ -72,7 +72,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
     public void testReplacedFallbackIsInvalid() throws Exception {
         Project fallback = FallbackFactory.findProjectOrFallback(dir);
         dir.createFolder("testproject");
-        pm.clearNonProjectCache();
+        FallbackFactory.clear(dir);
         assertNotSame(fallback, pm.findProject(dir));
         assertFalse("Replaced fallback must be invalid", pm.isValid(fallback));
     }
@@ -84,7 +84,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
         dir.createFolder("testproject");
         MockLookup.setInstances(TestUtil.testProjectFactory());
         Project real = pm.findProject(dir);
-        assertNotSame(fallback, real);
+        assertNotSame("Fallback: " + fallback + " real: " + real, fallback, real);
         final Project ownerOfFle = FileOwnerQuery.getOwner(file);
         assertSame("Factory change must retire the cached fallback owner", real, ownerOfFle);
     }

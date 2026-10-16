@@ -21,6 +21,7 @@ package org.netbeans.modules.project.ui.fallback;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.api.project.Project;
@@ -33,7 +34,20 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ProjectFactory.class, position = 1_000_000)
 public final class FallbackFactory implements ProjectFactory {
     private static final ThreadLocal<FileObject> FALLBACK = new ThreadLocal<>();
-    private static final Map<FileObject, Reference<Project>> EXISTING = new HashMap<>();
+    private static final Map<FileObject, Reference<Project>> EXISTING = Collections.synchronizedMap(new HashMap<>());
+
+    static void clearNonProjectCache() {
+        ProjectManager.getDefault().clearNonProjectCache();
+        EXISTING.clear();
+    }
+
+    static void clear(FileObject dir) {
+        Reference<Project> ref = EXISTING.get(dir);
+        Project existing = ref == null ? null : ref.get();
+        if (existing instanceof FallbackProject prj) {
+            prj.notifyDeleted();
+        }
+    }
 
     public FallbackFactory() {
     }

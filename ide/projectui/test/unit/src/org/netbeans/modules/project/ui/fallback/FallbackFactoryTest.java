@@ -241,9 +241,10 @@ public class FallbackFactoryTest extends NbTestCase {
         Project real = ProjectManager.mutex().writeAccess((Mutex.ExceptionAction<Project>) () -> {
             // what project generators do: create metadata, clear cache, find project
             justADir.createFolder("testproject");
-            pm.clearNonProjectCache();
+            FallbackFactory.clear(justADir);
             return pm.findProject(justADir);
         });
+        FallbackFactory.clear(justADir);
         Project outside = pm.findProject(justADir);
         assertNotNull("Project is found when mutex.writeAccess ends", outside);
         assertNotSame("Outside project replaces the fallback", fallback, outside);
@@ -255,7 +256,7 @@ public class FallbackFactoryTest extends NbTestCase {
     public void testReplacedFallbackIsNoLongerValid() throws Exception {
         Project fallback = FallbackFactory.findProjectOrFallback(justADir);
         justADir.createFolder("testproject");
-        pm.clearNonProjectCache();
+        FallbackFactory.clear(justADir);
         Project real = pm.findProject(justADir);
         assertNotSame(fallback, real);
         assertFalse("Replaced fallback should not be valid anymore", pm.isValid(fallback));

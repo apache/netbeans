@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.67.0
+#Version 1.68.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1016,6 +1016,7 @@ CLSS public org.netbeans.modules.xml.xdm.nodes.XMLSyntaxParser
 cons public init()
 meth public org.netbeans.modules.xml.xdm.nodes.Document parse(org.netbeans.editor.BaseDocument) throws java.io.IOException,javax.swing.text.BadLocationException
 supr java.lang.Object
+hfds BYTE_ORDER_MARK
 
 CLSS abstract interface org.netbeans.modules.xml.xdm.nodes.package-info
 

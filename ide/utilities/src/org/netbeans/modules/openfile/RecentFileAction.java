@@ -27,14 +27,16 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.openfile.RecentFiles.HistoryItem;
 import org.openide.awt.*;
-import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.actions.Presenter;
@@ -224,8 +226,15 @@ public class RecentFileAction extends AbstractAction
                 msg = OFMSG_NO_RECENT_FILE;
             }
         }
-        if( null == msg )
-            msg = openFile(path);
+        
+        try {
+            URL url = new URL(path);
+            if( null == msg ) msg = openFile(url);
+        } catch (MalformedURLException ex) {
+            msg = ""; //NOI18N
+        }
+        
+      
         if (msg != null) {
             StatusDisplayer.getDefault().setStatusText(msg);
             Toolkit.getDefaultToolkit().beep();
@@ -235,19 +244,15 @@ public class RecentFileAction extends AbstractAction
 
     /**
      * Open a file.
-     * @param path the path to the file or {@code null}.
+     * @param url the path to the file.
      * @return error message or {@code null} on success.
      */
-    private String openFile(String path) {
-        if(path == null || path.length() == 0) {
-            return OFMSG_PATH_IS_NOT_DEFINED;
-        }
-        File f = new File(path);
-        if (!f.exists()) {
+    private String openFile(URL url) {
+        FileObject fo = URLMapper.findFileObject(url);
+        if (fo == null || !fo.isValid()) {
             return OFMSG_FILE_NOT_EXISTS;
         }
-        File nf = FileUtil.normalizeFile(f);
-        return OpenFile.open(FileUtil.toFileObject(nf), -1);
+        return OpenFile.open(fo, -1);
     }
     
     /** Menu that checks its enabled state just before is populated */

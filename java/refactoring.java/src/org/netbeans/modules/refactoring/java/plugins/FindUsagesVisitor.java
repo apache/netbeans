@@ -61,16 +61,21 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
     private boolean usagesInComments;
     private final AtomicBoolean isCancelled;
     private List<ExecutableElement> methods;
+    private final boolean directReferencesOnly;
 
     public FindUsagesVisitor(CompilationController workingCopy, AtomicBoolean isCancelled) {
-        this(workingCopy, isCancelled, false, false);
+        this(workingCopy, isCancelled, false, false, false);
     }
     
     public FindUsagesVisitor(CompilationController workingCopy, AtomicBoolean isCancelled, boolean findInComments, boolean isSearchOverloadedMethods) {
-        this(workingCopy, isCancelled, findInComments, isSearchOverloadedMethods, RefactoringUtils.isFromTestRoot(workingCopy.getFileObject(), workingCopy.getClasspathInfo().getClassPath(PathKind.SOURCE)), false, false, new AtomicBoolean());
+        this(workingCopy, isCancelled, findInComments, isSearchOverloadedMethods, false);
     }
 
-    public FindUsagesVisitor(CompilationController workingCopy, AtomicBoolean isCancelled, boolean findInComments, boolean isSearchOverloadedMethods, boolean fromTestRoot, boolean fromPlatform, boolean fromDependency, AtomicBoolean inImport) {
+    public FindUsagesVisitor(CompilationController workingCopy, AtomicBoolean isCancelled, boolean findInComments, boolean isSearchOverloadedMethods, boolean directReferencesOnly) {
+        this(workingCopy, isCancelled, findInComments, isSearchOverloadedMethods, directReferencesOnly, RefactoringUtils.isFromTestRoot(workingCopy.getFileObject(), workingCopy.getClasspathInfo().getClassPath(PathKind.SOURCE)), false, false, new AtomicBoolean());
+    }
+
+    public FindUsagesVisitor(CompilationController workingCopy, AtomicBoolean isCancelled, boolean findInComments, boolean isSearchOverloadedMethods, boolean directReferencesOnly, boolean fromTestRoot, boolean fromPlatform, boolean fromDependency, AtomicBoolean inImport) {
         try {
             setWorkingCopy(workingCopy);
         } catch (ToPhaseException ex) {
@@ -84,6 +89,7 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
         this.inImport = inImport;
         this.isCancelled = isCancelled;
         this.methods = new LinkedList<>();
+        this.directReferencesOnly = directReferencesOnly;
     }
 
     @Override
@@ -188,9 +194,12 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
         }
         if (elementToFind != null && elementToFind.getKind() == ElementKind.METHOD && el.getKind() == ElementKind.METHOD) {
             for (ExecutableElement executableElement : methods) {
-                if (el.equals(executableElement) 
-                        || workingCopy.getElements().overrides((ExecutableElement) el,
-                        executableElement, (TypeElement) elementToFind.getEnclosingElement())) {
+                boolean match = el.equals(executableElement);
+                if (!match && !directReferencesOnly) {
+                    match = workingCopy.getElements().overrides((ExecutableElement) el,
+                            executableElement, (TypeElement) elementToFind.getEnclosingElement());
+                }
+                if (match) {
                     addUsage(path);
                 }
             }

@@ -79,6 +79,10 @@ public abstract class ActionUtils {
                     allBut.setEnabled(false);
                 }
                 actions.add(allBut);
+                //close all right of this
+                int index = mode.getTopComponentTabPosition(tc);
+                CloseAllRightOfThisAction allRight = new CloseAllRightOfThisAction(index);
+                actions.add(allRight);
             }
             
             actions.add(null); // Separator
@@ -499,6 +503,18 @@ public abstract class ActionUtils {
             closeAll(tcs);
         });
     }
+    
+    /** 
+     * Closes all documents after given index, according to isContext flag
+     */
+    public static void closeRight(int index) {
+        // See closeAllDocuments.
+        SwingUtilities.invokeLater(() -> {
+            List<TopComponent> tcs = new ArrayList<>(getOpened(TopComponent.getRegistry().getActivated()));
+            closeAll(tcs.subList(index + 1, tcs.size()));
+        });
+    }
+    
 
     private static void closeAll( Iterable<TopComponent> tcs ) {
         for (TopComponent curTC : tcs) {

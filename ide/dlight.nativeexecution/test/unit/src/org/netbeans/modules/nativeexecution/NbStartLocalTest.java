@@ -78,7 +78,7 @@ public class NbStartLocalTest extends NativeExecutionBaseTestCase {
     @Override
     public boolean canRun() {
         boolean res = super.canRun();
-        res = res && NbStartUtility.getInstance().isSupported(env);
+        res = res && NbStartUtility.getInstance(true).isSupported(env);
         return res;
     }
 

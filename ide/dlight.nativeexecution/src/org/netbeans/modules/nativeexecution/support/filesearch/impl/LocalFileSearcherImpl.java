@@ -33,11 +33,11 @@ import org.netbeans.modules.nativeexecution.support.filesearch.FileSearchParams;
 import org.netbeans.modules.nativeexecution.support.filesearch.FileSearcher;
 import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service = org.netbeans.modules.nativeexecution.support.filesearch.FileSearcher.class, position = 70)
 /**
  * In case of Windows use WINDOWS paths (c:\\mypath)... Also it requires exact
  * names (programm.exe and not just programm)
  */
+@ServiceProvider(service = org.netbeans.modules.nativeexecution.support.filesearch.FileSearcher.class, position = 70)
 public final class LocalFileSearcherImpl implements FileSearcher {
 
     private static final java.util.logging.Logger log = Logger.getInstance();

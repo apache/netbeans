@@ -21,14 +21,10 @@ package org.netbeans.modules.nativeexecution;
 import org.netbeans.modules.nativeexecution.ConcurrentTasksSupport.Counters;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionBaseTestCase;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.concurrent.CountDownLatch;
 import junit.framework.Test;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.netbeans.api.extexecution.ExecutionDescriptor;
-import org.netbeans.api.extexecution.input.InputProcessor;
-import org.netbeans.api.extexecution.input.InputProcessors;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.api.NativeProcessBuilder;
@@ -72,29 +68,6 @@ public class NativeTaskTest extends NativeExecutionBaseTestCase {
         super.tearDown();
     }
 
-//    public void testSimple() {
-//        ExternalTerminal term = ExternalTerminalProvider.getTerminal(ExecutionEnvironmentFactory.getLocal(), "gnome-terminal"); // NOI18N
-//        NativeProcessBuilder npb = NativeProcessBuilder.newProcessBuilder(ExecutionEnvironmentFactory.getLocal());
-//        npb.setExecutable("/bin/ls").useExternalTerminal(term); // NOI18N
-//        StringWriter result = new StringWriter();
-//        ExecutionDescriptor descriptor = new ExecutionDescriptor().inputOutput(InputOutput.NULL).outProcessorFactory(new InputRedirectorFactory(result));
-//        ExecutionService execService = ExecutionService.newService(
-//                npb, descriptor, "Demangling function "); // NOI18N
-//
-//        Future<Integer> res = execService.run();
-//
-//        try {
-//            System.out.println("Result: " + res.get()); // NOI18N
-//        } catch (InterruptedException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (ExecutionException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//
-//        System.out.println(result.toString());
-//    }
-
-//    @Test
     private static final String CNT_OUT_MATCH = "Output matches"; // NOI18N
     private static final String CNT_EXECUTION_SUCCESS = "Successful execution"; // NOI18N
     private static final String CNT_TASKS = "Tasks submitted"; // NOI18N
@@ -140,7 +113,7 @@ public class NativeTaskTest extends NativeExecutionBaseTestCase {
 
         private final CountDownLatch start;
         private final CountDownLatch latch;
-        private Counters counters;
+        private final Counters counters;
 
         public Worker(ConcurrentTasksSupport.Counters counters, CountDownLatch latch, CountDownLatch start) {
             this.start = start;
@@ -178,6 +151,7 @@ public class NativeTaskTest extends NativeExecutionBaseTestCase {
             }
         }
 
+        @Override
         public void run() {
             try {
                 start.await();
@@ -188,19 +162,6 @@ public class NativeTaskTest extends NativeExecutionBaseTestCase {
             doit();
 
             latch.countDown();
-        }
-    }
-
-    private static class InputRedirectorFactory implements ExecutionDescriptor.InputProcessorFactory {
-
-        private final Writer writer;
-
-        public InputRedirectorFactory(Writer writer) {
-            this.writer = writer;
-        }
-
-        public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
-            return InputProcessors.copying(writer);
         }
     }
 

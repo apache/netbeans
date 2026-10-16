@@ -57,6 +57,7 @@ import org.openide.filesystems.FileUtil;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import org.netbeans.api.java.source.SourceUtilsTestUtil.FileDescription;
 
 /**
  *
@@ -94,37 +95,10 @@ public class ElementUtilitiesTest extends NbTestCase {
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache, EMPTY_PATH, modulePathElements);
         
         if (fileNameAndContent.length > 0) {
-            testFO = writeFiles(sourceRoot, fileNameAndContent);
+            testFO = SourceUtilsTestUtil.writeFiles(sourceRoot, fileNameAndContent);
         } else {
             testFO = sourceRoot.createData("Test.java");
         }
-    }
-
-    private FileObject writeFiles(FileObject src,
-                                  FileDescription... fileNameAndContent) throws Exception {
-        FileObject firstFile = null;
-
-        for (FileDescription fileDescription : fileNameAndContent) {
-            FileObject f = writeFile(src,
-                                     fileDescription.path(),
-                                     fileDescription.content());
-
-            if (firstFile == null) {
-                firstFile = f;
-            }
-        }
-
-        return firstFile;
-    }
-
-    private FileObject writeFile(FileObject root,
-                                 String path,
-                                 String content) throws Exception {
-        FileObject file = FileUtil.createData(root, path);
-
-        TestUtilities.copyStringToFile(FileUtil.toFile(file), content);
-
-        return file;
     }
 
     public void testGetImplementationOfAndOverriden() throws Exception {
@@ -857,7 +831,7 @@ public class ElementUtilitiesTest extends NbTestCase {
         FileObject module1Src = module1.createFolder("src");
         FileObject module1Classes = module1.createFolder("classes");
 
-        writeFiles(module1Src,
+        SourceUtilsTestUtil.writeFiles(module1Src,
                    new FileDescription("module-info.java",
                                        """
                                        module module1 {
@@ -890,13 +864,13 @@ public class ElementUtilitiesTest extends NbTestCase {
                                        public class Impl1 {
                                        }
                                        """));
-        compile(module1Src, module1Classes, "24");
+        SourceUtilsTestUtil.compile(module1Src, module1Classes, "24");
 
         FileObject module2 = workFO.createFolder("module2");
         FileObject module2Src = module2.createFolder("src");
         FileObject module2Classes = module2.createFolder("classes");
 
-        writeFiles(module2Src,
+        SourceUtilsTestUtil.writeFiles(module2Src,
                    new FileDescription("module-info.java",
                                        """
                                        module module2 {
@@ -930,7 +904,7 @@ public class ElementUtilitiesTest extends NbTestCase {
                                        public class Impl2 {
                                        }
                                        """));
-        compile(module2Src, module2Classes, "24", "--module-path", FileUtil.toFile(module1Classes).getAbsolutePath());
+        SourceUtilsTestUtil.compile(module2Src, module2Classes, "24", "--module-path", FileUtil.toFile(module1Classes).getAbsolutePath());
 
         modulePathElements = new FileObject[] {
             module1Classes,
@@ -963,30 +937,4 @@ public class ElementUtilitiesTest extends NbTestCase {
             }
         }, true);
     }
-
-    private void compile(FileObject src, FileObject classes, String sourceLevel, String... extraOpts) throws IOException {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
-            List<File> sources = new ArrayList<>();
-
-            for (Enumeration<? extends FileObject> en = src.getChildren(true); en.hasMoreElements(); ) {
-                FileObject c = en.nextElement();
-
-                if (c.isData() && "text/x-java".equals(c.getMIMEType())) {
-                    sources.add(FileUtil.toFile(c));
-                }
-            }
-
-            Iterable<? extends JavaFileObject> sourceFileObjects = fm.getJavaFileObjectsFromFiles(sources);
-            List<String> options = new ArrayList<>();
-
-            options.addAll(List.of("--release", sourceLevel, "-d"));
-            options.addAll(List.of(FileUtil.toFile(classes).getAbsolutePath()));
-            options.addAll(List.of(extraOpts));
-
-            assertTrue(compiler.getTask(null, fm, null, options, null, sourceFileObjects).call());
-        }
-    }
-
-    private record FileDescription(String path, String content) {}
 }

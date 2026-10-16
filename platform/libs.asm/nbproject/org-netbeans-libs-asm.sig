@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.36
+#Version 5.37
 
 CLSS public abstract interface java.io.Serializable
 
@@ -216,8 +216,9 @@ meth public int newModule(java.lang.String)
 meth public int newNameType(java.lang.String,java.lang.String)
 meth public int newPackage(java.lang.String)
 meth public int newUTF8(java.lang.String)
+meth public void setComputeLimits(int,long)
 supr org.objectweb.asm.ClassVisitor
-hfds accessFlags,compute,debugExtension,enclosingClassIndex,enclosingMethodIndex,firstAttribute,firstField,firstMethod,firstRecordComponent,flags,innerClasses,interfaceCount,interfaces,lastField,lastMethod,lastRecordComponent,lastRuntimeInvisibleAnnotation,lastRuntimeInvisibleTypeAnnotation,lastRuntimeVisibleAnnotation,lastRuntimeVisibleTypeAnnotation,moduleWriter,nestHostClassIndex,nestMemberClasses,numberOfInnerClasses,numberOfNestMemberClasses,numberOfPermittedSubclasses,permittedSubclasses,signatureIndex,sourceFileIndex,superClass,symbolTable,thisClass,version
+hfds DEFAULT_MAX_MEMORY_LIMIT,DEFAULT_MAX_OPERATIONS_LIMIT,accessFlags,compute,debugExtension,enclosingClassIndex,enclosingMethodIndex,firstAttribute,firstField,firstMethod,firstRecordComponent,flags,innerClasses,interfaceCount,interfaces,lastField,lastMethod,lastRecordComponent,lastRuntimeInvisibleAnnotation,lastRuntimeInvisibleTypeAnnotation,lastRuntimeVisibleAnnotation,lastRuntimeVisibleTypeAnnotation,limits,moduleWriter,nestHostClassIndex,nestMemberClasses,numberOfInnerClasses,numberOfNestMemberClasses,numberOfPermittedSubclasses,permittedSubclasses,signatureIndex,sourceFileIndex,superClass,symbolTable,thisClass,version
 
 CLSS public final org.objectweb.asm.ConstantDynamic
 cons public !varargs init(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
@@ -266,7 +267,12 @@ fld public java.lang.Object info
 meth public int getOffset()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds EMPTY_LIST,FLAG_DEBUG_ONLY,FLAG_JUMP_TARGET,FLAG_LINE_NUMBER,FLAG_REACHABLE,FLAG_RESOLVED,FLAG_SUBROUTINE_CALLER,FLAG_SUBROUTINE_END,FLAG_SUBROUTINE_START,FORWARD_REFERENCES_CAPACITY_INCREMENT,FORWARD_REFERENCE_HANDLE_MASK,FORWARD_REFERENCE_TYPE_MASK,FORWARD_REFERENCE_TYPE_SHORT,FORWARD_REFERENCE_TYPE_STACK_MAP,FORWARD_REFERENCE_TYPE_WIDE,LINE_NUMBERS_CAPACITY_INCREMENT,bytecodeOffset,flags,forwardReferences,frame,inputStackSize,lineNumber,nextBasicBlock,nextListElement,otherLineNumbers,outgoingEdges,outputStackMax,outputStackSize,subroutineId
+hfds EMPTY_LIST,FLAG_DEBUG_ONLY,FLAG_JUMP_TARGET,FLAG_LINE_NUMBER,FLAG_REACHABLE,FLAG_RESOLVED,FLAG_SUBROUTINE_CALLER,FLAG_SUBROUTINE_END,FLAG_SUBROUTINE_START,LINE_NUMBERS_CAPACITY_INCREMENT,bytecodeOffset,flags,frame,inputStackSize,lastForwardReference,lastStackMapForwardReference,lastWideForwardReference,lineNumber,nextBasicBlock,nextListElement,otherLineNumbers,outgoingEdges,outputStackMax,outputStackSize,subroutineId
+
+CLSS public final org.objectweb.asm.LimitExceededException
+cons public init(java.lang.String)
+supr java.lang.RuntimeException
+hfds serialVersionUID
 
 CLSS public final org.objectweb.asm.MethodTooLargeException
 cons public init(java.lang.String,java.lang.String,java.lang.String,int)
@@ -577,6 +583,7 @@ fld public final static int V24 = 68
 fld public final static int V25 = 69
 fld public final static int V26 = 70
 fld public final static int V27 = 71
+fld public final static int V28 = 72
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE
@@ -723,8 +730,10 @@ meth protected void onMethodEnter()
 meth protected void onMethodExit(int)
 meth public !varargs void visitInvokeDynamicInsn(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public !varargs void visitTableSwitchInsn(int,int,org.objectweb.asm.Label,org.objectweb.asm.Label[])
+meth public void setComputeLimits(int)
 meth public void visitCode()
 meth public void visitFieldInsn(int,java.lang.String,java.lang.String,java.lang.String)
+meth public void visitFrame(int,int,java.lang.Object[],int,java.lang.Object[])
 meth public void visitInsn(int)
 meth public void visitIntInsn(int,int)
 meth public void visitJumpInsn(int,org.objectweb.asm.Label)
@@ -737,7 +746,8 @@ meth public void visitTryCatchBlock(org.objectweb.asm.Label,org.objectweb.asm.La
 meth public void visitTypeInsn(int,java.lang.String)
 meth public void visitVarInsn(int,int)
 supr org.objectweb.asm.commons.GeneratorAdapter
-hfds INVALID_OPCODE,OTHER,UNINITIALIZED_THIS,forwardJumpStackFrames,isConstructor,stackFrame,superClassConstructorCalled
+hfds DEFAULT_MAX_MEMORY_LIMIT,INVALID_OPCODE,OTHER,UNINITIALIZED_THIS,forwardJumpStackFrames,isConstructor,remainingBytes,stackFrame
+hcls StackFrame
 
 CLSS public org.objectweb.asm.commons.AnalyzerAdapter
 cons protected init(int,java.lang.String,int,java.lang.String,java.lang.String,org.objectweb.asm.MethodVisitor)
@@ -1056,10 +1066,11 @@ CLSS public org.objectweb.asm.commons.JSRInlinerAdapter
 cons protected init(int,org.objectweb.asm.MethodVisitor,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 cons public init(org.objectweb.asm.MethodVisitor,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 intf org.objectweb.asm.Opcodes
+meth public void setComputeLimits(int,long)
 meth public void visitEnd()
 meth public void visitJumpInsn(int,org.objectweb.asm.Label)
 supr org.objectweb.asm.tree.MethodNode
-hfds mainSubroutineInsns,sharedSubroutineInsns,subroutinesInsns
+hfds DEFAULT_MAX_MEMORY_LIMIT,DEFAULT_MAX_OPERATIONS_LIMIT,LABEL_NODE_SIZE,LOCAL_VARIABLE_NODE_SIZE,TRY_CATCH_BLOCK_NODE_SIZE,mainSubroutineInsns,numInlinedInstructions,remainingBytes,remainingOperations,sharedSubroutineInsns,subroutinesInsns
 hcls Instantiation
 
 CLSS public org.objectweb.asm.commons.LocalVariablesSorter
@@ -1284,7 +1295,7 @@ cons public init(java.lang.String)
 meth public void accept(org.objectweb.asm.signature.SignatureVisitor)
 meth public void acceptType(org.objectweb.asm.signature.SignatureVisitor)
 supr java.lang.Object
-hfds signatureValue
+hfds MAX_DEPTH,signatureValue
 
 CLSS public abstract org.objectweb.asm.signature.SignatureVisitor
 cons protected init(int)

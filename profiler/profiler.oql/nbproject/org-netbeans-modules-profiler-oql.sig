@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.51
+#Version 2.52
 
 CLSS public abstract interface java.io.Serializable
 

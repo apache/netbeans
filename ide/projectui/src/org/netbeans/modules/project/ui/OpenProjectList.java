@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -110,6 +109,7 @@ import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.WindowManager;
 
 import static org.netbeans.modules.project.ui.Bundle.*;
+import org.netbeans.modules.project.ui.fallback.FallbackFactory;
 
 /**
  * List of projects open in the GUI.
@@ -1300,9 +1300,11 @@ public final class OpenProjectList {
             FileObject dir = URLMapper.findFileObject(url);
             if (dir != null && dir.isFolder()) {
                 try {
-                    Project p = ProjectManager.getDefault().findProject(dir);
-                    if (p != null && !result.contains(p)) { //#238093, #238811 if multiple entries point to the same project we end up with the same instance multiple times in the linked list. That's wrong.
-                        result.add(p);
+                    if (FileOwnerQuery.getOwner(dir) == null) {
+                        Project p = FallbackFactory.findProjectOrFallback(dir);
+                        if (p != null && !result.contains(p)) { //#238093, #238811 if multiple entries point to the same project we end up with the same instance multiple times in the linked list. That's wrong.
+                            result.add(p);
+                        }
                     }
                 } catch (Throwable t) {
                     //something bad happened during loading the project.

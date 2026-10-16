@@ -48,7 +48,7 @@
     <fontcolor name="mod-interface" default="identifier"/>
     <fontcolor name="mod-interface-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-local-variable" default="identifier"/>
-    <fontcolor name="mod-local-variable-declaration" default="identifier"/>
+    <fontcolor name="mod-local-variable-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-method" default="method"/>
     <fontcolor name="mod-method-declaration" default="method" foreColor="ffffc66d"/>
     <fontcolor name="mod-package-private"/>

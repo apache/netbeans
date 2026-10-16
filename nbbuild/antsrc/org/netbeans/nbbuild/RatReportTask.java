@@ -25,8 +25,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -235,7 +233,7 @@ public class RatReportTask extends Task {
     private void doPopulateUnapproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
         NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license/@approval=\"false\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
-            String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
+            String resources = evaluate.item(i).getAttributes().getNamedItem("name").getTextContent();
             String moduleName = getModuleName(resources);
             if (!moduleRATInfo.containsKey(moduleName)) {
                 moduleRATInfo.get(NOT_CLUSTER).addUnapproved(resources);
@@ -248,7 +246,7 @@ public class RatReportTask extends Task {
     private void doPopulateApproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
         NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license/@approval=\"true\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
-            String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
+            String resources = evaluate.item(i).getAttributes().getNamedItem("name").getTextContent();
             String moduleName = getModuleName(resources);
             if (!moduleRATInfo.containsKey(moduleName)) {
                 moduleRATInfo.get(NOT_CLUSTER).addApproved(resources);
@@ -257,12 +255,6 @@ public class RatReportTask extends Task {
             }
 
         }
-    }
-
-    private String relativize(String target) {
-        Path full = Paths.get(target);
-        Path rootPath = root.toPath();
-        return rootPath.relativize(full).toString();
     }
 
     private String getModuleName(String resource) {

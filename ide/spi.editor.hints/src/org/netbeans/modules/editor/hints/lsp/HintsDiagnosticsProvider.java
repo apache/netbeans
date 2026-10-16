@@ -40,7 +40,7 @@ import org.openide.text.PositionBounds;
  * 
  * @author sdedic
  */
-@MimeRegistration(mimeType = "", service = ErrorProvider.class)
+@MimeRegistration(mimeType = "", service = ErrorProvider.class, position = 690)
 public class HintsDiagnosticsProvider implements ErrorProvider {
     public HintsDiagnosticsProvider() {
     }

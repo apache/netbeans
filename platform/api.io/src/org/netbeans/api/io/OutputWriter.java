@@ -21,11 +21,7 @@ package org.netbeans.api.io;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Locale;
-import java.util.Set;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.spi.io.InputOutputProvider;
 
 /**

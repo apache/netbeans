@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.19.0
+#Version 2.20.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1910,6 +1910,34 @@ supr java.nio.file.spi.FileSystemProvider
 hfds clientInstance,errorDataHandler,factory,fileSystems,fsSessionInitializer,versionSelector
 hcls SessionProvider
 
+CLSS public org.apache.sshd.sftp.client.fs.SftpFileSystemProviderFacade
+cons public init()
+meth public !varargs <%0 extends java.nio.file.attribute.BasicFileAttributes> {%%0} readAttributes(java.nio.file.Path,java.lang.Class<{%%0}>,java.nio.file.LinkOption[]) throws java.io.IOException
+meth public !varargs <%0 extends java.nio.file.attribute.FileAttributeView> {%%0} getFileAttributeView(java.nio.file.Path,java.lang.Class<{%%0}>,java.nio.file.LinkOption[])
+meth public !varargs java.io.InputStream newInputStream(java.nio.file.Path,java.nio.file.OpenOption[]) throws java.io.IOException
+meth public !varargs java.io.OutputStream newOutputStream(java.nio.file.Path,java.nio.file.OpenOption[]) throws java.io.IOException
+meth public !varargs java.nio.channels.FileChannel newFileChannel(java.nio.file.Path,java.util.Set<? extends java.nio.file.OpenOption>,java.nio.file.attribute.FileAttribute<?>[]) throws java.io.IOException
+meth public !varargs java.nio.channels.SeekableByteChannel newByteChannel(java.nio.file.Path,java.util.Set<? extends java.nio.file.OpenOption>,java.nio.file.attribute.FileAttribute<?>[]) throws java.io.IOException
+meth public !varargs java.util.Map<java.lang.String,java.lang.Object> readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
+meth public !varargs void checkAccess(java.nio.file.Path,java.nio.file.AccessMode[]) throws java.io.IOException
+meth public !varargs void copy(java.nio.file.Path,java.nio.file.Path,java.nio.file.CopyOption[]) throws java.io.IOException
+meth public !varargs void createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute<?>[]) throws java.io.IOException
+meth public !varargs void createSymbolicLink(java.nio.file.Path,java.nio.file.Path,java.nio.file.attribute.FileAttribute<?>[]) throws java.io.IOException
+meth public !varargs void move(java.nio.file.Path,java.nio.file.Path,java.nio.file.CopyOption[]) throws java.io.IOException
+meth public !varargs void setAttribute(java.nio.file.Path,java.lang.String,java.lang.Object,java.nio.file.LinkOption[]) throws java.io.IOException
+meth public boolean isHidden(java.nio.file.Path) throws java.io.IOException
+meth public boolean isSameFile(java.nio.file.Path,java.nio.file.Path) throws java.io.IOException
+meth public java.lang.String getScheme()
+meth public java.nio.file.DirectoryStream<java.nio.file.Path> newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter<? super java.nio.file.Path>) throws java.io.IOException
+meth public java.nio.file.FileStore getFileStore(java.nio.file.Path) throws java.io.IOException
+meth public java.nio.file.FileSystem getFileSystem(java.net.URI)
+meth public java.nio.file.FileSystem newFileSystem(java.net.URI,java.util.Map<java.lang.String,?>) throws java.io.IOException
+meth public java.nio.file.Path getPath(java.net.URI)
+meth public java.nio.file.Path readSymbolicLink(java.nio.file.Path) throws java.io.IOException
+meth public void delete(java.nio.file.Path) throws java.io.IOException
+supr java.nio.file.spi.FileSystemProvider
+hcls DefaultSftpFileSystemSingleton
+
 CLSS public org.apache.sshd.sftp.client.fs.SftpPath
 cons public init(org.apache.sshd.sftp.client.fs.SftpFileSystem,java.lang.String,java.util.List<java.lang.String>)
 intf org.apache.sshd.sftp.client.fs.WithFileAttributes
@@ -2090,7 +2118,7 @@ innr protected SftpChannelSubsystem
 meth protected boolean receive(org.apache.sshd.common.util.buffer.Buffer) throws java.io.IOException
 meth protected int data(byte[],int,int) throws java.io.IOException
 meth protected org.apache.sshd.client.channel.ChannelSubsystem createSftpChannelSubsystem(org.apache.sshd.client.session.ClientSession)
-meth protected org.apache.sshd.common.util.buffer.Buffer waitForInitResponse(java.time.Duration) throws java.io.IOException
+meth protected org.apache.sshd.common.util.buffer.Buffer waitForInitResponse(java.util.concurrent.CompletableFuture<org.apache.sshd.common.util.buffer.Buffer>,java.time.Duration) throws java.io.IOException
 meth protected void handleInitResponse(org.apache.sshd.common.util.buffer.Buffer) throws java.io.IOException
 meth protected void init(org.apache.sshd.client.session.ClientSession,org.apache.sshd.sftp.client.SftpVersionSelector,java.time.Duration) throws java.io.IOException
 meth protected void process(org.apache.sshd.common.util.buffer.Buffer) throws java.io.IOException
@@ -2359,6 +2387,7 @@ fld public final static int ACE4_WRITE_ATTRIBUTES = 256
 fld public final static int ACE4_WRITE_DATA = 2
 fld public final static int ACE4_WRITE_NAMED_ATTRS = 16
 fld public final static int ACE4_WRITE_OWNER = 524288
+fld public final static int MAX_SFTP_MESSAGE_LENGTH = 262144
 fld public final static int MD5_QUICK_HASH_SIZE = 2048
 fld public final static int MIN_CHKFILE_BLOCKSIZE = 256
 fld public final static int SFTP_V3 = 3

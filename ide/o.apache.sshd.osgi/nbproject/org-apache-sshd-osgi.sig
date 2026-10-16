@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.19.0
+#Version 2.20.0
 
 CLSS public java.io.ByteArrayOutputStream
 cons public init()
@@ -1239,7 +1239,7 @@ meth protected java.lang.String[] getUserResponses(java.lang.String,java.lang.St
 meth public static java.lang.String getAuthCommandName(int)
 meth public void init(org.apache.sshd.client.session.ClientSession,java.lang.String) throws java.lang.Exception
 supr org.apache.sshd.client.auth.AbstractUserAuth
-hfds maxAttempts,nOfAttempts,passwords,requestPending,wasChallenged,withUserInteraction
+hfds MAX_PROMPTS,maxAttempts,nOfAttempts,passwords,requestPending,wasChallenged,withUserInteraction
 
 CLSS public org.apache.sshd.client.auth.keyboard.UserAuthKeyboardInteractiveFactory
 cons public init()
@@ -4188,7 +4188,7 @@ meth public void compress(org.apache.sshd.common.util.buffer.Buffer) throws java
 meth public void init(org.apache.sshd.common.compression.Compression$Type,int)
 meth public void uncompress(org.apache.sshd.common.util.buffer.Buffer,org.apache.sshd.common.util.buffer.Buffer) throws java.io.IOException
 supr org.apache.sshd.common.compression.BaseCompression
-hfds BUF_SIZE,compresser,decompresser,tmpbuf
+hfds BUF_SIZE,MAX_UNCOMPRESSED_SIZE,compressor,decompressor,tmpbuf
 
 CLSS abstract interface org.apache.sshd.common.compression.package-info
 
@@ -4615,6 +4615,9 @@ supr java.lang.Object
 hfds BY_KEY_CLASS_DECODERS_MAP,BY_KEY_TYPE_DECODERS_MAP,DEFAULT_DIGEST_HOLDER,KEY_TYPE_ALIASES,SIGNATURE_ALGORITHM_MAP
 
 CLSS public abstract interface org.apache.sshd.common.config.keys.OpenSshCertificate
+fld public final static java.lang.String FORCE_COMMAND = "force-command"
+fld public final static java.lang.String SOURCE_ADDRESS = "source-address"
+fld public final static java.lang.String VERIFY_REQUIRED = "verify-required"
 fld public final static long INFINITY = -1
 fld public final static long MIN_EPOCH = 0
 innr public final static !enum Type
@@ -6013,6 +6016,7 @@ meth public void sessionClosed(org.apache.sshd.common.io.IoSession) throws java.
 meth public void sessionCreated(org.apache.sshd.common.io.IoSession) throws java.lang.Exception
 supr org.apache.sshd.common.util.closeable.AbstractCloseable
 hfds proxies,service
+hcls Socks5State
 
 CLSS public abstract static org.apache.sshd.common.forward.SocksProxy$Proxy
  outer org.apache.sshd.common.forward.SocksProxy
@@ -6038,10 +6042,13 @@ CLSS public org.apache.sshd.common.forward.SocksProxy$Socks5
  outer org.apache.sshd.common.forward.SocksProxy
 cons public init(org.apache.sshd.common.forward.SocksProxy,org.apache.sshd.common.io.IoSession)
 meth protected java.lang.String getBLString(org.apache.sshd.common.util.buffer.Buffer)
+meth protected void forwardPending()
 meth protected void onChannelOpened(org.apache.sshd.client.future.OpenFuture)
 meth protected void onMessage(org.apache.sshd.common.util.buffer.Buffer) throws java.io.IOException
+meth protected void processPending() throws java.io.IOException
+meth protected void sendReply(byte,java.lang.Runnable)
 supr org.apache.sshd.common.forward.SocksProxy$Proxy
-hfds authMethods,response
+hfds pending,state
 
 CLSS public org.apache.sshd.common.forward.TcpipClientChannel
 cons public init(org.apache.sshd.common.forward.TcpipClientChannel$Type,org.apache.sshd.common.io.IoSession,org.apache.sshd.common.util.net.SshdSocketAddress)
@@ -8279,6 +8286,7 @@ supr java.lang.Enum<org.apache.sshd.common.session.helpers.TimeoutIndicator$Time
 
 CLSS public abstract org.apache.sshd.common.signature.AbstractSecurityKeySignature
 cons protected init(java.lang.String)
+fld protected java.security.MessageDigest challengeDigest
 intf org.apache.sshd.common.signature.Signature
 meth protected abstract java.lang.String getSignatureKeyType()
 meth protected abstract org.apache.sshd.common.signature.Signature getDelegateSignature()
@@ -8288,7 +8296,7 @@ meth public void initSigner(org.apache.sshd.common.session.SessionContext,java.s
 meth public void initVerifier(org.apache.sshd.common.session.SessionContext,java.security.PublicKey) throws java.security.GeneralSecurityException
 meth public void update(org.apache.sshd.common.session.SessionContext,byte[],int,int)
 supr java.lang.Object
-hfds FLAG_USER_PRESENCE,FLAG_VERIFIED,challengeDigest,keyType,publicKey
+hfds FLAG_USER_PRESENCE,FLAG_VERIFIED,keyType,publicKey
 
 CLSS public abstract org.apache.sshd.common.signature.AbstractSignature
 cons protected init(java.lang.String,java.lang.String)
@@ -10572,6 +10580,7 @@ fld public final static long DEFAULT_MAX_PACKET_SIZE = 32768
 fld public final static long DEFAULT_WINDOW_SIZE = 2097152
 fld public final static org.apache.sshd.common.Property<java.lang.Boolean> ABORT_ON_INVALID_CERTIFICATE
 fld public final static org.apache.sshd.common.Property<java.lang.Boolean> ALLOW_DHG1_KEX_FALLBACK
+fld public final static org.apache.sshd.common.Property<java.lang.Boolean> ALLOW_EMPTY_CERTIFICATE_PRINCIPALS
 fld public final static org.apache.sshd.common.Property<java.lang.Boolean> IGNORE_INVALID_IDENTITIES
 fld public final static org.apache.sshd.common.Property<java.lang.Boolean> KB_SERVER_INTERACTIVE_ECHO_PROMPT
 fld public final static org.apache.sshd.common.Property<java.lang.Boolean> PREFER_UNIX_AGENT
@@ -11090,6 +11099,7 @@ meth protected java.lang.Boolean doAuth(org.apache.sshd.common.util.buffer.Buffe
 meth protected java.lang.Boolean doInitialAuth(org.apache.sshd.server.session.ServerSession,java.lang.String,org.apache.sshd.server.auth.keyboard.KeyboardInteractiveAuthenticator,org.apache.sshd.common.util.buffer.Buffer) throws java.lang.Exception
 meth protected java.lang.Boolean doValidateAuthResponse(org.apache.sshd.server.session.ServerSession,java.lang.String,org.apache.sshd.server.auth.keyboard.KeyboardInteractiveAuthenticator,org.apache.sshd.common.util.buffer.Buffer) throws java.lang.Exception
 supr org.apache.sshd.server.auth.AbstractUserAuth
+hfds numberOfPrompts
 
 CLSS public org.apache.sshd.server.auth.keyboard.UserAuthKeyboardInteractiveFactory
 cons public init()
@@ -11154,7 +11164,12 @@ CLSS public org.apache.sshd.server.auth.pubkey.AuthorizedKeyEntriesPublickeyAuth
 cons public init(java.lang.Object,org.apache.sshd.server.session.ServerSession,java.util.Collection<? extends org.apache.sshd.common.config.keys.AuthorizedKeyEntry>,org.apache.sshd.common.config.keys.PublicKeyEntryResolver) throws java.io.IOException,java.security.GeneralSecurityException
 fld public final static org.apache.sshd.common.AttributeRepository$AttributeKey<org.apache.sshd.common.config.keys.AuthorizedKeyEntry> AUTHORIZED_KEY
 intf org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator
+meth protected boolean matchesExpiryTime(java.lang.String,org.apache.sshd.server.session.ServerSession,java.lang.String)
+meth protected boolean matchesFrom(java.lang.String,org.apache.sshd.server.session.ServerSession,java.lang.String)
+meth protected boolean matchesLoginOptions(org.apache.sshd.common.config.keys.AuthorizedKeyEntry,java.lang.String,org.apache.sshd.server.session.ServerSession)
 meth protected boolean matchesPrincipals(org.apache.sshd.common.config.keys.AuthorizedKeyEntry,java.lang.String,org.apache.sshd.common.config.keys.OpenSshCertificate,org.apache.sshd.server.session.ServerSession)
+meth protected java.net.InetSocketAddress resolveClientAddress(org.apache.sshd.server.session.ServerSession)
+meth protected java.time.Instant parseExpiryTime(java.lang.String)
 meth public boolean authenticate(java.lang.String,java.security.PublicKey,org.apache.sshd.server.session.ServerSession)
 meth public java.lang.Object getId()
 meth public java.lang.String toString()
@@ -11204,11 +11219,14 @@ CLSS public org.apache.sshd.server.auth.pubkey.UserAuthPublicKey
 cons public init()
 cons public init(java.util.List<org.apache.sshd.common.NamedFactory<org.apache.sshd.common.signature.Signature>>)
 fld public final static java.lang.String NAME = "publickey"
+fld public final static org.apache.sshd.common.AttributeRepository$AttributeKey<java.util.List<java.security.PublicKey>> AUTHENTICATED_KEYS
 intf org.apache.sshd.common.signature.SignatureFactoriesManager
+meth protected boolean alreadyAuthenticated(java.security.PublicKey,java.util.List<java.security.PublicKey>)
 meth protected boolean verifySignature(org.apache.sshd.server.session.ServerSession,java.lang.String,java.lang.String,java.security.PublicKey,org.apache.sshd.common.util.buffer.Buffer,org.apache.sshd.common.signature.Signature,byte[]) throws java.lang.Exception
 meth protected void sendPublicKeyResponse(org.apache.sshd.server.session.ServerSession,java.lang.String,java.lang.String,java.security.PublicKey,byte[],int,int,org.apache.sshd.common.util.buffer.Buffer) throws java.lang.Exception
 meth protected void verifyCertificateSignature(org.apache.sshd.server.session.ServerSession,org.apache.sshd.common.config.keys.OpenSshCertificate) throws java.lang.Exception
 meth protected void verifyCertificateSources(org.apache.sshd.server.session.ServerSession,org.apache.sshd.common.config.keys.OpenSshCertificate) throws java.security.cert.CertificateException
+meth protected void verifyCriticalOptions(org.apache.sshd.server.session.ServerSession,org.apache.sshd.common.config.keys.OpenSshCertificate) throws java.security.cert.CertificateException
 meth public java.lang.Boolean doAuth(org.apache.sshd.common.util.buffer.Buffer,boolean) throws java.lang.Exception
 meth public java.util.List<org.apache.sshd.common.NamedFactory<org.apache.sshd.common.signature.Signature>> getSignatureFactories()
 meth public void setSignatureFactories(java.util.List<org.apache.sshd.common.NamedFactory<org.apache.sshd.common.signature.Signature>>)
@@ -11911,7 +11929,7 @@ meth public org.apache.sshd.server.session.ServerSession getSession()
 meth public void process(int,org.apache.sshd.common.util.buffer.Buffer) throws java.lang.Exception
 meth public void start()
 supr org.apache.sshd.common.util.closeable.AbstractCloseable
-hfds authMethod,authMethods,authService,authUserName,currentAuth,maxAuthRequests,nbAuthRequests,properties,serverSession,userAuthFactories,welcomePhase,welcomeSent
+hfds authMethod,authMethods,authService,authUserName,currentAuth,maxAuthRequests,nbAuthRequests,pendingAuth,properties,serverSession,userAuthFactories,welcomePhase,welcomeSent
 
 CLSS public org.apache.sshd.server.session.ServerUserAuthServiceFactory
 cons public init()

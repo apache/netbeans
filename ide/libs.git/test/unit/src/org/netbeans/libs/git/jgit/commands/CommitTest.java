@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
@@ -51,10 +50,11 @@ import org.netbeans.libs.git.jgit.Utils;
  * @author ondra
  */
 public class CommitTest extends AbstractGitTestCase {
+
     private Repository repository;
     private File workDir;
 
-    public CommitTest (String testName) throws IOException {
+    public CommitTest(String testName) throws IOException {
         super(testName);
     }
 
@@ -65,17 +65,17 @@ public class CommitTest extends AbstractGitTestCase {
         repository = getRepository(getLocalGitRepository());
     }
 
-    public void testCommitNoRoots () throws Exception {
+    public void testCommitNoRoots() throws Exception {
         File toCommit = new File(workDir, "testnotadd.txt");
         write(toCommit, "blablabla");
         GitClient client = getClient(workDir);
-        Map<File, GitStatus> statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        Map<File, GitStatus> statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, false, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_ADDED, false);
-        client.add(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
         GitRevisionInfo info = client.commit(new File[0], "initial commit", null, null, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
 
         Git git = new Git(repository);
@@ -88,7 +88,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertTrue(modifiedFiles.get(toCommit).getStatus().equals(Status.ADDED));
     }
 
-    public void testSingleFileCommit () throws Exception {
+    public void testSingleFileCommit() throws Exception {
         repository.getConfig().setString("user", null, "name", "John");
         repository.getConfig().setString("user", null, "email", "john@git.com");
         repository.getConfig().save();
@@ -96,17 +96,17 @@ public class CommitTest extends AbstractGitTestCase {
         File toCommit = new File(workDir, "testnotadd.txt");
         write(toCommit, "blablabla");
         GitClient client = getClient(workDir);
-        Map<File, GitStatus> statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        Map<File, GitStatus> statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, false, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_ADDED, false);
-        client.add(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
         long t1 = System.currentTimeMillis();
         Thread.sleep(1000);
-        GitRevisionInfo info = client.commit(new File[] { toCommit }, "initial commit", null, null,  NULL_PROGRESS_MONITOR);
+        GitRevisionInfo info = client.commit(new File[]{toCommit}, "initial commit", null, null, NULL_PROGRESS_MONITOR);
         Thread.sleep(1000);
         long t2 = System.currentTimeMillis();
-        statuses = client.getStatus(new File[] { toCommit }, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{toCommit}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, toCommit, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertTrue(t1 <= info.getCommitTime() && t2 >= info.getCommitTime());
 
@@ -115,14 +115,14 @@ public class CommitTest extends AbstractGitTestCase {
         RevCommit com = log.call().iterator().next();
         assertEquals("initial commit", info.getFullMessage());
         assertEquals("initial commit", com.getFullMessage());
-        assertEquals( "john@git.com", info.getAuthor().getEmailAddress());
-        assertEquals( "john@git.com", com.getAuthorIdent().getEmailAddress());
+        assertEquals("john@git.com", info.getAuthor().getEmailAddress());
+        assertEquals("john@git.com", com.getAuthorIdent().getEmailAddress());
         assertEquals(ObjectId.toString(com.getId()), info.getRevision());
         Map<File, GitFileInfo> modifiedFiles = info.getModifiedFiles();
         assertTrue(modifiedFiles.get(toCommit).getStatus().equals(Status.ADDED));
     }
 
-    public void testMultipleFileCommit () throws Exception {
+    public void testMultipleFileCommit() throws Exception {
         repository.getConfig().setString("user", null, "name", "John");
         repository.getConfig().setString("user", null, "email", "john@git.com");
         repository.getConfig().save();
@@ -135,12 +135,12 @@ public class CommitTest extends AbstractGitTestCase {
         write(another, "this is another test!");
 
         GitClient client = getClient(workDir);
-        client.add(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
-        Map<File, GitStatus> statuses = client.getStatus(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
+        Map<File, GitStatus> statuses = client.getStatus(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
-        GitRevisionInfo info = client.commit(new File[] { newOne, another }, "initial commit", null, null, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
+        GitRevisionInfo info = client.commit(new File[]{newOne, another}, "initial commit", null, null, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         Map<File, GitFileInfo> modifiedFiles = info.getModifiedFiles();
@@ -151,17 +151,17 @@ public class CommitTest extends AbstractGitTestCase {
         LogCommand log = git.log();
         RevCommit com = log.call().iterator().next();
         assertEquals("initial commit", com.getFullMessage());
-        assertEquals( "john@git.com", com.getAuthorIdent().getEmailAddress());
+        assertEquals("john@git.com", com.getAuthorIdent().getEmailAddress());
 
         write(newOne, "!modification!");
         write(another, "another modification!");
 
-        client.add(new File[] { workDir }, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{workDir}, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{workDir}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
-        info = client.commit(new File[] { newOne, another }, "second commit", null, null, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
+        info = client.commit(new File[]{newOne, another}, "second commit", null, null, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{workDir}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         modifiedFiles = info.getModifiedFiles();
@@ -171,18 +171,18 @@ public class CommitTest extends AbstractGitTestCase {
         log = git.log();
         com = log.call().iterator().next();
         assertEquals("second commit", com.getFullMessage());
-        assertEquals( "john@git.com", com.getAuthorIdent().getEmailAddress());
+        assertEquals("john@git.com", com.getAuthorIdent().getEmailAddress());
     }
 
-    public void testCommitOnlySomeOfAllFiles () throws Exception {
+    public void testCommitOnlySomeOfAllFiles() throws Exception {
         File file1 = new File(workDir, "file1");
         write(file1, "file1 content");
         File file2 = new File(workDir, "file2");
         write(file2, "file2 content");
-        File[] files = new File[] { file1, file2 };
+        File[] files = new File[]{file1, file2};
         GitClient client = getClient(workDir);
         client.add(files, NULL_PROGRESS_MONITOR);
-        GitRevisionInfo info = client.commit(new File[] { file1 }, "initial commit", null, null, NULL_PROGRESS_MONITOR);
+        GitRevisionInfo info = client.commit(new File[]{file1}, "initial commit", null, null, NULL_PROGRESS_MONITOR);
         Map<File, GitFileInfo> modifiedFiles = info.getModifiedFiles();
         assertEquals(1, modifiedFiles.size());
         assertTrue(modifiedFiles.get(file1).getStatus().equals(Status.ADDED));
@@ -191,18 +191,18 @@ public class CommitTest extends AbstractGitTestCase {
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         // but file2 should still be staged for commit
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
-        info = client.commit(new File[] { file2 }, "initial commit", null, null, NULL_PROGRESS_MONITOR);
+        info = client.commit(new File[]{file2}, "initial commit", null, null, NULL_PROGRESS_MONITOR);
         modifiedFiles = info.getModifiedFiles();
         assertEquals(1, modifiedFiles.size());
         assertTrue(modifiedFiles.get(file2).getStatus().equals(Status.ADDED));
 
         write(file1, "file1 content changed");
         write(file2, "file2 content changed");
-        client.add(new File[] { file1 }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{file1}, NULL_PROGRESS_MONITOR);
         statuses = client.getStatus(files, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_MODIFIED, false);
-        info = client.commit(new File[] { file1 }, "change in content", null, null, NULL_PROGRESS_MONITOR);
+        info = client.commit(new File[]{file1}, "change in content", null, null, NULL_PROGRESS_MONITOR);
         modifiedFiles = info.getModifiedFiles();
         assertEquals(1, modifiedFiles.size());
         assertTrue(modifiedFiles.get(file1).getStatus().equals(Status.MODIFIED));
@@ -214,12 +214,12 @@ public class CommitTest extends AbstractGitTestCase {
 
         write(file1, "file1 content changed again");
         write(file2, "file2 content changed again");
-        client.add(new File[] { file1, file2 }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{file1, file2}, NULL_PROGRESS_MONITOR);
         write(file2, "file2 content changed again and again");
         statuses = client.getStatus(files, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_MODIFIED, false);
-        info = client.commit(new File[] { file1 }, "another change in content", null, null, NULL_PROGRESS_MONITOR);
+        info = client.commit(new File[]{file1}, "another change in content", null, null, NULL_PROGRESS_MONITOR);
         modifiedFiles = info.getModifiedFiles();
         assertEquals(1, modifiedFiles.size());
         assertTrue(modifiedFiles.get(file1).getStatus().equals(Status.MODIFIED));
@@ -230,12 +230,12 @@ public class CommitTest extends AbstractGitTestCase {
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_MODIFIED, false);
 
         write(file1, "file1 content changed again and again");
-        client.add(new File[] { file1 }, NULL_PROGRESS_MONITOR);
-        client.remove(new File[] { file2 }, true, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{file1}, NULL_PROGRESS_MONITOR);
+        client.remove(new File[]{file2}, true, NULL_PROGRESS_MONITOR);
         statuses = client.getStatus(files, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_MODIFIED, false);
-        info = client.commit(new File[] { file1 }, "another change in content", null, null,  NULL_PROGRESS_MONITOR);
+        info = client.commit(new File[]{file1}, "another change in content", null, null, NULL_PROGRESS_MONITOR);
         modifiedFiles = info.getModifiedFiles();
         assertEquals(1, modifiedFiles.size());
         assertTrue(modifiedFiles.get(file1).getStatus().equals(Status.MODIFIED));
@@ -246,10 +246,10 @@ public class CommitTest extends AbstractGitTestCase {
         assertStatus(statuses, workDir, file2, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_MODIFIED, false);
     }
 
-    public void testCommitRemoval () throws Exception {
+    public void testCommitRemoval() throws Exception {
         File file = new File(workDir, "file");
         write(file, "file1 content");
-        File[] files = new File[] { file };
+        File[] files = new File[]{file};
         GitClient client = getClient(workDir);
         client.add(files, NULL_PROGRESS_MONITOR);
         GitRevisionInfo info = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -274,7 +274,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertNull(statuses.get(file));
     }
 
-    public void testSingleTreeCommit () throws Exception {
+    public void testSingleTreeCommit() throws Exception {
         File folder = new File(workDir, "folder");
         File subfolder1 = new File(folder, "subfolder");
         File subfolder11 = new File(subfolder1, "subfolder1");
@@ -285,7 +285,7 @@ public class CommitTest extends AbstractGitTestCase {
         File file2 = new File(subfolder12, "file2");
         write(file1, "file1 content");
         write(file2, "file2 content");
-        File[] files = new File[] { folder };
+        File[] files = new File[]{folder};
         GitClient client = getClient(workDir);
         client.add(files, NULL_PROGRESS_MONITOR);
         GitRevisionInfo info = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -304,7 +304,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertEquals("initial commit", com.getFullMessage());
     }
 
-    public void testMultipleTreesCommit () throws Exception {
+    public void testMultipleTreesCommit() throws Exception {
         File folder1 = new File(workDir, "folder1");
         File subfolder11 = new File(folder1, "subfolder1");
         File subfolder12 = new File(folder1, "subfolder2");
@@ -323,7 +323,7 @@ public class CommitTest extends AbstractGitTestCase {
         File file22 = new File(subfolder22, "file2");
         write(file21, "file1 content");
         write(file22, "file2 content");
-        File[] files = new File[] { folder1, folder2 };
+        File[] files = new File[]{folder1, folder2};
         GitClient client = getClient(workDir);
         client.add(files, NULL_PROGRESS_MONITOR);
         GitRevisionInfo info = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -364,7 +364,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertEquals("second commit", com.getFullMessage());
     }
 
-    public void testCommitOnlySomeOfAllFilesFromMultipleTrees () throws Exception {
+    public void testCommitOnlySomeOfAllFilesFromMultipleTrees() throws Exception {
         File folder1 = new File(workDir, "folder1");
         File subfolder11 = new File(folder1, "subfolder1");
         File subfolder12 = new File(folder1, "subfolder2");
@@ -383,9 +383,9 @@ public class CommitTest extends AbstractGitTestCase {
         File file22 = new File(subfolder22, "file2");
         write(file21, "file1 content");
         write(file22, "file2 content");
-        File[] trees = new File[] { folder1, folder2 };
-        File[] filesToCommit = new File[] { folder1, subfolder21 };
-        File[] filesSingleFolder = new File[] { subfolder21 };
+        File[] trees = new File[]{folder1, folder2};
+        File[] filesToCommit = new File[]{folder1, subfolder21};
+        File[] filesSingleFolder = new File[]{subfolder21};
         GitClient client = getClient(workDir);
         client.add(trees, NULL_PROGRESS_MONITOR);
 
@@ -446,7 +446,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertStatus(statuses, workDir, file22, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
     }
 
-    public void testCommitRemovalTree () throws Exception {
+    public void testCommitRemovalTree() throws Exception {
         File folder = new File(workDir, "folder");
         File subfolder1 = new File(folder, "subfolder");
         File subfolder11 = new File(subfolder1, "subfolder1");
@@ -457,7 +457,7 @@ public class CommitTest extends AbstractGitTestCase {
         File file2 = new File(subfolder12, "file2");
         write(file1, "file1 content");
         write(file2, "file2 content");
-        File[] files = new File[] { folder };
+        File[] files = new File[]{folder};
         GitClient client = getClient(workDir);
         client.add(files, NULL_PROGRESS_MONITOR);
         GitRevisionInfo info = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -486,7 +486,7 @@ public class CommitTest extends AbstractGitTestCase {
         assertNull(statuses.get(file2));
     }
 
-    public void testNeverCommitConflicts () throws Exception {
+    public void testNeverCommitConflicts() throws Exception {
         File f = new File(workDir, "conflict");
         DirCache cache = repository.lockDirCache();
         try {
@@ -504,7 +504,7 @@ public class CommitTest extends AbstractGitTestCase {
         File mergeFile = new File(new File(workDir, Constants.DOT_GIT), "MERGE_HEAD");
         mergeFile.createNewFile();
         try {
-            getClient(workDir).commit(new File[] { f }, "nothing", null, null, NULL_PROGRESS_MONITOR);
+            getClient(workDir).commit(new File[]{f}, "nothing", null, null, NULL_PROGRESS_MONITOR);
             fail();
         } catch (GitException ex) {
             assertEquals("Index contains files in conflict, please resolve them before commit", ex.getMessage());
@@ -519,7 +519,7 @@ public class CommitTest extends AbstractGitTestCase {
             cache.unlock();
         }
         try {
-            getClient(workDir).commit(new File[] { f }, "nothing", null, null, NULL_PROGRESS_MONITOR);
+            getClient(workDir).commit(new File[]{f}, "nothing", null, null, NULL_PROGRESS_MONITOR);
             fail();
         } catch (GitException ex) {
             assertEquals("Cannot do a partial commit during a merge.", ex.getMessage());
@@ -527,8 +527,8 @@ public class CommitTest extends AbstractGitTestCase {
 
         //TODO try to commit the whole WT, for that we need to create the real conflict, not just this fake ones
     }
-    
-    public void testLineEndingsWindows () throws Exception {
+
+    public void testLineEndingsWindows() throws Exception {
         if (!isWindows()) {
             return;
         }
@@ -536,11 +536,11 @@ public class CommitTest extends AbstractGitTestCase {
         StoredConfig cfg = repository.getConfig();
         cfg.setString(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_AUTOCRLF, "true");
         cfg.save();
-        
+
         File f = new File(workDir, "f");
         write(f, "a\r\nb\r\n");
-        File[] roots = new File[] { f };
-        
+        File[] roots = new File[]{f};
+
         GitClient client = getClient(workDir);
         client.add(roots, NULL_PROGRESS_MONITOR);
         DirCacheEntry e1 = repository.readDirCache().getEntry("f");
@@ -549,12 +549,12 @@ public class CommitTest extends AbstractGitTestCase {
         List<String> res = runExternally(workDir, Arrays.asList("git.cmd", "status", "-s"));
         assertEquals(Arrays.asList("A  f"), res);
         GitRevisionInfo info = client.commit(roots, "aaa", null, null, NULL_PROGRESS_MONITOR);
-        
+
         assertStatus(client.getStatus(roots, NULL_PROGRESS_MONITOR),
                 workDir, f, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         res = runExternally(workDir, Arrays.asList("git.cmd", "status", "-s"));
         assertEquals(0, res.size());
-        
+
         RevCommit commit = Utils.findCommit(repository, info.getRevision());
         TreeWalk walk = new TreeWalk(repository);
         walk.reset();
@@ -567,39 +567,38 @@ public class CommitTest extends AbstractGitTestCase {
         assertEquals(4, loader.getSize());
         assertEquals("a\nb\n", new String(loader.getBytes()));
         assertEquals(e1.getObjectId(), walk.getObjectId(0));
-        
-        
+
         File f2 = new File(workDir, "f2");
         write(f2, "a\r\nb\r\n");
-        roots = new File[] { f2 };
-        
+        roots = new File[]{f2};
+
         client.add(roots, NULL_PROGRESS_MONITOR);
         assertStatus(client.getStatus(roots, NULL_PROGRESS_MONITOR),
                 workDir, f2, true, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, false);
         res = runExternally(workDir, Arrays.asList("git.cmd", "status", "-s"));
         assertEquals(Arrays.asList("A  f2"), res);
         info = client.commit(roots, "bbb", null, null, NULL_PROGRESS_MONITOR);
-        
+
         assertStatus(client.getStatus(roots, NULL_PROGRESS_MONITOR),
                 workDir, f2, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         res = runExternally(workDir, Arrays.asList("git.cmd", "status", "-s"));
         assertEquals(0, res.size());
-        
+
         commit = Utils.findCommit(repository, info.getRevision());
         walk = new TreeWalk(repository);
         walk.reset();
         walk.addTree(commit.getTree());
         walk.setFilter(PathFilter.create("f"));
         walk.setRecursive(true);
-        while(walk.next()) {
+        while (walk.next()) {
             loader = repository.getObjectDatabase().open(walk.getObjectId(0));
             assertEquals(4, loader.getSize());
             assertEquals("a\nb\n", new String(loader.getBytes()));
             assertEquals(e1.getObjectId(), walk.getObjectId(0));
         }
     }
-    
-    public void testAmendCommit () throws Exception {
+
+    public void testAmendCommit() throws Exception {
         repository.getConfig().setString("user", null, "name", "John");
         repository.getConfig().setString("user", null, "email", "john@git.com");
         repository.getConfig().save();
@@ -612,18 +611,18 @@ public class CommitTest extends AbstractGitTestCase {
         write(another, "content2");
 
         GitClient client = getClient(workDir);
-        client.add(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
-        GitRevisionInfo info = client.commit(new File[] { newOne, another }, "initial commit", null, null, NULL_PROGRESS_MONITOR);
-        Map<File, GitStatus> statuses = client.getStatus(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
+        GitRevisionInfo info = client.commit(new File[]{newOne, another}, "initial commit", null, null, NULL_PROGRESS_MONITOR);
+        Map<File, GitStatus> statuses = client.getStatus(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
-        
+
         write(newOne, "modification1");
         write(another, "modification2");
 
-        client.add(new File[] { newOne, another }, NULL_PROGRESS_MONITOR);
-        GitRevisionInfo lastCommit = client.commit(new File[] { newOne }, "second commit", null, null, false, NULL_PROGRESS_MONITOR);
-        statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
+        client.add(new File[]{newOne, another}, NULL_PROGRESS_MONITOR);
+        GitRevisionInfo lastCommit = client.commit(new File[]{newOne}, "second commit", null, null, false, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{workDir}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_MODIFIED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_MODIFIED, false);
         Map<File, GitFileInfo> modifiedFiles = lastCommit.getModifiedFiles();
@@ -632,21 +631,21 @@ public class CommitTest extends AbstractGitTestCase {
 
         assertEquals(1, lastCommit.getParents().length);
         assertEquals(info.getRevision(), lastCommit.getParents()[0]);
-        assertEquals(lastCommit.getRevision(), client.getBranches(false, NULL_PROGRESS_MONITOR).get("master").getId());
-        
+        assertEquals(lastCommit.getRevision(), client.getBranches(false, NULL_PROGRESS_MONITOR).get(getDefaultBranch()).getId());
+
         Thread.sleep(1100);
-        
+
         long time = lastCommit.getCommitTime();
         RevWalk walk = new RevWalk(repository);
         RevCommit originalCommit = walk.parseCommit(repository.resolve(lastCommit.getRevision()));
-        lastCommit = client.commit(new File[] { newOne, another }, "second commit, modified message",
+        lastCommit = client.commit(new File[]{newOne, another}, "second commit, modified message",
                 new GitUser("user2", "user2.email"), new GitUser("committer2", "committer2.email"), true, NULL_PROGRESS_MONITOR);
         RevCommit amendedCommit = walk.parseCommit(repository.resolve(lastCommit.getRevision()));
         assertEquals("Commit time should not change after amend", time, lastCommit.getCommitTime());
         assertEquals(originalCommit.getAuthorIdent().getWhenAsInstant(), amendedCommit.getAuthorIdent().getWhenAsInstant());
         // commit time should not equal.
         assertFalse(originalCommit.getCommitterIdent().getWhenAsInstant().equals(amendedCommit.getCommitterIdent().getWhenAsInstant()));
-        statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
+        statuses = client.getStatus(new File[]{workDir}, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         modifiedFiles = lastCommit.getModifiedFiles();
@@ -655,31 +654,31 @@ public class CommitTest extends AbstractGitTestCase {
 
         assertEquals(1, lastCommit.getParents().length);
         assertEquals(info.getRevision(), lastCommit.getParents()[0]);
-        assertEquals(lastCommit.getRevision(), client.getBranches(false, NULL_PROGRESS_MONITOR).get("master").getId());
+        assertEquals(lastCommit.getRevision(), client.getBranches(false, NULL_PROGRESS_MONITOR).get(getDefaultBranch()).getId());
     }
-    
-    public void testCherryPickCommit () throws Exception {
+
+    public void testCherryPickCommit() throws Exception {
         repository.getConfig().setString("user", null, "name", "John");
         repository.getConfig().setString("user", null, "email", "john@git.com");
         repository.getConfig().save();
-        
+
         File f = new File(workDir, "f");
         write(f, "init");
-        File[] files = new File[] { f };
-        
+        File[] files = new File[]{f};
+
         add(f);
         commit(f);
-        
+
         GitClient client = getClient(workDir);
         write(f, "change");
         add(f);
         GitRevisionInfo info = client.commit(files, "change to CherryPick", null, null, NULL_PROGRESS_MONITOR);
-        
+
         Thread.sleep(1100);
-        
+
         client.reset("HEAD~1", GitClient.ResetType.MIXED, NULL_PROGRESS_MONITOR);
         repository.writeCherryPickHead(repository.resolve(info.getRevision()));
-        
+
         // now we are cherry-picking
         // amend is not allowed
         try {
@@ -688,14 +687,14 @@ public class CommitTest extends AbstractGitTestCase {
         } catch (GitException ex) {
             assertEquals(Utils.getBundle(CommitCommand.class).getString("MSG_Error_Commit_CannotAmend"), ex.getMessage());
         }
-        
+
         // doing commit should preserve authorship of the original commit (info)
         GitRevisionInfo commit = client.commit(new File[0], info.getFullMessage(), null, null, NULL_PROGRESS_MONITOR);
         assertEquals(info.getAuthor(), commit.getAuthor());
         assertEquals(info.getCommitTime(), commit.getCommitTime());
         assertEquals(
-            Utils.findCommit(repository, info.getRevision()).getAuthorIdent().getWhenAsInstant(),
-            Utils.findCommit(repository, commit.getRevision()).getAuthorIdent().getWhenAsInstant()
+                Utils.findCommit(repository, info.getRevision()).getAuthorIdent().getWhenAsInstant(),
+                Utils.findCommit(repository, commit.getRevision()).getAuthorIdent().getWhenAsInstant()
         );
     }
 }

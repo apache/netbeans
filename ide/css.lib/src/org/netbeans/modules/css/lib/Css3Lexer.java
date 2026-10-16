@@ -1,4 +1,4 @@
-// $ANTLR 3.5.3 ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g 2026-04-24 01:00:19
+// $ANTLR 3.5.3 Css3.g
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -213,15 +213,15 @@ public class Css3Lexer extends Lexer {
 	public Css3Lexer(CharStream input, RecognizerSharedState state) {
 		super(input,state);
 	}
-	@Override public String getGrammarFileName() { return "ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g"; }
+	@Override public String getGrammarFileName() { return "Css3.g"; }
 
 	// $ANTLR start "GEN"
 	public final void mGEN() throws RecognitionException {
 		try {
 			int _type = GEN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1701:25: ( '@@@' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1701:27: '@@@'
+			// Css3.g:1702:25: ( '@@@' )
+			// Css3.g:1702:27: '@@@'
 			{
 			match("@@@"); if (state.failed) return;
 
@@ -239,8 +239,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "HEXCHAR"
 	public final void mHEXCHAR() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1703:25: ( ( 'a' .. 'f' | 'A' .. 'F' | '0' .. '9' ) )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+			// Css3.g:1704:25: ( ( 'a' .. 'f' | 'A' .. 'F' | '0' .. '9' ) )
+			// Css3.g:
 			{
 			if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
 				input.consume();
@@ -264,8 +264,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "NONASCII"
 	public final void mNONASCII() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1705:25: ( '\\u0080' .. '\\uFFFF' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+			// Css3.g:1706:25: ( '\\u0080' .. '\\uFFFF' )
+			// Css3.g:
 			{
 			if ( (input.LA(1) >= '\u0080' && input.LA(1) <= '\uFFFF') ) {
 				input.consume();
@@ -289,13 +289,13 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "UNICODE"
 	public final void mUNICODE() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1707:25: ( '\\\\' HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )? ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1707:27: '\\\\' HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )? ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )*
+			// Css3.g:1708:25: ( '\\\\' HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )? ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )* )
+			// Css3.g:1708:27: '\\\\' HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )? ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )*
 			{
 			match('\\'); if (state.failed) return;
 			mHEXCHAR(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1708:33: ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )?
+			// Css3.g:1709:33: ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )? )?
 			int alt5=2;
 			int LA5_0 = input.LA(1);
 			if ( ((LA5_0 >= '0' && LA5_0 <= '9')||(LA5_0 >= 'A' && LA5_0 <= 'F')||(LA5_0 >= 'a' && LA5_0 <= 'f')) ) {
@@ -303,11 +303,11 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt5) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1708:34: HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )?
+					// Css3.g:1709:34: HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )?
 					{
 					mHEXCHAR(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1709:37: ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )?
+					// Css3.g:1710:37: ( HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )? )?
 					int alt4=2;
 					int LA4_0 = input.LA(1);
 					if ( ((LA4_0 >= '0' && LA4_0 <= '9')||(LA4_0 >= 'A' && LA4_0 <= 'F')||(LA4_0 >= 'a' && LA4_0 <= 'f')) ) {
@@ -315,11 +315,11 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt4) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1709:38: HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )?
+							// Css3.g:1710:38: HEXCHAR ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )?
 							{
 							mHEXCHAR(); if (state.failed) return;
 
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1710:41: ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )?
+							// Css3.g:1711:41: ( HEXCHAR ( HEXCHAR ( HEXCHAR )? )? )?
 							int alt3=2;
 							int LA3_0 = input.LA(1);
 							if ( ((LA3_0 >= '0' && LA3_0 <= '9')||(LA3_0 >= 'A' && LA3_0 <= 'F')||(LA3_0 >= 'a' && LA3_0 <= 'f')) ) {
@@ -327,11 +327,11 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt3) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1710:42: HEXCHAR ( HEXCHAR ( HEXCHAR )? )?
+									// Css3.g:1711:42: HEXCHAR ( HEXCHAR ( HEXCHAR )? )?
 									{
 									mHEXCHAR(); if (state.failed) return;
 
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1711:45: ( HEXCHAR ( HEXCHAR )? )?
+									// Css3.g:1712:45: ( HEXCHAR ( HEXCHAR )? )?
 									int alt2=2;
 									int LA2_0 = input.LA(1);
 									if ( ((LA2_0 >= '0' && LA2_0 <= '9')||(LA2_0 >= 'A' && LA2_0 <= 'F')||(LA2_0 >= 'a' && LA2_0 <= 'f')) ) {
@@ -339,11 +339,11 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt2) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1711:46: HEXCHAR ( HEXCHAR )?
+											// Css3.g:1712:46: HEXCHAR ( HEXCHAR )?
 											{
 											mHEXCHAR(); if (state.failed) return;
 
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1711:54: ( HEXCHAR )?
+											// Css3.g:1712:54: ( HEXCHAR )?
 											int alt1=2;
 											int LA1_0 = input.LA(1);
 											if ( ((LA1_0 >= '0' && LA1_0 <= '9')||(LA1_0 >= 'A' && LA1_0 <= 'F')||(LA1_0 >= 'a' && LA1_0 <= 'f')) ) {
@@ -351,7 +351,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt1) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+													// Css3.g:
 													{
 													if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
 														input.consume();
@@ -388,7 +388,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1715:33: ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )*
+			// Css3.g:1716:33: ( '\\r' | '\\n' | '\\t' | '\\f' | ' ' )*
 			loop6:
 			while (true) {
 				int alt6=2;
@@ -399,7 +399,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt6) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( (input.LA(1) >= '\t' && input.LA(1) <= '\n')||(input.LA(1) >= '\f' && input.LA(1) <= '\r')||input.LA(1)==' ' ) {
 						input.consume();
@@ -431,7 +431,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "ESCAPE"
 	public final void mESCAPE() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1717:25: ( UNICODE | '\\\\' ~ ( '\\r' | '\\n' | '\\f' | HEXCHAR ) )
+			// Css3.g:1718:25: ( UNICODE | '\\\\' ~ ( '\\r' | '\\n' | '\\f' | HEXCHAR ) )
 			int alt7=2;
 			int LA7_0 = input.LA(1);
 			if ( (LA7_0=='\\') ) {
@@ -467,14 +467,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt7) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1717:27: UNICODE
+					// Css3.g:1718:27: UNICODE
 					{
 					mUNICODE(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1717:37: '\\\\' ~ ( '\\r' | '\\n' | '\\f' | HEXCHAR )
+					// Css3.g:1718:37: '\\\\' ~ ( '\\r' | '\\n' | '\\f' | HEXCHAR )
 					{
 					match('\\'); if (state.failed) return;
 					if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\t')||input.LA(1)=='\u000B'||(input.LA(1) >= '\u000E' && input.LA(1) <= '/')||(input.LA(1) >= ':' && input.LA(1) <= '@')||(input.LA(1) >= 'G' && input.LA(1) <= '`')||(input.LA(1) >= 'g' && input.LA(1) <= '\uFFFF') ) {
@@ -501,7 +501,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "NMSTART"
 	public final void mNMSTART() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1719:25: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | NONASCII | ESCAPE )
+			// Css3.g:1720:25: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | NONASCII | ESCAPE )
 			int alt8=5;
 			int LA8_0 = input.LA(1);
 			if ( (LA8_0=='_') ) {
@@ -529,32 +529,32 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt8) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1719:27: '_'
+					// Css3.g:1720:27: '_'
 					{
 					match('_'); if (state.failed) return;
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1720:27: 'a' .. 'z'
+					// Css3.g:1721:27: 'a' .. 'z'
 					{
 					matchRange('a','z'); if (state.failed) return;
 					}
 					break;
 				case 3 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1721:27: 'A' .. 'Z'
+					// Css3.g:1722:27: 'A' .. 'Z'
 					{
 					matchRange('A','Z'); if (state.failed) return;
 					}
 					break;
 				case 4 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1722:27: NONASCII
+					// Css3.g:1723:27: NONASCII
 					{
 					mNONASCII(); if (state.failed) return;
 
 					}
 					break;
 				case 5 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1723:27: ESCAPE
+					// Css3.g:1724:27: ESCAPE
 					{
 					mESCAPE(); if (state.failed) return;
 
@@ -572,7 +572,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "NMCHAR"
 	public final void mNMCHAR() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1726:25: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | NONASCII | ESCAPE )
+			// Css3.g:1727:25: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | NONASCII | ESCAPE )
 			int alt9=7;
 			int LA9_0 = input.LA(1);
 			if ( (LA9_0=='_') ) {
@@ -606,44 +606,44 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt9) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1726:27: '_'
+					// Css3.g:1727:27: '_'
 					{
 					match('_'); if (state.failed) return;
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1727:27: 'a' .. 'z'
+					// Css3.g:1728:27: 'a' .. 'z'
 					{
 					matchRange('a','z'); if (state.failed) return;
 					}
 					break;
 				case 3 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1728:27: 'A' .. 'Z'
+					// Css3.g:1729:27: 'A' .. 'Z'
 					{
 					matchRange('A','Z'); if (state.failed) return;
 					}
 					break;
 				case 4 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1729:27: '0' .. '9'
+					// Css3.g:1730:27: '0' .. '9'
 					{
 					matchRange('0','9'); if (state.failed) return;
 					}
 					break;
 				case 5 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1730:27: '-'
+					// Css3.g:1731:27: '-'
 					{
 					match('-'); if (state.failed) return;
 					}
 					break;
 				case 6 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1731:27: NONASCII
+					// Css3.g:1732:27: NONASCII
 					{
 					mNONASCII(); if (state.failed) return;
 
 					}
 					break;
 				case 7 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1732:27: ESCAPE
+					// Css3.g:1733:27: ESCAPE
 					{
 					mESCAPE(); if (state.failed) return;
 
@@ -661,10 +661,10 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "NAME"
 	public final void mNAME() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1735:25: ( ( NMCHAR )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1735:27: ( NMCHAR )+
+			// Css3.g:1736:25: ( ( NMCHAR )+ )
+			// Css3.g:1736:27: ( NMCHAR )+
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1735:27: ( NMCHAR )+
+			// Css3.g:1736:27: ( NMCHAR )+
 			int cnt10=0;
 			loop10:
 			while (true) {
@@ -676,7 +676,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt10) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1735:27: NMCHAR
+					// Css3.g:1736:27: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -704,10 +704,10 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "URL"
 	public final void mURL() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1737:25: ( ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )? )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1737:27: ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )?
+			// Css3.g:1738:25: ( ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )? )
+			// Css3.g:1738:27: ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )?
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1737:27: ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )?
+			// Css3.g:1738:27: ( ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )* )?
 			int alt13=2;
 			int LA13_0 = input.LA(1);
 			if ( (LA13_0=='!'||(LA13_0 >= '#' && LA13_0 <= '&')||(LA13_0 >= '*' && LA13_0 <= ';')||LA13_0=='='||(LA13_0 >= '?' && LA13_0 <= '\\')||LA13_0=='_'||(LA13_0 >= 'a' && LA13_0 <= '~')||(LA13_0 >= '\u0080' && LA13_0 <= '\uFFFF')) ) {
@@ -715,9 +715,9 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt13) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1737:28: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )*
+					// Css3.g:1738:28: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR ) ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )*
 					{
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1737:28: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR )
+					// Css3.g:1738:28: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | '{' | '}' | NMCHAR )
 					int alt11=21;
 					int LA11_0 = input.LA(1);
 					if ( (LA11_0=='[') ) {
@@ -793,127 +793,127 @@ public class Css3Lexer extends Lexer {
 
 					switch (alt11) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:31: '['
+							// Css3.g:1739:31: '['
 							{
 							match('['); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:35: '!'
+							// Css3.g:1739:35: '!'
 							{
 							match('!'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:39: '#'
+							// Css3.g:1739:39: '#'
 							{
 							match('#'); if (state.failed) return;
 							}
 							break;
 						case 4 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:43: '$'
+							// Css3.g:1739:43: '$'
 							{
 							match('$'); if (state.failed) return;
 							}
 							break;
 						case 5 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:47: '%'
+							// Css3.g:1739:47: '%'
 							{
 							match('%'); if (state.failed) return;
 							}
 							break;
 						case 6 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:51: '&'
+							// Css3.g:1739:51: '&'
 							{
 							match('&'); if (state.failed) return;
 							}
 							break;
 						case 7 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:55: '*'
+							// Css3.g:1739:55: '*'
 							{
 							match('*'); if (state.failed) return;
 							}
 							break;
 						case 8 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:59: '~'
+							// Css3.g:1739:59: '~'
 							{
 							match('~'); if (state.failed) return;
 							}
 							break;
 						case 9 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:63: '.'
+							// Css3.g:1739:63: '.'
 							{
 							match('.'); if (state.failed) return;
 							}
 							break;
 						case 10 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:67: ':'
+							// Css3.g:1739:67: ':'
 							{
 							match(':'); if (state.failed) return;
 							}
 							break;
 						case 11 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:71: '/'
+							// Css3.g:1739:71: '/'
 							{
 							match('/'); if (state.failed) return;
 							}
 							break;
 						case 12 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:75: '?'
+							// Css3.g:1739:75: '?'
 							{
 							match('?'); if (state.failed) return;
 							}
 							break;
 						case 13 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:79: '='
+							// Css3.g:1739:79: '='
 							{
 							match('='); if (state.failed) return;
 							}
 							break;
 						case 14 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:83: ';'
+							// Css3.g:1739:83: ';'
 							{
 							match(';'); if (state.failed) return;
 							}
 							break;
 						case 15 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:87: ','
+							// Css3.g:1739:87: ','
 							{
 							match(','); if (state.failed) return;
 							}
 							break;
 						case 16 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:91: '+'
+							// Css3.g:1739:91: '+'
 							{
 							match('+'); if (state.failed) return;
 							}
 							break;
 						case 17 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:95: '@'
+							// Css3.g:1739:95: '@'
 							{
 							match('@'); if (state.failed) return;
 							}
 							break;
 						case 18 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:99: '|'
+							// Css3.g:1739:99: '|'
 							{
 							match('|'); if (state.failed) return;
 							}
 							break;
 						case 19 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:105: '{'
+							// Css3.g:1739:105: '{'
 							{
 							match('{'); if (state.failed) return;
 							}
 							break;
 						case 20 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1738:111: '}'
+							// Css3.g:1739:111: '}'
 							{
 							match('}'); if (state.failed) return;
 							}
 							break;
 						case 21 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1739:31: NMCHAR
+							// Css3.g:1740:31: NMCHAR
 							{
 							mNMCHAR(); if (state.failed) return;
 
@@ -922,7 +922,7 @@ public class Css3Lexer extends Lexer {
 
 					}
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1741:27: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )*
+					// Css3.g:1742:27: ( '[' | '!' | '#' | '$' | '%' | '&' | '*' | '~' | '.' | ':' | '/' | '?' | '=' | ';' | ',' | '+' | '@' | '|' | WS | '\\\"' | '\\'' | '{' | '}' | NMCHAR )*
 					loop12:
 					while (true) {
 						int alt12=25;
@@ -1002,146 +1002,146 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt12) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:31: '['
+							// Css3.g:1743:31: '['
 							{
 							match('['); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:35: '!'
+							// Css3.g:1743:35: '!'
 							{
 							match('!'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:39: '#'
+							// Css3.g:1743:39: '#'
 							{
 							match('#'); if (state.failed) return;
 							}
 							break;
 						case 4 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:43: '$'
+							// Css3.g:1743:43: '$'
 							{
 							match('$'); if (state.failed) return;
 							}
 							break;
 						case 5 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:47: '%'
+							// Css3.g:1743:47: '%'
 							{
 							match('%'); if (state.failed) return;
 							}
 							break;
 						case 6 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:51: '&'
+							// Css3.g:1743:51: '&'
 							{
 							match('&'); if (state.failed) return;
 							}
 							break;
 						case 7 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:55: '*'
+							// Css3.g:1743:55: '*'
 							{
 							match('*'); if (state.failed) return;
 							}
 							break;
 						case 8 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:59: '~'
+							// Css3.g:1743:59: '~'
 							{
 							match('~'); if (state.failed) return;
 							}
 							break;
 						case 9 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:63: '.'
+							// Css3.g:1743:63: '.'
 							{
 							match('.'); if (state.failed) return;
 							}
 							break;
 						case 10 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:67: ':'
+							// Css3.g:1743:67: ':'
 							{
 							match(':'); if (state.failed) return;
 							}
 							break;
 						case 11 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:71: '/'
+							// Css3.g:1743:71: '/'
 							{
 							match('/'); if (state.failed) return;
 							}
 							break;
 						case 12 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:75: '?'
+							// Css3.g:1743:75: '?'
 							{
 							match('?'); if (state.failed) return;
 							}
 							break;
 						case 13 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:79: '='
+							// Css3.g:1743:79: '='
 							{
 							match('='); if (state.failed) return;
 							}
 							break;
 						case 14 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:83: ';'
+							// Css3.g:1743:83: ';'
 							{
 							match(';'); if (state.failed) return;
 							}
 							break;
 						case 15 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:87: ','
+							// Css3.g:1743:87: ','
 							{
 							match(','); if (state.failed) return;
 							}
 							break;
 						case 16 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:91: '+'
+							// Css3.g:1743:91: '+'
 							{
 							match('+'); if (state.failed) return;
 							}
 							break;
 						case 17 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:95: '@'
+							// Css3.g:1743:95: '@'
 							{
 							match('@'); if (state.failed) return;
 							}
 							break;
 						case 18 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:99: '|'
+							// Css3.g:1743:99: '|'
 							{
 							match('|'); if (state.failed) return;
 							}
 							break;
 						case 19 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:105: WS
+							// Css3.g:1743:105: WS
 							{
 							mWS(); if (state.failed) return;
 
 							}
 							break;
 						case 20 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:111: '\\\"'
+							// Css3.g:1743:111: '\\\"'
 							{
 							match('\"'); if (state.failed) return;
 							}
 							break;
 						case 21 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:118: '\\''
+							// Css3.g:1743:118: '\\''
 							{
 							match('\''); if (state.failed) return;
 							}
 							break;
 						case 22 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:125: '{'
+							// Css3.g:1743:125: '{'
 							{
 							match('{'); if (state.failed) return;
 							}
 							break;
 						case 23 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1742:131: '}'
+							// Css3.g:1743:131: '}'
 							{
 							match('}'); if (state.failed) return;
 							}
 							break;
 						case 24 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1743:31: NMCHAR
+							// Css3.g:1744:31: NMCHAR
 							{
 							mNMCHAR(); if (state.failed) return;
 
@@ -1170,7 +1170,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "A"
 	public final void mA() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1750:17: ( ( 'a' | 'A' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '1' )
+			// Css3.g:1751:17: ( ( 'a' | 'A' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '1' )
 			int alt18=2;
 			int LA18_0 = input.LA(1);
 			if ( (LA18_0=='A'||LA18_0=='a') ) {
@@ -1189,7 +1189,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt18) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1750:21: ( 'a' | 'A' )
+					// Css3.g:1751:21: ( 'a' | 'A' )
 					{
 					if ( input.LA(1)=='A'||input.LA(1)=='a' ) {
 						input.consume();
@@ -1204,10 +1204,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '1'
+					// Css3.g:1752:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '1'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1752:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt17=2;
 					int LA17_0 = input.LA(1);
 					if ( (LA17_0=='0') ) {
@@ -1215,10 +1215,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt17) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1752:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1752:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt16=2;
 							int LA16_0 = input.LA(1);
 							if ( (LA16_0=='0') ) {
@@ -1226,10 +1226,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt16) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1752:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:36: ( '0' ( '0' )? )?
+									// Css3.g:1752:36: ( '0' ( '0' )? )?
 									int alt15=2;
 									int LA15_0 = input.LA(1);
 									if ( (LA15_0=='0') ) {
@@ -1237,10 +1237,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt15) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:37: '0' ( '0' )?
+											// Css3.g:1752:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:41: ( '0' )?
+											// Css3.g:1752:41: ( '0' )?
 											int alt14=2;
 											int LA14_0 = input.LA(1);
 											if ( (LA14_0=='0') ) {
@@ -1248,7 +1248,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt14) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1751:41: '0'
+													// Css3.g:1752:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1296,7 +1296,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "B"
 	public final void mB() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1753:17: ( ( 'b' | 'B' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '2' )
+			// Css3.g:1754:17: ( ( 'b' | 'B' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '2' )
 			int alt23=2;
 			int LA23_0 = input.LA(1);
 			if ( (LA23_0=='B'||LA23_0=='b') ) {
@@ -1315,7 +1315,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt23) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1753:21: ( 'b' | 'B' )
+					// Css3.g:1754:21: ( 'b' | 'B' )
 					{
 					if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
 						input.consume();
@@ -1330,10 +1330,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '2'
+					// Css3.g:1755:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '2'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1755:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt22=2;
 					int LA22_0 = input.LA(1);
 					if ( (LA22_0=='0') ) {
@@ -1341,10 +1341,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt22) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1755:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1755:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt21=2;
 							int LA21_0 = input.LA(1);
 							if ( (LA21_0=='0') ) {
@@ -1352,10 +1352,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt21) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1755:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:36: ( '0' ( '0' )? )?
+									// Css3.g:1755:36: ( '0' ( '0' )? )?
 									int alt20=2;
 									int LA20_0 = input.LA(1);
 									if ( (LA20_0=='0') ) {
@@ -1363,10 +1363,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt20) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:37: '0' ( '0' )?
+											// Css3.g:1755:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:41: ( '0' )?
+											// Css3.g:1755:41: ( '0' )?
 											int alt19=2;
 											int LA19_0 = input.LA(1);
 											if ( (LA19_0=='0') ) {
@@ -1374,7 +1374,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt19) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1754:41: '0'
+													// Css3.g:1755:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1422,7 +1422,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "C"
 	public final void mC() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1756:17: ( ( 'c' | 'C' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '3' )
+			// Css3.g:1757:17: ( ( 'c' | 'C' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '3' )
 			int alt28=2;
 			int LA28_0 = input.LA(1);
 			if ( (LA28_0=='C'||LA28_0=='c') ) {
@@ -1441,7 +1441,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt28) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1756:21: ( 'c' | 'C' )
+					// Css3.g:1757:21: ( 'c' | 'C' )
 					{
 					if ( input.LA(1)=='C'||input.LA(1)=='c' ) {
 						input.consume();
@@ -1456,10 +1456,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '3'
+					// Css3.g:1758:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '3'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1758:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt27=2;
 					int LA27_0 = input.LA(1);
 					if ( (LA27_0=='0') ) {
@@ -1467,10 +1467,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt27) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1758:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1758:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt26=2;
 							int LA26_0 = input.LA(1);
 							if ( (LA26_0=='0') ) {
@@ -1478,10 +1478,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt26) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1758:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:36: ( '0' ( '0' )? )?
+									// Css3.g:1758:36: ( '0' ( '0' )? )?
 									int alt25=2;
 									int LA25_0 = input.LA(1);
 									if ( (LA25_0=='0') ) {
@@ -1489,10 +1489,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt25) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:37: '0' ( '0' )?
+											// Css3.g:1758:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:41: ( '0' )?
+											// Css3.g:1758:41: ( '0' )?
 											int alt24=2;
 											int LA24_0 = input.LA(1);
 											if ( (LA24_0=='0') ) {
@@ -1500,7 +1500,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt24) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1757:41: '0'
+													// Css3.g:1758:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1548,7 +1548,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "D"
 	public final void mD() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1759:17: ( ( 'd' | 'D' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '4' )
+			// Css3.g:1760:17: ( ( 'd' | 'D' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '4' )
 			int alt33=2;
 			int LA33_0 = input.LA(1);
 			if ( (LA33_0=='D'||LA33_0=='d') ) {
@@ -1567,7 +1567,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt33) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1759:21: ( 'd' | 'D' )
+					// Css3.g:1760:21: ( 'd' | 'D' )
 					{
 					if ( input.LA(1)=='D'||input.LA(1)=='d' ) {
 						input.consume();
@@ -1582,10 +1582,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '4'
+					// Css3.g:1761:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '4'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1761:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt32=2;
 					int LA32_0 = input.LA(1);
 					if ( (LA32_0=='0') ) {
@@ -1593,10 +1593,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt32) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1761:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1761:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt31=2;
 							int LA31_0 = input.LA(1);
 							if ( (LA31_0=='0') ) {
@@ -1604,10 +1604,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt31) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1761:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:36: ( '0' ( '0' )? )?
+									// Css3.g:1761:36: ( '0' ( '0' )? )?
 									int alt30=2;
 									int LA30_0 = input.LA(1);
 									if ( (LA30_0=='0') ) {
@@ -1615,10 +1615,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt30) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:37: '0' ( '0' )?
+											// Css3.g:1761:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:41: ( '0' )?
+											// Css3.g:1761:41: ( '0' )?
 											int alt29=2;
 											int LA29_0 = input.LA(1);
 											if ( (LA29_0=='0') ) {
@@ -1626,7 +1626,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt29) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1760:41: '0'
+													// Css3.g:1761:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1674,7 +1674,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "E"
 	public final void mE() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1762:17: ( ( 'e' | 'E' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '5' )
+			// Css3.g:1763:17: ( ( 'e' | 'E' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '5' )
 			int alt38=2;
 			int LA38_0 = input.LA(1);
 			if ( (LA38_0=='E'||LA38_0=='e') ) {
@@ -1693,7 +1693,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt38) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1762:21: ( 'e' | 'E' )
+					// Css3.g:1763:21: ( 'e' | 'E' )
 					{
 					if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
 						input.consume();
@@ -1708,10 +1708,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '5'
+					// Css3.g:1764:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '5'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1764:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt37=2;
 					int LA37_0 = input.LA(1);
 					if ( (LA37_0=='0') ) {
@@ -1719,10 +1719,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt37) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1764:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1764:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt36=2;
 							int LA36_0 = input.LA(1);
 							if ( (LA36_0=='0') ) {
@@ -1730,10 +1730,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt36) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1764:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:36: ( '0' ( '0' )? )?
+									// Css3.g:1764:36: ( '0' ( '0' )? )?
 									int alt35=2;
 									int LA35_0 = input.LA(1);
 									if ( (LA35_0=='0') ) {
@@ -1741,10 +1741,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt35) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:37: '0' ( '0' )?
+											// Css3.g:1764:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:41: ( '0' )?
+											// Css3.g:1764:41: ( '0' )?
 											int alt34=2;
 											int LA34_0 = input.LA(1);
 											if ( (LA34_0=='0') ) {
@@ -1752,7 +1752,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt34) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1763:41: '0'
+													// Css3.g:1764:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1800,7 +1800,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "F"
 	public final void mF() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1765:17: ( ( 'f' | 'F' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '6' )
+			// Css3.g:1766:17: ( ( 'f' | 'F' ) | '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '6' )
 			int alt43=2;
 			int LA43_0 = input.LA(1);
 			if ( (LA43_0=='F'||LA43_0=='f') ) {
@@ -1819,7 +1819,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt43) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1765:21: ( 'f' | 'F' )
+					// Css3.g:1766:21: ( 'f' | 'F' )
 					{
 					if ( input.LA(1)=='F'||input.LA(1)=='f' ) {
 						input.consume();
@@ -1834,10 +1834,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '6'
+					// Css3.g:1767:21: '\\\\' ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '6'
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+					// Css3.g:1767:26: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 					int alt42=2;
 					int LA42_0 = input.LA(1);
 					if ( (LA42_0=='0') ) {
@@ -1845,10 +1845,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt42) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:27: '0' ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1767:27: '0' ( '0' ( '0' ( '0' )? )? )?
 							{
 							match('0'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:31: ( '0' ( '0' ( '0' )? )? )?
+							// Css3.g:1767:31: ( '0' ( '0' ( '0' )? )? )?
 							int alt41=2;
 							int LA41_0 = input.LA(1);
 							if ( (LA41_0=='0') ) {
@@ -1856,10 +1856,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt41) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:32: '0' ( '0' ( '0' )? )?
+									// Css3.g:1767:32: '0' ( '0' ( '0' )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:36: ( '0' ( '0' )? )?
+									// Css3.g:1767:36: ( '0' ( '0' )? )?
 									int alt40=2;
 									int LA40_0 = input.LA(1);
 									if ( (LA40_0=='0') ) {
@@ -1867,10 +1867,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt40) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:37: '0' ( '0' )?
+											// Css3.g:1767:37: '0' ( '0' )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:41: ( '0' )?
+											// Css3.g:1767:41: ( '0' )?
 											int alt39=2;
 											int LA39_0 = input.LA(1);
 											if ( (LA39_0=='0') ) {
@@ -1878,7 +1878,7 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt39) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1766:41: '0'
+													// Css3.g:1767:41: '0'
 													{
 													match('0'); if (state.failed) return;
 													}
@@ -1926,7 +1926,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "G"
 	public final void mG() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1768:17: ( ( 'g' | 'G' ) | '\\\\' ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' ) )
+			// Css3.g:1769:17: ( ( 'g' | 'G' ) | '\\\\' ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' ) )
 			int alt49=2;
 			int LA49_0 = input.LA(1);
 			if ( (LA49_0=='G'||LA49_0=='g') ) {
@@ -1945,7 +1945,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt49) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1768:21: ( 'g' | 'G' )
+					// Css3.g:1769:21: ( 'g' | 'G' )
 					{
 					if ( input.LA(1)=='G'||input.LA(1)=='g' ) {
 						input.consume();
@@ -1960,10 +1960,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1769:21: '\\\\' ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' )
+					// Css3.g:1770:21: '\\\\' ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1770:25: ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' )
+					// Css3.g:1771:25: ( 'g' | 'G' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7' )
 					int alt48=3;
 					switch ( input.LA(1) ) {
 					case 'g':
@@ -1991,21 +1991,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt48) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1771:31: 'g'
+							// Css3.g:1772:31: 'g'
 							{
 							match('g'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1772:31: 'G'
+							// Css3.g:1773:31: 'G'
 							{
 							match('G'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7'
+							// Css3.g:1774:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '7'
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1774:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt47=2;
 							int LA47_0 = input.LA(1);
 							if ( (LA47_0=='0') ) {
@@ -2013,10 +2013,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt47) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1774:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1774:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt46=2;
 									int LA46_0 = input.LA(1);
 									if ( (LA46_0=='0') ) {
@@ -2024,10 +2024,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt46) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1774:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:41: ( '0' ( '0' )? )?
+											// Css3.g:1774:41: ( '0' ( '0' )? )?
 											int alt45=2;
 											int LA45_0 = input.LA(1);
 											if ( (LA45_0=='0') ) {
@@ -2035,10 +2035,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt45) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:42: '0' ( '0' )?
+													// Css3.g:1774:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:46: ( '0' )?
+													// Css3.g:1774:46: ( '0' )?
 													int alt44=2;
 													int LA44_0 = input.LA(1);
 													if ( (LA44_0=='0') ) {
@@ -2046,7 +2046,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt44) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1773:46: '0'
+															// Css3.g:1774:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2099,7 +2099,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "H"
 	public final void mH() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1776:17: ( ( 'h' | 'H' ) | '\\\\' ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' ) )
+			// Css3.g:1777:17: ( ( 'h' | 'H' ) | '\\\\' ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' ) )
 			int alt55=2;
 			int LA55_0 = input.LA(1);
 			if ( (LA55_0=='H'||LA55_0=='h') ) {
@@ -2118,7 +2118,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt55) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1776:21: ( 'h' | 'H' )
+					// Css3.g:1777:21: ( 'h' | 'H' )
 					{
 					if ( input.LA(1)=='H'||input.LA(1)=='h' ) {
 						input.consume();
@@ -2133,10 +2133,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1777:19: '\\\\' ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' )
+					// Css3.g:1778:19: '\\\\' ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1778:25: ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' )
+					// Css3.g:1779:25: ( 'h' | 'H' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8' )
 					int alt54=3;
 					switch ( input.LA(1) ) {
 					case 'h':
@@ -2164,21 +2164,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt54) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1779:31: 'h'
+							// Css3.g:1780:31: 'h'
 							{
 							match('h'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1780:31: 'H'
+							// Css3.g:1781:31: 'H'
 							{
 							match('H'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8'
+							// Css3.g:1782:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '8'
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1782:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt53=2;
 							int LA53_0 = input.LA(1);
 							if ( (LA53_0=='0') ) {
@@ -2186,10 +2186,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt53) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1782:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1782:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt52=2;
 									int LA52_0 = input.LA(1);
 									if ( (LA52_0=='0') ) {
@@ -2197,10 +2197,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt52) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1782:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:41: ( '0' ( '0' )? )?
+											// Css3.g:1782:41: ( '0' ( '0' )? )?
 											int alt51=2;
 											int LA51_0 = input.LA(1);
 											if ( (LA51_0=='0') ) {
@@ -2208,10 +2208,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt51) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:42: '0' ( '0' )?
+													// Css3.g:1782:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:46: ( '0' )?
+													// Css3.g:1782:46: ( '0' )?
 													int alt50=2;
 													int LA50_0 = input.LA(1);
 													if ( (LA50_0=='0') ) {
@@ -2219,7 +2219,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt50) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1781:46: '0'
+															// Css3.g:1782:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2272,7 +2272,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "I"
 	public final void mI() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1784:17: ( ( 'i' | 'I' ) | '\\\\' ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' ) )
+			// Css3.g:1785:17: ( ( 'i' | 'I' ) | '\\\\' ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' ) )
 			int alt61=2;
 			int LA61_0 = input.LA(1);
 			if ( (LA61_0=='I'||LA61_0=='i') ) {
@@ -2291,7 +2291,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt61) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1784:21: ( 'i' | 'I' )
+					// Css3.g:1785:21: ( 'i' | 'I' )
 					{
 					if ( input.LA(1)=='I'||input.LA(1)=='i' ) {
 						input.consume();
@@ -2306,10 +2306,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1785:19: '\\\\' ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' )
+					// Css3.g:1786:19: '\\\\' ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1786:25: ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' )
+					// Css3.g:1787:25: ( 'i' | 'I' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9' )
 					int alt60=3;
 					switch ( input.LA(1) ) {
 					case 'i':
@@ -2337,21 +2337,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt60) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1787:31: 'i'
+							// Css3.g:1788:31: 'i'
 							{
 							match('i'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1788:31: 'I'
+							// Css3.g:1789:31: 'I'
 							{
 							match('I'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9'
+							// Css3.g:1790:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) '9'
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1790:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt59=2;
 							int LA59_0 = input.LA(1);
 							if ( (LA59_0=='0') ) {
@@ -2359,10 +2359,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt59) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1790:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1790:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt58=2;
 									int LA58_0 = input.LA(1);
 									if ( (LA58_0=='0') ) {
@@ -2370,10 +2370,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt58) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1790:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:41: ( '0' ( '0' )? )?
+											// Css3.g:1790:41: ( '0' ( '0' )? )?
 											int alt57=2;
 											int LA57_0 = input.LA(1);
 											if ( (LA57_0=='0') ) {
@@ -2381,10 +2381,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt57) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:42: '0' ( '0' )?
+													// Css3.g:1790:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:46: ( '0' )?
+													// Css3.g:1790:46: ( '0' )?
 													int alt56=2;
 													int LA56_0 = input.LA(1);
 													if ( (LA56_0=='0') ) {
@@ -2392,7 +2392,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt56) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1789:46: '0'
+															// Css3.g:1790:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2445,7 +2445,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "J"
 	public final void mJ() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1792:17: ( ( 'j' | 'J' ) | '\\\\' ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) ) )
+			// Css3.g:1793:17: ( ( 'j' | 'J' ) | '\\\\' ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) ) )
 			int alt67=2;
 			int LA67_0 = input.LA(1);
 			if ( (LA67_0=='J'||LA67_0=='j') ) {
@@ -2464,7 +2464,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt67) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1792:21: ( 'j' | 'J' )
+					// Css3.g:1793:21: ( 'j' | 'J' )
 					{
 					if ( input.LA(1)=='J'||input.LA(1)=='j' ) {
 						input.consume();
@@ -2479,10 +2479,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1793:19: '\\\\' ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) )
+					// Css3.g:1794:19: '\\\\' ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1794:25: ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) )
+					// Css3.g:1795:25: ( 'j' | 'J' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' ) )
 					int alt66=3;
 					switch ( input.LA(1) ) {
 					case 'j':
@@ -2510,21 +2510,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt66) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1795:31: 'j'
+							// Css3.g:1796:31: 'j'
 							{
 							match('j'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1796:31: 'J'
+							// Css3.g:1797:31: 'J'
 							{
 							match('J'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' )
+							// Css3.g:1798:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'A' | 'a' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1798:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt65=2;
 							int LA65_0 = input.LA(1);
 							if ( (LA65_0=='0') ) {
@@ -2532,10 +2532,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt65) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1798:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1798:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt64=2;
 									int LA64_0 = input.LA(1);
 									if ( (LA64_0=='0') ) {
@@ -2543,10 +2543,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt64) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1798:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:41: ( '0' ( '0' )? )?
+											// Css3.g:1798:41: ( '0' ( '0' )? )?
 											int alt63=2;
 											int LA63_0 = input.LA(1);
 											if ( (LA63_0=='0') ) {
@@ -2554,10 +2554,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt63) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:42: '0' ( '0' )?
+													// Css3.g:1798:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:46: ( '0' )?
+													// Css3.g:1798:46: ( '0' )?
 													int alt62=2;
 													int LA62_0 = input.LA(1);
 													if ( (LA62_0=='0') ) {
@@ -2565,7 +2565,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt62) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1797:46: '0'
+															// Css3.g:1798:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2627,7 +2627,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "K"
 	public final void mK() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1800:17: ( ( 'k' | 'K' ) | '\\\\' ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) ) )
+			// Css3.g:1801:17: ( ( 'k' | 'K' ) | '\\\\' ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) ) )
 			int alt73=2;
 			int LA73_0 = input.LA(1);
 			if ( (LA73_0=='K'||LA73_0=='k') ) {
@@ -2646,7 +2646,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt73) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1800:21: ( 'k' | 'K' )
+					// Css3.g:1801:21: ( 'k' | 'K' )
 					{
 					if ( input.LA(1)=='K'||input.LA(1)=='k' ) {
 						input.consume();
@@ -2661,10 +2661,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1801:19: '\\\\' ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) )
+					// Css3.g:1802:19: '\\\\' ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1802:25: ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) )
+					// Css3.g:1803:25: ( 'k' | 'K' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' ) )
 					int alt72=3;
 					switch ( input.LA(1) ) {
 					case 'k':
@@ -2692,21 +2692,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt72) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1803:31: 'k'
+							// Css3.g:1804:31: 'k'
 							{
 							match('k'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1804:31: 'K'
+							// Css3.g:1805:31: 'K'
 							{
 							match('K'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' )
+							// Css3.g:1806:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'B' | 'b' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1806:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt71=2;
 							int LA71_0 = input.LA(1);
 							if ( (LA71_0=='0') ) {
@@ -2714,10 +2714,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt71) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1806:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1806:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt70=2;
 									int LA70_0 = input.LA(1);
 									if ( (LA70_0=='0') ) {
@@ -2725,10 +2725,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt70) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1806:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:41: ( '0' ( '0' )? )?
+											// Css3.g:1806:41: ( '0' ( '0' )? )?
 											int alt69=2;
 											int LA69_0 = input.LA(1);
 											if ( (LA69_0=='0') ) {
@@ -2736,10 +2736,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt69) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:42: '0' ( '0' )?
+													// Css3.g:1806:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:46: ( '0' )?
+													// Css3.g:1806:46: ( '0' )?
 													int alt68=2;
 													int LA68_0 = input.LA(1);
 													if ( (LA68_0=='0') ) {
@@ -2747,7 +2747,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt68) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1805:46: '0'
+															// Css3.g:1806:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2809,7 +2809,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "L"
 	public final void mL() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1808:17: ( ( 'l' | 'L' ) | '\\\\' ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) ) )
+			// Css3.g:1809:17: ( ( 'l' | 'L' ) | '\\\\' ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) ) )
 			int alt79=2;
 			int LA79_0 = input.LA(1);
 			if ( (LA79_0=='L'||LA79_0=='l') ) {
@@ -2828,7 +2828,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt79) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1808:21: ( 'l' | 'L' )
+					// Css3.g:1809:21: ( 'l' | 'L' )
 					{
 					if ( input.LA(1)=='L'||input.LA(1)=='l' ) {
 						input.consume();
@@ -2843,10 +2843,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1809:19: '\\\\' ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) )
+					// Css3.g:1810:19: '\\\\' ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1810:25: ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) )
+					// Css3.g:1811:25: ( 'l' | 'L' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' ) )
 					int alt78=3;
 					switch ( input.LA(1) ) {
 					case 'l':
@@ -2874,21 +2874,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt78) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1811:31: 'l'
+							// Css3.g:1812:31: 'l'
 							{
 							match('l'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1812:31: 'L'
+							// Css3.g:1813:31: 'L'
 							{
 							match('L'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' )
+							// Css3.g:1814:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'C' | 'c' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1814:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt77=2;
 							int LA77_0 = input.LA(1);
 							if ( (LA77_0=='0') ) {
@@ -2896,10 +2896,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt77) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1814:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1814:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt76=2;
 									int LA76_0 = input.LA(1);
 									if ( (LA76_0=='0') ) {
@@ -2907,10 +2907,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt76) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1814:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:41: ( '0' ( '0' )? )?
+											// Css3.g:1814:41: ( '0' ( '0' )? )?
 											int alt75=2;
 											int LA75_0 = input.LA(1);
 											if ( (LA75_0=='0') ) {
@@ -2918,10 +2918,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt75) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:42: '0' ( '0' )?
+													// Css3.g:1814:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:46: ( '0' )?
+													// Css3.g:1814:46: ( '0' )?
 													int alt74=2;
 													int LA74_0 = input.LA(1);
 													if ( (LA74_0=='0') ) {
@@ -2929,7 +2929,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt74) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1813:46: '0'
+															// Css3.g:1814:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -2991,7 +2991,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "M"
 	public final void mM() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1816:17: ( ( 'm' | 'M' ) | '\\\\' ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) ) )
+			// Css3.g:1817:17: ( ( 'm' | 'M' ) | '\\\\' ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) ) )
 			int alt85=2;
 			int LA85_0 = input.LA(1);
 			if ( (LA85_0=='M'||LA85_0=='m') ) {
@@ -3010,7 +3010,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt85) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1816:21: ( 'm' | 'M' )
+					// Css3.g:1817:21: ( 'm' | 'M' )
 					{
 					if ( input.LA(1)=='M'||input.LA(1)=='m' ) {
 						input.consume();
@@ -3025,10 +3025,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1817:19: '\\\\' ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) )
+					// Css3.g:1818:19: '\\\\' ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1818:25: ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) )
+					// Css3.g:1819:25: ( 'm' | 'M' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' ) )
 					int alt84=3;
 					switch ( input.LA(1) ) {
 					case 'm':
@@ -3056,21 +3056,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt84) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1819:31: 'm'
+							// Css3.g:1820:31: 'm'
 							{
 							match('m'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1820:31: 'M'
+							// Css3.g:1821:31: 'M'
 							{
 							match('M'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' )
+							// Css3.g:1822:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'D' | 'd' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1822:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt83=2;
 							int LA83_0 = input.LA(1);
 							if ( (LA83_0=='0') ) {
@@ -3078,10 +3078,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt83) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1822:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1822:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt82=2;
 									int LA82_0 = input.LA(1);
 									if ( (LA82_0=='0') ) {
@@ -3089,10 +3089,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt82) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1822:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:41: ( '0' ( '0' )? )?
+											// Css3.g:1822:41: ( '0' ( '0' )? )?
 											int alt81=2;
 											int LA81_0 = input.LA(1);
 											if ( (LA81_0=='0') ) {
@@ -3100,10 +3100,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt81) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:42: '0' ( '0' )?
+													// Css3.g:1822:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:46: ( '0' )?
+													// Css3.g:1822:46: ( '0' )?
 													int alt80=2;
 													int LA80_0 = input.LA(1);
 													if ( (LA80_0=='0') ) {
@@ -3111,7 +3111,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt80) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1821:46: '0'
+															// Css3.g:1822:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -3173,7 +3173,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "N"
 	public final void mN() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1824:17: ( ( 'n' | 'N' ) | '\\\\' ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) ) )
+			// Css3.g:1825:17: ( ( 'n' | 'N' ) | '\\\\' ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) ) )
 			int alt91=2;
 			int LA91_0 = input.LA(1);
 			if ( (LA91_0=='N'||LA91_0=='n') ) {
@@ -3192,7 +3192,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt91) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1824:21: ( 'n' | 'N' )
+					// Css3.g:1825:21: ( 'n' | 'N' )
 					{
 					if ( input.LA(1)=='N'||input.LA(1)=='n' ) {
 						input.consume();
@@ -3207,10 +3207,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1825:19: '\\\\' ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) )
+					// Css3.g:1826:19: '\\\\' ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1826:25: ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) )
+					// Css3.g:1827:25: ( 'n' | 'N' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' ) )
 					int alt90=3;
 					switch ( input.LA(1) ) {
 					case 'n':
@@ -3238,21 +3238,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt90) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1827:31: 'n'
+							// Css3.g:1828:31: 'n'
 							{
 							match('n'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1828:31: 'N'
+							// Css3.g:1829:31: 'N'
 							{
 							match('N'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' )
+							// Css3.g:1830:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'E' | 'e' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1830:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt89=2;
 							int LA89_0 = input.LA(1);
 							if ( (LA89_0=='0') ) {
@@ -3260,10 +3260,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt89) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1830:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1830:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt88=2;
 									int LA88_0 = input.LA(1);
 									if ( (LA88_0=='0') ) {
@@ -3271,10 +3271,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt88) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1830:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:41: ( '0' ( '0' )? )?
+											// Css3.g:1830:41: ( '0' ( '0' )? )?
 											int alt87=2;
 											int LA87_0 = input.LA(1);
 											if ( (LA87_0=='0') ) {
@@ -3282,10 +3282,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt87) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:42: '0' ( '0' )?
+													// Css3.g:1830:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:46: ( '0' )?
+													// Css3.g:1830:46: ( '0' )?
 													int alt86=2;
 													int LA86_0 = input.LA(1);
 													if ( (LA86_0=='0') ) {
@@ -3293,7 +3293,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt86) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1829:46: '0'
+															// Css3.g:1830:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -3355,7 +3355,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "O"
 	public final void mO() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1832:17: ( ( 'o' | 'O' ) | '\\\\' ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) ) )
+			// Css3.g:1833:17: ( ( 'o' | 'O' ) | '\\\\' ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) ) )
 			int alt97=2;
 			int LA97_0 = input.LA(1);
 			if ( (LA97_0=='O'||LA97_0=='o') ) {
@@ -3374,7 +3374,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt97) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1832:21: ( 'o' | 'O' )
+					// Css3.g:1833:21: ( 'o' | 'O' )
 					{
 					if ( input.LA(1)=='O'||input.LA(1)=='o' ) {
 						input.consume();
@@ -3389,10 +3389,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1833:19: '\\\\' ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) )
+					// Css3.g:1834:19: '\\\\' ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1834:25: ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) )
+					// Css3.g:1835:25: ( 'o' | 'O' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' ) )
 					int alt96=3;
 					switch ( input.LA(1) ) {
 					case 'o':
@@ -3420,21 +3420,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt96) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1835:31: 'o'
+							// Css3.g:1836:31: 'o'
 							{
 							match('o'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1836:31: 'O'
+							// Css3.g:1837:31: 'O'
 							{
 							match('O'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' )
+							// Css3.g:1838:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '4' | '6' ) ( 'F' | 'f' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1838:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt95=2;
 							int LA95_0 = input.LA(1);
 							if ( (LA95_0=='0') ) {
@@ -3442,10 +3442,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt95) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1838:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1838:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt94=2;
 									int LA94_0 = input.LA(1);
 									if ( (LA94_0=='0') ) {
@@ -3453,10 +3453,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt94) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1838:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:41: ( '0' ( '0' )? )?
+											// Css3.g:1838:41: ( '0' ( '0' )? )?
 											int alt93=2;
 											int LA93_0 = input.LA(1);
 											if ( (LA93_0=='0') ) {
@@ -3464,10 +3464,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt93) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:42: '0' ( '0' )?
+													// Css3.g:1838:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:46: ( '0' )?
+													// Css3.g:1838:46: ( '0' )?
 													int alt92=2;
 													int LA92_0 = input.LA(1);
 													if ( (LA92_0=='0') ) {
@@ -3475,7 +3475,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt92) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1837:46: '0'
+															// Css3.g:1838:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -3537,7 +3537,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "P"
 	public final void mP() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1840:17: ( ( 'p' | 'P' ) | '\\\\' ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) ) )
+			// Css3.g:1841:17: ( ( 'p' | 'P' ) | '\\\\' ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) ) )
 			int alt103=2;
 			int LA103_0 = input.LA(1);
 			if ( (LA103_0=='P'||LA103_0=='p') ) {
@@ -3556,7 +3556,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt103) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1840:21: ( 'p' | 'P' )
+					// Css3.g:1841:21: ( 'p' | 'P' )
 					{
 					if ( input.LA(1)=='P'||input.LA(1)=='p' ) {
 						input.consume();
@@ -3571,10 +3571,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1841:19: '\\\\' ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) )
+					// Css3.g:1842:19: '\\\\' ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1842:25: ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) )
+					// Css3.g:1843:25: ( 'p' | 'P' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' ) )
 					int alt102=3;
 					switch ( input.LA(1) ) {
 					case 'p':
@@ -3602,21 +3602,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt102) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1843:31: 'p'
+							// Css3.g:1844:31: 'p'
 							{
 							match('p'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1844:31: 'P'
+							// Css3.g:1845:31: 'P'
 							{
 							match('P'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' )
+							// Css3.g:1846:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '0' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1846:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt101=2;
 							int LA101_0 = input.LA(1);
 							if ( (LA101_0=='0') ) {
@@ -3624,10 +3624,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt101) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1846:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1846:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt100=2;
 									int LA100_0 = input.LA(1);
 									if ( (LA100_0=='0') ) {
@@ -3635,10 +3635,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt100) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1846:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:41: ( '0' ( '0' )? )?
+											// Css3.g:1846:41: ( '0' ( '0' )? )?
 											int alt99=2;
 											int LA99_0 = input.LA(1);
 											if ( (LA99_0=='0') ) {
@@ -3646,10 +3646,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt99) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:42: '0' ( '0' )?
+													// Css3.g:1846:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:46: ( '0' )?
+													// Css3.g:1846:46: ( '0' )?
 													int alt98=2;
 													int LA98_0 = input.LA(1);
 													if ( (LA98_0=='0') ) {
@@ -3657,7 +3657,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt98) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:46: '0'
+															// Css3.g:1846:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -3690,8 +3690,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:66: ( '0' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1845:67: '0'
+							// Css3.g:1846:66: ( '0' )
+							// Css3.g:1846:67: '0'
 							{
 							match('0'); if (state.failed) return;
 							}
@@ -3715,7 +3715,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "Q"
 	public final void mQ() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1848:17: ( ( 'q' | 'Q' ) | '\\\\' ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) ) )
+			// Css3.g:1849:17: ( ( 'q' | 'Q' ) | '\\\\' ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) ) )
 			int alt109=2;
 			int LA109_0 = input.LA(1);
 			if ( (LA109_0=='Q'||LA109_0=='q') ) {
@@ -3734,7 +3734,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt109) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1848:21: ( 'q' | 'Q' )
+					// Css3.g:1849:21: ( 'q' | 'Q' )
 					{
 					if ( input.LA(1)=='Q'||input.LA(1)=='q' ) {
 						input.consume();
@@ -3749,10 +3749,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1849:19: '\\\\' ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) )
+					// Css3.g:1850:19: '\\\\' ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1850:25: ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) )
+					// Css3.g:1851:25: ( 'q' | 'Q' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' ) )
 					int alt108=3;
 					switch ( input.LA(1) ) {
 					case 'q':
@@ -3780,21 +3780,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt108) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1851:31: 'q'
+							// Css3.g:1852:31: 'q'
 							{
 							match('q'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1852:31: 'Q'
+							// Css3.g:1853:31: 'Q'
 							{
 							match('Q'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' )
+							// Css3.g:1854:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '1' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1854:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt107=2;
 							int LA107_0 = input.LA(1);
 							if ( (LA107_0=='0') ) {
@@ -3802,10 +3802,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt107) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1854:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1854:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt106=2;
 									int LA106_0 = input.LA(1);
 									if ( (LA106_0=='0') ) {
@@ -3813,10 +3813,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt106) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1854:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:41: ( '0' ( '0' )? )?
+											// Css3.g:1854:41: ( '0' ( '0' )? )?
 											int alt105=2;
 											int LA105_0 = input.LA(1);
 											if ( (LA105_0=='0') ) {
@@ -3824,10 +3824,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt105) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:42: '0' ( '0' )?
+													// Css3.g:1854:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:46: ( '0' )?
+													// Css3.g:1854:46: ( '0' )?
 													int alt104=2;
 													int LA104_0 = input.LA(1);
 													if ( (LA104_0=='0') ) {
@@ -3835,7 +3835,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt104) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:46: '0'
+															// Css3.g:1854:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -3868,8 +3868,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:66: ( '1' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1853:67: '1'
+							// Css3.g:1854:66: ( '1' )
+							// Css3.g:1854:67: '1'
 							{
 							match('1'); if (state.failed) return;
 							}
@@ -3893,7 +3893,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "R"
 	public final void mR() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1856:17: ( ( 'r' | 'R' ) | '\\\\' ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) ) )
+			// Css3.g:1857:17: ( ( 'r' | 'R' ) | '\\\\' ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) ) )
 			int alt115=2;
 			int LA115_0 = input.LA(1);
 			if ( (LA115_0=='R'||LA115_0=='r') ) {
@@ -3912,7 +3912,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt115) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1856:21: ( 'r' | 'R' )
+					// Css3.g:1857:21: ( 'r' | 'R' )
 					{
 					if ( input.LA(1)=='R'||input.LA(1)=='r' ) {
 						input.consume();
@@ -3927,10 +3927,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1857:19: '\\\\' ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) )
+					// Css3.g:1858:19: '\\\\' ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1858:25: ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) )
+					// Css3.g:1859:25: ( 'r' | 'R' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' ) )
 					int alt114=3;
 					switch ( input.LA(1) ) {
 					case 'r':
@@ -3958,21 +3958,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt114) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1859:31: 'r'
+							// Css3.g:1860:31: 'r'
 							{
 							match('r'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1860:31: 'R'
+							// Css3.g:1861:31: 'R'
 							{
 							match('R'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' )
+							// Css3.g:1862:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '2' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1862:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt113=2;
 							int LA113_0 = input.LA(1);
 							if ( (LA113_0=='0') ) {
@@ -3980,10 +3980,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt113) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1862:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1862:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt112=2;
 									int LA112_0 = input.LA(1);
 									if ( (LA112_0=='0') ) {
@@ -3991,10 +3991,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt112) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1862:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:41: ( '0' ( '0' )? )?
+											// Css3.g:1862:41: ( '0' ( '0' )? )?
 											int alt111=2;
 											int LA111_0 = input.LA(1);
 											if ( (LA111_0=='0') ) {
@@ -4002,10 +4002,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt111) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:42: '0' ( '0' )?
+													// Css3.g:1862:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:46: ( '0' )?
+													// Css3.g:1862:46: ( '0' )?
 													int alt110=2;
 													int LA110_0 = input.LA(1);
 													if ( (LA110_0=='0') ) {
@@ -4013,7 +4013,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt110) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:46: '0'
+															// Css3.g:1862:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4046,8 +4046,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:66: ( '2' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1861:67: '2'
+							// Css3.g:1862:66: ( '2' )
+							// Css3.g:1862:67: '2'
 							{
 							match('2'); if (state.failed) return;
 							}
@@ -4071,7 +4071,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "S"
 	public final void mS() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1864:17: ( ( 's' | 'S' ) | '\\\\' ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) ) )
+			// Css3.g:1865:17: ( ( 's' | 'S' ) | '\\\\' ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) ) )
 			int alt121=2;
 			int LA121_0 = input.LA(1);
 			if ( (LA121_0=='S'||LA121_0=='s') ) {
@@ -4090,7 +4090,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt121) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1864:21: ( 's' | 'S' )
+					// Css3.g:1865:21: ( 's' | 'S' )
 					{
 					if ( input.LA(1)=='S'||input.LA(1)=='s' ) {
 						input.consume();
@@ -4105,10 +4105,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1865:19: '\\\\' ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) )
+					// Css3.g:1866:19: '\\\\' ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1866:25: ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) )
+					// Css3.g:1867:25: ( 's' | 'S' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' ) )
 					int alt120=3;
 					switch ( input.LA(1) ) {
 					case 's':
@@ -4136,21 +4136,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt120) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1867:31: 's'
+							// Css3.g:1868:31: 's'
 							{
 							match('s'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1868:31: 'S'
+							// Css3.g:1869:31: 'S'
 							{
 							match('S'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' )
+							// Css3.g:1870:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '3' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1870:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt119=2;
 							int LA119_0 = input.LA(1);
 							if ( (LA119_0=='0') ) {
@@ -4158,10 +4158,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt119) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1870:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1870:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt118=2;
 									int LA118_0 = input.LA(1);
 									if ( (LA118_0=='0') ) {
@@ -4169,10 +4169,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt118) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1870:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:41: ( '0' ( '0' )? )?
+											// Css3.g:1870:41: ( '0' ( '0' )? )?
 											int alt117=2;
 											int LA117_0 = input.LA(1);
 											if ( (LA117_0=='0') ) {
@@ -4180,10 +4180,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt117) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:42: '0' ( '0' )?
+													// Css3.g:1870:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:46: ( '0' )?
+													// Css3.g:1870:46: ( '0' )?
 													int alt116=2;
 													int LA116_0 = input.LA(1);
 													if ( (LA116_0=='0') ) {
@@ -4191,7 +4191,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt116) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:46: '0'
+															// Css3.g:1870:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4224,8 +4224,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:66: ( '3' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1869:67: '3'
+							// Css3.g:1870:66: ( '3' )
+							// Css3.g:1870:67: '3'
 							{
 							match('3'); if (state.failed) return;
 							}
@@ -4249,7 +4249,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "T"
 	public final void mT() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1872:17: ( ( 't' | 'T' ) | '\\\\' ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) ) )
+			// Css3.g:1873:17: ( ( 't' | 'T' ) | '\\\\' ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) ) )
 			int alt127=2;
 			int LA127_0 = input.LA(1);
 			if ( (LA127_0=='T'||LA127_0=='t') ) {
@@ -4268,7 +4268,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt127) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1872:21: ( 't' | 'T' )
+					// Css3.g:1873:21: ( 't' | 'T' )
 					{
 					if ( input.LA(1)=='T'||input.LA(1)=='t' ) {
 						input.consume();
@@ -4283,10 +4283,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1873:19: '\\\\' ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) )
+					// Css3.g:1874:19: '\\\\' ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1874:25: ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) )
+					// Css3.g:1875:25: ( 't' | 'T' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' ) )
 					int alt126=3;
 					switch ( input.LA(1) ) {
 					case 't':
@@ -4314,21 +4314,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt126) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1875:31: 't'
+							// Css3.g:1876:31: 't'
 							{
 							match('t'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1876:31: 'T'
+							// Css3.g:1877:31: 'T'
 							{
 							match('T'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' )
+							// Css3.g:1878:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '4' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1878:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt125=2;
 							int LA125_0 = input.LA(1);
 							if ( (LA125_0=='0') ) {
@@ -4336,10 +4336,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt125) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1878:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1878:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt124=2;
 									int LA124_0 = input.LA(1);
 									if ( (LA124_0=='0') ) {
@@ -4347,10 +4347,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt124) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1878:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:41: ( '0' ( '0' )? )?
+											// Css3.g:1878:41: ( '0' ( '0' )? )?
 											int alt123=2;
 											int LA123_0 = input.LA(1);
 											if ( (LA123_0=='0') ) {
@@ -4358,10 +4358,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt123) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:42: '0' ( '0' )?
+													// Css3.g:1878:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:46: ( '0' )?
+													// Css3.g:1878:46: ( '0' )?
 													int alt122=2;
 													int LA122_0 = input.LA(1);
 													if ( (LA122_0=='0') ) {
@@ -4369,7 +4369,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt122) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:46: '0'
+															// Css3.g:1878:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4402,8 +4402,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:66: ( '4' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1877:67: '4'
+							// Css3.g:1878:66: ( '4' )
+							// Css3.g:1878:67: '4'
 							{
 							match('4'); if (state.failed) return;
 							}
@@ -4427,7 +4427,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "U"
 	public final void mU() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1880:17: ( ( 'u' | 'U' ) | '\\\\' ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) ) )
+			// Css3.g:1881:17: ( ( 'u' | 'U' ) | '\\\\' ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) ) )
 			int alt133=2;
 			int LA133_0 = input.LA(1);
 			if ( (LA133_0=='U'||LA133_0=='u') ) {
@@ -4446,7 +4446,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt133) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1880:21: ( 'u' | 'U' )
+					// Css3.g:1881:21: ( 'u' | 'U' )
 					{
 					if ( input.LA(1)=='U'||input.LA(1)=='u' ) {
 						input.consume();
@@ -4461,10 +4461,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1881:19: '\\\\' ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) )
+					// Css3.g:1882:19: '\\\\' ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1882:25: ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) )
+					// Css3.g:1883:25: ( 'u' | 'U' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' ) )
 					int alt132=3;
 					switch ( input.LA(1) ) {
 					case 'u':
@@ -4492,21 +4492,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt132) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1883:31: 'u'
+							// Css3.g:1884:31: 'u'
 							{
 							match('u'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1884:31: 'U'
+							// Css3.g:1885:31: 'U'
 							{
 							match('U'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' )
+							// Css3.g:1886:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '5' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1886:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt131=2;
 							int LA131_0 = input.LA(1);
 							if ( (LA131_0=='0') ) {
@@ -4514,10 +4514,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt131) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1886:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1886:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt130=2;
 									int LA130_0 = input.LA(1);
 									if ( (LA130_0=='0') ) {
@@ -4525,10 +4525,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt130) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1886:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:41: ( '0' ( '0' )? )?
+											// Css3.g:1886:41: ( '0' ( '0' )? )?
 											int alt129=2;
 											int LA129_0 = input.LA(1);
 											if ( (LA129_0=='0') ) {
@@ -4536,10 +4536,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt129) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:42: '0' ( '0' )?
+													// Css3.g:1886:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:46: ( '0' )?
+													// Css3.g:1886:46: ( '0' )?
 													int alt128=2;
 													int LA128_0 = input.LA(1);
 													if ( (LA128_0=='0') ) {
@@ -4547,7 +4547,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt128) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:46: '0'
+															// Css3.g:1886:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4580,8 +4580,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:66: ( '5' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1885:67: '5'
+							// Css3.g:1886:66: ( '5' )
+							// Css3.g:1886:67: '5'
 							{
 							match('5'); if (state.failed) return;
 							}
@@ -4605,7 +4605,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "V"
 	public final void mV() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1888:17: ( ( 'v' | 'V' ) | '\\\\' ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) ) )
+			// Css3.g:1889:17: ( ( 'v' | 'V' ) | '\\\\' ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) ) )
 			int alt139=2;
 			int LA139_0 = input.LA(1);
 			if ( (LA139_0=='V'||LA139_0=='v') ) {
@@ -4624,7 +4624,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt139) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1888:21: ( 'v' | 'V' )
+					// Css3.g:1889:21: ( 'v' | 'V' )
 					{
 					if ( input.LA(1)=='V'||input.LA(1)=='v' ) {
 						input.consume();
@@ -4639,10 +4639,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1889:19: '\\\\' ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) )
+					// Css3.g:1890:19: '\\\\' ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1890:25: ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) )
+					// Css3.g:1891:25: ( 'v' | 'V' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' ) )
 					int alt138=3;
 					switch ( input.LA(1) ) {
 					case 'v':
@@ -4670,21 +4670,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt138) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1890:31: 'v'
+							// Css3.g:1891:31: 'v'
 							{
 							match('v'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1891:31: 'V'
+							// Css3.g:1892:31: 'V'
 							{
 							match('V'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' )
+							// Css3.g:1893:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '6' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1893:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt137=2;
 							int LA137_0 = input.LA(1);
 							if ( (LA137_0=='0') ) {
@@ -4692,10 +4692,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt137) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1893:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1893:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt136=2;
 									int LA136_0 = input.LA(1);
 									if ( (LA136_0=='0') ) {
@@ -4703,10 +4703,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt136) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1893:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:41: ( '0' ( '0' )? )?
+											// Css3.g:1893:41: ( '0' ( '0' )? )?
 											int alt135=2;
 											int LA135_0 = input.LA(1);
 											if ( (LA135_0=='0') ) {
@@ -4714,10 +4714,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt135) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:42: '0' ( '0' )?
+													// Css3.g:1893:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:46: ( '0' )?
+													// Css3.g:1893:46: ( '0' )?
 													int alt134=2;
 													int LA134_0 = input.LA(1);
 													if ( (LA134_0=='0') ) {
@@ -4725,7 +4725,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt134) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:46: '0'
+															// Css3.g:1893:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4758,8 +4758,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:66: ( '6' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1892:67: '6'
+							// Css3.g:1893:66: ( '6' )
+							// Css3.g:1893:67: '6'
 							{
 							match('6'); if (state.failed) return;
 							}
@@ -4783,7 +4783,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "W"
 	public final void mW() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1895:17: ( ( 'w' | 'W' ) | '\\\\' ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) ) )
+			// Css3.g:1896:17: ( ( 'w' | 'W' ) | '\\\\' ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) ) )
 			int alt145=2;
 			int LA145_0 = input.LA(1);
 			if ( (LA145_0=='W'||LA145_0=='w') ) {
@@ -4802,7 +4802,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt145) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1895:21: ( 'w' | 'W' )
+					// Css3.g:1896:21: ( 'w' | 'W' )
 					{
 					if ( input.LA(1)=='W'||input.LA(1)=='w' ) {
 						input.consume();
@@ -4817,10 +4817,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1896:19: '\\\\' ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) )
+					// Css3.g:1897:19: '\\\\' ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1897:25: ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) )
+					// Css3.g:1898:25: ( 'w' | 'W' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' ) )
 					int alt144=3;
 					switch ( input.LA(1) ) {
 					case 'w':
@@ -4848,21 +4848,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt144) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1898:31: 'w'
+							// Css3.g:1899:31: 'w'
 							{
 							match('w'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1899:31: 'W'
+							// Css3.g:1900:31: 'W'
 							{
 							match('W'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' )
+							// Css3.g:1901:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '7' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1901:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt143=2;
 							int LA143_0 = input.LA(1);
 							if ( (LA143_0=='0') ) {
@@ -4870,10 +4870,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt143) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1901:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1901:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt142=2;
 									int LA142_0 = input.LA(1);
 									if ( (LA142_0=='0') ) {
@@ -4881,10 +4881,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt142) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1901:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:41: ( '0' ( '0' )? )?
+											// Css3.g:1901:41: ( '0' ( '0' )? )?
 											int alt141=2;
 											int LA141_0 = input.LA(1);
 											if ( (LA141_0=='0') ) {
@@ -4892,10 +4892,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt141) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:42: '0' ( '0' )?
+													// Css3.g:1901:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:46: ( '0' )?
+													// Css3.g:1901:46: ( '0' )?
 													int alt140=2;
 													int LA140_0 = input.LA(1);
 													if ( (LA140_0=='0') ) {
@@ -4903,7 +4903,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt140) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:46: '0'
+															// Css3.g:1901:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -4936,8 +4936,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:66: ( '7' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1900:67: '7'
+							// Css3.g:1901:66: ( '7' )
+							// Css3.g:1901:67: '7'
 							{
 							match('7'); if (state.failed) return;
 							}
@@ -4961,7 +4961,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "X"
 	public final void mX() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1903:17: ( ( 'x' | 'X' ) | '\\\\' ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) ) )
+			// Css3.g:1904:17: ( ( 'x' | 'X' ) | '\\\\' ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) ) )
 			int alt151=2;
 			int LA151_0 = input.LA(1);
 			if ( (LA151_0=='X'||LA151_0=='x') ) {
@@ -4980,7 +4980,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt151) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1903:21: ( 'x' | 'X' )
+					// Css3.g:1904:21: ( 'x' | 'X' )
 					{
 					if ( input.LA(1)=='X'||input.LA(1)=='x' ) {
 						input.consume();
@@ -4995,10 +4995,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1904:19: '\\\\' ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) )
+					// Css3.g:1905:19: '\\\\' ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1905:25: ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) )
+					// Css3.g:1906:25: ( 'x' | 'X' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' ) )
 					int alt150=3;
 					switch ( input.LA(1) ) {
 					case 'x':
@@ -5026,21 +5026,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt150) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1906:31: 'x'
+							// Css3.g:1907:31: 'x'
 							{
 							match('x'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1907:31: 'X'
+							// Css3.g:1908:31: 'X'
 							{
 							match('X'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' )
+							// Css3.g:1909:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '8' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1909:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt149=2;
 							int LA149_0 = input.LA(1);
 							if ( (LA149_0=='0') ) {
@@ -5048,10 +5048,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt149) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1909:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1909:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt148=2;
 									int LA148_0 = input.LA(1);
 									if ( (LA148_0=='0') ) {
@@ -5059,10 +5059,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt148) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1909:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:41: ( '0' ( '0' )? )?
+											// Css3.g:1909:41: ( '0' ( '0' )? )?
 											int alt147=2;
 											int LA147_0 = input.LA(1);
 											if ( (LA147_0=='0') ) {
@@ -5070,10 +5070,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt147) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:42: '0' ( '0' )?
+													// Css3.g:1909:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:46: ( '0' )?
+													// Css3.g:1909:46: ( '0' )?
 													int alt146=2;
 													int LA146_0 = input.LA(1);
 													if ( (LA146_0=='0') ) {
@@ -5081,7 +5081,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt146) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:46: '0'
+															// Css3.g:1909:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -5114,8 +5114,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:66: ( '8' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1908:67: '8'
+							// Css3.g:1909:66: ( '8' )
+							// Css3.g:1909:67: '8'
 							{
 							match('8'); if (state.failed) return;
 							}
@@ -5139,7 +5139,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "Y"
 	public final void mY() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1911:17: ( ( 'y' | 'Y' ) | '\\\\' ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) ) )
+			// Css3.g:1912:17: ( ( 'y' | 'Y' ) | '\\\\' ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) ) )
 			int alt157=2;
 			int LA157_0 = input.LA(1);
 			if ( (LA157_0=='Y'||LA157_0=='y') ) {
@@ -5158,7 +5158,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt157) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1911:21: ( 'y' | 'Y' )
+					// Css3.g:1912:21: ( 'y' | 'Y' )
 					{
 					if ( input.LA(1)=='Y'||input.LA(1)=='y' ) {
 						input.consume();
@@ -5173,10 +5173,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1912:19: '\\\\' ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) )
+					// Css3.g:1913:19: '\\\\' ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1913:25: ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) )
+					// Css3.g:1914:25: ( 'y' | 'Y' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' ) )
 					int alt156=3;
 					switch ( input.LA(1) ) {
 					case 'y':
@@ -5204,21 +5204,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt156) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1914:31: 'y'
+							// Css3.g:1915:31: 'y'
 							{
 							match('y'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1915:31: 'Y'
+							// Css3.g:1916:31: 'Y'
 							{
 							match('Y'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' )
+							// Css3.g:1917:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( '9' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1917:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt155=2;
 							int LA155_0 = input.LA(1);
 							if ( (LA155_0=='0') ) {
@@ -5226,10 +5226,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt155) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1917:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1917:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt154=2;
 									int LA154_0 = input.LA(1);
 									if ( (LA154_0=='0') ) {
@@ -5237,10 +5237,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt154) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1917:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:41: ( '0' ( '0' )? )?
+											// Css3.g:1917:41: ( '0' ( '0' )? )?
 											int alt153=2;
 											int LA153_0 = input.LA(1);
 											if ( (LA153_0=='0') ) {
@@ -5248,10 +5248,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt153) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:42: '0' ( '0' )?
+													// Css3.g:1917:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:46: ( '0' )?
+													// Css3.g:1917:46: ( '0' )?
 													int alt152=2;
 													int LA152_0 = input.LA(1);
 													if ( (LA152_0=='0') ) {
@@ -5259,7 +5259,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt152) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:46: '0'
+															// Css3.g:1917:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -5292,8 +5292,8 @@ public class Css3Lexer extends Lexer {
 								recover(mse);
 								throw mse;
 							}
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:66: ( '9' )
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1916:67: '9'
+							// Css3.g:1917:66: ( '9' )
+							// Css3.g:1917:67: '9'
 							{
 							match('9'); if (state.failed) return;
 							}
@@ -5317,7 +5317,7 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "Z"
 	public final void mZ() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1919:17: ( ( 'z' | 'Z' ) | '\\\\' ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) ) )
+			// Css3.g:1920:17: ( ( 'z' | 'Z' ) | '\\\\' ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) ) )
 			int alt163=2;
 			int LA163_0 = input.LA(1);
 			if ( (LA163_0=='Z'||LA163_0=='z') ) {
@@ -5336,7 +5336,7 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt163) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1919:21: ( 'z' | 'Z' )
+					// Css3.g:1920:21: ( 'z' | 'Z' )
 					{
 					if ( input.LA(1)=='Z'||input.LA(1)=='z' ) {
 						input.consume();
@@ -5351,10 +5351,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1920:19: '\\\\' ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) )
+					// Css3.g:1921:19: '\\\\' ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) )
 					{
 					match('\\'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1921:25: ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) )
+					// Css3.g:1922:25: ( 'z' | 'Z' | ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' ) )
 					int alt162=3;
 					switch ( input.LA(1) ) {
 					case 'z':
@@ -5382,21 +5382,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt162) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1922:31: 'z'
+							// Css3.g:1923:31: 'z'
 							{
 							match('z'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1923:31: 'Z'
+							// Css3.g:1924:31: 'Z'
 							{
 							match('Z'); if (state.failed) return;
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' )
+							// Css3.g:1925:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )? ( '5' | '7' ) ( 'A' | 'a' )
 							{
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
+							// Css3.g:1925:31: ( '0' ( '0' ( '0' ( '0' )? )? )? )?
 							int alt161=2;
 							int LA161_0 = input.LA(1);
 							if ( (LA161_0=='0') ) {
@@ -5404,10 +5404,10 @@ public class Css3Lexer extends Lexer {
 							}
 							switch (alt161) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:32: '0' ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1925:32: '0' ( '0' ( '0' ( '0' )? )? )?
 									{
 									match('0'); if (state.failed) return;
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:36: ( '0' ( '0' ( '0' )? )? )?
+									// Css3.g:1925:36: ( '0' ( '0' ( '0' )? )? )?
 									int alt160=2;
 									int LA160_0 = input.LA(1);
 									if ( (LA160_0=='0') ) {
@@ -5415,10 +5415,10 @@ public class Css3Lexer extends Lexer {
 									}
 									switch (alt160) {
 										case 1 :
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:37: '0' ( '0' ( '0' )? )?
+											// Css3.g:1925:37: '0' ( '0' ( '0' )? )?
 											{
 											match('0'); if (state.failed) return;
-											// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:41: ( '0' ( '0' )? )?
+											// Css3.g:1925:41: ( '0' ( '0' )? )?
 											int alt159=2;
 											int LA159_0 = input.LA(1);
 											if ( (LA159_0=='0') ) {
@@ -5426,10 +5426,10 @@ public class Css3Lexer extends Lexer {
 											}
 											switch (alt159) {
 												case 1 :
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:42: '0' ( '0' )?
+													// Css3.g:1925:42: '0' ( '0' )?
 													{
 													match('0'); if (state.failed) return;
-													// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:46: ( '0' )?
+													// Css3.g:1925:46: ( '0' )?
 													int alt158=2;
 													int LA158_0 = input.LA(1);
 													if ( (LA158_0=='0') ) {
@@ -5437,7 +5437,7 @@ public class Css3Lexer extends Lexer {
 													}
 													switch (alt158) {
 														case 1 :
-															// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1924:46: '0'
+															// Css3.g:1925:46: '0'
 															{
 															match('0'); if (state.failed) return;
 															}
@@ -5501,8 +5501,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CDO;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1936:17: ( '<!--' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1936:19: '<!--'
+			// Css3.g:1937:17: ( '<!--' )
+			// Css3.g:1937:19: '<!--'
 			{
 			match("<!--"); if (state.failed) return;
 
@@ -5525,8 +5525,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CDC;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1949:17: ( '-->' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1949:19: '-->'
+			// Css3.g:1950:17: ( '-->' )
+			// Css3.g:1950:19: '-->'
 			{
 			match("-->"); if (state.failed) return;
 
@@ -5549,8 +5549,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = INCLUDES;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1956:17: ( '~=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1956:19: '~='
+			// Css3.g:1957:17: ( '~=' )
+			// Css3.g:1957:19: '~='
 			{
 			match("~="); if (state.failed) return;
 
@@ -5570,8 +5570,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = DASHMATCH;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1957:17: ( '|=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1957:19: '|='
+			// Css3.g:1958:17: ( '|=' )
+			// Css3.g:1958:19: '|='
 			{
 			match("|="); if (state.failed) return;
 
@@ -5591,8 +5591,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BEGINS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1958:17: ( '^=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1958:19: '^='
+			// Css3.g:1959:17: ( '^=' )
+			// Css3.g:1959:19: '^='
 			{
 			match("^="); if (state.failed) return;
 
@@ -5612,8 +5612,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = ENDS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1959:17: ( '$=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1959:19: '$='
+			// Css3.g:1960:17: ( '$=' )
+			// Css3.g:1960:19: '$='
 			{
 			match("$="); if (state.failed) return;
 
@@ -5633,8 +5633,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CONTAINS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1960:17: ( '*=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1960:19: '*='
+			// Css3.g:1961:17: ( '*=' )
+			// Css3.g:1961:19: '*='
 			{
 			match("*="); if (state.failed) return;
 
@@ -5654,8 +5654,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = GREATER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1962:17: ( '>' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1962:19: '>'
+			// Css3.g:1963:17: ( '>' )
+			// Css3.g:1963:19: '>'
 			{
 			match('>'); if (state.failed) return;
 			}
@@ -5674,8 +5674,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LBRACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1963:17: ( '{' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1963:19: '{'
+			// Css3.g:1964:17: ( '{' )
+			// Css3.g:1964:19: '{'
 			{
 			match('{'); if (state.failed) return;
 			}
@@ -5694,8 +5694,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RBRACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1964:17: ( '}' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1964:19: '}'
+			// Css3.g:1965:17: ( '}' )
+			// Css3.g:1965:19: '}'
 			{
 			match('}'); if (state.failed) return;
 			}
@@ -5714,8 +5714,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LBRACKET;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1965:17: ( '[' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1965:19: '['
+			// Css3.g:1966:17: ( '[' )
+			// Css3.g:1966:19: '['
 			{
 			match('['); if (state.failed) return;
 			}
@@ -5734,8 +5734,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RBRACKET;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1966:17: ( ']' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1966:19: ']'
+			// Css3.g:1967:17: ( ']' )
+			// Css3.g:1967:19: ']'
 			{
 			match(']'); if (state.failed) return;
 			}
@@ -5754,8 +5754,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = OPEQ;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1967:17: ( '=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1967:19: '='
+			// Css3.g:1968:17: ( '=' )
+			// Css3.g:1968:19: '='
 			{
 			match('='); if (state.failed) return;
 			}
@@ -5774,8 +5774,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SEMI;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1968:17: ( ';' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1968:19: ';'
+			// Css3.g:1969:17: ( ';' )
+			// Css3.g:1969:19: ';'
 			{
 			match(';'); if (state.failed) return;
 			}
@@ -5794,8 +5794,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = COLON;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1969:17: ( ':' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1969:19: ':'
+			// Css3.g:1970:17: ( ':' )
+			// Css3.g:1970:19: ':'
 			{
 			match(':'); if (state.failed) return;
 			}
@@ -5814,8 +5814,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = DCOLON;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1970:17: ( '::' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1970:19: '::'
+			// Css3.g:1971:17: ( '::' )
+			// Css3.g:1971:19: '::'
 			{
 			match("::"); if (state.failed) return;
 
@@ -5835,8 +5835,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SOLIDUS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1971:17: ( '/' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1971:19: '/'
+			// Css3.g:1972:17: ( '/' )
+			// Css3.g:1972:19: '/'
 			{
 			match('/'); if (state.failed) return;
 			}
@@ -5855,8 +5855,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MINUS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1972:17: ( '-' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1972:19: '-'
+			// Css3.g:1973:17: ( '-' )
+			// Css3.g:1973:19: '-'
 			{
 			match('-'); if (state.failed) return;
 			}
@@ -5875,8 +5875,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = PLUS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1973:17: ( '+' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1973:19: '+'
+			// Css3.g:1974:17: ( '+' )
+			// Css3.g:1974:19: '+'
 			{
 			match('+'); if (state.failed) return;
 			}
@@ -5895,8 +5895,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = STAR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1974:17: ( '*' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1974:19: '*'
+			// Css3.g:1975:17: ( '*' )
+			// Css3.g:1975:19: '*'
 			{
 			match('*'); if (state.failed) return;
 			}
@@ -5915,8 +5915,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LPAREN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1975:17: ( '(' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1975:19: '('
+			// Css3.g:1976:17: ( '(' )
+			// Css3.g:1976:19: '('
 			{
 			match('('); if (state.failed) return;
 			}
@@ -5935,8 +5935,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RPAREN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1976:17: ( ')' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1976:19: ')'
+			// Css3.g:1977:17: ( ')' )
+			// Css3.g:1977:19: ')'
 			{
 			match(')'); if (state.failed) return;
 			}
@@ -5955,8 +5955,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = COMMA;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1977:17: ( ',' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1977:19: ','
+			// Css3.g:1978:17: ( ',' )
+			// Css3.g:1978:19: ','
 			{
 			match(','); if (state.failed) return;
 			}
@@ -5975,8 +5975,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = DOT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1978:17: ( '.' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1978:19: '.'
+			// Css3.g:1979:17: ( '.' )
+			// Css3.g:1979:19: '.'
 			{
 			match('.'); if (state.failed) return;
 			}
@@ -5995,8 +5995,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TILDE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1979:8: ( '~' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1979:10: '~'
+			// Css3.g:1980:8: ( '~' )
+			// Css3.g:1980:10: '~'
 			{
 			match('~'); if (state.failed) return;
 			}
@@ -6015,8 +6015,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = PIPE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1980:17: ( '|' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1980:19: '|'
+			// Css3.g:1981:17: ( '|' )
+			// Css3.g:1981:19: '|'
 			{
 			match('|'); if (state.failed) return;
 			}
@@ -6035,8 +6035,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = PERCENTAGE_SYMBOL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1982:17: ( '%' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1982:19: '%'
+			// Css3.g:1983:17: ( '%' )
+			// Css3.g:1983:19: '%'
 			{
 			match('%'); if (state.failed) return;
 			}
@@ -6055,8 +6055,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = EXCLAMATION_MARK;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1983:17: ( '!' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1983:19: '!'
+			// Css3.g:1984:17: ( '!' )
+			// Css3.g:1984:19: '!'
 			{
 			match('!'); if (state.failed) return;
 			}
@@ -6075,8 +6075,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CP_EQ;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1985:17: ( '==' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1985:19: '=='
+			// Css3.g:1986:17: ( '==' )
+			// Css3.g:1986:19: '=='
 			{
 			match("=="); if (state.failed) return;
 
@@ -6096,8 +6096,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CP_NOT_EQ;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1986:17: ( '!=' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1986:19: '!='
+			// Css3.g:1987:17: ( '!=' )
+			// Css3.g:1987:19: '!='
 			{
 			match("!="); if (state.failed) return;
 
@@ -6117,8 +6117,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LESS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1987:17: ( '<' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1987:19: '<'
+			// Css3.g:1988:17: ( '<' )
+			// Css3.g:1988:19: '<'
 			{
 			match('<'); if (state.failed) return;
 			}
@@ -6137,7 +6137,7 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = GREATER_OR_EQ;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1988:17: ( '>=' | '=>' )
+			// Css3.g:1989:17: ( '>=' | '=>' )
 			int alt164=2;
 			int LA164_0 = input.LA(1);
 			if ( (LA164_0=='>') ) {
@@ -6156,14 +6156,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt164) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1988:19: '>='
+					// Css3.g:1989:19: '>='
 					{
 					match(">="); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1988:26: '=>'
+					// Css3.g:1989:26: '=>'
 					{
 					match("=>"); if (state.failed) return;
 
@@ -6185,7 +6185,7 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LESS_OR_EQ;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1989:17: ( '=<' | '<=' )
+			// Css3.g:1990:17: ( '=<' | '<=' )
 			int alt165=2;
 			int LA165_0 = input.LA(1);
 			if ( (LA165_0=='=') ) {
@@ -6204,14 +6204,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt165) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1989:19: '=<'
+					// Css3.g:1990:19: '=<'
 					{
 					match("=<"); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1989:26: '<='
+					// Css3.g:1990:26: '<='
 					{
 					match("<="); if (state.failed) return;
 
@@ -6233,11 +6233,11 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LESS_AND;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1990:17: ( '&' ( '-' )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1990:19: '&' ( '-' )*
+			// Css3.g:1991:17: ( '&' ( '-' )* )
+			// Css3.g:1991:19: '&' ( '-' )*
 			{
 			match('&'); if (state.failed) return;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1990:23: ( '-' )*
+			// Css3.g:1991:23: ( '-' )*
 			loop166:
 			while (true) {
 				int alt166=2;
@@ -6248,7 +6248,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt166) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1990:23: '-'
+					// Css3.g:1991:23: '-'
 					{
 					match('-'); if (state.failed) return;
 					}
@@ -6275,8 +6275,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CP_DOTS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1991:17: ( '...' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1991:19: '...'
+			// Css3.g:1992:17: ( '...' )
+			// Css3.g:1992:19: '...'
 			{
 			match("..."); if (state.failed) return;
 
@@ -6296,8 +6296,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LESS_REST;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1992:17: ( '@rest...' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1992:19: '@rest...'
+			// Css3.g:1993:17: ( '@rest...' )
+			// Css3.g:1993:19: '@rest...'
 			{
 			match("@rest..."); if (state.failed) return;
 
@@ -6315,8 +6315,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "INVALID"
 	public final void mINVALID() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1997:21: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1997:22: 
+			// Css3.g:1998:21: ()
+			// Css3.g:1998:22: 
 			{
 			}
 
@@ -6332,7 +6332,7 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = STRING;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1998:17: ( '\\'' (~ ( '\\r' | '\\f' | '\\'' ) )* ( '\\'' |) | '\"' ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )* ( '\"' |) )
+			// Css3.g:1999:17: ( '\\'' (~ ( '\\r' | '\\f' | '\\'' ) )* ( '\\'' |) | '\"' ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )* ( '\"' |) )
 			int alt171=2;
 			int LA171_0 = input.LA(1);
 			if ( (LA171_0=='\'') ) {
@@ -6351,10 +6351,10 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt171) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1998:19: '\\'' (~ ( '\\r' | '\\f' | '\\'' ) )* ( '\\'' |)
+					// Css3.g:1999:19: '\\'' (~ ( '\\r' | '\\f' | '\\'' ) )* ( '\\'' |)
 					{
 					match('\''); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1998:24: (~ ( '\\r' | '\\f' | '\\'' ) )*
+					// Css3.g:1999:24: (~ ( '\\r' | '\\f' | '\\'' ) )*
 					loop167:
 					while (true) {
 						int alt167=2;
@@ -6365,7 +6365,7 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt167) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+							// Css3.g:
 							{
 							if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\u000B')||(input.LA(1) >= '\u000E' && input.LA(1) <= '&')||(input.LA(1) >= '(' && input.LA(1) <= '\uFFFF') ) {
 								input.consume();
@@ -6385,7 +6385,7 @@ public class Css3Lexer extends Lexer {
 						}
 					}
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1999:21: ( '\\'' |)
+					// Css3.g:2000:21: ( '\\'' |)
 					int alt168=2;
 					int LA168_0 = input.LA(1);
 					if ( (LA168_0=='\'') ) {
@@ -6398,13 +6398,13 @@ public class Css3Lexer extends Lexer {
 
 					switch (alt168) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2000:27: '\\''
+							// Css3.g:2001:27: '\\''
 							{
 							match('\''); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2001:27: 
+							// Css3.g:2002:27: 
 							{
 							if ( state.backtracking==0 ) { _type = INVALID; }
 							}
@@ -6415,10 +6415,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:19: '\"' ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )* ( '\"' |)
+					// Css3.g:2005:19: '\"' ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )* ( '\"' |)
 					{
 					match('\"'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:24: ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )*
+					// Css3.g:2005:24: ( ( '\\\\\\\"' )=> '\\\\\\\"' | ( '\\\\\\\\' )=> '\\\\\\\\' |~ ( '\\r' | '\\f' | '\"' ) )*
 					loop169:
 					while (true) {
 						int alt169=4;
@@ -6460,21 +6460,21 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt169) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:26: ( '\\\\\\\"' )=> '\\\\\\\"'
+							// Css3.g:2005:26: ( '\\\\\\\"' )=> '\\\\\\\"'
 							{
 							match("\\\""); if (state.failed) return;
 
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:47: ( '\\\\\\\\' )=> '\\\\\\\\'
+							// Css3.g:2005:47: ( '\\\\\\\\' )=> '\\\\\\\\'
 							{
 							match("\\\\"); if (state.failed) return;
 
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:68: ~ ( '\\r' | '\\f' | '\"' )
+							// Css3.g:2005:68: ~ ( '\\r' | '\\f' | '\"' )
 							{
 							if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\u000B')||(input.LA(1) >= '\u000E' && input.LA(1) <= '!')||(input.LA(1) >= '#' && input.LA(1) <= '\uFFFF') ) {
 								input.consume();
@@ -6494,7 +6494,7 @@ public class Css3Lexer extends Lexer {
 						}
 					}
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2005:21: ( '\"' |)
+					// Css3.g:2006:21: ( '\"' |)
 					int alt170=2;
 					int LA170_0 = input.LA(1);
 					if ( (LA170_0=='\"') ) {
@@ -6507,13 +6507,13 @@ public class Css3Lexer extends Lexer {
 
 					switch (alt170) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2006:27: '\"'
+							// Css3.g:2007:27: '\"'
 							{
 							match('\"'); if (state.failed) return;
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2007:27: 
+							// Css3.g:2008:27: 
 							{
 							if ( state.backtracking==0 ) { _type = INVALID; }
 							}
@@ -6539,11 +6539,11 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LESS_JS_STRING;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2011:17: ( '`' (~ ( '\\r' | '\\f' | '`' ) )* ( '`' |) )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2011:19: '`' (~ ( '\\r' | '\\f' | '`' ) )* ( '`' |)
+			// Css3.g:2012:17: ( '`' (~ ( '\\r' | '\\f' | '`' ) )* ( '`' |) )
+			// Css3.g:2012:19: '`' (~ ( '\\r' | '\\f' | '`' ) )* ( '`' |)
 			{
 			match('`'); if (state.failed) return;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2011:23: (~ ( '\\r' | '\\f' | '`' ) )*
+			// Css3.g:2012:23: (~ ( '\\r' | '\\f' | '`' ) )*
 			loop172:
 			while (true) {
 				int alt172=2;
@@ -6554,7 +6554,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt172) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\u000B')||(input.LA(1) >= '\u000E' && input.LA(1) <= '_')||(input.LA(1) >= 'a' && input.LA(1) <= '\uFFFF') ) {
 						input.consume();
@@ -6574,7 +6574,7 @@ public class Css3Lexer extends Lexer {
 				}
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2012:21: ( '`' |)
+			// Css3.g:2013:21: ( '`' |)
 			int alt173=2;
 			int LA173_0 = input.LA(1);
 			if ( (LA173_0=='`') ) {
@@ -6587,13 +6587,13 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt173) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2013:27: '`'
+					// Css3.g:2014:27: '`'
 					{
 					match('`'); if (state.failed) return;
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2014:27: 
+					// Css3.g:2015:27: 
 					{
 					if ( state.backtracking==0 ) { _type = INVALID; }
 					}
@@ -6617,8 +6617,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = NOT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2018:6: ( 'NOT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2018:8: 'NOT'
+			// Css3.g:2019:6: ( 'NOT' )
+			// Css3.g:2019:8: 'NOT'
 			{
 			match("NOT"); if (state.failed) return;
 
@@ -6638,14 +6638,14 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = VARIABLE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2022:17: ( '--' NMSTART ( NMCHAR )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2022:19: '--' NMSTART ( NMCHAR )*
+			// Css3.g:2023:17: ( '--' NMSTART ( NMCHAR )* )
+			// Css3.g:2023:19: '--' NMSTART ( NMCHAR )*
 			{
 			match("--"); if (state.failed) return;
 
 			mNMSTART(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2022:32: ( NMCHAR )*
+			// Css3.g:2023:32: ( NMCHAR )*
 			loop174:
 			while (true) {
 				int alt174=2;
@@ -6656,7 +6656,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt174) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2022:32: NMCHAR
+					// Css3.g:2023:32: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -6684,10 +6684,10 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = IDENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:17: ( ( '-' )? NMSTART ( NMCHAR )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:19: ( '-' )? NMSTART ( NMCHAR )*
+			// Css3.g:2028:17: ( ( '-' )? NMSTART ( NMCHAR )* )
+			// Css3.g:2028:19: ( '-' )? NMSTART ( NMCHAR )*
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:19: ( '-' )?
+			// Css3.g:2028:19: ( '-' )?
 			int alt175=2;
 			int LA175_0 = input.LA(1);
 			if ( (LA175_0=='-') ) {
@@ -6695,7 +6695,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt175) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:19: '-'
+					// Css3.g:2028:19: '-'
 					{
 					match('-'); if (state.failed) return;
 					}
@@ -6705,7 +6705,7 @@ public class Css3Lexer extends Lexer {
 
 			mNMSTART(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:32: ( NMCHAR )*
+			// Css3.g:2028:32: ( NMCHAR )*
 			loop176:
 			while (true) {
 				int alt176=2;
@@ -6716,7 +6716,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt176) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2027:32: NMCHAR
+					// Css3.g:2028:32: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -6744,8 +6744,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = HASH_SYMBOL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2032:17: ( '#' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2032:19: '#'
+			// Css3.g:2033:17: ( '#' )
+			// Css3.g:2033:19: '#'
 			{
 			match('#'); if (state.failed) return;
 			}
@@ -6764,8 +6764,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = HASH;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2033:17: ( HASH_SYMBOL NAME )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2033:19: HASH_SYMBOL NAME
+			// Css3.g:2034:17: ( HASH_SYMBOL NAME )
+			// Css3.g:2034:19: HASH_SYMBOL NAME
 			{
 			mHASH_SYMBOL(); if (state.failed) return;
 
@@ -6787,12 +6787,12 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = IMPORTANT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2035:17: ( EXCLAMATION_MARK ( WS | COMMENT )* 'IMPORTANT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2035:19: EXCLAMATION_MARK ( WS | COMMENT )* 'IMPORTANT'
+			// Css3.g:2036:17: ( EXCLAMATION_MARK ( WS | COMMENT )* 'IMPORTANT' )
+			// Css3.g:2036:19: EXCLAMATION_MARK ( WS | COMMENT )* 'IMPORTANT'
 			{
 			mEXCLAMATION_MARK(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2035:36: ( WS | COMMENT )*
+			// Css3.g:2036:36: ( WS | COMMENT )*
 			loop177:
 			while (true) {
 				int alt177=3;
@@ -6806,14 +6806,14 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt177) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2035:37: WS
+					// Css3.g:2036:37: WS
 					{
 					mWS(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2035:40: COMMENT
+					// Css3.g:2036:40: COMMENT
 					{
 					mCOMMENT(); if (state.failed) return;
 
@@ -6843,8 +6843,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = IMPORT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2037:21: ( '@IMPORT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2037:23: '@IMPORT'
+			// Css3.g:2038:21: ( '@IMPORT' )
+			// Css3.g:2038:23: '@IMPORT'
 			{
 			match("@IMPORT"); if (state.failed) return;
 
@@ -6864,8 +6864,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = PAGE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2038:21: ( '@PAGE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2038:23: '@PAGE'
+			// Css3.g:2039:21: ( '@PAGE' )
+			// Css3.g:2039:23: '@PAGE'
 			{
 			match("@PAGE"); if (state.failed) return;
 
@@ -6885,8 +6885,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MEDIA_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2039:21: ( '@MEDIA' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2039:23: '@MEDIA'
+			// Css3.g:2040:21: ( '@MEDIA' )
+			// Css3.g:2040:23: '@MEDIA'
 			{
 			match("@MEDIA"); if (state.failed) return;
 
@@ -6906,8 +6906,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = NAMESPACE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2040:21: ( '@NAMESPACE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2040:23: '@NAMESPACE'
+			// Css3.g:2041:21: ( '@NAMESPACE' )
+			// Css3.g:2041:23: '@NAMESPACE'
 			{
 			match("@NAMESPACE"); if (state.failed) return;
 
@@ -6927,8 +6927,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CHARSET_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2041:21: ( '@CHARSET' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2041:23: '@CHARSET'
+			// Css3.g:2042:21: ( '@CHARSET' )
+			// Css3.g:2042:23: '@CHARSET'
 			{
 			match("@CHARSET"); if (state.failed) return;
 
@@ -6948,8 +6948,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = COUNTER_STYLE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2042:21: ( '@COUNTER-STYLE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2042:23: '@COUNTER-STYLE'
+			// Css3.g:2043:21: ( '@COUNTER-STYLE' )
+			// Css3.g:2043:23: '@COUNTER-STYLE'
 			{
 			match("@COUNTER-STYLE"); if (state.failed) return;
 
@@ -6969,8 +6969,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = FONT_FACE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2043:21: ( '@FONT-FACE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2043:23: '@FONT-FACE'
+			// Css3.g:2044:21: ( '@FONT-FACE' )
+			// Css3.g:2044:23: '@FONT-FACE'
 			{
 			match("@FONT-FACE"); if (state.failed) return;
 
@@ -6990,8 +6990,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SUPPORTS_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2044:21: ( '@SUPPORTS' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2044:23: '@SUPPORTS'
+			// Css3.g:2045:21: ( '@SUPPORTS' )
+			// Css3.g:2045:23: '@SUPPORTS'
 			{
 			match("@SUPPORTS"); if (state.failed) return;
 
@@ -7011,8 +7011,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LAYER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2045:21: ( '@LAYER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2045:23: '@LAYER'
+			// Css3.g:2046:21: ( '@LAYER' )
+			// Css3.g:2046:23: '@LAYER'
 			{
 			match("@LAYER"); if (state.failed) return;
 
@@ -7032,8 +7032,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = CONTAINER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2046:21: ( '@CONTAINER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2046:23: '@CONTAINER'
+			// Css3.g:2047:21: ( '@CONTAINER' )
+			// Css3.g:2047:23: '@CONTAINER'
 			{
 			match("@CONTAINER"); if (state.failed) return;
 
@@ -7053,8 +7053,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = KEYFRAMES_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2047:21: ( '@KEYFRAMES' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2047:23: '@KEYFRAMES'
+			// Css3.g:2048:21: ( '@KEYFRAMES' )
+			// Css3.g:2048:23: '@KEYFRAMES'
 			{
 			match("@KEYFRAMES"); if (state.failed) return;
 
@@ -7074,8 +7074,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TOPLEFTCORNER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2049:23: ( '@TOP-LEFT-CORNER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2049:24: '@TOP-LEFT-CORNER'
+			// Css3.g:2050:23: ( '@TOP-LEFT-CORNER' )
+			// Css3.g:2050:24: '@TOP-LEFT-CORNER'
 			{
 			match("@TOP-LEFT-CORNER"); if (state.failed) return;
 
@@ -7095,8 +7095,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TOPLEFT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2050:23: ( '@TOP-LEFT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2050:24: '@TOP-LEFT'
+			// Css3.g:2051:23: ( '@TOP-LEFT' )
+			// Css3.g:2051:24: '@TOP-LEFT'
 			{
 			match("@TOP-LEFT"); if (state.failed) return;
 
@@ -7116,8 +7116,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TOPCENTER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2051:23: ( '@TOP-CENTER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2051:24: '@TOP-CENTER'
+			// Css3.g:2052:23: ( '@TOP-CENTER' )
+			// Css3.g:2052:24: '@TOP-CENTER'
 			{
 			match("@TOP-CENTER"); if (state.failed) return;
 
@@ -7137,8 +7137,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TOPRIGHT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2052:23: ( '@TOP-RIGHT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2052:24: '@TOP-RIGHT'
+			// Css3.g:2053:23: ( '@TOP-RIGHT' )
+			// Css3.g:2053:24: '@TOP-RIGHT'
 			{
 			match("@TOP-RIGHT"); if (state.failed) return;
 
@@ -7158,8 +7158,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = TOPRIGHTCORNER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2053:23: ( '@TOP-RIGHT-CORNER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2053:24: '@TOP-RIGHT-CORNER'
+			// Css3.g:2054:23: ( '@TOP-RIGHT-CORNER' )
+			// Css3.g:2054:24: '@TOP-RIGHT-CORNER'
 			{
 			match("@TOP-RIGHT-CORNER"); if (state.failed) return;
 
@@ -7179,8 +7179,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BOTTOMLEFTCORNER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2054:23: ( '@BOTTOM-LEFT-CORNER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2054:24: '@BOTTOM-LEFT-CORNER'
+			// Css3.g:2055:23: ( '@BOTTOM-LEFT-CORNER' )
+			// Css3.g:2055:24: '@BOTTOM-LEFT-CORNER'
 			{
 			match("@BOTTOM-LEFT-CORNER"); if (state.failed) return;
 
@@ -7200,8 +7200,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BOTTOMLEFT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2055:23: ( '@BOTTOM-LEFT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2055:24: '@BOTTOM-LEFT'
+			// Css3.g:2056:23: ( '@BOTTOM-LEFT' )
+			// Css3.g:2056:24: '@BOTTOM-LEFT'
 			{
 			match("@BOTTOM-LEFT"); if (state.failed) return;
 
@@ -7221,8 +7221,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BOTTOMCENTER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2056:23: ( '@BOTTOM-CENTER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2056:24: '@BOTTOM-CENTER'
+			// Css3.g:2057:23: ( '@BOTTOM-CENTER' )
+			// Css3.g:2057:24: '@BOTTOM-CENTER'
 			{
 			match("@BOTTOM-CENTER"); if (state.failed) return;
 
@@ -7242,8 +7242,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BOTTOMRIGHT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2057:23: ( '@BOTTOM-RIGHT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2057:24: '@BOTTOM-RIGHT'
+			// Css3.g:2058:23: ( '@BOTTOM-RIGHT' )
+			// Css3.g:2058:24: '@BOTTOM-RIGHT'
 			{
 			match("@BOTTOM-RIGHT"); if (state.failed) return;
 
@@ -7263,8 +7263,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = BOTTOMRIGHTCORNER_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2058:23: ( '@BOTTOM-RIGHT-CORNER' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2058:24: '@BOTTOM-RIGHT-CORNER'
+			// Css3.g:2059:23: ( '@BOTTOM-RIGHT-CORNER' )
+			// Css3.g:2059:24: '@BOTTOM-RIGHT-CORNER'
 			{
 			match("@BOTTOM-RIGHT-CORNER"); if (state.failed) return;
 
@@ -7284,8 +7284,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LEFTTOP_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2059:23: ( '@LEFT-TOP' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2059:24: '@LEFT-TOP'
+			// Css3.g:2060:23: ( '@LEFT-TOP' )
+			// Css3.g:2060:24: '@LEFT-TOP'
 			{
 			match("@LEFT-TOP"); if (state.failed) return;
 
@@ -7305,8 +7305,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LEFTMIDDLE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2060:23: ( '@LEFT-MIDDLE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2060:24: '@LEFT-MIDDLE'
+			// Css3.g:2061:23: ( '@LEFT-MIDDLE' )
+			// Css3.g:2061:24: '@LEFT-MIDDLE'
 			{
 			match("@LEFT-MIDDLE"); if (state.failed) return;
 
@@ -7326,8 +7326,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LEFTBOTTOM_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2061:23: ( '@LEFT-BOTTOM' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2061:24: '@LEFT-BOTTOM'
+			// Css3.g:2062:23: ( '@LEFT-BOTTOM' )
+			// Css3.g:2062:24: '@LEFT-BOTTOM'
 			{
 			match("@LEFT-BOTTOM"); if (state.failed) return;
 
@@ -7347,8 +7347,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RIGHTTOP_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2062:23: ( '@RIGHT-TOP' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2062:24: '@RIGHT-TOP'
+			// Css3.g:2063:23: ( '@RIGHT-TOP' )
+			// Css3.g:2063:24: '@RIGHT-TOP'
 			{
 			match("@RIGHT-TOP"); if (state.failed) return;
 
@@ -7368,8 +7368,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RIGHTMIDDLE_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2063:23: ( '@RIGHT-MIDDLE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2063:24: '@RIGHT-MIDDLE'
+			// Css3.g:2064:23: ( '@RIGHT-MIDDLE' )
+			// Css3.g:2064:24: '@RIGHT-MIDDLE'
 			{
 			match("@RIGHT-MIDDLE"); if (state.failed) return;
 
@@ -7389,8 +7389,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = RIGHTBOTTOM_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2064:23: ( '@RIGHT-BOTTOM' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2064:24: '@RIGHT-BOTTOM'
+			// Css3.g:2065:23: ( '@RIGHT-BOTTOM' )
+			// Css3.g:2065:24: '@RIGHT-BOTTOM'
 			{
 			match("@RIGHT-BOTTOM"); if (state.failed) return;
 
@@ -7410,8 +7410,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MOZ_DOCUMENT_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2066:23: ( '@-MOZ-DOCUMENT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2066:25: '@-MOZ-DOCUMENT'
+			// Css3.g:2067:23: ( '@-MOZ-DOCUMENT' )
+			// Css3.g:2067:25: '@-MOZ-DOCUMENT'
 			{
 			match("@-MOZ-DOCUMENT"); if (state.failed) return;
 
@@ -7431,8 +7431,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = WEBKIT_KEYFRAMES_SYM;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2067:23: ( '@-WEBKIT-KEYFRAMES' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2067:25: '@-WEBKIT-KEYFRAMES'
+			// Css3.g:2068:23: ( '@-WEBKIT-KEYFRAMES' )
+			// Css3.g:2068:25: '@-WEBKIT-KEYFRAMES'
 			{
 			match("@-WEBKIT-KEYFRAMES"); if (state.failed) return;
 
@@ -7452,8 +7452,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_CONTENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2070:21: ( '@CONTENT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2070:23: '@CONTENT'
+			// Css3.g:2071:21: ( '@CONTENT' )
+			// Css3.g:2071:23: '@CONTENT'
 			{
 			match("@CONTENT"); if (state.failed) return;
 
@@ -7473,8 +7473,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_MIXIN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2071:21: ( '@MIXIN' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2071:23: '@MIXIN'
+			// Css3.g:2072:21: ( '@MIXIN' )
+			// Css3.g:2072:23: '@MIXIN'
 			{
 			match("@MIXIN"); if (state.failed) return;
 
@@ -7494,8 +7494,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_INCLUDE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2072:21: ( '@INCLUDE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2072:23: '@INCLUDE'
+			// Css3.g:2073:21: ( '@INCLUDE' )
+			// Css3.g:2073:23: '@INCLUDE'
 			{
 			match("@INCLUDE"); if (state.failed) return;
 
@@ -7515,8 +7515,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_EXTEND;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2073:21: ( '@EXTEND' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2073:23: '@EXTEND'
+			// Css3.g:2074:21: ( '@EXTEND' )
+			// Css3.g:2074:23: '@EXTEND'
 			{
 			match("@EXTEND"); if (state.failed) return;
 
@@ -7536,8 +7536,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_DEBUG;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2074:21: ( '@DEBUG' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2074:23: '@DEBUG'
+			// Css3.g:2075:21: ( '@DEBUG' )
+			// Css3.g:2075:23: '@DEBUG'
 			{
 			match("@DEBUG"); if (state.failed) return;
 
@@ -7557,8 +7557,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_ERROR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2075:21: ( '@ERROR' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2075:23: '@ERROR'
+			// Css3.g:2076:21: ( '@ERROR' )
+			// Css3.g:2076:23: '@ERROR'
 			{
 			match("@ERROR"); if (state.failed) return;
 
@@ -7578,8 +7578,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_WARN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2076:21: ( '@WARN' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2076:23: '@WARN'
+			// Css3.g:2077:21: ( '@WARN' )
+			// Css3.g:2077:23: '@WARN'
 			{
 			match("@WARN"); if (state.failed) return;
 
@@ -7599,8 +7599,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_IF;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2077:21: ( '@IF' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2077:23: '@IF'
+			// Css3.g:2078:21: ( '@IF' )
+			// Css3.g:2078:23: '@IF'
 			{
 			match("@IF"); if (state.failed) return;
 
@@ -7620,8 +7620,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_ELSE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2078:21: ( '@ELSE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2078:23: '@ELSE'
+			// Css3.g:2079:21: ( '@ELSE' )
+			// Css3.g:2079:23: '@ELSE'
 			{
 			match("@ELSE"); if (state.failed) return;
 
@@ -7641,8 +7641,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_ELSEIF;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2079:21: ( '@ELSEIF' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2079:23: '@ELSEIF'
+			// Css3.g:2080:21: ( '@ELSEIF' )
+			// Css3.g:2080:23: '@ELSEIF'
 			{
 			match("@ELSEIF"); if (state.failed) return;
 
@@ -7662,8 +7662,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_FOR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2080:21: ( '@FOR' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2080:23: '@FOR'
+			// Css3.g:2081:21: ( '@FOR' )
+			// Css3.g:2081:23: '@FOR'
 			{
 			match("@FOR"); if (state.failed) return;
 
@@ -7683,8 +7683,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_FUNCTION;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2081:21: ( '@FUNCTION' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2081:23: '@FUNCTION'
+			// Css3.g:2082:21: ( '@FUNCTION' )
+			// Css3.g:2082:23: '@FUNCTION'
 			{
 			match("@FUNCTION"); if (state.failed) return;
 
@@ -7704,8 +7704,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_RETURN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2082:21: ( '@RETURN' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2082:23: '@RETURN'
+			// Css3.g:2083:21: ( '@RETURN' )
+			// Css3.g:2083:23: '@RETURN'
 			{
 			match("@RETURN"); if (state.failed) return;
 
@@ -7725,8 +7725,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_USE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2083:21: ( '@USE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2083:23: '@USE'
+			// Css3.g:2084:21: ( '@USE' )
+			// Css3.g:2084:23: '@USE'
 			{
 			match("@USE"); if (state.failed) return;
 
@@ -7746,8 +7746,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_FORWARD;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2084:21: ( '@FORWARD' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2084:23: '@FORWARD'
+			// Css3.g:2085:21: ( '@FORWARD' )
+			// Css3.g:2085:23: '@FORWARD'
 			{
 			match("@FORWARD"); if (state.failed) return;
 
@@ -7767,8 +7767,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_EACH;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2086:21: ( '@EACH' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2086:23: '@EACH'
+			// Css3.g:2087:21: ( '@EACH' )
+			// Css3.g:2087:23: '@EACH'
 			{
 			match("@EACH"); if (state.failed) return;
 
@@ -7788,8 +7788,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_WHILE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2087:21: ( '@WHILE' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2087:23: '@WHILE'
+			// Css3.g:2088:21: ( '@WHILE' )
+			// Css3.g:2088:23: '@WHILE'
 			{
 			match("@WHILE"); if (state.failed) return;
 
@@ -7809,8 +7809,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_AT_ROOT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2088:21: ( '@AT-ROOT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2088:23: '@AT-ROOT'
+			// Css3.g:2089:21: ( '@AT-ROOT' )
+			// Css3.g:2089:23: '@AT-ROOT'
 			{
 			match("@AT-ROOT"); if (state.failed) return;
 
@@ -7830,8 +7830,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = AT_SIGN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2090:21: ( '@' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2090:23: '@'
+			// Css3.g:2091:21: ( '@' )
+			// Css3.g:2091:23: '@'
 			{
 			match('@'); if (state.failed) return;
 			}
@@ -7850,10 +7850,10 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = AT_IDENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:14: ( ( AT_SIGN | ( AT_SIGN AT_SIGN ) ) ( NMCHAR )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:16: ( AT_SIGN | ( AT_SIGN AT_SIGN ) ) ( NMCHAR )+
+			// Css3.g:2092:14: ( ( AT_SIGN | ( AT_SIGN AT_SIGN ) ) ( NMCHAR )+ )
+			// Css3.g:2092:16: ( AT_SIGN | ( AT_SIGN AT_SIGN ) ) ( NMCHAR )+
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:16: ( AT_SIGN | ( AT_SIGN AT_SIGN ) )
+			// Css3.g:2092:16: ( AT_SIGN | ( AT_SIGN AT_SIGN ) )
 			int alt178=2;
 			int LA178_0 = input.LA(1);
 			if ( (LA178_0=='@') ) {
@@ -7889,17 +7889,17 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt178) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:17: AT_SIGN
+					// Css3.g:2092:17: AT_SIGN
 					{
 					mAT_SIGN(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:27: ( AT_SIGN AT_SIGN )
+					// Css3.g:2092:27: ( AT_SIGN AT_SIGN )
 					{
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:27: ( AT_SIGN AT_SIGN )
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:28: AT_SIGN AT_SIGN
+					// Css3.g:2092:27: ( AT_SIGN AT_SIGN )
+					// Css3.g:2092:28: AT_SIGN AT_SIGN
 					{
 					mAT_SIGN(); if (state.failed) return;
 
@@ -7912,7 +7912,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:46: ( NMCHAR )+
+			// Css3.g:2092:46: ( NMCHAR )+
 			int cnt179=0;
 			loop179:
 			while (true) {
@@ -7924,7 +7924,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt179) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2091:46: NMCHAR
+					// Css3.g:2092:46: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -7956,11 +7956,11 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_VAR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2093:21: ( '$' ( NMCHAR )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2093:23: '$' ( NMCHAR )+
+			// Css3.g:2094:21: ( '$' ( NMCHAR )+ )
+			// Css3.g:2094:23: '$' ( NMCHAR )+
 			{
 			match('$'); if (state.failed) return;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2093:27: ( NMCHAR )+
+			// Css3.g:2094:27: ( NMCHAR )+
 			int cnt180=0;
 			loop180:
 			while (true) {
@@ -7972,7 +7972,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt180) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2093:27: NMCHAR
+					// Css3.g:2094:27: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -8004,8 +8004,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_DEFAULT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2094:21: ( '!DEFAULT' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2094:23: '!DEFAULT'
+			// Css3.g:2095:21: ( '!DEFAULT' )
+			// Css3.g:2095:23: '!DEFAULT'
 			{
 			match("!DEFAULT"); if (state.failed) return;
 
@@ -8025,8 +8025,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_OPTIONAL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2095:21: ( '!OPTIONAL' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2095:23: '!OPTIONAL'
+			// Css3.g:2096:21: ( '!OPTIONAL' )
+			// Css3.g:2096:23: '!OPTIONAL'
 			{
 			match("!OPTIONAL"); if (state.failed) return;
 
@@ -8046,8 +8046,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_GLOBAL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2096:21: ( '!GLOBAL' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2096:23: '!GLOBAL'
+			// Css3.g:2097:21: ( '!GLOBAL' )
+			// Css3.g:2097:23: '!GLOBAL'
 			{
 			match("!GLOBAL"); if (state.failed) return;
 
@@ -8067,12 +8067,12 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = SASS_EXTEND_ONLY_SELECTOR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2099:21: ( PERCENTAGE_SYMBOL ( NMCHAR )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2099:23: PERCENTAGE_SYMBOL ( NMCHAR )+
+			// Css3.g:2100:21: ( PERCENTAGE_SYMBOL ( NMCHAR )+ )
+			// Css3.g:2100:23: PERCENTAGE_SYMBOL ( NMCHAR )+
 			{
 			mPERCENTAGE_SYMBOL(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2099:41: ( NMCHAR )+
+			// Css3.g:2100:41: ( NMCHAR )+
 			int cnt181=0;
 			loop181:
 			while (true) {
@@ -8084,7 +8084,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt181) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2099:41: NMCHAR
+					// Css3.g:2100:41: NMCHAR
 					{
 					mNMCHAR(); if (state.failed) return;
 
@@ -8114,8 +8114,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "EMS"
 	public final void mEMS() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2111:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2111:26: 
+			// Css3.g:2112:25: ()
+			// Css3.g:2112:26: 
 			{
 			}
 
@@ -8129,8 +8129,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "EXS"
 	public final void mEXS() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2112:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2112:26: 
+			// Css3.g:2113:25: ()
+			// Css3.g:2113:26: 
 			{
 			}
 
@@ -8144,8 +8144,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "LENGTH"
 	public final void mLENGTH() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2113:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2113:26: 
+			// Css3.g:2114:25: ()
+			// Css3.g:2114:26: 
 			{
 			}
 
@@ -8159,8 +8159,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "REM"
 	public final void mREM() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2114:18: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2114:19: 
+			// Css3.g:2115:18: ()
+			// Css3.g:2115:19: 
 			{
 			}
 
@@ -8174,8 +8174,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "ANGLE"
 	public final void mANGLE() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2115:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2115:26: 
+			// Css3.g:2116:25: ()
+			// Css3.g:2116:26: 
 			{
 			}
 
@@ -8189,8 +8189,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "TIME"
 	public final void mTIME() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2116:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2116:26: 
+			// Css3.g:2117:25: ()
+			// Css3.g:2117:26: 
 			{
 			}
 
@@ -8204,8 +8204,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "FREQ"
 	public final void mFREQ() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2117:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2117:26: 
+			// Css3.g:2118:25: ()
+			// Css3.g:2118:26: 
 			{
 			}
 
@@ -8219,8 +8219,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "DIMENSION"
 	public final void mDIMENSION() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2118:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2118:26: 
+			// Css3.g:2119:25: ()
+			// Css3.g:2119:26: 
 			{
 			}
 
@@ -8234,8 +8234,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "PERCENTAGE"
 	public final void mPERCENTAGE() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2119:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2119:26: 
+			// Css3.g:2120:25: ()
+			// Css3.g:2120:26: 
 			{
 			}
 
@@ -8249,8 +8249,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "RESOLUTION"
 	public final void mRESOLUTION() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2120:25: ()
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2120:26: 
+			// Css3.g:2121:25: ()
+			// Css3.g:2121:26: 
 			{
 			}
 
@@ -8266,10 +8266,10 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = NUMBER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2123:5: ( ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ) ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |) )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2123:9: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ) ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)
+			// Css3.g:2124:5: ( ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ) ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |) )
+			// Css3.g:2124:9: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ) ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2123:9: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ )
+			// Css3.g:2124:9: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ )
 			int alt186=2;
 			int LA186_0 = input.LA(1);
 			if ( ((LA186_0 >= '0' && LA186_0 <= '9')) ) {
@@ -8288,9 +8288,9 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt186) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2124:15: ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )?
+					// Css3.g:2125:15: ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )?
 					{
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2124:15: ( '0' .. '9' )+
+					// Css3.g:2125:15: ( '0' .. '9' )+
 					int cnt182=0;
 					loop182:
 					while (true) {
@@ -8302,7 +8302,7 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt182) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+							// Css3.g:
 							{
 							if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
 								input.consume();
@@ -8326,7 +8326,7 @@ public class Css3Lexer extends Lexer {
 						cnt182++;
 					}
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2124:25: ( '.' ( '0' .. '9' )+ )?
+					// Css3.g:2125:25: ( '.' ( '0' .. '9' )+ )?
 					int alt184=2;
 					int LA184_0 = input.LA(1);
 					if ( (LA184_0=='.') ) {
@@ -8334,10 +8334,10 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt184) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2124:26: '.' ( '0' .. '9' )+
+							// Css3.g:2125:26: '.' ( '0' .. '9' )+
 							{
 							match('.'); if (state.failed) return;
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2124:30: ( '0' .. '9' )+
+							// Css3.g:2125:30: ( '0' .. '9' )+
 							int cnt183=0;
 							loop183:
 							while (true) {
@@ -8349,7 +8349,7 @@ public class Css3Lexer extends Lexer {
 
 								switch (alt183) {
 								case 1 :
-									// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+									// Css3.g:
 									{
 									if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
 										input.consume();
@@ -8381,10 +8381,10 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2125:15: '.' ( '0' .. '9' )+
+					// Css3.g:2126:15: '.' ( '0' .. '9' )+
 					{
 					match('.'); if (state.failed) return;
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2125:19: ( '0' .. '9' )+
+					// Css3.g:2126:19: ( '0' .. '9' )+
 					int cnt185=0;
 					loop185:
 					while (true) {
@@ -8396,7 +8396,7 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt185) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+							// Css3.g:
 							{
 							if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
 								input.consume();
@@ -8425,18 +8425,18 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2127:9: ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)
+			// Css3.g:2128:9: ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)
 			int alt193=13;
 			alt193 = dfa193.predict(input);
 			switch (alt193) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:15: ( D P ( I | C ) )=> D P ( I | C M )
+					// Css3.g:2129:15: ( D P ( I | C ) )=> D P ( I | C M )
 					{
 					mD(); if (state.failed) return;
 
 					mP(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2130:17: ( I | C M )
+					// Css3.g:2131:17: ( I | C M )
 					int alt187=2;
 					switch ( input.LA(1) ) {
 					case 'I':
@@ -8688,14 +8688,14 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt187) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2131:22: I
+							// Css3.g:2132:22: I
 							{
 							mI(); if (state.failed) return;
 
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2131:26: C M
+							// Css3.g:2132:26: C M
 							{
 							mC(); if (state.failed) return;
 
@@ -8710,11 +8710,11 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:15: ( E ( M | X ) )=> E ( M | X )
+					// Css3.g:2136:15: ( E ( M | X ) )=> E ( M | X )
 					{
 					mE(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2137:17: ( M | X )
+					// Css3.g:2138:17: ( M | X )
 					int alt188=2;
 					switch ( input.LA(1) ) {
 					case 'M':
@@ -8890,7 +8890,7 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt188) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2138:23: M
+							// Css3.g:2139:23: M
 							{
 							mM(); if (state.failed) return;
 
@@ -8898,7 +8898,7 @@ public class Css3Lexer extends Lexer {
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2139:23: X
+							// Css3.g:2140:23: X
 							{
 							mX(); if (state.failed) return;
 
@@ -8911,11 +8911,11 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 3 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:15: ( P ( X | T | C ) )=> P ( X | T | C )
+					// Css3.g:2142:15: ( P ( X | T | C ) )=> P ( X | T | C )
 					{
 					mP(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2143:17: ( X | T | C )
+					// Css3.g:2144:17: ( X | T | C )
 					int alt189=3;
 					switch ( input.LA(1) ) {
 					case 'X':
@@ -9215,21 +9215,21 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt189) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2144:23: X
+							// Css3.g:2145:23: X
 							{
 							mX(); if (state.failed) return;
 
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2145:23: T
+							// Css3.g:2146:23: T
 							{
 							mT(); if (state.failed) return;
 
 							}
 							break;
 						case 3 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2146:23: C
+							// Css3.g:2147:23: C
 							{
 							mC(); if (state.failed) return;
 
@@ -9242,7 +9242,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 4 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2149:15: ( C M )=> C M
+					// Css3.g:2150:15: ( C M )=> C M
 					{
 					mC(); if (state.failed) return;
 
@@ -9252,11 +9252,11 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 5 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:15: ( M ( M | S ) )=> M ( M | S )
+					// Css3.g:2152:15: ( M ( M | S ) )=> M ( M | S )
 					{
 					mM(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2153:17: ( M | S )
+					// Css3.g:2154:17: ( M | S )
 					int alt190=2;
 					switch ( input.LA(1) ) {
 					case 'M':
@@ -9432,7 +9432,7 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt190) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2154:23: M
+							// Css3.g:2155:23: M
 							{
 							mM(); if (state.failed) return;
 
@@ -9440,7 +9440,7 @@ public class Css3Lexer extends Lexer {
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2156:23: S
+							// Css3.g:2157:23: S
 							{
 							mS(); if (state.failed) return;
 
@@ -9453,7 +9453,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 6 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2158:15: ( I N )=> I N
+					// Css3.g:2159:15: ( I N )=> I N
 					{
 					mI(); if (state.failed) return;
 
@@ -9463,7 +9463,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 7 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2161:15: ( D E G )=> D E G
+					// Css3.g:2162:15: ( D E G )=> D E G
 					{
 					mD(); if (state.failed) return;
 
@@ -9475,11 +9475,11 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 8 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:15: ( R ( A | E ) )=> R ( A D | E M )
+					// Css3.g:2167:15: ( R ( A | E ) )=> R ( A D | E M )
 					{
 					mR(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2168:17: ( A D | E M )
+					// Css3.g:2169:17: ( A D | E M )
 					int alt191=2;
 					switch ( input.LA(1) ) {
 					case 'A':
@@ -9722,7 +9722,7 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt191) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2169:20: A D
+							// Css3.g:2170:20: A D
 							{
 							mA(); if (state.failed) return;
 
@@ -9732,7 +9732,7 @@ public class Css3Lexer extends Lexer {
 							}
 							break;
 						case 2 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2170:20: E M
+							// Css3.g:2171:20: E M
 							{
 							mE(); if (state.failed) return;
 
@@ -9747,7 +9747,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 9 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2173:15: ( S )=> S
+					// Css3.g:2174:15: ( S )=> S
 					{
 					mS(); if (state.failed) return;
 
@@ -9755,9 +9755,9 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 10 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2175:15: ( ( K )? H Z )=> ( K )? H Z
+					// Css3.g:2176:15: ( ( K )? H Z )=> ( K )? H Z
 					{
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2176:17: ( K )?
+					// Css3.g:2177:17: ( K )?
 					int alt192=2;
 					int LA192_0 = input.LA(1);
 					if ( (LA192_0=='K'||LA192_0=='k') ) {
@@ -9822,7 +9822,7 @@ public class Css3Lexer extends Lexer {
 					}
 					switch (alt192) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2176:17: K
+							// Css3.g:2177:17: K
 							{
 							mK(); if (state.failed) return;
 
@@ -9839,7 +9839,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 11 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2178:15: IDENT
+					// Css3.g:2179:15: IDENT
 					{
 					mIDENT(); if (state.failed) return;
 
@@ -9847,7 +9847,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 12 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2180:15: PERCENTAGE_SYMBOL
+					// Css3.g:2181:15: PERCENTAGE_SYMBOL
 					{
 					mPERCENTAGE_SYMBOL(); if (state.failed) return;
 
@@ -9855,7 +9855,7 @@ public class Css3Lexer extends Lexer {
 					}
 					break;
 				case 13 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2183:9: 
+					// Css3.g:2184:9: 
 					{
 					}
 					break;
@@ -9878,8 +9878,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = URI;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2189:5: ( U R L '(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2189:9: U R L '(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
+			// Css3.g:2190:5: ( U R L '(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
+			// Css3.g:2190:9: U R L '(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
 			{
 			mU(); if (state.failed) return;
 
@@ -9888,7 +9888,7 @@ public class Css3Lexer extends Lexer {
 			mL(); if (state.failed) return;
 
 			match('('); if (state.failed) return;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:13: ( ( WS )=> WS )?
+			// Css3.g:2192:13: ( ( WS )=> WS )?
 			int alt194=2;
 			int LA194_0 = input.LA(1);
 			if ( (LA194_0=='\t'||LA194_0==' ') ) {
@@ -9899,7 +9899,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt194) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:14: ( WS )=> WS
+					// Css3.g:2192:14: ( WS )=> WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -9908,7 +9908,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:25: ( URL | STRING )
+			// Css3.g:2192:25: ( URL | STRING )
 			int alt195=2;
 			int LA195_0 = input.LA(1);
 			if ( (LA195_0=='\t'||(LA195_0 >= ' ' && LA195_0 <= '!')||(LA195_0 >= '#' && LA195_0 <= '&')||(LA195_0 >= ')' && LA195_0 <= ';')||LA195_0=='='||(LA195_0 >= '?' && LA195_0 <= '\\')||LA195_0=='_'||(LA195_0 >= 'a' && LA195_0 <= '~')||(LA195_0 >= '\u0080' && LA195_0 <= '\uFFFF')) ) {
@@ -9927,14 +9927,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt195) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:26: URL
+					// Css3.g:2192:26: URL
 					{
 					mURL(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:30: STRING
+					// Css3.g:2192:30: STRING
 					{
 					mSTRING(); if (state.failed) return;
 
@@ -9943,7 +9943,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:38: ( WS )?
+			// Css3.g:2192:38: ( WS )?
 			int alt196=2;
 			int LA196_0 = input.LA(1);
 			if ( (LA196_0=='\t'||LA196_0==' ') ) {
@@ -9951,7 +9951,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt196) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:38: WS
+					// Css3.g:2192:38: WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -9975,8 +9975,8 @@ public class Css3Lexer extends Lexer {
 	// $ANTLR start "HEXCHAR_WILDCARD"
 	public final void mHEXCHAR_WILDCARD() throws RecognitionException {
 		try {
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2195:26: ( '?' | HEXCHAR )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+			// Css3.g:2196:26: ( '?' | HEXCHAR )
+			// Css3.g:
 			{
 			if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||input.LA(1)=='?'||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
 				input.consume();
@@ -10002,8 +10002,8 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = URANGE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:7: ( ( 'u' | 'U' ) PLUS ( HEXCHAR_WILDCARD )+ ( MINUS ( HEXCHAR_WILDCARD )+ )? )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:9: ( 'u' | 'U' ) PLUS ( HEXCHAR_WILDCARD )+ ( MINUS ( HEXCHAR_WILDCARD )+ )?
+			// Css3.g:2198:7: ( ( 'u' | 'U' ) PLUS ( HEXCHAR_WILDCARD )+ ( MINUS ( HEXCHAR_WILDCARD )+ )? )
+			// Css3.g:2198:9: ( 'u' | 'U' ) PLUS ( HEXCHAR_WILDCARD )+ ( MINUS ( HEXCHAR_WILDCARD )+ )?
 			{
 			if ( input.LA(1)=='U'||input.LA(1)=='u' ) {
 				input.consume();
@@ -10017,7 +10017,7 @@ public class Css3Lexer extends Lexer {
 			}
 			mPLUS(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:24: ( HEXCHAR_WILDCARD )+
+			// Css3.g:2198:24: ( HEXCHAR_WILDCARD )+
 			int cnt197=0;
 			loop197:
 			while (true) {
@@ -10029,7 +10029,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt197) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||input.LA(1)=='?'||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
 						input.consume();
@@ -10053,7 +10053,7 @@ public class Css3Lexer extends Lexer {
 				cnt197++;
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:42: ( MINUS ( HEXCHAR_WILDCARD )+ )?
+			// Css3.g:2198:42: ( MINUS ( HEXCHAR_WILDCARD )+ )?
 			int alt199=2;
 			int LA199_0 = input.LA(1);
 			if ( (LA199_0=='-') ) {
@@ -10061,11 +10061,11 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt199) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:43: MINUS ( HEXCHAR_WILDCARD )+
+					// Css3.g:2198:43: MINUS ( HEXCHAR_WILDCARD )+
 					{
 					mMINUS(); if (state.failed) return;
 
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2197:49: ( HEXCHAR_WILDCARD )+
+					// Css3.g:2198:49: ( HEXCHAR_WILDCARD )+
 					int cnt198=0;
 					loop198:
 					while (true) {
@@ -10077,7 +10077,7 @@ public class Css3Lexer extends Lexer {
 
 						switch (alt198) {
 						case 1 :
-							// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+							// Css3.g:
 							{
 							if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||input.LA(1)=='?'||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
 								input.consume();
@@ -10122,12 +10122,12 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MOZ_URL_PREFIX;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2200:2: ( 'URL-PREFIX(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2201:2: 'URL-PREFIX(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
+			// Css3.g:2201:2: ( 'URL-PREFIX(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
+			// Css3.g:2202:2: 'URL-PREFIX(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
 			{
 			match("URL-PREFIX("); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:13: ( ( WS )=> WS )?
+			// Css3.g:2203:13: ( ( WS )=> WS )?
 			int alt200=2;
 			int LA200_0 = input.LA(1);
 			if ( (LA200_0=='\t'||LA200_0==' ') ) {
@@ -10138,7 +10138,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt200) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:14: ( WS )=> WS
+					// Css3.g:2203:14: ( WS )=> WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10147,7 +10147,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:25: ( URL | STRING )
+			// Css3.g:2203:25: ( URL | STRING )
 			int alt201=2;
 			int LA201_0 = input.LA(1);
 			if ( (LA201_0=='\t'||(LA201_0 >= ' ' && LA201_0 <= '!')||(LA201_0 >= '#' && LA201_0 <= '&')||(LA201_0 >= ')' && LA201_0 <= ';')||LA201_0=='='||(LA201_0 >= '?' && LA201_0 <= '\\')||LA201_0=='_'||(LA201_0 >= 'a' && LA201_0 <= '~')||(LA201_0 >= '\u0080' && LA201_0 <= '\uFFFF')) ) {
@@ -10166,14 +10166,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt201) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:26: URL
+					// Css3.g:2203:26: URL
 					{
 					mURL(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:30: STRING
+					// Css3.g:2203:30: STRING
 					{
 					mSTRING(); if (state.failed) return;
 
@@ -10182,7 +10182,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:38: ( WS )?
+			// Css3.g:2203:38: ( WS )?
 			int alt202=2;
 			int LA202_0 = input.LA(1);
 			if ( (LA202_0=='\t'||LA202_0==' ') ) {
@@ -10190,7 +10190,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt202) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:38: WS
+					// Css3.g:2203:38: WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10216,12 +10216,12 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MOZ_DOMAIN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2208:2: ( 'DOMAIN(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2209:2: 'DOMAIN(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
+			// Css3.g:2209:2: ( 'DOMAIN(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')' )
+			// Css3.g:2210:2: 'DOMAIN(' ( ( WS )=> WS )? ( URL | STRING ) ( WS )? ')'
 			{
 			match("DOMAIN("); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:13: ( ( WS )=> WS )?
+			// Css3.g:2211:13: ( ( WS )=> WS )?
 			int alt203=2;
 			int LA203_0 = input.LA(1);
 			if ( (LA203_0=='\t'||LA203_0==' ') ) {
@@ -10232,7 +10232,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt203) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:14: ( WS )=> WS
+					// Css3.g:2211:14: ( WS )=> WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10241,7 +10241,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:25: ( URL | STRING )
+			// Css3.g:2211:25: ( URL | STRING )
 			int alt204=2;
 			int LA204_0 = input.LA(1);
 			if ( (LA204_0=='\t'||(LA204_0 >= ' ' && LA204_0 <= '!')||(LA204_0 >= '#' && LA204_0 <= '&')||(LA204_0 >= ')' && LA204_0 <= ';')||LA204_0=='='||(LA204_0 >= '?' && LA204_0 <= '\\')||LA204_0=='_'||(LA204_0 >= 'a' && LA204_0 <= '~')||(LA204_0 >= '\u0080' && LA204_0 <= '\uFFFF')) ) {
@@ -10260,14 +10260,14 @@ public class Css3Lexer extends Lexer {
 
 			switch (alt204) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:26: URL
+					// Css3.g:2211:26: URL
 					{
 					mURL(); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:30: STRING
+					// Css3.g:2211:30: STRING
 					{
 					mSTRING(); if (state.failed) return;
 
@@ -10276,7 +10276,7 @@ public class Css3Lexer extends Lexer {
 
 			}
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:38: ( WS )?
+			// Css3.g:2211:38: ( WS )?
 			int alt205=2;
 			int LA205_0 = input.LA(1);
 			if ( (LA205_0=='\t'||LA205_0==' ') ) {
@@ -10284,7 +10284,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt205) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:38: WS
+					// Css3.g:2211:38: WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10310,12 +10310,12 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = MOZ_REGEXP;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2216:2: ( 'REGEXP(' ( ( WS )=> WS )? STRING ( WS )? ')' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2217:2: 'REGEXP(' ( ( WS )=> WS )? STRING ( WS )? ')'
+			// Css3.g:2217:2: ( 'REGEXP(' ( ( WS )=> WS )? STRING ( WS )? ')' )
+			// Css3.g:2218:2: 'REGEXP(' ( ( WS )=> WS )? STRING ( WS )? ')'
 			{
 			match("REGEXP("); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:13: ( ( WS )=> WS )?
+			// Css3.g:2219:13: ( ( WS )=> WS )?
 			int alt206=2;
 			int LA206_0 = input.LA(1);
 			if ( (LA206_0=='\t'||LA206_0==' ') && (synpred16_Css3())) {
@@ -10323,7 +10323,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt206) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:14: ( WS )=> WS
+					// Css3.g:2219:14: ( WS )=> WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10334,7 +10334,7 @@ public class Css3Lexer extends Lexer {
 
 			mSTRING(); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:32: ( WS )?
+			// Css3.g:2219:32: ( WS )?
 			int alt207=2;
 			int LA207_0 = input.LA(1);
 			if ( (LA207_0=='\t'||LA207_0==' ') ) {
@@ -10342,7 +10342,7 @@ public class Css3Lexer extends Lexer {
 			}
 			switch (alt207) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:32: WS
+					// Css3.g:2219:32: WS
 					{
 					mWS(); if (state.failed) return;
 
@@ -10368,10 +10368,10 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = WS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2229:5: ( ( ' ' | '\\t' )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2230:5: ( ' ' | '\\t' )+
+			// Css3.g:2230:5: ( ( ' ' | '\\t' )+ )
+			// Css3.g:2231:5: ( ' ' | '\\t' )+
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2230:5: ( ' ' | '\\t' )+
+			// Css3.g:2231:5: ( ' ' | '\\t' )+
 			int cnt208=0;
 			loop208:
 			while (true) {
@@ -10383,7 +10383,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt208) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
 						input.consume();
@@ -10423,10 +10423,10 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = NL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2234:5: ( ( '\\r' | '\\n' )+ )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2236:5: ( '\\r' | '\\n' )+
+			// Css3.g:2235:5: ( ( '\\r' | '\\n' )+ )
+			// Css3.g:2237:5: ( '\\r' | '\\n' )+
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2236:5: ( '\\r' | '\\n' )+
+			// Css3.g:2237:5: ( '\\r' | '\\n' )+
 			int cnt209=0;
 			loop209:
 			while (true) {
@@ -10438,7 +10438,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt209) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( input.LA(1)=='\n'||input.LA(1)=='\r' ) {
 						input.consume();
@@ -10478,15 +10478,15 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = COMMENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2242:5: ( '/*' ( options {greedy=false; } : ( . )* ) '*/' )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2243:5: '/*' ( options {greedy=false; } : ( . )* ) '*/'
+			// Css3.g:2243:5: ( '/*' ( options {greedy=false; } : ( . )* ) '*/' )
+			// Css3.g:2244:5: '/*' ( options {greedy=false; } : ( . )* ) '*/'
 			{
 			match("/*"); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2243:10: ( options {greedy=false; } : ( . )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2243:40: ( . )*
+			// Css3.g:2244:10: ( options {greedy=false; } : ( . )* )
+			// Css3.g:2244:40: ( . )*
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2243:40: ( . )*
+			// Css3.g:2244:40: ( . )*
 			loop210:
 			while (true) {
 				int alt210=2;
@@ -10507,7 +10507,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt210) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2243:40: .
+					// Css3.g:2244:40: .
 					{
 					matchAny(); if (state.failed) return;
 					}
@@ -10538,15 +10538,15 @@ public class Css3Lexer extends Lexer {
 		try {
 			int _type = LINE_COMMENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2247:5: ( '//' ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* ) )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2248:5: '//' ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* )
+			// Css3.g:2248:5: ( '//' ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* ) )
+			// Css3.g:2249:5: '//' ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* )
 			{
 			match("//"); if (state.failed) return;
 
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2248:9: ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* )
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2248:39: (~ ( '\\r' | '\\n' ) )*
+			// Css3.g:2249:9: ( options {greedy=false; } : (~ ( '\\r' | '\\n' ) )* )
+			// Css3.g:2249:39: (~ ( '\\r' | '\\n' ) )*
 			{
-			// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2248:39: (~ ( '\\r' | '\\n' ) )*
+			// Css3.g:2249:39: (~ ( '\\r' | '\\n' ) )*
 			loop211:
 			while (true) {
 				int alt211=2;
@@ -10557,7 +10557,7 @@ public class Css3Lexer extends Lexer {
 
 				switch (alt211) {
 				case 1 :
-					// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:
+					// Css3.g:
 					{
 					if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\t')||(input.LA(1) >= '\u000B' && input.LA(1) <= '\f')||(input.LA(1) >= '\u000E' && input.LA(1) <= '\uFFFF') ) {
 						input.consume();
@@ -10595,768 +10595,768 @@ public class Css3Lexer extends Lexer {
 
 	@Override
 	public void mTokens() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:8: ( GEN | CDO | CDC | INCLUDES | DASHMATCH | BEGINS | ENDS | CONTAINS | GREATER | LBRACE | RBRACE | LBRACKET | RBRACKET | OPEQ | SEMI | COLON | DCOLON | SOLIDUS | MINUS | PLUS | STAR | LPAREN | RPAREN | COMMA | DOT | TILDE | PIPE | PERCENTAGE_SYMBOL | EXCLAMATION_MARK | CP_EQ | CP_NOT_EQ | LESS | GREATER_OR_EQ | LESS_OR_EQ | LESS_AND | CP_DOTS | LESS_REST | STRING | LESS_JS_STRING | NOT | VARIABLE | IDENT | HASH_SYMBOL | HASH | IMPORTANT_SYM | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | SUPPORTS_SYM | LAYER_SYM | CONTAINER_SYM | KEYFRAMES_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_ERROR | SASS_WARN | SASS_IF | SASS_ELSE | SASS_ELSEIF | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_USE | SASS_FORWARD | SASS_EACH | SASS_WHILE | SASS_AT_ROOT | AT_SIGN | AT_IDENT | SASS_VAR | SASS_DEFAULT | SASS_OPTIONAL | SASS_GLOBAL | SASS_EXTEND_ONLY_SELECTOR | NUMBER | URI | URANGE | MOZ_URL_PREFIX | MOZ_DOMAIN | MOZ_REGEXP | WS | NL | COMMENT | LINE_COMMENT )
+		// Css3.g:1:8: ( GEN | CDO | CDC | INCLUDES | DASHMATCH | BEGINS | ENDS | CONTAINS | GREATER | LBRACE | RBRACE | LBRACKET | RBRACKET | OPEQ | SEMI | COLON | DCOLON | SOLIDUS | MINUS | PLUS | STAR | LPAREN | RPAREN | COMMA | DOT | TILDE | PIPE | PERCENTAGE_SYMBOL | EXCLAMATION_MARK | CP_EQ | CP_NOT_EQ | LESS | GREATER_OR_EQ | LESS_OR_EQ | LESS_AND | CP_DOTS | LESS_REST | STRING | LESS_JS_STRING | NOT | VARIABLE | IDENT | HASH_SYMBOL | HASH | IMPORTANT_SYM | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | SUPPORTS_SYM | LAYER_SYM | CONTAINER_SYM | KEYFRAMES_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_ERROR | SASS_WARN | SASS_IF | SASS_ELSE | SASS_ELSEIF | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_USE | SASS_FORWARD | SASS_EACH | SASS_WHILE | SASS_AT_ROOT | AT_SIGN | AT_IDENT | SASS_VAR | SASS_DEFAULT | SASS_OPTIONAL | SASS_GLOBAL | SASS_EXTEND_ONLY_SELECTOR | NUMBER | URI | URANGE | MOZ_URL_PREFIX | MOZ_DOMAIN | MOZ_REGEXP | WS | NL | COMMENT | LINE_COMMENT )
 		int alt212=109;
 		alt212 = dfa212.predict(input);
 		switch (alt212) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:10: GEN
+				// Css3.g:1:10: GEN
 				{
 				mGEN(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:14: CDO
+				// Css3.g:1:14: CDO
 				{
 				mCDO(); if (state.failed) return;
 
 				}
 				break;
 			case 3 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:18: CDC
+				// Css3.g:1:18: CDC
 				{
 				mCDC(); if (state.failed) return;
 
 				}
 				break;
 			case 4 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:22: INCLUDES
+				// Css3.g:1:22: INCLUDES
 				{
 				mINCLUDES(); if (state.failed) return;
 
 				}
 				break;
 			case 5 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:31: DASHMATCH
+				// Css3.g:1:31: DASHMATCH
 				{
 				mDASHMATCH(); if (state.failed) return;
 
 				}
 				break;
 			case 6 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:41: BEGINS
+				// Css3.g:1:41: BEGINS
 				{
 				mBEGINS(); if (state.failed) return;
 
 				}
 				break;
 			case 7 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:48: ENDS
+				// Css3.g:1:48: ENDS
 				{
 				mENDS(); if (state.failed) return;
 
 				}
 				break;
 			case 8 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:53: CONTAINS
+				// Css3.g:1:53: CONTAINS
 				{
 				mCONTAINS(); if (state.failed) return;
 
 				}
 				break;
 			case 9 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:62: GREATER
+				// Css3.g:1:62: GREATER
 				{
 				mGREATER(); if (state.failed) return;
 
 				}
 				break;
 			case 10 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:70: LBRACE
+				// Css3.g:1:70: LBRACE
 				{
 				mLBRACE(); if (state.failed) return;
 
 				}
 				break;
 			case 11 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:77: RBRACE
+				// Css3.g:1:77: RBRACE
 				{
 				mRBRACE(); if (state.failed) return;
 
 				}
 				break;
 			case 12 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:84: LBRACKET
+				// Css3.g:1:84: LBRACKET
 				{
 				mLBRACKET(); if (state.failed) return;
 
 				}
 				break;
 			case 13 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:93: RBRACKET
+				// Css3.g:1:93: RBRACKET
 				{
 				mRBRACKET(); if (state.failed) return;
 
 				}
 				break;
 			case 14 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:102: OPEQ
+				// Css3.g:1:102: OPEQ
 				{
 				mOPEQ(); if (state.failed) return;
 
 				}
 				break;
 			case 15 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:107: SEMI
+				// Css3.g:1:107: SEMI
 				{
 				mSEMI(); if (state.failed) return;
 
 				}
 				break;
 			case 16 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:112: COLON
+				// Css3.g:1:112: COLON
 				{
 				mCOLON(); if (state.failed) return;
 
 				}
 				break;
 			case 17 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:118: DCOLON
+				// Css3.g:1:118: DCOLON
 				{
 				mDCOLON(); if (state.failed) return;
 
 				}
 				break;
 			case 18 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:125: SOLIDUS
+				// Css3.g:1:125: SOLIDUS
 				{
 				mSOLIDUS(); if (state.failed) return;
 
 				}
 				break;
 			case 19 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:133: MINUS
+				// Css3.g:1:133: MINUS
 				{
 				mMINUS(); if (state.failed) return;
 
 				}
 				break;
 			case 20 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:139: PLUS
+				// Css3.g:1:139: PLUS
 				{
 				mPLUS(); if (state.failed) return;
 
 				}
 				break;
 			case 21 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:144: STAR
+				// Css3.g:1:144: STAR
 				{
 				mSTAR(); if (state.failed) return;
 
 				}
 				break;
 			case 22 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:149: LPAREN
+				// Css3.g:1:149: LPAREN
 				{
 				mLPAREN(); if (state.failed) return;
 
 				}
 				break;
 			case 23 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:156: RPAREN
+				// Css3.g:1:156: RPAREN
 				{
 				mRPAREN(); if (state.failed) return;
 
 				}
 				break;
 			case 24 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:163: COMMA
+				// Css3.g:1:163: COMMA
 				{
 				mCOMMA(); if (state.failed) return;
 
 				}
 				break;
 			case 25 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:169: DOT
+				// Css3.g:1:169: DOT
 				{
 				mDOT(); if (state.failed) return;
 
 				}
 				break;
 			case 26 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:173: TILDE
+				// Css3.g:1:173: TILDE
 				{
 				mTILDE(); if (state.failed) return;
 
 				}
 				break;
 			case 27 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:179: PIPE
+				// Css3.g:1:179: PIPE
 				{
 				mPIPE(); if (state.failed) return;
 
 				}
 				break;
 			case 28 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:184: PERCENTAGE_SYMBOL
+				// Css3.g:1:184: PERCENTAGE_SYMBOL
 				{
 				mPERCENTAGE_SYMBOL(); if (state.failed) return;
 
 				}
 				break;
 			case 29 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:202: EXCLAMATION_MARK
+				// Css3.g:1:202: EXCLAMATION_MARK
 				{
 				mEXCLAMATION_MARK(); if (state.failed) return;
 
 				}
 				break;
 			case 30 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:219: CP_EQ
+				// Css3.g:1:219: CP_EQ
 				{
 				mCP_EQ(); if (state.failed) return;
 
 				}
 				break;
 			case 31 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:225: CP_NOT_EQ
+				// Css3.g:1:225: CP_NOT_EQ
 				{
 				mCP_NOT_EQ(); if (state.failed) return;
 
 				}
 				break;
 			case 32 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:235: LESS
+				// Css3.g:1:235: LESS
 				{
 				mLESS(); if (state.failed) return;
 
 				}
 				break;
 			case 33 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:240: GREATER_OR_EQ
+				// Css3.g:1:240: GREATER_OR_EQ
 				{
 				mGREATER_OR_EQ(); if (state.failed) return;
 
 				}
 				break;
 			case 34 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:254: LESS_OR_EQ
+				// Css3.g:1:254: LESS_OR_EQ
 				{
 				mLESS_OR_EQ(); if (state.failed) return;
 
 				}
 				break;
 			case 35 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:265: LESS_AND
+				// Css3.g:1:265: LESS_AND
 				{
 				mLESS_AND(); if (state.failed) return;
 
 				}
 				break;
 			case 36 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:274: CP_DOTS
+				// Css3.g:1:274: CP_DOTS
 				{
 				mCP_DOTS(); if (state.failed) return;
 
 				}
 				break;
 			case 37 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:282: LESS_REST
+				// Css3.g:1:282: LESS_REST
 				{
 				mLESS_REST(); if (state.failed) return;
 
 				}
 				break;
 			case 38 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:292: STRING
+				// Css3.g:1:292: STRING
 				{
 				mSTRING(); if (state.failed) return;
 
 				}
 				break;
 			case 39 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:299: LESS_JS_STRING
+				// Css3.g:1:299: LESS_JS_STRING
 				{
 				mLESS_JS_STRING(); if (state.failed) return;
 
 				}
 				break;
 			case 40 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:314: NOT
+				// Css3.g:1:314: NOT
 				{
 				mNOT(); if (state.failed) return;
 
 				}
 				break;
 			case 41 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:318: VARIABLE
+				// Css3.g:1:318: VARIABLE
 				{
 				mVARIABLE(); if (state.failed) return;
 
 				}
 				break;
 			case 42 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:327: IDENT
+				// Css3.g:1:327: IDENT
 				{
 				mIDENT(); if (state.failed) return;
 
 				}
 				break;
 			case 43 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:333: HASH_SYMBOL
+				// Css3.g:1:333: HASH_SYMBOL
 				{
 				mHASH_SYMBOL(); if (state.failed) return;
 
 				}
 				break;
 			case 44 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:345: HASH
+				// Css3.g:1:345: HASH
 				{
 				mHASH(); if (state.failed) return;
 
 				}
 				break;
 			case 45 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:350: IMPORTANT_SYM
+				// Css3.g:1:350: IMPORTANT_SYM
 				{
 				mIMPORTANT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 46 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:364: IMPORT_SYM
+				// Css3.g:1:364: IMPORT_SYM
 				{
 				mIMPORT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 47 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:375: PAGE_SYM
+				// Css3.g:1:375: PAGE_SYM
 				{
 				mPAGE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 48 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:384: MEDIA_SYM
+				// Css3.g:1:384: MEDIA_SYM
 				{
 				mMEDIA_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 49 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:394: NAMESPACE_SYM
+				// Css3.g:1:394: NAMESPACE_SYM
 				{
 				mNAMESPACE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 50 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:408: CHARSET_SYM
+				// Css3.g:1:408: CHARSET_SYM
 				{
 				mCHARSET_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 51 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:420: COUNTER_STYLE_SYM
+				// Css3.g:1:420: COUNTER_STYLE_SYM
 				{
 				mCOUNTER_STYLE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 52 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:438: FONT_FACE_SYM
+				// Css3.g:1:438: FONT_FACE_SYM
 				{
 				mFONT_FACE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 53 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:452: SUPPORTS_SYM
+				// Css3.g:1:452: SUPPORTS_SYM
 				{
 				mSUPPORTS_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 54 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:465: LAYER_SYM
+				// Css3.g:1:465: LAYER_SYM
 				{
 				mLAYER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 55 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:475: CONTAINER_SYM
+				// Css3.g:1:475: CONTAINER_SYM
 				{
 				mCONTAINER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 56 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:489: KEYFRAMES_SYM
+				// Css3.g:1:489: KEYFRAMES_SYM
 				{
 				mKEYFRAMES_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 57 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:503: TOPLEFTCORNER_SYM
+				// Css3.g:1:503: TOPLEFTCORNER_SYM
 				{
 				mTOPLEFTCORNER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 58 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:521: TOPLEFT_SYM
+				// Css3.g:1:521: TOPLEFT_SYM
 				{
 				mTOPLEFT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 59 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:533: TOPCENTER_SYM
+				// Css3.g:1:533: TOPCENTER_SYM
 				{
 				mTOPCENTER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 60 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:547: TOPRIGHT_SYM
+				// Css3.g:1:547: TOPRIGHT_SYM
 				{
 				mTOPRIGHT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 61 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:560: TOPRIGHTCORNER_SYM
+				// Css3.g:1:560: TOPRIGHTCORNER_SYM
 				{
 				mTOPRIGHTCORNER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 62 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:579: BOTTOMLEFTCORNER_SYM
+				// Css3.g:1:579: BOTTOMLEFTCORNER_SYM
 				{
 				mBOTTOMLEFTCORNER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 63 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:600: BOTTOMLEFT_SYM
+				// Css3.g:1:600: BOTTOMLEFT_SYM
 				{
 				mBOTTOMLEFT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 64 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:615: BOTTOMCENTER_SYM
+				// Css3.g:1:615: BOTTOMCENTER_SYM
 				{
 				mBOTTOMCENTER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 65 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:632: BOTTOMRIGHT_SYM
+				// Css3.g:1:632: BOTTOMRIGHT_SYM
 				{
 				mBOTTOMRIGHT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 66 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:648: BOTTOMRIGHTCORNER_SYM
+				// Css3.g:1:648: BOTTOMRIGHTCORNER_SYM
 				{
 				mBOTTOMRIGHTCORNER_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 67 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:670: LEFTTOP_SYM
+				// Css3.g:1:670: LEFTTOP_SYM
 				{
 				mLEFTTOP_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 68 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:682: LEFTMIDDLE_SYM
+				// Css3.g:1:682: LEFTMIDDLE_SYM
 				{
 				mLEFTMIDDLE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 69 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:697: LEFTBOTTOM_SYM
+				// Css3.g:1:697: LEFTBOTTOM_SYM
 				{
 				mLEFTBOTTOM_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 70 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:712: RIGHTTOP_SYM
+				// Css3.g:1:712: RIGHTTOP_SYM
 				{
 				mRIGHTTOP_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 71 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:725: RIGHTMIDDLE_SYM
+				// Css3.g:1:725: RIGHTMIDDLE_SYM
 				{
 				mRIGHTMIDDLE_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 72 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:741: RIGHTBOTTOM_SYM
+				// Css3.g:1:741: RIGHTBOTTOM_SYM
 				{
 				mRIGHTBOTTOM_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 73 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:757: MOZ_DOCUMENT_SYM
+				// Css3.g:1:757: MOZ_DOCUMENT_SYM
 				{
 				mMOZ_DOCUMENT_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 74 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:774: WEBKIT_KEYFRAMES_SYM
+				// Css3.g:1:774: WEBKIT_KEYFRAMES_SYM
 				{
 				mWEBKIT_KEYFRAMES_SYM(); if (state.failed) return;
 
 				}
 				break;
 			case 75 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:795: SASS_CONTENT
+				// Css3.g:1:795: SASS_CONTENT
 				{
 				mSASS_CONTENT(); if (state.failed) return;
 
 				}
 				break;
 			case 76 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:808: SASS_MIXIN
+				// Css3.g:1:808: SASS_MIXIN
 				{
 				mSASS_MIXIN(); if (state.failed) return;
 
 				}
 				break;
 			case 77 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:819: SASS_INCLUDE
+				// Css3.g:1:819: SASS_INCLUDE
 				{
 				mSASS_INCLUDE(); if (state.failed) return;
 
 				}
 				break;
 			case 78 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:832: SASS_EXTEND
+				// Css3.g:1:832: SASS_EXTEND
 				{
 				mSASS_EXTEND(); if (state.failed) return;
 
 				}
 				break;
 			case 79 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:844: SASS_DEBUG
+				// Css3.g:1:844: SASS_DEBUG
 				{
 				mSASS_DEBUG(); if (state.failed) return;
 
 				}
 				break;
 			case 80 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:855: SASS_ERROR
+				// Css3.g:1:855: SASS_ERROR
 				{
 				mSASS_ERROR(); if (state.failed) return;
 
 				}
 				break;
 			case 81 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:866: SASS_WARN
+				// Css3.g:1:866: SASS_WARN
 				{
 				mSASS_WARN(); if (state.failed) return;
 
 				}
 				break;
 			case 82 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:876: SASS_IF
+				// Css3.g:1:876: SASS_IF
 				{
 				mSASS_IF(); if (state.failed) return;
 
 				}
 				break;
 			case 83 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:884: SASS_ELSE
+				// Css3.g:1:884: SASS_ELSE
 				{
 				mSASS_ELSE(); if (state.failed) return;
 
 				}
 				break;
 			case 84 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:894: SASS_ELSEIF
+				// Css3.g:1:894: SASS_ELSEIF
 				{
 				mSASS_ELSEIF(); if (state.failed) return;
 
 				}
 				break;
 			case 85 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:906: SASS_FOR
+				// Css3.g:1:906: SASS_FOR
 				{
 				mSASS_FOR(); if (state.failed) return;
 
 				}
 				break;
 			case 86 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:915: SASS_FUNCTION
+				// Css3.g:1:915: SASS_FUNCTION
 				{
 				mSASS_FUNCTION(); if (state.failed) return;
 
 				}
 				break;
 			case 87 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:929: SASS_RETURN
+				// Css3.g:1:929: SASS_RETURN
 				{
 				mSASS_RETURN(); if (state.failed) return;
 
 				}
 				break;
 			case 88 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:941: SASS_USE
+				// Css3.g:1:941: SASS_USE
 				{
 				mSASS_USE(); if (state.failed) return;
 
 				}
 				break;
 			case 89 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:950: SASS_FORWARD
+				// Css3.g:1:950: SASS_FORWARD
 				{
 				mSASS_FORWARD(); if (state.failed) return;
 
 				}
 				break;
 			case 90 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:963: SASS_EACH
+				// Css3.g:1:963: SASS_EACH
 				{
 				mSASS_EACH(); if (state.failed) return;
 
 				}
 				break;
 			case 91 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:973: SASS_WHILE
+				// Css3.g:1:973: SASS_WHILE
 				{
 				mSASS_WHILE(); if (state.failed) return;
 
 				}
 				break;
 			case 92 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:984: SASS_AT_ROOT
+				// Css3.g:1:984: SASS_AT_ROOT
 				{
 				mSASS_AT_ROOT(); if (state.failed) return;
 
 				}
 				break;
 			case 93 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:997: AT_SIGN
+				// Css3.g:1:997: AT_SIGN
 				{
 				mAT_SIGN(); if (state.failed) return;
 
 				}
 				break;
 			case 94 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1005: AT_IDENT
+				// Css3.g:1:1005: AT_IDENT
 				{
 				mAT_IDENT(); if (state.failed) return;
 
 				}
 				break;
 			case 95 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1014: SASS_VAR
+				// Css3.g:1:1014: SASS_VAR
 				{
 				mSASS_VAR(); if (state.failed) return;
 
 				}
 				break;
 			case 96 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1023: SASS_DEFAULT
+				// Css3.g:1:1023: SASS_DEFAULT
 				{
 				mSASS_DEFAULT(); if (state.failed) return;
 
 				}
 				break;
 			case 97 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1036: SASS_OPTIONAL
+				// Css3.g:1:1036: SASS_OPTIONAL
 				{
 				mSASS_OPTIONAL(); if (state.failed) return;
 
 				}
 				break;
 			case 98 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1050: SASS_GLOBAL
+				// Css3.g:1:1050: SASS_GLOBAL
 				{
 				mSASS_GLOBAL(); if (state.failed) return;
 
 				}
 				break;
 			case 99 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1062: SASS_EXTEND_ONLY_SELECTOR
+				// Css3.g:1:1062: SASS_EXTEND_ONLY_SELECTOR
 				{
 				mSASS_EXTEND_ONLY_SELECTOR(); if (state.failed) return;
 
 				}
 				break;
 			case 100 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1088: NUMBER
+				// Css3.g:1:1088: NUMBER
 				{
 				mNUMBER(); if (state.failed) return;
 
 				}
 				break;
 			case 101 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1095: URI
+				// Css3.g:1:1095: URI
 				{
 				mURI(); if (state.failed) return;
 
 				}
 				break;
 			case 102 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1099: URANGE
+				// Css3.g:1:1099: URANGE
 				{
 				mURANGE(); if (state.failed) return;
 
 				}
 				break;
 			case 103 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1106: MOZ_URL_PREFIX
+				// Css3.g:1:1106: MOZ_URL_PREFIX
 				{
 				mMOZ_URL_PREFIX(); if (state.failed) return;
 
 				}
 				break;
 			case 104 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1121: MOZ_DOMAIN
+				// Css3.g:1:1121: MOZ_DOMAIN
 				{
 				mMOZ_DOMAIN(); if (state.failed) return;
 
 				}
 				break;
 			case 105 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1132: MOZ_REGEXP
+				// Css3.g:1:1132: MOZ_REGEXP
 				{
 				mMOZ_REGEXP(); if (state.failed) return;
 
 				}
 				break;
 			case 106 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1143: WS
+				// Css3.g:1:1143: WS
 				{
 				mWS(); if (state.failed) return;
 
 				}
 				break;
 			case 107 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1146: NL
+				// Css3.g:1:1146: NL
 				{
 				mNL(); if (state.failed) return;
 
 				}
 				break;
 			case 108 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1149: COMMENT
+				// Css3.g:1:1149: COMMENT
 				{
 				mCOMMENT(); if (state.failed) return;
 
 				}
 				break;
 			case 109 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:1:1157: LINE_COMMENT
+				// Css3.g:1:1157: LINE_COMMENT
 				{
 				mLINE_COMMENT(); if (state.failed) return;
 
@@ -11368,8 +11368,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred1_Css3
 	public final void synpred1_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:26: ( '\\\\\\\"' )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:27: '\\\\\\\"'
+		// Css3.g:2005:26: ( '\\\\\\\"' )
+		// Css3.g:2005:27: '\\\\\\\"'
 		{
 		match("\\\""); if (state.failed) return;
 
@@ -11380,8 +11380,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred2_Css3
 	public final void synpred2_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:47: ( '\\\\\\\\' )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2004:48: '\\\\\\\\'
+		// Css3.g:2005:47: ( '\\\\\\\\' )
+		// Css3.g:2005:48: '\\\\\\\\'
 		{
 		match("\\\\"); if (state.failed) return;
 
@@ -11392,14 +11392,14 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred3_Css3
 	public final void synpred3_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:15: ( D P ( I | C ) )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:16: D P ( I | C )
+		// Css3.g:2129:15: ( D P ( I | C ) )
+		// Css3.g:2129:16: D P ( I | C )
 		{
 		mD(); if (state.failed) return;
 
 		mP(); if (state.failed) return;
 
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:20: ( I | C )
+		// Css3.g:2129:20: ( I | C )
 		int alt213=2;
 		switch ( input.LA(1) ) {
 		case 'I':
@@ -11651,14 +11651,14 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt213) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:21: I
+				// Css3.g:2129:21: I
 				{
 				mI(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2128:23: C
+				// Css3.g:2129:23: C
 				{
 				mC(); if (state.failed) return;
 
@@ -11674,12 +11674,12 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred4_Css3
 	public final void synpred4_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:15: ( E ( M | X ) )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:16: E ( M | X )
+		// Css3.g:2136:15: ( E ( M | X ) )
+		// Css3.g:2136:16: E ( M | X )
 		{
 		mE(); if (state.failed) return;
 
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:18: ( M | X )
+		// Css3.g:2136:18: ( M | X )
 		int alt214=2;
 		switch ( input.LA(1) ) {
 		case 'M':
@@ -11855,14 +11855,14 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt214) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:19: M
+				// Css3.g:2136:19: M
 				{
 				mM(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2135:21: X
+				// Css3.g:2136:21: X
 				{
 				mX(); if (state.failed) return;
 
@@ -11878,12 +11878,12 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred5_Css3
 	public final void synpred5_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:15: ( P ( X | T | C ) )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:16: P ( X | T | C )
+		// Css3.g:2142:15: ( P ( X | T | C ) )
+		// Css3.g:2142:16: P ( X | T | C )
 		{
 		mP(); if (state.failed) return;
 
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:17: ( X | T | C )
+		// Css3.g:2142:17: ( X | T | C )
 		int alt215=3;
 		switch ( input.LA(1) ) {
 		case 'X':
@@ -12183,21 +12183,21 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt215) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:18: X
+				// Css3.g:2142:18: X
 				{
 				mX(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:20: T
+				// Css3.g:2142:20: T
 				{
 				mT(); if (state.failed) return;
 
 				}
 				break;
 			case 3 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2141:22: C
+				// Css3.g:2142:22: C
 				{
 				mC(); if (state.failed) return;
 
@@ -12213,8 +12213,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred6_Css3
 	public final void synpred6_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2149:15: ( C M )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2149:16: C M
+		// Css3.g:2150:15: ( C M )
+		// Css3.g:2150:16: C M
 		{
 		mC(); if (state.failed) return;
 
@@ -12227,12 +12227,12 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred7_Css3
 	public final void synpred7_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:15: ( M ( M | S ) )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:16: M ( M | S )
+		// Css3.g:2152:15: ( M ( M | S ) )
+		// Css3.g:2152:16: M ( M | S )
 		{
 		mM(); if (state.failed) return;
 
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:18: ( M | S )
+		// Css3.g:2152:18: ( M | S )
 		int alt216=2;
 		switch ( input.LA(1) ) {
 		case 'M':
@@ -12408,14 +12408,14 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt216) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:19: M
+				// Css3.g:2152:19: M
 				{
 				mM(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2151:21: S
+				// Css3.g:2152:21: S
 				{
 				mS(); if (state.failed) return;
 
@@ -12431,8 +12431,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred8_Css3
 	public final void synpred8_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2158:15: ( I N )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2158:16: I N
+		// Css3.g:2159:15: ( I N )
+		// Css3.g:2159:16: I N
 		{
 		mI(); if (state.failed) return;
 
@@ -12445,8 +12445,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred9_Css3
 	public final void synpred9_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2161:15: ( D E G )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2161:16: D E G
+		// Css3.g:2162:15: ( D E G )
+		// Css3.g:2162:16: D E G
 		{
 		mD(); if (state.failed) return;
 
@@ -12461,12 +12461,12 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred10_Css3
 	public final void synpred10_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:15: ( R ( A | E ) )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:16: R ( A | E )
+		// Css3.g:2167:15: ( R ( A | E ) )
+		// Css3.g:2167:16: R ( A | E )
 		{
 		mR(); if (state.failed) return;
 
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:18: ( A | E )
+		// Css3.g:2167:18: ( A | E )
 		int alt217=2;
 		switch ( input.LA(1) ) {
 		case 'A':
@@ -12709,14 +12709,14 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt217) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:19: A
+				// Css3.g:2167:19: A
 				{
 				mA(); if (state.failed) return;
 
 				}
 				break;
 			case 2 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2166:21: E
+				// Css3.g:2167:21: E
 				{
 				mE(); if (state.failed) return;
 
@@ -12732,8 +12732,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred11_Css3
 	public final void synpred11_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2173:15: ( S )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2173:16: S
+		// Css3.g:2174:15: ( S )
+		// Css3.g:2174:16: S
 		{
 		mS(); if (state.failed) return;
 
@@ -12744,10 +12744,10 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred12_Css3
 	public final void synpred12_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2175:15: ( ( K )? H Z )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2175:16: ( K )? H Z
+		// Css3.g:2176:15: ( ( K )? H Z )
+		// Css3.g:2176:16: ( K )? H Z
 		{
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2175:16: ( K )?
+		// Css3.g:2176:16: ( K )?
 		int alt218=2;
 		int LA218_0 = input.LA(1);
 		if ( (LA218_0=='K'||LA218_0=='k') ) {
@@ -12812,7 +12812,7 @@ public class Css3Lexer extends Lexer {
 		}
 		switch (alt218) {
 			case 1 :
-				// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2175:16: K
+				// Css3.g:2176:16: K
 				{
 				mK(); if (state.failed) return;
 
@@ -12832,8 +12832,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred13_Css3
 	public final void synpred13_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:14: ( WS )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2191:15: WS
+		// Css3.g:2192:14: ( WS )
+		// Css3.g:2192:15: WS
 		{
 		mWS(); if (state.failed) return;
 
@@ -12844,8 +12844,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred14_Css3
 	public final void synpred14_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:14: ( WS )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2202:15: WS
+		// Css3.g:2203:14: ( WS )
+		// Css3.g:2203:15: WS
 		{
 		mWS(); if (state.failed) return;
 
@@ -12856,8 +12856,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred15_Css3
 	public final void synpred15_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:14: ( WS )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2210:15: WS
+		// Css3.g:2211:14: ( WS )
+		// Css3.g:2211:15: WS
 		{
 		mWS(); if (state.failed) return;
 
@@ -12868,8 +12868,8 @@ public class Css3Lexer extends Lexer {
 
 	// $ANTLR start synpred16_Css3
 	public final void synpred16_Css3_fragment() throws RecognitionException {
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:14: ( WS )
-		// ide\\css.lib\\src\\org\\netbeans\\modules\\css\\lib\\Css3.g:2218:15: WS
+		// Css3.g:2219:14: ( WS )
+		// Css3.g:2219:15: WS
 		{
 		mWS(); if (state.failed) return;
 
@@ -13205,70 +13205,70 @@ public class Css3Lexer extends Lexer {
 		"\uffff\1\7\113\uffff\1\10\u020c\uffff";
 	static final String DFA193_specialS =
 		"\2\uffff\1\u01b8\6\uffff\1\u01ac\12\uffff\1\u01ad\5\uffff\1\141\16\uffff"+
-		"\1\u01b9\1\u01ba\4\uffff\1\u01e6\1\4\1\u00e1\1\u01ee\1\u00e8\1\u00f7\1"+
-		"\11\1\165\1\u0140\1\u0101\1\177\1\u0145\1\u0160\1\u0195\1\u0167\1\14\1"+
-		"\55\1\u0089\1\33\1\u0097\1\u0198\1\5\1\u01a1\1\uffff\1\52\5\uffff\1\u01b3"+
-		"\1\uffff\1\u00ba\1\u00b7\1\u00cc\1\u01e7\1\u00e2\1\u01ef\1\u00e9\1\u00f8"+
-		"\1\166\1\u0141\1\u0102\1\u0080\1\u0146\1\u0161\1\u0168\1\15\1\u008a\1"+
-		"\34\1\u0099\1\u0199\1\u01a2\1\u00b9\1\u00ca\1\u0180\1\u0153\1\uffff\1"+
-		"\u0189\6\uffff\1\u011f\1\u0155\1\u012c\1\u0181\1\u018a\1\u011e\1\u012d"+
-		"\1\u00f9\1\u0103\1\167\1\u0081\1\u0142\1\u0147\14\uffff\1\u00fa\1\u0100"+
-		"\1\170\1\u0082\1\u0143\1\u0148\1\16\1\35\1\u008d\1\u009b\2\uffff\1\u01be"+
-		"\1\17\1\43\1\u008e\1\u0098\1\u019a\1\u01a0\1\u019b\1\u01a3\1\u00bc\1\u00cb"+
-		"\1\u00c2\1\u00ce\1\uffff\1\u01bb\1\u01bc\1\u0119\2\uffff\1\u011b\2\uffff"+
+		"\1\u01b9\1\u01ba\4\uffff\1\u01e6\1\4\1\u00e1\1\u01ee\1\u00e8\1\u00f8\1"+
+		"\11\1\165\1\u0140\1\u0101\1\177\1\u0145\1\u0160\1\u0195\1\u0167\1\15\1"+
+		"\55\1\u008a\1\33\1\u0097\1\u0197\1\5\1\u01a1\1\uffff\1\52\5\uffff\1\u01b3"+
+		"\1\uffff\1\u00ba\1\u00b7\1\u00cc\1\u01e7\1\u00e2\1\u01ef\1\u00e9\1\u00f9"+
+		"\1\166\1\u0141\1\u0102\1\u0080\1\u0146\1\u0161\1\u0168\1\16\1\u008b\1"+
+		"\34\1\u0099\1\u0198\1\u01a0\1\u00bb\1\u00ca\1\u0180\1\u0153\1\uffff\1"+
+		"\u0189\6\uffff\1\u011d\1\u0155\1\u012c\1\u0181\1\u0188\1\u011e\1\u012d"+
+		"\1\u00f7\1\u0103\1\167\1\u0081\1\u0142\1\u0147\14\uffff\1\u00fa\1\u0104"+
+		"\1\170\1\176\1\u0143\1\u0148\1\22\1\35\1\u0089\1\u0098\2\uffff\1\u01be"+
+		"\1\23\1\36\1\u008d\1\u009a\1\u019a\1\u01a2\1\u019b\1\u01a3\1\u00be\1\u00ce"+
+		"\1\u00b8\1\u00d3\1\uffff\1\u01bb\1\u01bc\1\u0119\2\uffff\1\u011b\2\uffff"+
 		"\1\u013a\1\u013b\1\u00b5\2\uffff\1\u00b6\2\uffff\1\u015a\1\u015b\3\uffff"+
 		"\1\u01f6\1\u01f7\1\u00af\2\uffff\1\u00b0\2\uffff\1\u017c\1\u017d\2\uffff"+
-		"\1\u016e\1\u010f\1\u0173\2\uffff\1\71\1\u0196\1\111\1\u016f\1\u0174\1"+
-		"\75\1\114\1\u00c3\1\u00d2\4\uffff\1\u00c4\1\u00d3\1\uffff\1\u0118\1\u011a"+
-		"\3\uffff\1\u014d\1\u014e\2\uffff\1\u01c6\1\u017e\1\u01d6\1\u01c7\1\u01d7"+
-		"\1\u0182\1\u018b\1\u0183\1\u018c\6\uffff\1\u00dd\1\u00de\20\uffff\1\67"+
-		"\2\uffff\1\u01e8\1\u00e3\1\u01f0\1\u00ea\1\u0162\1\u0169\1\20\1\u0090"+
-		"\1\44\1\u009c\1\u0197\1\u01a4\1\u00c5\1\u00d4\1\21\1\u0091\1\45\1\u009e"+
-		"\1\u00fb\1\171\1\12\1\u0104\1\176\1\13\7\uffff\1\u0192\1\u0194\1\u010e"+
+		"\1\u016e\1\u010f\1\u0173\2\uffff\1\71\1\u0196\1\107\1\u016f\1\u0174\1"+
+		"\72\1\110\1\u00c2\1\u00d4\4\uffff\1\u00b9\1\u00d5\1\uffff\1\u0118\1\u011a"+
+		"\3\uffff\1\u014d\1\u014e\2\uffff\1\u01c6\1\u017e\1\u01d6\1\u01c7\1\u01d5"+
+		"\1\u0182\1\u018a\1\u0183\1\u018b\6\uffff\1\u00dd\1\u00de\20\uffff\1\67"+
+		"\2\uffff\1\u01e8\1\u00e3\1\u01f0\1\u00ea\1\u0162\1\u0169\1\14\1\u008e"+
+		"\1\40\1\u009b\1\u019c\1\u01a4\1\u00c3\1\u00d6\1\26\1\u0090\1\32\1\u00a0"+
+		"\1\u00fb\1\171\1\12\1\u0100\1\u0082\1\13\7\uffff\1\u0192\1\u0194\1\u010e"+
 		"\3\uffff\1\u0112\1\155\1\u01e3\2\uffff\1\u013c\1\u013d\3\uffff\1\u01af"+
-		"\1\u01b0\1\152\2\uffff\1\u0156\1\u0157\7\uffff\1\53\1\54\2\uffff\1\u00c7"+
-		"\1\u00da\1\u00c0\1\u00d5\5\uffff\1\u010c\1\u010d\2\uffff\1\u0116\1\uffff"+
-		"\1\u01b4\1\u01b5\7\uffff\1\u0184\1\uffff\1\u0188\1\uffff\1\u0120\1\u012f"+
+		"\1\u01b0\1\152\2\uffff\1\u0156\1\u0157\7\uffff\1\53\1\54\2\uffff\1\u00c9"+
+		"\1\u00cb\1\u00bf\1\u00d7\5\uffff\1\u010c\1\u010d\2\uffff\1\u0116\1\uffff"+
+		"\1\u01b4\1\u01b5\7\uffff\1\u0184\1\uffff\1\u018c\1\uffff\1\u0123\1\u012e"+
 		"\2\uffff\1\u00a5\16\uffff\1\u00a8\2\uffff\1\u01e9\1\u00e4\1\u01f1\1\u00eb"+
-		"\1\u0163\1\u016a\1\26\1\u0092\1\32\1\u009f\1\u019c\1\u01a5\1\u00c1\1\u00d7"+
-		"\1\27\1\u0094\1\46\1\u00a0\1\u00fc\1\173\1\150\1\u0105\1\u0083\1\151\4"+
-		"\uffff\1\u0122\1\u0130\1\u011d\1\u0132\1\u00b1\1\u00b3\1\70\1\107\1\u00b2"+
-		"\1\u00b4\1\76\1\110\3\uffff\1\2\1\3\1\u014c\3\uffff\1\u0154\1\u00f5\1"+
+		"\1\u0163\1\u016a\1\27\1\u0091\1\42\1\u00a1\1\u019d\1\u01a5\1\u00c4\1\u00da"+
+		"\1\30\1\u0093\1\45\1\u00a2\1\u00fc\1\172\1\150\1\u0105\1\u0083\1\151\4"+
+		"\uffff\1\u0124\1\u012f\1\u0126\1\u0130\1\u00b1\1\u00b3\1\73\1\116\1\u00b2"+
+		"\1\u00b4\1\76\1\121\3\uffff\1\2\1\3\1\u014c\3\uffff\1\u0154\1\u00f5\1"+
 		"\133\2\uffff\1\u017a\1\u017b\3\uffff\1\61\1\63\1\u00f0\2\uffff\1\u01b1"+
-		"\1\u01b2\2\uffff\1\66\4\uffff\1\161\1\163\1\77\1\120\2\uffff\1\u01c2\1"+
-		"\u01c3\3\uffff\1\u00bd\1\u00cd\2\uffff\1\u014a\1\u014b\2\uffff\1\u015d"+
-		"\1\uffff\1\u01c5\1\u01d5\2\uffff\1\u0178\1\u0179\5\uffff\1\u017f\1\uffff"+
-		"\1\u018d\1\uffff\1\u0128\1\u0133\1\u01ca\1\u01d9\1\u01cb\1\u01da\2\uffff"+
+		"\1\u01b2\2\uffff\1\66\4\uffff\1\161\1\163\1\100\1\122\2\uffff\1\u01c2"+
+		"\1\u01c3\3\uffff\1\u00c0\1\u00d0\2\uffff\1\u014a\1\u014b\2\uffff\1\u015d"+
+		"\1\uffff\1\u01c8\1\u01d7\2\uffff\1\u0178\1\u0179\5\uffff\1\u017f\1\uffff"+
+		"\1\u018d\1\uffff\1\u0128\1\u012b\1\u01c9\1\u01da\1\u01cc\1\u01dd\2\uffff"+
 		"\1\u0111\15\uffff\1\126\2\uffff\1\u01ea\1\u00e5\1\u01f2\1\u00ec\1\u0164"+
-		"\1\u016b\1\30\1\u0095\1\50\1\u00a3\1\u019d\1\u01a6\1\u00c9\1\u00db\1\22"+
-		"\1\u0093\1\40\1\u00a4\1\u00fd\1\174\1\36\1\u0106\1\u0084\1\51\4\uffff"+
-		"\1\u0129\1\u012b\1\u012a\1\u0135\1\142\1\144\1\100\1\121\1\143\1\145\1"+
+		"\1\u016b\1\31\1\u0096\1\47\1\u009d\1\u019e\1\u01a6\1\u00c1\1\u00d9\1\24"+
+		"\1\u0092\1\37\1\u009f\1\u00fd\1\174\1\41\1\u0106\1\u0084\1\51\4\uffff"+
+		"\1\u011c\1\u0132\1\u0129\1\u0133\1\142\1\144\1\70\1\123\1\143\1\145\1"+
 		"\101\1\124\3\uffff\1\146\1\147\1\u01ab\3\uffff\1\u01ae\1\u013f\1\u00ad"+
 		"\2\uffff\1\u01ed\1\u01f5\3\uffff\1\156\1\157\1\u013e\2\uffff\1\60\1\62"+
 		"\2\uffff\1\164\4\uffff\1\u0109\1\u010b\1\102\1\125\2\uffff\1\127\1\130"+
-		"\3\uffff\1\u00bf\1\u00d8\2\uffff\1\u01a9\1\u01aa\2\uffff\1\u01c1\1\uffff"+
-		"\1\u01cc\1\u01dc\2\uffff\1\u01e4\1\u01e5\4\uffff\1\u0186\1\uffff\1\u018e"+
-		"\1\uffff\1\u0123\1\u0136\1\u01cf\1\u01d4\1\u01d2\1\u01df\2\uffff\1\u0152"+
+		"\3\uffff\1\u00c8\1\u00d8\2\uffff\1\u01a9\1\u01aa\2\uffff\1\u01c1\1\uffff"+
+		"\1\u01c5\1\u01d4\2\uffff\1\u01e4\1\u01e5\4\uffff\1\u0185\1\uffff\1\u018e"+
+		"\1\uffff\1\u0120\1\u0138\1\u01cf\1\u01de\1\u01d1\1\u01e0\2\uffff\1\u0152"+
 		"\13\uffff\1\u00dc\2\uffff\1\u01eb\1\u00e6\1\u01f3\1\u00ed\1\u0165\1\u016c"+
-		"\1\23\1\u008b\1\47\1\u00a2\1\u019f\1\u01a7\1\u00c8\1\u00d0\1\24\1\u0096"+
-		"\1\37\1\u009d\1\u00fe\1\175\1\u00a7\1\u0107\1\u0085\1\u00a9\4\uffff\1"+
-		"\u0126\1\u0134\1\u0124\1\u012e\1\u00f1\1\u00f3\1\103\1\122\1\u00f2\1\u00f4"+
-		"\1\106\1\116\2\uffff\1\6\1\7\1\u0151\2\uffff\1\u0158\1\u010a\1\140\1\uffff"+
+		"\1\25\1\u0094\1\50\1\u009c\1\u019f\1\u01a7\1\u00c6\1\u00d2\1\17\1\u008f"+
+		"\1\46\1\u009e\1\u00fe\1\175\1\u00a7\1\u0107\1\u0085\1\u00a9\4\uffff\1"+
+		"\u011f\1\u0135\1\u0127\1\u0131\1\u00f1\1\u00f3\1\103\1\114\1\u00f2\1\u00f4"+
+		"\1\106\1\113\2\uffff\1\6\1\7\1\u0151\2\uffff\1\u0158\1\u010a\1\140\1\uffff"+
 		"\1\u0191\1\u0193\2\uffff\1\64\1\65\1\u00f6\1\uffff\1\u01b6\1\u01b7\2\uffff"+
-		"\1\u0110\3\uffff\1\u0087\1\u0088\1\73\1\117\2\uffff\1\u00aa\1\u00ab\2"+
-		"\uffff\1\u00c6\1\u00d1\1\uffff\1\u014f\1\u0150\1\uffff\1\u015e\1\uffff"+
-		"\1\u01d3\1\u01de\2\uffff\1\136\1\137\2\uffff\1\u0187\1\uffff\1\u018f\1"+
-		"\uffff\1\u011c\1\u0138\1\u01c8\1\u01db\1\u01cd\1\u01d8\1\uffff\1\u0113"+
-		"\1\u01ec\1\u00e7\1\u01f4\1\u00ee\1\u0166\1\u016d\1\25\1\u008f\1\42\1\u009a"+
-		"\1\u019e\1\u01a8\1\u00b8\1\u00d9\1\31\1\u008c\1\41\1\u00a1\1\u00ff\1\172"+
-		"\1\u0144\1\u0108\1\u0086\1\u0149\1\u0125\1\u0131\1\u0127\1\u0139\1\u0170"+
-		"\1\u0175\1\104\1\123\1\u0171\1\u0176\1\72\1\115\1\160\1\162\1\u01c0\1"+
+		"\1\u0110\3\uffff\1\u0087\1\u0088\1\105\1\120\2\uffff\1\u00aa\1\u00ab\2"+
+		"\uffff\1\u00bc\1\u00cd\1\uffff\1\u014f\1\u0150\1\uffff\1\u015e\1\uffff"+
+		"\1\u01d2\1\u01df\2\uffff\1\136\1\137\2\uffff\1\u0187\1\uffff\1\u018f\1"+
+		"\uffff\1\u0122\1\u0134\1\u01cd\1\u01d8\1\u01cb\1\u01dc\1\uffff\1\u0113"+
+		"\1\u01ec\1\u00e7\1\u01f4\1\u00ee\1\u0166\1\u016d\1\20\1\u0095\1\44\1\u00a4"+
+		"\1\u0199\1\u01a8\1\u00bd\1\u00cf\1\21\1\u008c\1\43\1\u00a3\1\u00ff\1\173"+
+		"\1\u0144\1\u0108\1\u0086\1\u0149\1\u0125\1\u0139\1\u0121\1\u0136\1\u0170"+
+		"\1\u0175\1\104\1\111\1\u0171\1\u0176\1\77\1\117\1\160\1\162\1\u01c0\1"+
 		"\u01c4\1\u015c\1\u00ef\1\56\1\57\1\u00ac\1\u00ae\1\u0159\1\131\1\132\1"+
-		"\uffff\1\u00a6\2\uffff\1\u0114\1\u0115\1\74\1\112\1\uffff\1\134\1\135"+
-		"\1\uffff\1\u00be\1\u00d6\1\u01bd\1\u01bf\1\10\1\uffff\1\u01ce\1\u01e0"+
-		"\1\uffff\1\0\1\1\1\u0185\1\u0190\1\u0121\1\u0137\1\u01c9\1\u01dd\1\u01d0"+
-		"\1\u01e1\1\u015f\1\u0117\1\u0172\1\u0177\1\105\1\113\1\u00df\1\u00e0\1"+
-		"\u00bb\1\u00cf\1\u01d1\1\u01e2\1\153\1\154}>";
+		"\uffff\1\u00a6\2\uffff\1\u0114\1\u0115\1\74\1\115\1\uffff\1\134\1\135"+
+		"\1\uffff\1\u00c5\1\u00d1\1\u01bd\1\u01bf\1\10\1\uffff\1\u01ca\1\u01e1"+
+		"\1\uffff\1\0\1\1\1\u0186\1\u0190\1\u012a\1\u0137\1\u01ce\1\u01e2\1\u01d3"+
+		"\1\u01db\1\u015f\1\u0117\1\u0172\1\u0177\1\75\1\112\1\u00df\1\u00e0\1"+
+		"\u00c7\1\u00db\1\u01d0\1\u01d9\1\153\1\154}>";
 	static final String[] DFA193_transitionS = {
 			"\1\27\7\uffff\1\14\23\uffff\2\14\1\20\1\15\1\16\2\14\1\26\1\22\1\14\1"+
 			"\25\1\14\1\21\2\14\1\17\1\14\1\23\1\24\7\14\1\uffff\1\2\2\uffff\1\14"+
@@ -14180,7 +14180,7 @@ public class Css3Lexer extends Lexer {
 		}
 		@Override
 		public String getDescription() {
-			return "2127:9: ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)";
+			return "2128:9: ( ( D P ( I | C ) )=> D P ( I | C M ) | ( E ( M | X ) )=> E ( M | X ) | ( P ( X | T | C ) )=> P ( X | T | C ) | ( C M )=> C M | ( M ( M | S ) )=> M ( M | S ) | ( I N )=> I N | ( D E G )=> D E G | ( R ( A | E ) )=> R ( A D | E M ) | ( S )=> S | ( ( K )? H Z )=> ( K )? H Z | IDENT | PERCENTAGE_SYMBOL |)";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -14332,54 +14332,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 12 : 
-						int LA193_62 = input.LA(1);
-						 
-						int index193_62 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_62);
-						if ( s>=0 ) return s;
-						break;
-					case 13 : 
-						int LA193_94 = input.LA(1);
-						 
-						int index193_94 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_94);
-						if ( s>=0 ) return s;
-						break;
-					case 14 : 
-						int LA193_143 = input.LA(1);
-						 
-						int index193_143 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_143);
-						if ( s>=0 ) return s;
-						break;
-					case 15 : 
-						int LA193_150 = input.LA(1);
-						 
-						int index193_150 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_150);
-						if ( s>=0 ) return s;
-						break;
-					case 16 : 
 						int LA193_268 = input.LA(1);
 						 
 						int index193_268 = input.index();
@@ -14391,43 +14343,31 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_268);
 						if ( s>=0 ) return s;
 						break;
-					case 17 : 
-						int LA193_276 = input.LA(1);
+					case 13 : 
+						int LA193_62 = input.LA(1);
 						 
-						int index193_276 = input.index();
+						int index193_62 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_276);
+						input.seek(index193_62);
 						if ( s>=0 ) return s;
 						break;
-					case 18 : 
-						int LA193_525 = input.LA(1);
+					case 14 : 
+						int LA193_94 = input.LA(1);
 						 
-						int index193_525 = input.index();
+						int index193_94 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_525);
+						input.seek(index193_94);
 						if ( s>=0 ) return s;
 						break;
-					case 19 : 
-						int LA193_648 = input.LA(1);
-						 
-						int index193_648 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_648);
-						if ( s>=0 ) return s;
-						break;
-					case 20 : 
+					case 15 : 
 						int LA193_656 = input.LA(1);
 						 
 						int index193_656 = input.index();
@@ -14439,7 +14379,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_656);
 						if ( s>=0 ) return s;
 						break;
-					case 21 : 
+					case 16 : 
 						int LA193_753 = input.LA(1);
 						 
 						int index193_753 = input.index();
@@ -14451,43 +14391,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_753);
 						if ( s>=0 ) return s;
 						break;
-					case 22 : 
-						int LA193_383 = input.LA(1);
-						 
-						int index193_383 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_383);
-						if ( s>=0 ) return s;
-						break;
-					case 23 : 
-						int LA193_391 = input.LA(1);
-						 
-						int index193_391 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_391);
-						if ( s>=0 ) return s;
-						break;
-					case 24 : 
-						int LA193_517 = input.LA(1);
-						 
-						int index193_517 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_517);
-						if ( s>=0 ) return s;
-						break;
-					case 25 : 
+					case 17 : 
 						int LA193_761 = input.LA(1);
 						 
 						int index193_761 = input.index();
@@ -14499,16 +14403,112 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_761);
 						if ( s>=0 ) return s;
 						break;
-					case 26 : 
-						int LA193_385 = input.LA(1);
+					case 18 : 
+						int LA193_143 = input.LA(1);
 						 
-						int index193_385 = input.index();
+						int index193_143 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_385);
+						input.seek(index193_143);
+						if ( s>=0 ) return s;
+						break;
+					case 19 : 
+						int LA193_150 = input.LA(1);
+						 
+						int index193_150 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_150);
+						if ( s>=0 ) return s;
+						break;
+					case 20 : 
+						int LA193_525 = input.LA(1);
+						 
+						int index193_525 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_525);
+						if ( s>=0 ) return s;
+						break;
+					case 21 : 
+						int LA193_648 = input.LA(1);
+						 
+						int index193_648 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_648);
+						if ( s>=0 ) return s;
+						break;
+					case 22 : 
+						int LA193_276 = input.LA(1);
+						 
+						int index193_276 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_276);
+						if ( s>=0 ) return s;
+						break;
+					case 23 : 
+						int LA193_383 = input.LA(1);
+						 
+						int index193_383 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_383);
+						if ( s>=0 ) return s;
+						break;
+					case 24 : 
+						int LA193_391 = input.LA(1);
+						 
+						int index193_391 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_391);
+						if ( s>=0 ) return s;
+						break;
+					case 25 : 
+						int LA193_517 = input.LA(1);
+						 
+						int index193_517 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_517);
+						if ( s>=0 ) return s;
+						break;
+					case 26 : 
+						int LA193_278 = input.LA(1);
+						 
+						int index193_278 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_278);
 						if ( s>=0 ) return s;
 						break;
 					case 27 : 
@@ -14548,66 +14548,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 30 : 
-						int LA193_531 = input.LA(1);
-						 
-						int index193_531 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred5_Css3()) ) {s = 170;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_531);
-						if ( s>=0 ) return s;
-						break;
-					case 31 : 
-						int LA193_658 = input.LA(1);
-						 
-						int index193_658 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_658);
-						if ( s>=0 ) return s;
-						break;
-					case 32 : 
-						int LA193_527 = input.LA(1);
-						 
-						int index193_527 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_527);
-						if ( s>=0 ) return s;
-						break;
-					case 33 : 
-						int LA193_763 = input.LA(1);
-						 
-						int index193_763 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_763);
-						if ( s>=0 ) return s;
-						break;
-					case 34 : 
-						int LA193_755 = input.LA(1);
-						 
-						int index193_755 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_755);
-						if ( s>=0 ) return s;
-						break;
-					case 35 : 
 						int LA193_151 = input.LA(1);
 						 
 						int index193_151 = input.index();
@@ -14619,7 +14559,19 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_151);
 						if ( s>=0 ) return s;
 						break;
-					case 36 : 
+					case 31 : 
+						int LA193_527 = input.LA(1);
+						 
+						int index193_527 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_527);
+						if ( s>=0 ) return s;
+						break;
+					case 32 : 
 						int LA193_270 = input.LA(1);
 						 
 						int index193_270 = input.index();
@@ -14631,19 +14583,55 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_270);
 						if ( s>=0 ) return s;
 						break;
-					case 37 : 
-						int LA193_278 = input.LA(1);
+					case 33 : 
+						int LA193_531 = input.LA(1);
 						 
-						int index193_278 = input.index();
+						int index193_531 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred5_Css3()) ) {s = 170;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_531);
+						if ( s>=0 ) return s;
+						break;
+					case 34 : 
+						int LA193_385 = input.LA(1);
+						 
+						int index193_385 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_278);
+						input.seek(index193_385);
 						if ( s>=0 ) return s;
 						break;
-					case 38 : 
+					case 35 : 
+						int LA193_763 = input.LA(1);
+						 
+						int index193_763 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_763);
+						if ( s>=0 ) return s;
+						break;
+					case 36 : 
+						int LA193_755 = input.LA(1);
+						 
+						int index193_755 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_755);
+						if ( s>=0 ) return s;
+						break;
+					case 37 : 
 						int LA193_393 = input.LA(1);
 						 
 						int index193_393 = input.index();
@@ -14655,19 +14643,19 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_393);
 						if ( s>=0 ) return s;
 						break;
-					case 39 : 
-						int LA193_650 = input.LA(1);
+					case 38 : 
+						int LA193_658 = input.LA(1);
 						 
-						int index193_650 = input.index();
+						int index193_658 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_650);
+						input.seek(index193_658);
 						if ( s>=0 ) return s;
 						break;
-					case 40 : 
+					case 39 : 
 						int LA193_519 = input.LA(1);
 						 
 						int index193_519 = input.index();
@@ -14677,6 +14665,18 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_519);
+						if ( s>=0 ) return s;
+						break;
+					case 40 : 
+						int LA193_650 = input.LA(1);
+						 
+						int index193_650 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_650);
 						if ( s>=0 ) return s;
 						break;
 					case 41 : 
@@ -14857,15 +14857,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 56 : 
-						int LA193_411 = input.LA(1);
+						int LA193_545 = input.LA(1);
 						 
-						int index193_411 = input.index();
+						int index193_545 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_411);
+						input.seek(index193_545);
 						if ( s>=0 ) return s;
 						break;
 					case 57 : 
@@ -14881,27 +14881,27 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 58 : 
-						int LA193_781 = input.LA(1);
+						int LA193_206 = input.LA(1);
 						 
-						int index193_781 = input.index();
+						int index193_206 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_781);
+						input.seek(index193_206);
 						if ( s>=0 ) return s;
 						break;
 					case 59 : 
-						int LA193_711 = input.LA(1);
+						int LA193_411 = input.LA(1);
 						 
-						int index193_711 = input.index();
+						int index193_411 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_711);
+						input.seek(index193_411);
 						if ( s>=0 ) return s;
 						break;
 					case 60 : 
@@ -14917,15 +14917,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 61 : 
-						int LA193_206 = input.LA(1);
+						int LA193_831 = input.LA(1);
 						 
-						int index193_206 = input.index();
+						int index193_831 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_206);
+						input.seek(index193_831);
 						if ( s>=0 ) return s;
 						break;
 					case 62 : 
@@ -14941,6 +14941,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 63 : 
+						int LA193_781 = input.LA(1);
+						 
+						int index193_781 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_781);
+						if ( s>=0 ) return s;
+						break;
+					case 64 : 
 						int LA193_452 = input.LA(1);
 						 
 						int index193_452 = input.index();
@@ -14950,18 +14962,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_452);
-						if ( s>=0 ) return s;
-						break;
-					case 64 : 
-						int LA193_545 = input.LA(1);
-						 
-						int index193_545 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_545);
 						if ( s>=0 ) return s;
 						break;
 					case 65 : 
@@ -15013,15 +15013,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 69 : 
-						int LA193_831 = input.LA(1);
+						int LA193_711 = input.LA(1);
 						 
-						int index193_831 = input.index();
+						int index193_711 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_831);
+						input.seek(index193_711);
 						if ( s>=0 ) return s;
 						break;
 					case 70 : 
@@ -15037,30 +15037,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 71 : 
-						int LA193_412 = input.LA(1);
-						 
-						int index193_412 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_412);
-						if ( s>=0 ) return s;
-						break;
-					case 72 : 
-						int LA193_416 = input.LA(1);
-						 
-						int index193_416 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_416);
-						if ( s>=0 ) return s;
-						break;
-					case 73 : 
 						int LA193_203 = input.LA(1);
 						 
 						int index193_203 = input.index();
@@ -15072,31 +15048,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_203);
 						if ( s>=0 ) return s;
 						break;
-					case 74 : 
-						int LA193_803 = input.LA(1);
-						 
-						int index193_803 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_803);
-						if ( s>=0 ) return s;
-						break;
-					case 75 : 
-						int LA193_832 = input.LA(1);
-						 
-						int index193_832 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_832);
-						if ( s>=0 ) return s;
-						break;
-					case 76 : 
+					case 72 : 
 						int LA193_207 = input.LA(1);
 						 
 						int index193_207 = input.index();
@@ -15108,19 +15060,31 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_207);
 						if ( s>=0 ) return s;
 						break;
-					case 77 : 
-						int LA193_782 = input.LA(1);
+					case 73 : 
+						int LA193_778 = input.LA(1);
 						 
-						int index193_782 = input.index();
+						int index193_778 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_782);
+						input.seek(index193_778);
 						if ( s>=0 ) return s;
 						break;
-					case 78 : 
+					case 74 : 
+						int LA193_832 = input.LA(1);
+						 
+						int index193_832 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_832);
+						if ( s>=0 ) return s;
+						break;
+					case 75 : 
 						int LA193_681 = input.LA(1);
 						 
 						int index193_681 = input.index();
@@ -15132,43 +15096,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_681);
 						if ( s>=0 ) return s;
 						break;
-					case 79 : 
-						int LA193_712 = input.LA(1);
-						 
-						int index193_712 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_712);
-						if ( s>=0 ) return s;
-						break;
-					case 80 : 
-						int LA193_453 = input.LA(1);
-						 
-						int index193_453 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_453);
-						if ( s>=0 ) return s;
-						break;
-					case 81 : 
-						int LA193_546 = input.LA(1);
-						 
-						int index193_546 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_546);
-						if ( s>=0 ) return s;
-						break;
-					case 82 : 
+					case 76 : 
 						int LA193_677 = input.LA(1);
 						 
 						int index193_677 = input.index();
@@ -15180,16 +15108,88 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_677);
 						if ( s>=0 ) return s;
 						break;
-					case 83 : 
-						int LA193_778 = input.LA(1);
+					case 77 : 
+						int LA193_803 = input.LA(1);
 						 
-						int index193_778 = input.index();
+						int index193_803 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_778);
+						input.seek(index193_803);
+						if ( s>=0 ) return s;
+						break;
+					case 78 : 
+						int LA193_412 = input.LA(1);
+						 
+						int index193_412 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_412);
+						if ( s>=0 ) return s;
+						break;
+					case 79 : 
+						int LA193_782 = input.LA(1);
+						 
+						int index193_782 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_782);
+						if ( s>=0 ) return s;
+						break;
+					case 80 : 
+						int LA193_712 = input.LA(1);
+						 
+						int index193_712 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_712);
+						if ( s>=0 ) return s;
+						break;
+					case 81 : 
+						int LA193_416 = input.LA(1);
+						 
+						int index193_416 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_416);
+						if ( s>=0 ) return s;
+						break;
+					case 82 : 
+						int LA193_453 = input.LA(1);
+						 
+						int index193_453 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_453);
+						if ( s>=0 ) return s;
+						break;
+					case 83 : 
+						int LA193_546 = input.LA(1);
+						 
+						int index193_546 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_546);
 						if ( s>=0 ) return s;
 						break;
 					case 84 : 
@@ -15648,18 +15648,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 122 : 
-						int LA193_766 = input.LA(1);
-						 
-						int index193_766 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred5_Css3()) ) {s = 170;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_766);
-						if ( s>=0 ) return s;
-						break;
-					case 123 : 
 						int LA193_396 = input.LA(1);
 						 
 						int index193_396 = input.index();
@@ -15669,6 +15657,18 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_396);
+						if ( s>=0 ) return s;
+						break;
+					case 123 : 
+						int LA193_766 = input.LA(1);
+						 
+						int index193_766 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred5_Css3()) ) {s = 170;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_766);
 						if ( s>=0 ) return s;
 						break;
 					case 124 : 
@@ -15696,15 +15696,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 126 : 
-						int LA193_284 = input.LA(1);
+						int LA193_140 = input.LA(1);
 						 
-						int index193_284 = input.index();
+						int index193_140 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred5_Css3()) ) {s = 170;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_284);
+						input.seek(index193_140);
 						if ( s>=0 ) return s;
 						break;
 					case 127 : 
@@ -15744,15 +15744,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 130 : 
-						int LA193_140 = input.LA(1);
+						int LA193_284 = input.LA(1);
 						 
-						int index193_140 = input.index();
+						int index193_284 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred5_Css3()) ) {s = 170;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_140);
+						input.seek(index193_284);
 						if ( s>=0 ) return s;
 						break;
 					case 131 : 
@@ -15828,6 +15828,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 137 : 
+						int LA193_145 = input.LA(1);
+						 
+						int index193_145 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_145);
+						if ( s>=0 ) return s;
+						break;
+					case 138 : 
 						int LA193_64 = input.LA(1);
 						 
 						int index193_64 = input.index();
@@ -15839,7 +15851,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_64);
 						if ( s>=0 ) return s;
 						break;
-					case 138 : 
+					case 139 : 
 						int LA193_95 = input.LA(1);
 						 
 						int index193_95 = input.index();
@@ -15849,18 +15861,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_95);
-						if ( s>=0 ) return s;
-						break;
-					case 139 : 
-						int LA193_649 = input.LA(1);
-						 
-						int index193_649 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_649);
 						if ( s>=0 ) return s;
 						break;
 					case 140 : 
@@ -15876,18 +15876,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 141 : 
-						int LA193_145 = input.LA(1);
-						 
-						int index193_145 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_145);
-						if ( s>=0 ) return s;
-						break;
-					case 142 : 
 						int LA193_152 = input.LA(1);
 						 
 						int index193_152 = input.index();
@@ -15899,19 +15887,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_152);
 						if ( s>=0 ) return s;
 						break;
-					case 143 : 
-						int LA193_754 = input.LA(1);
-						 
-						int index193_754 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_754);
-						if ( s>=0 ) return s;
-						break;
-					case 144 : 
+					case 142 : 
 						int LA193_269 = input.LA(1);
 						 
 						int index193_269 = input.index();
@@ -15923,7 +15899,19 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_269);
 						if ( s>=0 ) return s;
 						break;
-					case 145 : 
+					case 143 : 
+						int LA193_657 = input.LA(1);
+						 
+						int index193_657 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_657);
+						if ( s>=0 ) return s;
+						break;
+					case 144 : 
 						int LA193_277 = input.LA(1);
 						 
 						int index193_277 = input.index();
@@ -15935,7 +15923,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_277);
 						if ( s>=0 ) return s;
 						break;
-					case 146 : 
+					case 145 : 
 						int LA193_384 = input.LA(1);
 						 
 						int index193_384 = input.index();
@@ -15947,7 +15935,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_384);
 						if ( s>=0 ) return s;
 						break;
-					case 147 : 
+					case 146 : 
 						int LA193_526 = input.LA(1);
 						 
 						int index193_526 = input.index();
@@ -15959,7 +15947,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_526);
 						if ( s>=0 ) return s;
 						break;
-					case 148 : 
+					case 147 : 
 						int LA193_392 = input.LA(1);
 						 
 						int index193_392 = input.index();
@@ -15971,7 +15959,31 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_392);
 						if ( s>=0 ) return s;
 						break;
+					case 148 : 
+						int LA193_649 = input.LA(1);
+						 
+						int index193_649 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_649);
+						if ( s>=0 ) return s;
+						break;
 					case 149 : 
+						int LA193_754 = input.LA(1);
+						 
+						int index193_754 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_754);
+						if ( s>=0 ) return s;
+						break;
+					case 150 : 
 						int LA193_518 = input.LA(1);
 						 
 						int index193_518 = input.index();
@@ -15981,18 +15993,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_518);
-						if ( s>=0 ) return s;
-						break;
-					case 150 : 
-						int LA193_657 = input.LA(1);
-						 
-						int index193_657 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_657);
 						if ( s>=0 ) return s;
 						break;
 					case 151 : 
@@ -16008,15 +16008,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 152 : 
-						int LA193_153 = input.LA(1);
+						int LA193_146 = input.LA(1);
 						 
-						int index193_153 = input.index();
+						int index193_146 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_153);
+						input.seek(index193_146);
 						if ( s>=0 ) return s;
 						break;
 					case 153 : 
@@ -16032,30 +16032,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 154 : 
-						int LA193_756 = input.LA(1);
+						int LA193_153 = input.LA(1);
 						 
-						int index193_756 = input.index();
+						int index193_153 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_756);
+						input.seek(index193_153);
 						if ( s>=0 ) return s;
 						break;
 					case 155 : 
-						int LA193_146 = input.LA(1);
-						 
-						int index193_146 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_146);
-						if ( s>=0 ) return s;
-						break;
-					case 156 : 
 						int LA193_271 = input.LA(1);
 						 
 						int index193_271 = input.index();
@@ -16067,67 +16055,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_271);
 						if ( s>=0 ) return s;
 						break;
-					case 157 : 
-						int LA193_659 = input.LA(1);
-						 
-						int index193_659 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_659);
-						if ( s>=0 ) return s;
-						break;
-					case 158 : 
-						int LA193_279 = input.LA(1);
-						 
-						int index193_279 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_279);
-						if ( s>=0 ) return s;
-						break;
-					case 159 : 
-						int LA193_386 = input.LA(1);
-						 
-						int index193_386 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_386);
-						if ( s>=0 ) return s;
-						break;
-					case 160 : 
-						int LA193_394 = input.LA(1);
-						 
-						int index193_394 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_394);
-						if ( s>=0 ) return s;
-						break;
-					case 161 : 
-						int LA193_764 = input.LA(1);
-						 
-						int index193_764 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_764);
-						if ( s>=0 ) return s;
-						break;
-					case 162 : 
+					case 156 : 
 						int LA193_651 = input.LA(1);
 						 
 						int index193_651 = input.index();
@@ -16139,7 +16067,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_651);
 						if ( s>=0 ) return s;
 						break;
-					case 163 : 
+					case 157 : 
 						int LA193_520 = input.LA(1);
 						 
 						int index193_520 = input.index();
@@ -16151,7 +16079,19 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_520);
 						if ( s>=0 ) return s;
 						break;
-					case 164 : 
+					case 158 : 
+						int LA193_659 = input.LA(1);
+						 
+						int index193_659 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_659);
+						if ( s>=0 ) return s;
+						break;
+					case 159 : 
 						int LA193_528 = input.LA(1);
 						 
 						int index193_528 = input.index();
@@ -16161,6 +16101,66 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_528);
+						if ( s>=0 ) return s;
+						break;
+					case 160 : 
+						int LA193_279 = input.LA(1);
+						 
+						int index193_279 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_279);
+						if ( s>=0 ) return s;
+						break;
+					case 161 : 
+						int LA193_386 = input.LA(1);
+						 
+						int index193_386 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_386);
+						if ( s>=0 ) return s;
+						break;
+					case 162 : 
+						int LA193_394 = input.LA(1);
+						 
+						int index193_394 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_394);
+						if ( s>=0 ) return s;
+						break;
+					case 163 : 
+						int LA193_764 = input.LA(1);
+						 
+						int index193_764 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_764);
+						if ( s>=0 ) return s;
+						break;
+					case 164 : 
+						int LA193_756 = input.LA(1);
+						 
+						int index193_756 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_756);
 						if ( s>=0 ) return s;
 						break;
 					case 165 : 
@@ -16390,27 +16390,27 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 184 : 
-						int LA193_759 = input.LA(1);
+						int LA193_160 = input.LA(1);
 						 
-						int index193_759 = input.index();
+						int index193_160 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_759);
+						input.seek(index193_160);
 						if ( s>=0 ) return s;
 						break;
 					case 185 : 
-						int LA193_100 = input.LA(1);
+						int LA193_214 = input.LA(1);
 						 
-						int index193_100 = input.index();
+						int index193_214 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_100);
+						input.seek(index193_214);
 						if ( s>=0 ) return s;
 						break;
 					case 186 : 
@@ -16426,138 +16426,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 187 : 
-						int LA193_835 = input.LA(1);
+						int LA193_100 = input.LA(1);
 						 
-						int index193_835 = input.index();
+						int index193_100 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_835);
+						input.seek(index193_100);
 						if ( s>=0 ) return s;
 						break;
 					case 188 : 
-						int LA193_158 = input.LA(1);
-						 
-						int index193_158 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_158);
-						if ( s>=0 ) return s;
-						break;
-					case 189 : 
-						int LA193_461 = input.LA(1);
-						 
-						int index193_461 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_461);
-						if ( s>=0 ) return s;
-						break;
-					case 190 : 
-						int LA193_808 = input.LA(1);
-						 
-						int index193_808 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_808);
-						if ( s>=0 ) return s;
-						break;
-					case 191 : 
-						int LA193_595 = input.LA(1);
-						 
-						int index193_595 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_595);
-						if ( s>=0 ) return s;
-						break;
-					case 192 : 
-						int LA193_329 = input.LA(1);
-						 
-						int index193_329 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_329);
-						if ( s>=0 ) return s;
-						break;
-					case 193 : 
-						int LA193_389 = input.LA(1);
-						 
-						int index193_389 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_389);
-						if ( s>=0 ) return s;
-						break;
-					case 194 : 
-						int LA193_160 = input.LA(1);
-						 
-						int index193_160 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_160);
-						if ( s>=0 ) return s;
-						break;
-					case 195 : 
-						int LA193_208 = input.LA(1);
-						 
-						int index193_208 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_208);
-						if ( s>=0 ) return s;
-						break;
-					case 196 : 
-						int LA193_214 = input.LA(1);
-						 
-						int index193_214 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_214);
-						if ( s>=0 ) return s;
-						break;
-					case 197 : 
-						int LA193_274 = input.LA(1);
-						 
-						int index193_274 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_274);
-						if ( s>=0 ) return s;
-						break;
-					case 198 : 
 						int LA193_719 = input.LA(1);
 						 
 						int index193_719 = input.index();
@@ -16569,19 +16449,115 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_719);
 						if ( s>=0 ) return s;
 						break;
-					case 199 : 
-						int LA193_327 = input.LA(1);
+					case 189 : 
+						int LA193_759 = input.LA(1);
 						 
-						int index193_327 = input.index();
+						int index193_759 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_327);
+						input.seek(index193_759);
 						if ( s>=0 ) return s;
 						break;
-					case 200 : 
+					case 190 : 
+						int LA193_158 = input.LA(1);
+						 
+						int index193_158 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_158);
+						if ( s>=0 ) return s;
+						break;
+					case 191 : 
+						int LA193_329 = input.LA(1);
+						 
+						int index193_329 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_329);
+						if ( s>=0 ) return s;
+						break;
+					case 192 : 
+						int LA193_461 = input.LA(1);
+						 
+						int index193_461 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_461);
+						if ( s>=0 ) return s;
+						break;
+					case 193 : 
+						int LA193_523 = input.LA(1);
+						 
+						int index193_523 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_523);
+						if ( s>=0 ) return s;
+						break;
+					case 194 : 
+						int LA193_208 = input.LA(1);
+						 
+						int index193_208 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_208);
+						if ( s>=0 ) return s;
+						break;
+					case 195 : 
+						int LA193_274 = input.LA(1);
+						 
+						int index193_274 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_274);
+						if ( s>=0 ) return s;
+						break;
+					case 196 : 
+						int LA193_389 = input.LA(1);
+						 
+						int index193_389 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_389);
+						if ( s>=0 ) return s;
+						break;
+					case 197 : 
+						int LA193_808 = input.LA(1);
+						 
+						int index193_808 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_808);
+						if ( s>=0 ) return s;
+						break;
+					case 198 : 
 						int LA193_654 = input.LA(1);
 						 
 						int index193_654 = input.index();
@@ -16593,16 +16569,40 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_654);
 						if ( s>=0 ) return s;
 						break;
-					case 201 : 
-						int LA193_523 = input.LA(1);
+					case 199 : 
+						int LA193_835 = input.LA(1);
 						 
-						int index193_523 = input.index();
+						int index193_835 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_523);
+						input.seek(index193_835);
+						if ( s>=0 ) return s;
+						break;
+					case 200 : 
+						int LA193_595 = input.LA(1);
+						 
+						int index193_595 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_595);
+						if ( s>=0 ) return s;
+						break;
+					case 201 : 
+						int LA193_327 = input.LA(1);
+						 
+						int index193_327 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_327);
 						if ( s>=0 ) return s;
 						break;
 					case 202 : 
@@ -16618,15 +16618,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 203 : 
-						int LA193_159 = input.LA(1);
+						int LA193_328 = input.LA(1);
 						 
-						int index193_159 = input.index();
+						int index193_328 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_159);
+						input.seek(index193_328);
 						if ( s>=0 ) return s;
 						break;
 					case 204 : 
@@ -16642,54 +16642,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 205 : 
-						int LA193_462 = input.LA(1);
-						 
-						int index193_462 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_462);
-						if ( s>=0 ) return s;
-						break;
-					case 206 : 
-						int LA193_161 = input.LA(1);
-						 
-						int index193_161 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_161);
-						if ( s>=0 ) return s;
-						break;
-					case 207 : 
-						int LA193_836 = input.LA(1);
-						 
-						int index193_836 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_836);
-						if ( s>=0 ) return s;
-						break;
-					case 208 : 
-						int LA193_655 = input.LA(1);
-						 
-						int index193_655 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_655);
-						if ( s>=0 ) return s;
-						break;
-					case 209 : 
 						int LA193_720 = input.LA(1);
 						 
 						int index193_720 = input.index();
@@ -16701,55 +16653,43 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_720);
 						if ( s>=0 ) return s;
 						break;
-					case 210 : 
-						int LA193_209 = input.LA(1);
+					case 206 : 
+						int LA193_159 = input.LA(1);
 						 
-						int index193_209 = input.index();
+						int index193_159 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_209);
+						input.seek(index193_159);
 						if ( s>=0 ) return s;
 						break;
-					case 211 : 
-						int LA193_215 = input.LA(1);
+					case 207 : 
+						int LA193_760 = input.LA(1);
 						 
-						int index193_215 = input.index();
+						int index193_760 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_215);
+						input.seek(index193_760);
 						if ( s>=0 ) return s;
 						break;
-					case 212 : 
-						int LA193_275 = input.LA(1);
+					case 208 : 
+						int LA193_462 = input.LA(1);
 						 
-						int index193_275 = input.index();
+						int index193_462 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_275);
+						input.seek(index193_462);
 						if ( s>=0 ) return s;
 						break;
-					case 213 : 
-						int LA193_330 = input.LA(1);
-						 
-						int index193_330 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_330);
-						if ( s>=0 ) return s;
-						break;
-					case 214 : 
+					case 209 : 
 						int LA193_809 = input.LA(1);
 						 
 						int index193_809 = input.index();
@@ -16761,16 +16701,76 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_809);
 						if ( s>=0 ) return s;
 						break;
-					case 215 : 
-						int LA193_390 = input.LA(1);
+					case 210 : 
+						int LA193_655 = input.LA(1);
 						 
-						int index193_390 = input.index();
+						int index193_655 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_390);
+						input.seek(index193_655);
+						if ( s>=0 ) return s;
+						break;
+					case 211 : 
+						int LA193_161 = input.LA(1);
+						 
+						int index193_161 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_161);
+						if ( s>=0 ) return s;
+						break;
+					case 212 : 
+						int LA193_209 = input.LA(1);
+						 
+						int index193_209 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_209);
+						if ( s>=0 ) return s;
+						break;
+					case 213 : 
+						int LA193_215 = input.LA(1);
+						 
+						int index193_215 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_215);
+						if ( s>=0 ) return s;
+						break;
+					case 214 : 
+						int LA193_275 = input.LA(1);
+						 
+						int index193_275 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_275);
+						if ( s>=0 ) return s;
+						break;
+					case 215 : 
+						int LA193_330 = input.LA(1);
+						 
+						int index193_330 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_330);
 						if ( s>=0 ) return s;
 						break;
 					case 216 : 
@@ -16786,30 +16786,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 217 : 
-						int LA193_760 = input.LA(1);
-						 
-						int index193_760 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_760);
-						if ( s>=0 ) return s;
-						break;
-					case 218 : 
-						int LA193_328 = input.LA(1);
-						 
-						int index193_328 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_328);
-						if ( s>=0 ) return s;
-						break;
-					case 219 : 
 						int LA193_524 = input.LA(1);
 						 
 						int index193_524 = input.index();
@@ -16819,6 +16795,30 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_524);
+						if ( s>=0 ) return s;
+						break;
+					case 218 : 
+						int LA193_390 = input.LA(1);
+						 
+						int index193_390 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_390);
+						if ( s>=0 ) return s;
+						break;
+					case 219 : 
+						int LA193_836 = input.LA(1);
+						 
+						int index193_836 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_836);
 						if ( s>=0 ) return s;
 						break;
 					case 220 : 
@@ -17146,6 +17146,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 247 : 
+						int LA193_119 = input.LA(1);
+						 
+						int index193_119 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred5_Css3()) ) {s = 170;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_119);
+						if ( s>=0 ) return s;
+						break;
+					case 248 : 
 						int LA193_52 = input.LA(1);
 						 
 						int index193_52 = input.index();
@@ -17157,7 +17169,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_52);
 						if ( s>=0 ) return s;
 						break;
-					case 248 : 
+					case 249 : 
 						int LA193_86 = input.LA(1);
 						 
 						int index193_86 = input.index();
@@ -17167,18 +17179,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_86);
-						if ( s>=0 ) return s;
-						break;
-					case 249 : 
-						int LA193_119 = input.LA(1);
-						 
-						int index193_119 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred5_Css3()) ) {s = 170;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_119);
 						if ( s>=0 ) return s;
 						break;
 					case 250 : 
@@ -17254,15 +17254,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 256 : 
-						int LA193_138 = input.LA(1);
+						int LA193_283 = input.LA(1);
 						 
-						int index193_138 = input.index();
+						int index193_283 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred5_Css3()) ) {s = 170;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_138);
+						input.seek(index193_283);
 						if ( s>=0 ) return s;
 						break;
 					case 257 : 
@@ -17302,15 +17302,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 260 : 
-						int LA193_283 = input.LA(1);
+						int LA193_138 = input.LA(1);
 						 
-						int index193_283 = input.index();
+						int index193_138 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred5_Css3()) ) {s = 170;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_283);
+						input.seek(index193_138);
 						if ( s>=0 ) return s;
 						break;
 					case 261 : 
@@ -17586,27 +17586,27 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 284 : 
-						int LA193_739 = input.LA(1);
+						int LA193_539 = input.LA(1);
 						 
-						int index193_739 = input.index();
+						int index193_539 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_739);
+						input.seek(index193_539);
 						if ( s>=0 ) return s;
 						break;
 					case 285 : 
-						int LA193_407 = input.LA(1);
+						int LA193_112 = input.LA(1);
 						 
-						int index193_407 = input.index();
+						int index193_112 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_407);
+						input.seek(index193_112);
 						if ( s>=0 ) return s;
 						break;
 					case 286 : 
@@ -17622,54 +17622,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 287 : 
-						int LA193_112 = input.LA(1);
+						int LA193_670 = input.LA(1);
 						 
-						int index193_112 = input.index();
+						int index193_670 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_112);
+						input.seek(index193_670);
 						if ( s>=0 ) return s;
 						break;
 					case 288 : 
-						int LA193_355 = input.LA(1);
-						 
-						int index193_355 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_355);
-						if ( s>=0 ) return s;
-						break;
-					case 289 : 
-						int LA193_821 = input.LA(1);
-						 
-						int index193_821 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_821);
-						if ( s>=0 ) return s;
-						break;
-					case 290 : 
-						int LA193_405 = input.LA(1);
-						 
-						int index193_405 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_405);
-						if ( s>=0 ) return s;
-						break;
-					case 291 : 
 						int LA193_619 = input.LA(1);
 						 
 						int index193_619 = input.index();
@@ -17681,16 +17645,52 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_619);
 						if ( s>=0 ) return s;
 						break;
-					case 292 : 
-						int LA193_672 = input.LA(1);
+					case 289 : 
+						int LA193_773 = input.LA(1);
 						 
-						int index193_672 = input.index();
+						int index193_773 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_672);
+						input.seek(index193_773);
+						if ( s>=0 ) return s;
+						break;
+					case 290 : 
+						int LA193_739 = input.LA(1);
+						 
+						int index193_739 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_739);
+						if ( s>=0 ) return s;
+						break;
+					case 291 : 
+						int LA193_355 = input.LA(1);
+						 
+						int index193_355 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_355);
+						if ( s>=0 ) return s;
+						break;
+					case 292 : 
+						int LA193_405 = input.LA(1);
+						 
+						int index193_405 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_405);
 						if ( s>=0 ) return s;
 						break;
 					case 293 : 
@@ -17706,27 +17706,27 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 294 : 
-						int LA193_670 = input.LA(1);
+						int LA193_407 = input.LA(1);
 						 
-						int index193_670 = input.index();
+						int index193_407 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_670);
+						input.seek(index193_407);
 						if ( s>=0 ) return s;
 						break;
 					case 295 : 
-						int LA193_773 = input.LA(1);
+						int LA193_672 = input.LA(1);
 						 
-						int index193_773 = input.index();
+						int index193_672 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_773);
+						input.seek(index193_672);
 						if ( s>=0 ) return s;
 						break;
 					case 296 : 
@@ -17742,18 +17742,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 297 : 
-						int LA193_539 = input.LA(1);
-						 
-						int index193_539 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_539);
-						if ( s>=0 ) return s;
-						break;
-					case 298 : 
 						int LA193_541 = input.LA(1);
 						 
 						int index193_541 = input.index();
@@ -17765,16 +17753,28 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_541);
 						if ( s>=0 ) return s;
 						break;
-					case 299 : 
-						int LA193_540 = input.LA(1);
+					case 298 : 
+						int LA193_821 = input.LA(1);
 						 
-						int index193_540 = input.index();
+						int index193_821 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_540);
+						input.seek(index193_821);
+						if ( s>=0 ) return s;
+						break;
+					case 299 : 
+						int LA193_487 = input.LA(1);
+						 
+						int index193_487 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_487);
 						if ( s>=0 ) return s;
 						break;
 					case 300 : 
@@ -17802,18 +17802,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 302 : 
-						int LA193_673 = input.LA(1);
-						 
-						int index193_673 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_673);
-						if ( s>=0 ) return s;
-						break;
-					case 303 : 
 						int LA193_356 = input.LA(1);
 						 
 						int index193_356 = input.index();
@@ -17825,7 +17813,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_356);
 						if ( s>=0 ) return s;
 						break;
-					case 304 : 
+					case 303 : 
 						int LA193_406 = input.LA(1);
 						 
 						int index193_406 = input.index();
@@ -17837,19 +17825,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_406);
 						if ( s>=0 ) return s;
 						break;
-					case 305 : 
-						int LA193_772 = input.LA(1);
-						 
-						int index193_772 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_772);
-						if ( s>=0 ) return s;
-						break;
-					case 306 : 
+					case 304 : 
 						int LA193_408 = input.LA(1);
 						 
 						int index193_408 = input.index();
@@ -17861,31 +17837,31 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_408);
 						if ( s>=0 ) return s;
 						break;
+					case 305 : 
+						int LA193_673 = input.LA(1);
+						 
+						int index193_673 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_673);
+						if ( s>=0 ) return s;
+						break;
+					case 306 : 
+						int LA193_540 = input.LA(1);
+						 
+						int index193_540 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_540);
+						if ( s>=0 ) return s;
+						break;
 					case 307 : 
-						int LA193_487 = input.LA(1);
-						 
-						int index193_487 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_487);
-						if ( s>=0 ) return s;
-						break;
-					case 308 : 
-						int LA193_671 = input.LA(1);
-						 
-						int index193_671 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_671);
-						if ( s>=0 ) return s;
-						break;
-					case 309 : 
 						int LA193_542 = input.LA(1);
 						 
 						int index193_542 = input.index();
@@ -17897,16 +17873,40 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_542);
 						if ( s>=0 ) return s;
 						break;
-					case 310 : 
-						int LA193_620 = input.LA(1);
+					case 308 : 
+						int LA193_740 = input.LA(1);
 						 
-						int index193_620 = input.index();
+						int index193_740 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_620);
+						input.seek(index193_740);
+						if ( s>=0 ) return s;
+						break;
+					case 309 : 
+						int LA193_671 = input.LA(1);
+						 
+						int index193_671 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_671);
+						if ( s>=0 ) return s;
+						break;
+					case 310 : 
+						int LA193_774 = input.LA(1);
+						 
+						int index193_774 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_774);
 						if ( s>=0 ) return s;
 						break;
 					case 311 : 
@@ -17922,27 +17922,27 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 312 : 
-						int LA193_740 = input.LA(1);
+						int LA193_620 = input.LA(1);
 						 
-						int index193_740 = input.index();
+						int index193_620 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_740);
+						input.seek(index193_620);
 						if ( s>=0 ) return s;
 						break;
 					case 313 : 
-						int LA193_774 = input.LA(1);
+						int LA193_772 = input.LA(1);
 						 
-						int index193_774 = input.index();
+						int index193_772 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_774);
+						input.seek(index193_772);
 						if ( s>=0 ) return s;
 						break;
 					case 314 : 
@@ -18840,18 +18840,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 389 : 
-						int LA193_819 = input.LA(1);
-						 
-						int index193_819 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_819);
-						if ( s>=0 ) return s;
-						break;
-					case 390 : 
 						int LA193_615 = input.LA(1);
 						 
 						int index193_615 = input.index();
@@ -18861,6 +18849,18 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_615);
+						if ( s>=0 ) return s;
+						break;
+					case 390 : 
+						int LA193_819 = input.LA(1);
+						 
+						int index193_819 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_819);
 						if ( s>=0 ) return s;
 						break;
 					case 391 : 
@@ -18876,15 +18876,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 392 : 
-						int LA193_353 = input.LA(1);
+						int LA193_116 = input.LA(1);
 						 
-						int index193_353 = input.index();
+						int index193_116 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_353);
+						input.seek(index193_116);
 						if ( s>=0 ) return s;
 						break;
 					case 393 : 
@@ -18900,18 +18900,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 394 : 
-						int LA193_116 = input.LA(1);
-						 
-						int index193_116 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_116);
-						if ( s>=0 ) return s;
-						break;
-					case 395 : 
 						int LA193_232 = input.LA(1);
 						 
 						int index193_232 = input.index();
@@ -18923,7 +18911,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_232);
 						if ( s>=0 ) return s;
 						break;
-					case 396 : 
+					case 395 : 
 						int LA193_234 = input.LA(1);
 						 
 						int index193_234 = input.index();
@@ -18933,6 +18921,18 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_234);
+						if ( s>=0 ) return s;
+						break;
+					case 396 : 
+						int LA193_353 = input.LA(1);
+						 
+						int index193_353 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_353);
 						if ( s>=0 ) return s;
 						break;
 					case 397 : 
@@ -19052,18 +19052,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 407 : 
-						int LA193_272 = input.LA(1);
-						 
-						int index193_272 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred8_Css3()) ) {s = 191;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_272);
-						if ( s>=0 ) return s;
-						break;
-					case 408 : 
 						int LA193_67 = input.LA(1);
 						 
 						int index193_67 = input.index();
@@ -19075,7 +19063,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_67);
 						if ( s>=0 ) return s;
 						break;
-					case 409 : 
+					case 408 : 
 						int LA193_98 = input.LA(1);
 						 
 						int index193_98 = input.index();
@@ -19085,6 +19073,18 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_98);
+						if ( s>=0 ) return s;
+						break;
+					case 409 : 
+						int LA193_757 = input.LA(1);
+						 
+						int index193_757 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred8_Css3()) ) {s = 191;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_757);
 						if ( s>=0 ) return s;
 						break;
 					case 410 : 
@@ -19112,6 +19112,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 412 : 
+						int LA193_272 = input.LA(1);
+						 
+						int index193_272 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred8_Css3()) ) {s = 191;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_272);
+						if ( s>=0 ) return s;
+						break;
+					case 413 : 
 						int LA193_387 = input.LA(1);
 						 
 						int index193_387 = input.index();
@@ -19123,7 +19135,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_387);
 						if ( s>=0 ) return s;
 						break;
-					case 413 : 
+					case 414 : 
 						int LA193_521 = input.LA(1);
 						 
 						int index193_521 = input.index();
@@ -19133,18 +19145,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_521);
-						if ( s>=0 ) return s;
-						break;
-					case 414 : 
-						int LA193_757 = input.LA(1);
-						 
-						int index193_757 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred8_Css3()) ) {s = 191;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_757);
 						if ( s>=0 ) return s;
 						break;
 					case 415 : 
@@ -19160,15 +19160,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 416 : 
-						int LA193_155 = input.LA(1);
+						int LA193_99 = input.LA(1);
 						 
-						int index193_155 = input.index();
+						int index193_99 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred8_Css3()) ) {s = 191;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_155);
+						input.seek(index193_99);
 						if ( s>=0 ) return s;
 						break;
 					case 417 : 
@@ -19184,15 +19184,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 418 : 
-						int LA193_99 = input.LA(1);
+						int LA193_155 = input.LA(1);
 						 
-						int index193_99 = input.index();
+						int index193_155 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred8_Css3()) ) {s = 191;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_99);
+						input.seek(index193_155);
 						if ( s>=0 ) return s;
 						break;
 					case 419 : 
@@ -19613,15 +19613,15 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 453 : 
-						int LA193_471 = input.LA(1);
+						int LA193_605 = input.LA(1);
 						 
-						int index193_471 = input.index();
+						int index193_605 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_471);
+						input.seek(index193_605);
 						if ( s>=0 ) return s;
 						break;
 					case 454 : 
@@ -19649,30 +19649,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 456 : 
-						int LA193_741 = input.LA(1);
+						int LA193_471 = input.LA(1);
 						 
-						int index193_741 = input.index();
+						int index193_471 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_741);
+						input.seek(index193_471);
 						if ( s>=0 ) return s;
 						break;
 					case 457 : 
-						int LA193_823 = input.LA(1);
-						 
-						int index193_823 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_823);
-						if ( s>=0 ) return s;
-						break;
-					case 458 : 
 						int LA193_488 = input.LA(1);
 						 
 						int index193_488 = input.index();
@@ -19684,31 +19672,19 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_488);
 						if ( s>=0 ) return s;
 						break;
+					case 458 : 
+						int LA193_814 = input.LA(1);
+						 
+						int index193_814 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_814);
+						if ( s>=0 ) return s;
+						break;
 					case 459 : 
-						int LA193_490 = input.LA(1);
-						 
-						int index193_490 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_490);
-						if ( s>=0 ) return s;
-						break;
-					case 460 : 
-						int LA193_605 = input.LA(1);
-						 
-						int index193_605 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_605);
-						if ( s>=0 ) return s;
-						break;
-					case 461 : 
 						int LA193_743 = input.LA(1);
 						 
 						int index193_743 = input.index();
@@ -19720,16 +19696,40 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_743);
 						if ( s>=0 ) return s;
 						break;
-					case 462 : 
-						int LA193_814 = input.LA(1);
+					case 460 : 
+						int LA193_490 = input.LA(1);
 						 
-						int index193_814 = input.index();
+						int index193_490 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_814);
+						input.seek(index193_490);
+						if ( s>=0 ) return s;
+						break;
+					case 461 : 
+						int LA193_741 = input.LA(1);
+						 
+						int index193_741 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_741);
+						if ( s>=0 ) return s;
+						break;
+					case 462 : 
+						int LA193_823 = input.LA(1);
+						 
+						int index193_823 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_823);
 						if ( s>=0 ) return s;
 						break;
 					case 463 : 
@@ -19745,18 +19745,6 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 464 : 
-						int LA193_825 = input.LA(1);
-						 
-						int index193_825 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_825);
-						if ( s>=0 ) return s;
-						break;
-					case 465 : 
 						int LA193_837 = input.LA(1);
 						 
 						int index193_837 = input.index();
@@ -19768,7 +19756,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_837);
 						if ( s>=0 ) return s;
 						break;
-					case 466 : 
+					case 465 : 
 						int LA193_623 = input.LA(1);
 						 
 						int index193_623 = input.index();
@@ -19780,7 +19768,7 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_623);
 						if ( s>=0 ) return s;
 						break;
-					case 467 : 
+					case 466 : 
 						int LA193_727 = input.LA(1);
 						 
 						int index193_727 = input.index();
@@ -19792,28 +19780,40 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_727);
 						if ( s>=0 ) return s;
 						break;
-					case 468 : 
-						int LA193_622 = input.LA(1);
+					case 467 : 
+						int LA193_825 = input.LA(1);
 						 
-						int index193_622 = input.index();
+						int index193_825 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_622);
+						input.seek(index193_825);
+						if ( s>=0 ) return s;
+						break;
+					case 468 : 
+						int LA193_606 = input.LA(1);
+						 
+						int index193_606 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_606);
 						if ( s>=0 ) return s;
 						break;
 					case 469 : 
-						int LA193_472 = input.LA(1);
+						int LA193_230 = input.LA(1);
 						 
-						int index193_472 = input.index();
+						int index193_230 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_472);
+						input.seek(index193_230);
 						if ( s>=0 ) return s;
 						break;
 					case 470 : 
@@ -19829,54 +19829,18 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 					case 471 : 
-						int LA193_230 = input.LA(1);
+						int LA193_472 = input.LA(1);
 						 
-						int index193_230 = input.index();
+						int index193_472 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_230);
+						input.seek(index193_472);
 						if ( s>=0 ) return s;
 						break;
 					case 472 : 
-						int LA193_744 = input.LA(1);
-						 
-						int index193_744 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_744);
-						if ( s>=0 ) return s;
-						break;
-					case 473 : 
-						int LA193_489 = input.LA(1);
-						 
-						int index193_489 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_489);
-						if ( s>=0 ) return s;
-						break;
-					case 474 : 
-						int LA193_491 = input.LA(1);
-						 
-						int index193_491 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_491);
-						if ( s>=0 ) return s;
-						break;
-					case 475 : 
 						int LA193_742 = input.LA(1);
 						 
 						int index193_742 = input.index();
@@ -19888,67 +19852,31 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_742);
 						if ( s>=0 ) return s;
 						break;
-					case 476 : 
-						int LA193_606 = input.LA(1);
+					case 473 : 
+						int LA193_838 = input.LA(1);
 						 
-						int index193_606 = input.index();
+						int index193_838 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_606);
+						input.seek(index193_838);
 						if ( s>=0 ) return s;
 						break;
-					case 477 : 
-						int LA193_824 = input.LA(1);
+					case 474 : 
+						int LA193_489 = input.LA(1);
 						 
-						int index193_824 = input.index();
+						int index193_489 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_824);
+						input.seek(index193_489);
 						if ( s>=0 ) return s;
 						break;
-					case 478 : 
-						int LA193_728 = input.LA(1);
-						 
-						int index193_728 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_728);
-						if ( s>=0 ) return s;
-						break;
-					case 479 : 
-						int LA193_624 = input.LA(1);
-						 
-						int index193_624 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_624);
-						if ( s>=0 ) return s;
-						break;
-					case 480 : 
-						int LA193_815 = input.LA(1);
-						 
-						int index193_815 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_815);
-						if ( s>=0 ) return s;
-						break;
-					case 481 : 
+					case 475 : 
 						int LA193_826 = input.LA(1);
 						 
 						int index193_826 = input.index();
@@ -19960,16 +19888,88 @@ public class Css3Lexer extends Lexer {
 						input.seek(index193_826);
 						if ( s>=0 ) return s;
 						break;
-					case 482 : 
-						int LA193_838 = input.LA(1);
+					case 476 : 
+						int LA193_744 = input.LA(1);
 						 
-						int index193_838 = input.index();
+						int index193_744 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_838);
+						input.seek(index193_744);
+						if ( s>=0 ) return s;
+						break;
+					case 477 : 
+						int LA193_491 = input.LA(1);
+						 
+						int index193_491 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_491);
+						if ( s>=0 ) return s;
+						break;
+					case 478 : 
+						int LA193_622 = input.LA(1);
+						 
+						int index193_622 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_622);
+						if ( s>=0 ) return s;
+						break;
+					case 479 : 
+						int LA193_728 = input.LA(1);
+						 
+						int index193_728 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_728);
+						if ( s>=0 ) return s;
+						break;
+					case 480 : 
+						int LA193_624 = input.LA(1);
+						 
+						int index193_624 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_624);
+						if ( s>=0 ) return s;
+						break;
+					case 481 : 
+						int LA193_815 = input.LA(1);
+						 
+						int index193_815 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_815);
+						if ( s>=0 ) return s;
+						break;
+					case 482 : 
+						int LA193_824 = input.LA(1);
+						 
+						int index193_824 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_824);
 						if ( s>=0 ) return s;
 						break;
 					case 483 : 

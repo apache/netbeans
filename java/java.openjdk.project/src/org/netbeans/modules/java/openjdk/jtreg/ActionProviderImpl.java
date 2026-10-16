@@ -299,7 +299,8 @@ public class ActionProviderImpl implements ActionProvider {
                         case COMMAND_RUN_SINGLE: break;
                         case COMMAND_DEBUG_TEST_SINGLE:
                             try {
-                                InetAddress addr = InetAddress.getLocalHost();
+                                String userSelectedAddress = settings != null ? settings.getDebugListenAddress() : null;
+                                InetAddress addr = userSelectedAddress == null || userSelectedAddress.isBlank() ? InetAddress.getLoopbackAddress() : InetAddress.getByName(userSelectedAddress);
                                 debugSocket[0] = new ServerSocket(0, 1, addr);
                                 BACKGROUND.post(() -> {
                                     try {

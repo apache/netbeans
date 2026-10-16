@@ -21,6 +21,7 @@ package org.netbeans.api.debugger.jpda.event;
 
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.event.Event;
+import com.sun.jdi.event.ThreadDeathEvent;
 import java.util.EventObject;
 import org.netbeans.api.debugger.jpda.*;
 
@@ -105,6 +106,16 @@ public final class JPDABreakpointEvent extends EventObject {
         this.referenceType = referenceType;
         this.variable = variable;
     }
+
+    /** The breakpoint that generated this event.
+     *
+     * @return the breakpoint associated with this event
+     * @since 3.45
+     */
+    @Override
+    public JPDABreakpoint getSource() {
+        return (JPDABreakpoint) super.getSource();
+    }
     
     /**
      * Returns result of condition evaluation.
@@ -179,5 +190,14 @@ public final class JPDABreakpointEvent extends EventObject {
      */
     public boolean getResume () {
         return resume;
+    }
+
+    /** Checks if this event is representing {@link ThreadDeathEvent}.
+     *
+     * @return {@code true} or {@code false}
+     * @since 3.45
+     */
+    public boolean isThreadDeath() {
+        return event instanceof ThreadDeathEvent;
     }
 }

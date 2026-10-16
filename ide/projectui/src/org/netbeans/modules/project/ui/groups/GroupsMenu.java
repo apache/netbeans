@@ -20,11 +20,15 @@
 package org.netbeans.modules.project.ui.groups;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import org.netbeans.modules.project.ui.OpenProjectListSettings;
 import org.netbeans.modules.project.ui.ProjectsRootNode;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -37,11 +41,13 @@ import org.openide.awt.Mnemonics;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
-import static org.netbeans.modules.project.ui.groups.Bundle.*;
 import org.netbeans.modules.project.uiapi.BaseUtilities;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+
+import static org.netbeans.modules.project.ui.groups.Bundle.*;
+
 
 /**
  * Menu listing available groups and offering some operations on them.
@@ -149,7 +155,11 @@ public class GroupsMenu extends AbstractAction {
         JButton close = new JButton(GroupsMenu_manage_close());
         close.setDefaultCapable(false);
         dd.setOptions(new Object[] {select, newGroup, close});
+
+        OpenProjectListSettings settings = OpenProjectListSettings.getInstance();
+        settings.restoreComponentSize(panel);
         DialogDisplayer.getDefault().notify(dd);
+        settings.storeComponentSize(panel);
     }
 
     /**

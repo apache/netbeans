@@ -1,11 +1,10 @@
-Name: Apache Rat
-Origin: Apache Software Foundation
-Version: 0.15
+Name: Apache Tomcat (Annotations Package)
+Version: 11.0.26
 License: Apache-2.0
-Description: Apache Rat is a release audit tool, focused on licenses.
-URL: https://creadur.apache.org/rat/
+Description: Annotations used in Apache Tomcat
+Origin: http://tomcat.apache.org
 
-                                 Apache License
+                                Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 

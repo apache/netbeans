@@ -468,7 +468,6 @@ jobs:
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: |
-          export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000
           ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
 
       - name: Create Test Summary
@@ -694,6 +693,9 @@ jobs:
 
       - name: ide/languages.env
         run: ant $OPTS -f ide/languages.env test
+
+      - name: ide/languages.go
+        run: ant $OPTS -f ide/languages.go test
 
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test

@@ -989,4 +989,8 @@ public class JavaCompletionTaskAdvancedTest extends CompletionTestBase {
                     new java.lang.String""",
                     "stringConstructors.pass");
     }
+
+    public void testIntersectionTypes() throws Exception {
+        performTest("GenericMethodInvocation", 1232, "run2(null, null, 0).", "intersectionTypes.pass", "1.8");
+    }
 }

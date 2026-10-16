@@ -207,7 +207,7 @@ public final class JsfELVariableResolver implements ELVariableResolver {
     public List<VariableInfo> getBeansInScope(String scope, Snapshot snapshot, ResolverContext context) {
         List<VariableInfo> result = new ArrayList<>();
         for (FacesManagedBean bean : getJsfManagedBeans(snapshot.getSource().getFileObject(), context)) {
-            if(bean.getManagedBeanClass() != null && bean.getManagedBeanName() == null) {
+            if(bean.getManagedBeanClass() != null && bean.getManagedBeanName() != null) {
                 if (scope.equals(bean.getManagedBeanScopeString())) {
                     result.add(VariableInfo.createResolvedVariable(bean.getManagedBeanName(), bean.getManagedBeanClass()));
                 }

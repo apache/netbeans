@@ -405,6 +405,7 @@
 
     <target name="javadoc" depends="build-init,-javadoc-init">
         <path id="javadoc.classpath" refid="processor.cp"/> <!-- #157320 -->
+        <sysproperty property="jdk.xml.totalEntitySizeLimit" value="200000"/>
         <!-- This should become an import at some point, perhaps: -->
         <ant dir="${nb_all}/nbbuild/javadoctools" antfile="template.xml" target="javadoc">
             <property name="javadoc.base" location="."/>

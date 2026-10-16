@@ -300,6 +300,8 @@ public final class Splash implements Stamps.Updater {
         private volatile int barLength = 0;
         private volatile String text;
 
+        private long next;
+        
         private void increment(SplashPainter painter, int steps) {
             if (steps <= 0) {
                 return;
@@ -311,12 +313,15 @@ public final class Splash implements Stamps.Updater {
                 int bl = painter.bar.width * progress / maxSteps - barStart;
                 if (bl > 1 || barStart % 2 == 0) {
                     barLength = bl;
-                    onEDT(() -> {
-                        /* Don't try to be smart about which section of the bar to repaint.
-                        There can be tricky rounding issues on HiDPI screens with non-integral
-                        scaling factors (e.g. 150%). */
-                        painter.repaint(painter.bar);
-                    });
+                    if (next < System.currentTimeMillis()) {
+                        onEDT(() -> {
+                            /* Don't try to be smart about which section of the bar to repaint.
+                            There can be tricky rounding issues on HiDPI screens with non-integral
+                            scaling factors (e.g. 150%). */
+                            painter.repaint(painter.bar);
+                        });
+                        next = System.currentTimeMillis() + 50;
+                    }
                 }
             }
         }
@@ -546,21 +551,17 @@ public final class Splash implements Stamps.Updater {
             }
         }
 
-        long next;
         final void repaint(Rectangle r) {
             if (comp != null) {
                 comp.repaint(r);
             } else {
-                if (next < System.currentTimeMillis()) {
-                    paint();
-                    try {
-                        SplashScreen ss = SplashScreen.getSplashScreen();
-                        if (ss != null) {
-                            ss.update();
-                        }
-                    } catch (IllegalStateException splashAlreadyClosed) {}
-                    next = System.currentTimeMillis() + 200;
-                }
+                paint();
+                try {
+                    SplashScreen ss = SplashScreen.getSplashScreen();
+                    if (ss != null) {
+                        ss.update();
+                    }
+                } catch (IllegalStateException splashAlreadyClosed) {}
             }
         }
 

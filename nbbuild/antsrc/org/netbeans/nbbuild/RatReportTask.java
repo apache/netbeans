@@ -233,7 +233,7 @@ public class RatReportTask extends Task {
     }
 
     private void doPopulateUnapproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
-        NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license-approval/@name=\"false\"]", rootElement, XPathConstants.NODESET);
+        NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license/@approval=\"false\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
             String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
             String moduleName = getModuleName(resources);
@@ -246,7 +246,7 @@ public class RatReportTask extends Task {
     }
 
     private void doPopulateApproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
-        NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license-approval/@name=\"true\"]", rootElement, XPathConstants.NODESET);
+        NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license/@approval=\"true\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
             String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
             String moduleName = getModuleName(resources);

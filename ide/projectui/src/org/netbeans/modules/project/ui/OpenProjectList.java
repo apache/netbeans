@@ -110,6 +110,7 @@ import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.WindowManager;
 
 import static org.netbeans.modules.project.ui.Bundle.*;
+import org.netbeans.modules.project.ui.fallback.FallbackFactory;
 
 /**
  * List of projects open in the GUI.
@@ -1300,7 +1301,7 @@ public final class OpenProjectList {
             FileObject dir = URLMapper.findFileObject(url);
             if (dir != null && dir.isFolder()) {
                 try {
-                    Project p = ProjectManager.getDefault().findProjectOrFallback(dir);
+                    Project p = FallbackFactory.findProjectOrFallback(dir);
                     if (p != null && !result.contains(p)) { //#238093, #238811 if multiple entries point to the same project we end up with the same instance multiple times in the linked list. That's wrong.
                         result.add(p);
                     }

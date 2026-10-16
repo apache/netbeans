@@ -13,11 +13,19 @@
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
+ * specific language governing permissions and limitafile:/home/devel/NetBeansProjects/netbeans/ide/projectapi/test/unit/src/org/netbeans/api/project/ProjectManagerFallbackTest.java
+tions
  * under the License.
  */
-package org.netbeans.api.project;
+package org.netbeans.modules.project.ui.fallback;
 
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
+import org.netbeans.api.project.TestUtil;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.projectapi.nb.NbProjectManagerAccessor;
 import org.openide.filesystems.FileObject;
@@ -46,13 +54,13 @@ public class ProjectManagerFallbackTest extends NbTestCase {
     public void testLooseJavaFileRemainsUnowned() throws Exception {
         FileObject file = dir.createData("Hello.java");
         assertNull(FileOwnerQuery.getOwner(file));
-        Project fallback = pm.findProjectOrFallback(dir);
+        Project fallback = FallbackFactory.findProjectOrFallback(dir);
         assertSame(fallback, pm.findProject(dir));
         assertEquals("Fallback project gains ownershipt", fallback, FileOwnerQuery.getOwner(file));
     }
 
     public void testReplacementUnderWriteLock() throws Exception {
-        Project fallback = pm.findProjectOrFallback(dir);
+        Project fallback = FallbackFactory.findProjectOrFallback(dir);
         Project real = ProjectManager.mutex().writeAccess((Mutex.ExceptionAction<Project>) () -> {
             dir.createFolder("testproject");
             pm.clearNonProjectCache();
@@ -62,7 +70,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
     }
 
     public void testReplacedFallbackIsInvalid() throws Exception {
-        Project fallback = pm.findProjectOrFallback(dir);
+        Project fallback = FallbackFactory.findProjectOrFallback(dir);
         dir.createFolder("testproject");
         pm.clearNonProjectCache();
         assertNotSame(fallback, pm.findProject(dir));
@@ -71,7 +79,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
 
     public void testFactoryChangeUpdatesFileOwner() throws Exception {
         FileObject file = dir.createData("Hello.java");
-        Project fallback = pm.findProjectOrFallback(dir);
+        Project fallback = FallbackFactory.findProjectOrFallback(dir);
         assertSame(fallback, FileOwnerQuery.getOwner(file));
         dir.createFolder("testproject");
         MockLookup.setInstances(TestUtil.testProjectFactory());
@@ -86,7 +94,7 @@ public class ProjectManagerFallbackTest extends NbTestCase {
         Project parent = pm.findProject(dir);
         FileObject child = dir.createFolder("child");
         assertSame("Owned by " + testProject + " parent", parent, FileOwnerQuery.getOwner(child));
-        Project fallback = pm.findProjectOrFallback(child);
+        Project fallback = FallbackFactory.findProjectOrFallback(child);
         SourceGroup group = ProjectUtils.getSources(fallback).getSourceGroups(Sources.TYPE_GENERIC)[0];
         assertTrue("Every source group must contain its own root", group.contains(child));
     }

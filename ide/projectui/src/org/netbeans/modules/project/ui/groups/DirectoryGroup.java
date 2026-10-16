@@ -32,6 +32,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.queries.SharabilityQuery;
+import org.netbeans.modules.project.ui.fallback.FallbackFactory;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -77,7 +78,7 @@ public class DirectoryGroup extends Group {
         }
         if (fo != null && fo.isFolder()) {
             try {
-                Project p = ProjectManager.getDefault().findProjectOrFallback(fo);
+                Project p = FallbackFactory.findProjectOrFallback(fo);
                 if (p != null) {
                     projects.add(p);
                     if (h != null) {

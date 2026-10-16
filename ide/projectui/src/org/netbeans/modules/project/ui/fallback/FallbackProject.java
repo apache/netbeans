@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.projectapi.nb;
+package org.netbeans.modules.project.ui.fallback;
 
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
@@ -36,7 +36,7 @@ import org.openide.util.lookup.Lookups;
 
 final class FallbackProject implements Project, ProjectInformation, Sources {
     private static final String DASHNAME = "org-netbeans-modules-project-fallback"; // NOI18N
-    private static final String ICON = "org/netbeans/modules/projectapi/nb/fallback.svg"; // NOI18N
+    private static final String ICON = "org/netbeans/modules/project/ui/fallback/fallback.svg"; // NOI18N
 
     private final FileObject dir;
     private final ProjectState state;

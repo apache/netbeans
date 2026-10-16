@@ -216,7 +216,7 @@ public class ProjectsRootNode extends AbstractNode {
             }
 
             if (n.getLookup().lookup(LazyProject.class) != null) {
-                OpenProjectList.LOGGER.warning("LazyProjects remain visible");
+                OpenProjectsLogging.LOGGER.warning("LazyProjects remain visible");
             }
         }
     }
@@ -591,7 +591,7 @@ public class ProjectsRootNode extends AbstractNode {
                         return;
                     }
                 } catch (IOException | IllegalArgumentException ex) {
-                    OpenProjectList.LOGGER.log(Level.INFO, "No project for " + pair.fo, ex); // NOI18N
+                    OpenProjectsLogging.LOGGER.log(Level.INFO, "No project for " + pair.fo, ex); // NOI18N
                 }
             }
 
@@ -600,14 +600,14 @@ public class ProjectsRootNode extends AbstractNode {
                 return;
             }
 
-            if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
-                OpenProjectList.log(Level.FINER, "replacing for {0}", toStringForLog());
+            if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINER)) {
+                OpenProjectsLogging.log(Level.FINER, "replacing for {0}", toStringForLog());
             }
 
             Project p = getLookup().lookup(Project.class);
             if (p == null) {
-                if (OpenProjectList.LOGGER.isLoggable(Level.FINE)) {
-                    OpenProjectList.log(Level.FINE, "no project in lookup {0}", toStringForLog());
+                if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINE)) {
+                    OpenProjectsLogging.log(Level.FINE, "no project in lookup {0}", toStringForLog());
                 }
                 return;
             }
@@ -619,39 +619,39 @@ public class ProjectsRootNode extends AbstractNode {
                             newProj,
                             ch.rootKeys.createInfo(newProj, logicalView),
                             null);
-                    OpenProjectList.log(Level.FINER, "logical view {0}", n);
+                    OpenProjectsLogging.log(Level.FINER, "logical view {0}", n);
                 } else {
                     Node[] arr = PhysicalView.createNodesForProject(newProj);
-                    OpenProjectList.log(Level.FINER, "physical view {0}", Arrays.asList(arr));
+                    OpenProjectsLogging.log(Level.FINER, "physical view {0}", Arrays.asList(arr));
                     if (arr.length > 1) {
                         pair.update(newProj);
-                        OpenProjectList.log(Level.FINER, "refreshing for {0}", newProj);
+                        OpenProjectsLogging.log(Level.FINER, "refreshing for {0}", newProj);
                         ch.refresh(newProj);
-                        OpenProjectList.log(Level.FINER, "refreshed for {0}", newProj);
+                        OpenProjectsLogging.log(Level.FINER, "refreshed for {0}", newProj);
                         return;
                     } else if (arr.length == 1) {
                         n = arr[0];
                     } else {
-                        OpenProjectList.log(Level.WARNING, "newProject yields null node: " + newProj);
+                        OpenProjectsLogging.log(Level.WARNING, "newProject yields null node: " + newProj);
                         n = Node.EMPTY;
                     }
                 }
-                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
-                    OpenProjectList.log(Level.FINER, "change original: {0}", n);
-                    OpenProjectList.log(Level.FINER, "children before change original: {0}", getChildren());
-                    OpenProjectList.log(Level.FINER, "delegate children before change original: {0}", getOriginal().getChildren());
+                if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectsLogging.log(Level.FINER, "change original: {0}", n);
+                    OpenProjectsLogging.log(Level.FINER, "children before change original: {0}", getChildren());
+                    OpenProjectsLogging.log(Level.FINER, "delegate children before change original: {0}", getOriginal().getChildren());
                 }
                 changeOriginal(n, true);
-                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
-                    OpenProjectList.log(Level.FINER, "delegate after change original: {0}", getOriginal());
-                    OpenProjectList.log(Level.FINER, "name after change original: {0}", getName());
-                    OpenProjectList.log(Level.FINER, "children after change original: {0}", getChildren());
-                    OpenProjectList.log(Level.FINER, "delegate children after change original: {0}", getOriginal().getChildren());
+                if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectsLogging.log(Level.FINER, "delegate after change original: {0}", getOriginal());
+                    OpenProjectsLogging.log(Level.FINER, "name after change original: {0}", getName());
+                    OpenProjectsLogging.log(Level.FINER, "children after change original: {0}", getChildren());
+                    OpenProjectsLogging.log(Level.FINER, "delegate children after change original: {0}", getOriginal().getChildren());
                 }
                 BadgingLookup bl = (BadgingLookup) getLookup();
                 bl.setMyLookups(n.getLookup());
-                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
-                    OpenProjectList.log(Level.FINER, "done {0}", toStringForLog());
+                if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectsLogging.log(Level.FINER, "done {0}", toStringForLog());
                 }
                 setProjectFilesAsynch();
             } else {
@@ -661,8 +661,8 @@ public class ProjectsRootNode extends AbstractNode {
                         OpenProjectList.getDefault().close(new Project[] { pair.project() }, false);
                     });
                 }
-                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
-                    OpenProjectList.log(Level.FINER, "wrong directories. current: " + fo
+                if (OpenProjectsLogging.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectsLogging.log(Level.FINER, "wrong directories. current: " + fo
                             + " new " + (newProj != null ? newProj.getProjectDirectory() : null));
                 }
             }

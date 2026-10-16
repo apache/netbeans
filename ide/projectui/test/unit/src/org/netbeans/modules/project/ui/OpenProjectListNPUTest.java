@@ -87,9 +87,9 @@ public class OpenProjectListNPUTest extends NbTestCase {
         ((TestSupport.TestProject) project2).setLookup(Lookups.fixed(TestSupport.createAuxiliaryConfiguration()));
         
         // prepare set of open documents for both projects
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f1_1_open);
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f1_2_open);
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f2_1_open);
+        ProjectUtilities.open (f1_1_open);
+        ProjectUtilities.open (f1_2_open);
+        ProjectUtilities.open (f2_1_open);
         
         // close both projects with own open files
         OpenProjectList.getDefault().close(new Project[] {project1, project2}, false);

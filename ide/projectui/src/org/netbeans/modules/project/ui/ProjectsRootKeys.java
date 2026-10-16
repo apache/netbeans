@@ -84,7 +84,7 @@ abstract class ProjectsRootKeys {
 
     Collection<PrjInfo> getKeys() {
         var projects = Arrays.asList(listProjects());
-        projects.sort(OpenProjectList.projectByPath());
+        projects.sort(ProjectByPathComparator.projectByPath());
 
         var dirs = new ArrayList<PrjInfo>(projects.size());
         final java.util.Map<Project,ProjectsRootKeys.PrjInfo> snapshot = new HashMap<>();

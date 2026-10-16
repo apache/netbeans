@@ -32,7 +32,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.project.ui.actions.TestSupport;
 import org.netbeans.modules.projectapi.nb.TimedWeakReference;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
@@ -55,7 +54,8 @@ import org.openide.util.lookup.Lookups;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
-    CountDownLatch down;
+    private final CountDownLatch down = new CountDownLatch(1);
+    private final List<TestSupport.TestProject> holdemAll  = new ArrayList<>();
     
     public ProjectsRootNodePhysicalViewTest(String testName) {
         super(testName);
@@ -63,6 +63,11 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
 
     Lookup createLookup(TestSupport.TestProject project, Object instance) {
         return Lookups.fixed(instance, new LVP());
+    }
+
+    @Override
+    protected int timeOut() {
+        return 20_000;
     }
 
     @Override
@@ -76,7 +81,6 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         assertNotNull(workDir);
         
-        down = new CountDownLatch(1);
         
         List<URL> list = new ArrayList<URL>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
@@ -90,6 +94,7 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
             TestSupport.TestProject tmp = (TestSupport.TestProject)ProjectManager.getDefault ().findProject (prj);
             assertNotNull("Project found", tmp);
             tmp.setLookup(createLookup(tmp, new TestProjectOpenedHookImpl(down)));
+            holdemAll.add(tmp);
         }
         
         OpenProjectListSettings.getInstance().setOpenProjectsURLs(list);
@@ -97,13 +102,13 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
     }
 
-    @RandomlyFails // NB-Core-Build #3939: "Can be garbage collected when closed" involving TimedWeakReference
     public void testBehaviourOfProjectsLogicNode() throws InterruptedException {
         Node n = doBehaviourOfProjectsNode();
+        holdemAll.clear();
         
         Project p = n.getLookup().lookup(Project.class);
         assertNotNull("Project is in the node", p);
-        
+
         WeakReference<Project> ref = new WeakReference<Project>(p);
         p = null;
         

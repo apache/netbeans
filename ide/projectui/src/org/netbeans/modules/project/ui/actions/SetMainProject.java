@@ -40,6 +40,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.project.ui.OpenProjectList;
+import org.netbeans.modules.project.ui.ProjectByPathComparator;
 import org.netbeans.modules.project.ui.ProjectsRootNode;
 import static org.netbeans.modules.project.ui.actions.Bundle.*;
 import org.openide.awt.ActionID;
@@ -162,7 +163,7 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
         "LBL_NoneMainProject_Name=&None"
     })
     private void createSubMenu(Project[] projects) {    
-        Arrays.sort(projects, OpenProjectList.projectByPath());
+        Arrays.sort(projects, ProjectByPathComparator.projectByPath());
         
         // Enable disable the action according to number of open projects
         if (projects.length == 0) {

@@ -539,6 +539,7 @@
                 <friend>org.netbeans.modules.javascript2.nodejs</friend>
                 <friend>org.netbeans.modules.javascript2.react</friend>
                 <friend>org.netbeans.modules.javascript2.requirejs</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.netbeans.modules.php.latte</friend>
                 <friend>org.netbeans.modules.ruby.rhtml</friend>
                 <friend>org.netbeans.modules.web.clientproject</friend>
@@ -552,7 +553,6 @@
                 <package>org.netbeans.modules.html.editor.api.actions</package>
                 <package>org.netbeans.modules.html.editor.api.completion</package>
                 <package>org.netbeans.modules.html.editor.api.gsf</package>
-                <package>org.netbeans.modules.html.editor.api.index</package>
                 <package>org.netbeans.modules.html.editor.spi</package>
                 <package>org.netbeans.modules.html.editor.spi.embedding</package>
             </friend-packages>

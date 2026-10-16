@@ -23,6 +23,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -44,7 +45,7 @@ import org.openide.windows.WindowManager;
 
 /**
  * Test NotifyExcPanel class.
- * 
+ *
  * @author Stanislav Aubrecht
  */
 public class NotifyExceptionTest extends NbTestCase {
@@ -56,7 +57,7 @@ public class NotifyExceptionTest extends NbTestCase {
     static {
         System.setProperty("org.openide.util.Lookup", Lkp.class.getName());
     }
-    
+
     public NotifyExceptionTest(String name) {
         super(name);
     }
@@ -67,7 +68,7 @@ public class NotifyExceptionTest extends NbTestCase {
             }
         });
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
@@ -83,26 +84,50 @@ public class NotifyExceptionTest extends NbTestCase {
 
         NotifyExcPanel.cleanInstance();
     }
-    
-    public void testNoErrorDialog() throws Exception {
+
+    private static void withReport(int minReportLevel, Callable<Void> r) throws Exception {
+        System.setProperty("netbeans.exception.report.min.level", "" + minReportLevel);
+        try {
+            r.call();
+        } finally {
+            System.getProperties().remove("netbeans.exception.report.min.level");
+        }
+    }
+
+    /**
+     * A simple test to ensure that error dialog window is not created modal
+     * until the MainWindow is visible.
+     */
+    public void testNoModalErrorDialog() throws Exception {
         Frame mainWindow = WindowManager.getDefault().getMainWindow();
         final JDialog modalDialog = new HiddenDialog( mainWindow, true );
         DD.toReturn = modalDialog;
 
-        Logger.global.log(Level.WARNING, "Something is wrong", new NullPointerException("npe"));
-        waitEQ();
-        assertNull("No dialog shown", DD.lastDescriptor);
+        withReport(900, () -> {
+            Logger.global.log(Level.WARNING, "Something is wrong", new NullPointerException("npe"));
+            waitEQ();
+            assertNotNull("Really returned", DD.lastDescriptor);
+            return null;
+        });
+        assertEquals("It is DialogDescriptor", DialogDescriptor.class, DD.lastDescriptor.getClass());
+        DialogDescriptor dd = (DialogDescriptor)DD.lastDescriptor;
+        assertFalse( "The request is for non-modal dialog", dd.isModal());
+        assertFalse("Main window is not visible", mainWindow.isVisible());
     }
 
     public void testExceptionWillGetTheLevelFromAnnoatation() throws Exception {
-        NullPointerException npe = new NullPointerException("npe");
-        ErrorManager.getDefault().annotate(npe, ErrorManager.WARNING, null, null, null, null);
+        withReport(900, () -> {
+            NullPointerException npe = new NullPointerException("npe");
+            ErrorManager.getDefault().annotate(npe, ErrorManager.WARNING, null, null, null, null);
 
-        DD.toReturn = new HiddenDialog();
-        Exceptions.printStackTrace(npe);
+            DD.toReturn = new HiddenDialog();
+            Exceptions.printStackTrace(npe);
 
-        waitEQ();
-        assertNull("No dialogs shown", DD.lastDescriptor);
+            waitEQ();
+            return null;
+        });
+        assertNotNull("We are going to display a warning", DD.lastDescriptor);
+
     }
 
     public void testDirectlyLoggingAnExceptionWithALocalizedMessageAndTheRightLevelShowsItInADialog() throws Exception {

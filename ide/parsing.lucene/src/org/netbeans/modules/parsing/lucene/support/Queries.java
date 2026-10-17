@@ -399,7 +399,7 @@ public final class Queries {
         @Override
         public Query createAllDocsQuery(final @NonNull String name) {
             if (name.isEmpty()) {
-                return new MatchAllDocsQuery();
+                return MatchAllDocsQuery.INSTANCE;
             } else {
                 return new FieldExistsQuery(name);
             }

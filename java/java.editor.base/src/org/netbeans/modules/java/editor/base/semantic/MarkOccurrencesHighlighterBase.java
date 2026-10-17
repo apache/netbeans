@@ -102,7 +102,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
     protected abstract void process(CompilationInfo info, Document doc, SchedulerEvent event);
     
     private boolean isIn(CompilationUnitTree cu, SourcePositions sp, Tree tree, int position) {
-        return sp.getStartPosition(cu, tree) <= position && position <= sp.getEndPosition(cu, tree);
+        return sp.getStartPosition(tree) <= position && position <= sp.getEndPosition(tree);
     }
 
     private boolean isIn(int caretPosition, Token span) {
@@ -510,7 +510,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         
         TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
         
-        ts.move((int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), target));
+        ts.move((int) info.getTrees().getSourcePositions().getStartPosition(target));
 
         if (ts.moveNext()) {
             result.add(new int[] {ts.offset(), ts.offset() + ts.token().length()});
@@ -552,7 +552,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         }
 
         if (block != null) {
-            ts.move((int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), block));
+            ts.move((int) info.getTrees().getSourcePositions().getEndPosition(block));
 
             if (ts.movePrevious() && ts.token().id() == JavaTokenId.RBRACE) {
                 result.add(new int[] {ts.offset(), ts.offset() + ts.token().length()});

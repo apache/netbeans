@@ -181,7 +181,7 @@ public enum MicronautExpressionLanguageTokenId implements TokenId {
                                 TreePath path = this.getCurrentPath();
                                 if (path.getParentPath() != null && path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT
                                         && path.getParentPath().getParentPath() != null && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
-                                    p.add(Pair.of((int) sp.getStartPosition(path.getCompilationUnit(), node), (int) sp.getEndPosition(path.getCompilationUnit(), node)));
+                                    p.add(Pair.of((int) sp.getStartPosition(node), (int) sp.getEndPosition(node)));
                                 }
                             }
                             return null;

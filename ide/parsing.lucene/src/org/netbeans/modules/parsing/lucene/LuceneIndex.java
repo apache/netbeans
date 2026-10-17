@@ -280,22 +280,22 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException();
                     }
-                    if (q instanceof TermQuery) {
-                        Terms terms = lr.terms(((TermQuery) q).getTerm().field());
+                    if (q instanceof TermQuery termQuery) {
+                        Terms terms = lr.terms(termQuery.getTerm().field());
                         if (terms != null) {
                             TermsEnum te = terms.iterator();
-                            if (te.seekExact(((TermQuery) q).getTerm().bytes())) {
+                            if (te.seekExact(termQuery.getTerm().bytes())) {
                                 PostingsEnum pe = te.postings(null);
                                 for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
                                     docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
-                                            .add(((TermQuery) q).getTerm().bytes());
+                                            .add(termQuery.getTerm().bytes());
                                 }
                             }
                         }
-                    } else if (q instanceof PrefixQuery) {
-                        Terms terms = lr.terms(((PrefixQuery) q).getField());
+                    } else if (q instanceof PrefixQuery prefixQuery) {
+                        Terms terms = lr.terms(prefixQuery.getField());
                         if (terms != null) {
-                            TermsEnum te = new CompiledAutomaton(((PrefixQuery) q).getAutomaton()).getTermsEnum(terms);
+                            TermsEnum te = new CompiledAutomaton(prefixQuery.getAutomaton()).getTermsEnum(terms);
                             for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
                                 PostingsEnum pe = te.postings(null);
                                 BytesRef localRef = null;
@@ -309,10 +309,10 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                                 }
                             }
                         }
-                    } else if (q instanceof RegexpFilter) {
-                        Terms terms = lr.terms(((RegexpFilter) q).getField());
+                    } else if (q instanceof RegexpFilter regexpFilter) {
+                        Terms terms = lr.terms(regexpFilter.getField());
                         if (terms != null) {
-                            TermsEnum te = ((RegexpFilter) q).getTermsEnum(terms);
+                            TermsEnum te = regexpFilter.getTermsEnum(terms);
                             for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
                                 PostingsEnum pe = te.postings(null);
                                 BytesRef localRef = null;
@@ -374,7 +374,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
     }
     
     private static <T> Set<T> convertTerms(final Convertor<? super BytesRef, T> convertor, final Set<? extends BytesRef> terms) {
-        final Set<T> result = new HashSet<T>(terms.size());
+        final Set<T> result = HashSet.newHashSet(terms.size());
         for (BytesRef term : terms) {
             result.add(convertor.convert(term));
         }
@@ -1167,9 +1167,9 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                         "old owner Thread %s(%d), " +          //NOI18N
                         "new owner Thread %s(%d).",             //NOI18N
                             openThread.first(),
-                            openThread.first().getId(),
+                            openThread.first().threadId(),
                             Thread.currentThread(),
-                            Thread.currentThread().getId()),
+                            Thread.currentThread().threadId()),
                         openThread.second() != null ?
                                 openThread.second().second() :
                                 null);
@@ -1186,10 +1186,10 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                             "old owner Thread %s(%d) enter time: %d, " +           //NOI18N
                             "new owner Thread %s(%d) enter time: %d.",            //NOI18N
                                 txThread.first(),
-                                txThread.first().getId(),
+                                txThread.first().threadId(),
                                 txThread.second().first(),
                                 Thread.currentThread(),
-                                Thread.currentThread().getId(),
+                                Thread.currentThread().threadId(),
                                 System.currentTimeMillis()),
                         txThread.second().second());
                     LOGGER.log(

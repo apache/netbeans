@@ -104,7 +104,7 @@ public class OrganizeMembers {
                 ClassTree clazz = (ClassTree) context.getPath().getLeaf();
                 for (Tree member : clazz.getMembers()) {
                     if (context.getInfo().getTreeUtilities().isSynthetic(new TreePath(context.getPath(), member))) continue;
-                    if (sp.getStartPosition(cut, member) >= offset) {
+                    if (sp.getStartPosition(member) >= offset) {
                         return ErrorDescriptionFactory.forTree(context, member, NbBundle.getMessage(OrganizeMembers.class, "MSG_OragnizeMembers"), fix); //NOI18N
                     }
                 }

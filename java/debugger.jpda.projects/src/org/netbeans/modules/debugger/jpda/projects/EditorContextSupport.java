@@ -201,7 +201,7 @@ public final class EditorContextSupport {
                         // If no field name is provided, just find the beginning of the class:
                         SourcePositions positions =  ci.getTrees().getSourcePositions();
                         Tree tree = ci.getTrees().getTree(classElement);
-                        int pos = (int)positions.getStartPosition(ci.getCompilationUnit(), tree);
+                        int pos = (int)positions.getStartPosition(tree);
                         if (pos == Diagnostic.NOPOS) {
                             LOG.warning(
                                     "No position for tree "+tree+" in "+className);
@@ -225,7 +225,7 @@ public final class EditorContextSupport {
                             if (name.equals(fieldName)) {
                                 SourcePositions positions =  ci.getTrees().getSourcePositions();
                                 Tree tree = ci.getTrees().getTree(elm);
-                                int pos = (int)positions.getStartPosition(ci.getCompilationUnit(), tree);
+                                int pos = (int)positions.getStartPosition(tree);
                                 if (pos == Diagnostic.NOPOS) {
                                     LOG.warning(
                                             "No position for tree "+tree+" of element "+elm+" in "+className);
@@ -377,7 +377,7 @@ public final class EditorContextSupport {
                                                 "Null tree for element "+elm+" in "+className);
                                         continue;
                                     }
-                                    int pos = (int)positions.getStartPosition(ci.getCompilationUnit(), tree);
+                                    int pos = (int)positions.getStartPosition(tree);
                                     if (pos == Diagnostic.NOPOS) {
                                         LOG.warning(
                                                 "No position for tree "+tree+" of element "+elm+" in "+className);
@@ -391,7 +391,7 @@ public final class EditorContextSupport {
                                             if (modt != null) {
                                                 List<? extends AnnotationTree> annotations = modt.getAnnotations();
                                                 if (annotations != null && annotations.size() > 0) {
-                                                    pos = (int) positions.getEndPosition(ci.getCompilationUnit(), annotations.get(annotations.size() - 1));
+                                                    pos = (int) positions.getEndPosition(annotations.get(annotations.size() - 1));
                                                     if (pos == Diagnostic.NOPOS) {
                                                         LOG.warning(
                                                                 "No position for tree "+annotations.get(annotations.size() - 1)+" in "+className);
@@ -577,7 +577,7 @@ public final class EditorContextSupport {
                                 "Null tree for element "+classElement+" in "+className);
                         return;
                     }
-                    int pos = (int)positions.getStartPosition(ci.getCompilationUnit(), tree);
+                    int pos = (int)positions.getStartPosition(tree);
                     if (pos == Diagnostic.NOPOS) {
                         LOG.warning(
                                 "No position for tree "+tree+" of element "+classElement+" ("+className+")");
@@ -587,7 +587,7 @@ public final class EditorContextSupport {
                         boolean shifted = false;
                         ModifiersTree mtree = ((ClassTree) tree).getModifiers();
                         for (AnnotationTree atree : mtree.getAnnotations()) {
-                            int aend = (int) positions.getEndPosition(ci.getCompilationUnit(), atree);
+                            int aend = (int) positions.getEndPosition(atree);
                             if (aend != Diagnostic.NOPOS && pos < aend) {
                                 shifted = true;
                                 pos = aend + 1;
@@ -780,7 +780,7 @@ public final class EditorContextSupport {
                     } while (true);
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(tree.getKind())) {
                         SourcePositions positions =  ci.getTrees().getSourcePositions();
-                        int pos = (int) positions.getStartPosition(ci.getCompilationUnit(), tree);
+                        int pos = (int) positions.getStartPosition(tree);
                         if (pos == Diagnostic.NOPOS) {
                             return ; // We do not know where we are!
                         }
@@ -806,22 +806,22 @@ public final class EditorContextSupport {
 
                 private int getHeaderEnd(ClassTree classTree, SourcePositions positions, CompilationUnitTree compilationUnit) {
                     int max = -1;
-                    int pos = (int) positions.getEndPosition(compilationUnit, classTree.getExtendsClause());
+                    int pos = (int) positions.getEndPosition(classTree.getExtendsClause());
                     if (pos != Diagnostic.NOPOS) {
                         max = Math.max(max, pos);
                     }
-                    pos = (int) positions.getEndPosition(compilationUnit, classTree.getModifiers());
+                    pos = (int) positions.getEndPosition(classTree.getModifiers());
                     if (pos != Diagnostic.NOPOS) {
                         max = Math.max(max, pos);
                     }
                     for (Tree t : classTree.getImplementsClause()) {
-                        pos = (int) positions.getEndPosition(compilationUnit, t);
+                        pos = (int) positions.getEndPosition(t);
                         if (pos != Diagnostic.NOPOS) {
                             max = Math.max(max, pos);
                         }
                     }
                     for (Tree t : classTree.getTypeParameters()) {
-                        pos = (int) positions.getEndPosition(compilationUnit, t);
+                        pos = (int) positions.getEndPosition(t);
                         if (pos != Diagnostic.NOPOS) {
                             max = Math.max(max, pos);
                         }
@@ -1013,8 +1013,8 @@ public final class EditorContextSupport {
         }
         CompilationUnitTree cu = ci.getCompilationUnit();
         SourcePositions sp = ci.getTrees().getSourcePositions();
-        int statementStart = (int) cu.getLineMap().getLineNumber(sp.getStartPosition(cu, statementTree));
-        int statementEnd = (int) cu.getLineMap().getLineNumber(sp.getEndPosition(cu, statementTree));
+        int statementStart = (int) cu.getLineMap().getLineNumber(sp.getStartPosition(statementTree));
+        int statementEnd = (int) cu.getLineMap().getLineNumber(sp.getEndPosition(statementTree));
         ExpressionScanner scanner = new ExpressionScanner(lineNumber, statementStart, statementEnd,
                                                           cu, ci.getTrees().getSourcePositions());
         ExpressionScanner.ExpressionsInfo info = new ExpressionScanner.ExpressionsInfo();
@@ -1030,10 +1030,8 @@ public final class EditorContextSupport {
         int treeEndLine = 0;
         for (int i = 0; i < expTrees.size(); i++) {
             Tree tree = expTrees.get(i);
-            int start = (int) cu.getLineMap().getLineNumber(
-                sp.getStartPosition(cu, tree));
-            int end = (int) cu.getLineMap().getLineNumber(
-                sp.getEndPosition(cu, tree));
+            int start = (int) cu.getLineMap().getLineNumber(sp.getStartPosition(tree));
+            int end = (int) cu.getLineMap().getLineNumber(sp.getEndPosition(tree));
             if (start == Diagnostic.NOPOS || end == Diagnostic.NOPOS) {
                 continue;
             }
@@ -1098,14 +1096,12 @@ public final class EditorContextSupport {
                         if (nextOp == null) {
                             SourcePositions sp = ci.getTrees().getSourcePositions();
                             int treeStartLine =
-                                    (int) cu.getLineMap().getLineNumber(
-                                        sp.getStartPosition(cu, t));
+                                    (int) cu.getLineMap().getLineNumber(sp.getStartPosition(t));
                             if (treeStartLine == Diagnostic.NOPOS) {
                                 continue;
                             }
                             int treeEndLine =
-                                    (int) cu.getLineMap().getLineNumber(
-                                        sp.getEndPosition(cu, t));
+                                    (int) cu.getLineMap().getLineNumber(sp.getEndPosition(t));
                             if (treeEndLine == Diagnostic.NOPOS) {
                                 continue;
                             }
@@ -1117,11 +1113,9 @@ public final class EditorContextSupport {
                                 continue;
                             }
                             treeStartLine =
-                                    (int) cu.getLineMap().getLineNumber(
-                                        sp.getStartPosition(cu, newExpTrees.get(0)));
+                                    (int) cu.getLineMap().getLineNumber(sp.getStartPosition(newExpTrees.get(0)));
                             treeEndLine =
-                                    (int) cu.getLineMap().getLineNumber(
-                                        sp.getEndPosition(cu, newExpTrees.get(newExpTrees.size() - 1)));
+                                    (int) cu.getLineMap().getLineNumber(sp.getEndPosition(newExpTrees.get(newExpTrees.size() - 1)));
 
                             if (treeStartLine == Diagnostic.NOPOS || treeEndLine == Diagnostic.NOPOS) {
                                 continue;

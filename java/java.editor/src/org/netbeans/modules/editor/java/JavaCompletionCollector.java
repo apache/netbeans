@@ -486,7 +486,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                 if (castStartOffset < 0) {
                     if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                     }
                 }
                 StringBuilder castText = new StringBuilder();
@@ -1210,7 +1210,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 int castStartOffset = assignToVarOffset;
                 if (castStartOffset < 0) {
                     if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                     }
                 }
                 StringBuilder castText = new StringBuilder();
@@ -1347,7 +1347,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             if (path != null) {
                 Trees trees = info.getTrees();
-                int pos = (int)trees.getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
+                int pos = (int)trees.getSourcePositions().getStartPosition(path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
                 if (pos >= 0) {
                     Scope scope = tu.scopeFor(pos);
                     String stmt = info.getText().substring(pos, offset);

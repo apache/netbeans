@@ -640,8 +640,8 @@ public class UtilitiesTest extends TestBase {
             @Override
             public Void scan(Tree node, Void p) {
                 if (node != null) {
-                    int start = (int) sp.getStartPosition(null, node);
-                    int end = (int) sp.getEndPosition(null, node);
+                    int start = (int) sp.getStartPosition(node);
+                    int end = (int) sp.getEndPosition(node);
 
                     if (start >= 0 && end >= 0) {
                         actual.add(code.substring(start, end));

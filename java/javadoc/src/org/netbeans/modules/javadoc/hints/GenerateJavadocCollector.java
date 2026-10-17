@@ -89,7 +89,7 @@ public class GenerateJavadocCollector implements CompletionCollector {
                                                 && tp.getLeaf().getKind() != Tree.Kind.METHOD && tp.getLeaf().getKind() != Tree.Kind.VARIABLE) {
                                             tp = tp.getParentPath();
                                         }
-                                        if (tp != null && cc.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf()) >= jdBeginOffset) {
+                                        if (tp != null && cc.getTrees().getSourcePositions().getStartPosition(tp.getLeaf()) >= jdBeginOffset) {
                                             Element el = cc.getTrees().getElement(tp);
                                             if (el != null) {
                                                 String javadoc = gen.generateComment(el, cc);

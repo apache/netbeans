@@ -36,9 +36,9 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Tor Norbye, Marek Fukala
  */
-public class HtmlTokenList extends AbstractTokenList {
+public final class HtmlTokenList extends AbstractTokenList {
 
-    private String fileType;
+    private final String fileType;
     private boolean hidden = false;
     private Iterator<TokenSequence<?>> tss;
     private TokenSequence<?> ts;
@@ -84,16 +84,16 @@ public class HtmlTokenList extends AbstractTokenList {
         } else {
            //no html code in the file
         }
-        
+
     }
 
     //fast hack for making the spellchecking embedding aware, should be fixed properly
     //performance: the current approach is wrong since a new token sequence is obtained
     //and positioned for each search offset!
     @Override
-    protected int[] findNextSpellSpan() throws BadLocationException {
+    protected SpellSpan findNextSpellSpan() throws BadLocationException {
         if (ts == null || !ts.isValid() || hidden) {
-            return new int[]{-1, -1};
+            return SpellSpan.NONE;
         }
 
         ts.move(nextSearchOffset);
@@ -102,7 +102,7 @@ public class HtmlTokenList extends AbstractTokenList {
             TokenId id = ts.token().id();
 
             if (id == HTMLTokenId.SGML_COMMENT || id == HTMLTokenId.BLOCK_COMMENT || id == HTMLTokenId.TEXT) {
-                return new int[]{ts.offset(), ts.offset() + ts.token().length()};
+                return new SpellSpan(ts.offset(), ts.offset() + ts.token().length());
             }
         }
 
@@ -112,7 +112,7 @@ public class HtmlTokenList extends AbstractTokenList {
             return findNextSpellSpan();
         }
 
-        return new int[]{-1, -1};
+        return SpellSpan.NONE;
     }
 
 

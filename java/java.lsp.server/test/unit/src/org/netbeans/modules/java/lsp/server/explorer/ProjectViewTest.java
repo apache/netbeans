@@ -417,7 +417,7 @@ public class ProjectViewTest extends NbTestCase {
         InitializeResult result = server.initialize(new InitializeParams()).get();
                 
         // by default the ProjectsRootNode initializes its contents asynchronously; a proper reaction to that will be tested in another testcase. Save the complexity here.
-        System.setProperty("test.projectnode.sync", "true");
+        System.setProperty("treeViewProvider.sync", "true");
 
         CompletableFuture<TreeItem> explorer = server.getTreeViewService().explorerManager(new CreateExplorerParams("foundProjects"));
         TreeItem root = explorer.get();

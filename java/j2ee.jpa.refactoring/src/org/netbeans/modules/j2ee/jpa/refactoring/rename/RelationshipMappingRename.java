@@ -203,8 +203,8 @@ public final class RelationshipMappingRename extends JavaRefactoringPlugin {
                                                             }
                                                         }
                                                         SourcePositions sp = ci.getTrees().getSourcePositions();
-                                                        sp.getStartPosition(unit, t);
-                                                        refactoringElementsBag.add(rename, new RelationshipAnnotationRenameRefactoringElement(fo, field, at0, an, var.getSimpleName().toString(), (int) sp.getStartPosition(unit, t), (int) sp.getEndPosition(unit, t)));
+                                                        sp.getStartPosition(t);
+                                                        refactoringElementsBag.add(rename, new RelationshipAnnotationRenameRefactoringElement(fo, field, at0, an, var.getSimpleName().toString(), (int) sp.getStartPosition(t), (int) sp.getEndPosition(t)));
                                                     }
                                                 }
                                             }

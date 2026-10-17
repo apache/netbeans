@@ -24,7 +24,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.netbeans.junit.NbTestCase;
 
 /**

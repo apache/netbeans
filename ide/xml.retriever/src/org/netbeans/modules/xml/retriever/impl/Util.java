@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.xml.retriever.Retriever;
@@ -37,7 +38,6 @@ import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -299,6 +299,14 @@ public class Util {
         }
         return result;
     }
-    
+
+    public static DocumentBuilderFactory createEntityIgnoringDBF() throws ParserConfigurationException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //NOI18N
+        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false); //NOI18N
+        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false); //NOI18N
+        return dbf;
+    }
 
 }

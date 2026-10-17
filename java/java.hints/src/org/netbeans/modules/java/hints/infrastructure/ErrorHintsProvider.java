@@ -444,8 +444,8 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                     a = mit.getArguments().get(index[0]);
                 }
 
-                int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), a);
-                int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), a);
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(a);
+                int end = (int) info.getTrees().getSourcePositions().getEndPosition(a);
             
                 return new int[] {start, end};
             }
@@ -643,8 +643,8 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                     Tree firstNonClass = topLevelClass.getMembers().stream().filter(t -> !TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())).filter(t -> !info.getTreeUtilities().isSynthetic(new TreePath(topLevelClassTP, t))).findFirst().orElse(null);
 
                     if (firstNonClass != null) {
-                        soff = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), firstNonClass);
-                        endOffset = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), firstNonClass);
+                        soff = (int) info.getTrees().getSourcePositions().getStartPosition(firstNonClass);
+                        endOffset = (int) info.getTrees().getSourcePositions().getEndPosition(firstNonClass);
                     }
                 }
             }

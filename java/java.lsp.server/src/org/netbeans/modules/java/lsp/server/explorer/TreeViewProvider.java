@@ -470,8 +470,9 @@ public abstract class TreeViewProvider {
     }
 
     public final CompletionStage<Node[]> getChildren(Node nodeOrNull) {
-        Node node = getNodeOrRoot(nodeOrNull);
-        return CompletableFuture.completedFuture(node.getChildren().getNodes());
+        var node = getNodeOrRoot(nodeOrNull);
+        var optimalResult = Boolean.getBoolean("treeViewProvider.sync");
+        return CompletableFuture.completedFuture(node.getChildren().getNodes(optimalResult));
     }
 
     public final CompletionStage<Node> getParent(Node node) {

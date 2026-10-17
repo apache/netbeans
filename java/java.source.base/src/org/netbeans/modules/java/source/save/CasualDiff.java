@@ -605,7 +605,7 @@ public class CasualDiff {
     }
     
     private static int getOldIndent(DiffContext diffContext, Tree t) {
-        int offset = (int) diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, t);
+        int offset = (int) diffContext.trees.getSourcePositions().getStartPosition(t);
         
         if (offset < 0) return -1;
         
@@ -1944,7 +1944,7 @@ public class CasualDiff {
 
                     JCTree last = oldT.init.get(oldT.init.size() - 1);
 
-                    long endPos = diffContext.trees.getSourcePositions().getEndPosition(oldTopLevel, last);
+                    long endPos = diffContext.trees.getSourcePositions().getEndPosition(last);
 
                     initBounds[1] = (int) endPos;
                     localPointer = diffTree(old, nue, initBounds);
@@ -3457,11 +3457,11 @@ public class CasualDiff {
           case ERRONEOUS: {
               // errors match, iff their source texts match
               SourcePositions sps = this.diffContext.trees.getSourcePositions();
-              int a1 = (int)sps.getStartPosition(diffContext.origUnit, t1);
-              int a2 = (int)sps.getEndPosition(diffContext.origUnit, t1);
+              int a1 = (int)sps.getStartPosition(t1);
+              int a2 = (int)sps.getEndPosition(t1);
               
-              int b1 = (int)sps.getStartPosition(diffContext.origUnit, t2);
-              int b2 = (int)sps.getEndPosition(diffContext.origUnit, t2);
+              int b1 = (int)sps.getStartPosition(t2);
+              int b2 = (int)sps.getEndPosition(t2);
               
               if (a1 == b1 && a2 == b2) {
                   return true;
@@ -5478,7 +5478,7 @@ public class CasualDiff {
     
     public int endPos(DCTree oldT, DCDocComment doc) {
         DocSourcePositions sp = JavacTrees.instance(context).getSourcePositions();
-        return (int) sp.getEndPosition(null, doc, oldT);
+        return (int) sp.getEndPosition(doc, oldT);
     }
     
     private int endPos(List<? extends DCTree> trees, DCDocComment doc) {

@@ -120,7 +120,7 @@ public class OrganizeImports {
             int offset = diffs.get(0).getStartPosition().getOffset();
             CompilationUnitTree cu = context.getInfo().getCompilationUnit();
             for (ImportTree imp : cu.getImports()) {
-                if (sp.getEndPosition(cu, imp) >= offset)
+                if (sp.getEndPosition(imp) >= offset)
                     return ErrorDescriptionFactory.forTree(context, imp, NbBundle.getMessage(OrganizeImports.class, "MSG_OragnizeImports"), fix); //NOI18N
             }
             return ErrorDescriptionFactory.forTree(context, context.getInfo().getCompilationUnit().getImports().get(0), NbBundle.getMessage(OrganizeImports.class, "MSG_OragnizeImports"), fix); //NOI18N
@@ -155,8 +155,8 @@ public class OrganizeImports {
             List<Diagnostic> diags = copy.getDiagnostics();
             if (!diags.isEmpty()) {
                 SourcePositions sp = copy.getTrees().getSourcePositions();
-                long startPos = sp.getStartPosition(cu, imports.get(0));
-                long endPos = sp.getEndPosition(cu, imports.get(imports.size() - 1));
+                long startPos = sp.getStartPosition(imports.get(0));
+                long endPos = sp.getEndPosition(imports.get(imports.size() - 1));
                 for (Diagnostic d : diags) {
                     if (startPos <= d.getPosition() && d.getPosition() <= endPos) {
                         if (ERROR_CODE.contentEquals(d.getCode()))

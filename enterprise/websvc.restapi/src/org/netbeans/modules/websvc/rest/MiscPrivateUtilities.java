@@ -222,10 +222,8 @@ public class MiscPrivateUtilities {
                         public void run() {
                             SourcePositions srcPos = controller.getTrees()
                                     .getSourcePositions();
-                            int start = (int) srcPos.getStartPosition(
-                                    controller.getCompilationUnit(), tree);
-                            int end = (int) srcPos.getEndPosition(
-                                    controller.getCompilationUnit(), tree);
+                            int start = (int) srcPos.getStartPosition(tree);
+                            int end = (int) srcPos.getEndPosition(tree);
 
                             try {
                                 String text = doc.getText(start, end - start + 1);

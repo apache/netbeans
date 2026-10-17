@@ -569,7 +569,8 @@ public class SourcePathProviderImpl extends SourcePathProvider {
      * @return url or <code>null</code>
      */
     @Override
-    public String getURL (String relativePath, boolean global) {    if (verbose) System.out.println ("SPPI: getURL " + relativePath + " global " + global);
+    public String getURL (String relativePath, boolean global) {
+        if (verbose) System.out.println ("SPPI: getURL " + relativePath + " global " + global);
         relativePath = normalize(relativePath);
         if (global) {
             synchronized (urlCacheGlobal) {

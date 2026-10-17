@@ -67,6 +67,7 @@ import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.Occurence;
 import org.netbeans.modules.php.editor.model.Occurence.Accuracy;
+import org.netbeans.modules.php.editor.model.PropertyHookScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -88,6 +89,7 @@ import org.netbeans.modules.php.editor.model.nodes.InterfaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MagicMethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.PhpDocTypeTagInfo;
+import org.netbeans.modules.php.editor.model.nodes.PropertyHookDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleFieldDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.TraitDeclarationInfo;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
@@ -110,6 +112,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
@@ -158,6 +161,7 @@ class OccurenceBuilder {
     private Map<ASTNodeInfo<Variable>, Scope> variables;
     private Map<IncludeInfo, IncludeElement> includes;
     private Map<SingleFieldDeclarationInfo, FieldElementImpl> fldDeclarations;
+    private Map<PropertyHookDeclarationInfo, PropertyHookScope> propertyHookDeclarations;
     private Map<ASTNodeInfo<FieldAccess>, Scope> fieldInvocations;
     private volatile ElementInfo elementInfo;
     private volatile ElementInfo promotedVariableElementInfo;
@@ -200,6 +204,7 @@ class OccurenceBuilder {
         this.caseDeclarations = this.<ASTNodeInfo<Identifier>, CaseElement>initMap();
         this.variables = this.<ASTNodeInfo<Variable>, Scope>initMap();
         this.fldDeclarations = this.<SingleFieldDeclarationInfo, FieldElementImpl>initMap();
+        this.propertyHookDeclarations = this.<PropertyHookDeclarationInfo, PropertyHookScope>initMap();
         this.docTags = this.<PhpDocTypeTagInfo, Scope>initMap();
         this.gotoStatement = this.<ASTNodeInfo<GotoStatement>, Scope>initMap();
         this.gotoLabel = this.<ASTNodeInfo<GotoLabel>, Scope>initMap();
@@ -251,6 +256,13 @@ class OccurenceBuilder {
         SingleFieldDeclaration node = info.getOriginalNode();
         if (canBePrepared(node, fei)) {
             fldDeclarations.put(info, fei);
+        }
+    }
+
+    void prepare(PropertyHookDeclarationInfo info, PropertyHookScope scope) {
+        PropertyHookDeclaration node = info.getOriginalNode();
+        if (canBePrepared(node, scope)) {
+            propertyHookDeclarations.put(info, scope);
         }
     }
 
@@ -563,6 +575,10 @@ class OccurenceBuilder {
             setOffsetElementInfo(new ElementInfo(entry.getKey(), entry.getValue()), offset);
         }
 
+        for (Entry<PropertyHookDeclarationInfo, PropertyHookScope> entry : propertyHookDeclarations.entrySet()) {
+            setOffsetElementInfo(new ElementInfo(entry.getKey(), entry.getValue()), offset);
+        }
+
         for (Entry<ASTNodeInfo<Variable>, Scope> entry : variables.entrySet()) {
             setOffsetElementInfo(new ElementInfo(entry.getKey(), entry.getValue()), offset);
         }
@@ -815,8 +831,11 @@ class OccurenceBuilder {
                         buildUseAliases(elementInfo, fileScope, cachedOccurences);
                     }
                     break;
+                case PROPERTY_HOOK:
+                    // TODO
+                    break;
                 default:
-                    throw new IllegalStateException();
+                    throw new IllegalStateException(kind.name());
             }
         }
         //return retval;
@@ -2466,6 +2485,7 @@ class OccurenceBuilder {
                     if (NameKind.exact(name).matchesName(PhpElementKind.VARIABLE, nodeName)) {
                         if (!var.isGloballyVisible()) {
                             Scope nextScope = entry.getValue();
+                            // TODO handle $this in PropertyHookScope
                             if (var.representsThis() && nextScope.getInScope() instanceof TypeScope) {
                                 final Scope inScope = ctxVarScope instanceof MethodScope ? ctxVarScope.getInScope() : ctxVarScope;
                                 if (nextScope.getInScope().equals(inScope)) {

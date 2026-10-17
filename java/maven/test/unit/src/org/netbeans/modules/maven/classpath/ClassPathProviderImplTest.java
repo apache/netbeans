@@ -30,15 +30,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Assert;
-import static org.junit.Assert.assertNotEquals;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -58,7 +55,6 @@ import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
-import org.netbeans.modules.project.ui.actions.OpenProject;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
@@ -67,7 +63,9 @@ import org.openide.util.Utilities;
 import org.openide.util.test.MockLookup;
 import org.openide.util.test.MockPropertyChangeListener;
 
-@SuppressWarnings("AssignmentToMethodParameter")
+import static org.junit.Assert.assertNotEquals;
+
+@SuppressWarnings({"AssignmentToMethodParameter", "null"})
 public class ClassPathProviderImplTest extends NbTestCase {
 
     public ClassPathProviderImplTest(String n) {
@@ -106,15 +104,17 @@ public class ClassPathProviderImplTest extends NbTestCase {
 
     public void testClassPath() throws Exception {
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         assertRoots(ClassPath.getClassPath(src, ClassPath.COMPILE));
     }
@@ -122,14 +122,16 @@ public class ClassPathProviderImplTest extends NbTestCase {
     public void testSourcePathWithResources() throws Exception {
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject rsrc = FileUtil.createFolder(d, "src/main/resources");
         FileObject tsrc = FileUtil.createFolder(d, "src/test/java");
@@ -143,17 +145,19 @@ public class ClassPathProviderImplTest extends NbTestCase {
     public void testITSourcePath() throws Exception {
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "<build>" +
-                "<testSourceDirectory>src/it/java</testSourceDirectory>" +
-                "</build>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                    <build>
+                        <testSourceDirectory>src/it/java</testSourceDirectory>
+                    </build>
+                </project>
+                """);
         FileObject itsrc = FileUtil.createFolder(d, "src/it/java");
         assertRoots(ClassPath.getClassPath(itsrc, ClassPath.SOURCE), itsrc);
     }
@@ -161,14 +165,16 @@ public class ClassPathProviderImplTest extends NbTestCase {
     public void testCompileClassPath() throws Exception {
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
         assertNotNull(cp);
@@ -182,19 +188,21 @@ public class ClassPathProviderImplTest extends NbTestCase {
             return;
         }
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "    <properties>" +
-                "        <maven.compiler.source>11</maven.compiler.source>" +
-                "        <maven.compiler.target>11</maven.compiler.target>" +
-                "    </properties>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                    <properties>
+                        <maven.compiler.source>11</maven.compiler.source>
+                        <maven.compiler.target>11</maven.compiler.target>
+                    </properties>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject mi = FileUtil.createData(src, "module-info.java");
         ClassPath cp = ClassPath.getClassPath(src, JavaClassPathConstants.MODULE_COMPILE_PATH);
@@ -212,18 +220,20 @@ public class ClassPathProviderImplTest extends NbTestCase {
                 
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "    <properties>" +
-                "        <maven.compiler.source>11</maven.compiler.source>" +
-                "        <maven.compiler.target>11</maven.compiler.target>" +
-                "    </properties>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                    <properties>
+                        <maven.compiler.source>11</maven.compiler.source>
+                        <maven.compiler.target>11</maven.compiler.target>
+                    </properties>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         Project prj = FileOwnerQuery.getOwner(src);
         // trigger FSL on source groups
@@ -249,18 +259,20 @@ public class ClassPathProviderImplTest extends NbTestCase {
         }
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "    <properties>" +
-                "        <maven.compiler.source>11</maven.compiler.source>" +
-                "        <maven.compiler.target>11</maven.compiler.target>" +
-                "    </properties>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                    <properties>
+                        <maven.compiler.source>11</maven.compiler.source>
+                        <maven.compiler.target>11</maven.compiler.target>
+                    </properties>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         ClassPath cp = ClassPath.getClassPath(src, JavaClassPathConstants.MODULE_BOOT_PATH);
         assertNotNull(cp);
@@ -289,23 +301,25 @@ public class ClassPathProviderImplTest extends NbTestCase {
     }
     private static void assertRoots(ClassPath cp, FileObject... files) {
         assertNotNull(cp);
-        Set<FileObject> roots = new LinkedHashSet<FileObject>();
+        Set<FileObject> roots = new LinkedHashSet<>();
         for (FileObject file : files) {
             roots.add(FileUtil.isArchiveFile(file) ? FileUtil.getArchiveRoot(file) : file);
         }
-        assertEquals(roots, new LinkedHashSet<FileObject>(Arrays.asList(cp.getRoots())));
+        assertEquals(roots, new LinkedHashSet<>(Arrays.asList(cp.getRoots())));
     }
 
     public void testGeneratedSources() throws Exception { // #187595
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject gsrc = FileUtil.createFolder(d, "target/generated-sources/xjc");
         gsrc.createData("Whatever.class");
@@ -323,14 +337,16 @@ public class ClassPathProviderImplTest extends NbTestCase {
 
     public void testNewlyCreatedSourceGroup() throws Exception { // #190852
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject tsrc = FileUtil.createFolder(d, "src/test/java");
         ClassPath sourcepath = ClassPath.getClassPath(src, ClassPath.SOURCE);
@@ -355,13 +371,16 @@ public class ClassPathProviderImplTest extends NbTestCase {
     public void testArchetypeResources() throws Exception { // #189037
         TestFileUtils.writeFile(d,
                 "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>g</groupId>" +
-                "<artifactId>a</artifactId>" +
-                // unloadable during a test: "<packaging>maven-archetype</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <!-- unloadable during a test: "<packaging>maven-archetype</packaging> -->"
+                    <version>0</version>
+                </project>
+                """
+        );
         TestFileUtils.writeFile(d, "src/main/resources/META-INF/maven/archetype-metadata.xml", "<archetype-descriptor/>");
         TestFileUtils.writeFile(d, "src/main/resources/archetype-resources/pom.xml", "<project/>");
         TestFileUtils.writeFile(d, "src/main/resources/archetype-resources/src/main/java/X.java", "package $package; public class X {}");

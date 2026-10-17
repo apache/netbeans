@@ -21,7 +21,7 @@ package org.netbeans.modules.maven.queries;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.junit.Log;
@@ -45,14 +45,16 @@ public class MavenBinaryForSourceQueryImplTest extends NbTestCase {
 
     public void testGeneratedSources() throws Exception { // #187595
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject gsrc = FileUtil.createFolder(d, "target/generated-sources/xjc");
         gsrc.createData("Whatever.class");
@@ -63,22 +65,24 @@ public class MavenBinaryForSourceQueryImplTest extends NbTestCase {
         File art0 = new File(repo, "grp/art/0/art-0.jar");
         URL url0 = FileUtil.getArchiveRoot(art0.toURI().toURL());        
         
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(src.toURL()).getRoots()));
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(gsrc.toURL()).getRoots()));
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/test-classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(tsrc.toURL()).getRoots()));
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/test-classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(gtsrc.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(src.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(gsrc.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/test-classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(tsrc.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/test-classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(gtsrc.toURL()).getRoots()));
     }
 
     public void testResources() throws Exception { // #208816
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                </project>
+                """);
         FileObject res = FileUtil.createFolder(d, "src/main/resources");
         FileObject tres = FileUtil.createFolder(d, "src/test/resources");
         CharSequence log = Log.enable(BinaryForSourceQuery.class.getName(), Level.FINE);
@@ -86,8 +90,8 @@ public class MavenBinaryForSourceQueryImplTest extends NbTestCase {
         File art0 = new File(repo, "grp/art/0/art-0.jar");
         URL url0 = FileUtil.getArchiveRoot(art0.toURI().toURL()); 
 
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(res.toURL()).getRoots()));
-        assertEquals(Arrays.asList(new URL(d.toURL(), "target/test-classes/"), url0), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(tres.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(res.toURL()).getRoots()));
+        assertEquals(List.of(new URL(d.toURL(), "target/test-classes/"), url0), List.of(BinaryForSourceQuery.findBinaryRoots(tres.toURL()).getRoots()));
         String logS = log.toString();
         assertFalse(logS, logS.contains("-> nil"));
         assertTrue(logS, logS.contains("ProjectBinaryForSourceQuery"));

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.35
+#Version 5.36
 
 CLSS public abstract interface java.io.Serializable
 
@@ -576,6 +576,7 @@ fld public final static int V23 = 67
 fld public final static int V24 = 68
 fld public final static int V25 = 69
 fld public final static int V26 = 70
+fld public final static int V27 = 71
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE
@@ -1176,13 +1177,15 @@ meth public org.objectweb.asm.AnnotationVisitor visitTypeAnnotation(int,org.obje
 supr org.objectweb.asm.RecordComponentVisitor
 
 CLSS public abstract org.objectweb.asm.commons.Remapper
-cons public init()
+cons protected init()
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
-cons public init(int)
+cons protected init(int)
 meth protected org.objectweb.asm.signature.SignatureVisitor createRemappingSignatureAdapter(org.objectweb.asm.signature.SignatureVisitor)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.objectweb.asm.signature.SignatureVisitor createSignatureRemapper(org.objectweb.asm.signature.SignatureVisitor)
+meth public !varargs java.lang.String mapBasicInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
+meth public !varargs java.lang.String mapWellKnownInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.Object mapValue(java.lang.Object)
 meth public java.lang.String map(java.lang.String)
 meth public java.lang.String mapAnnotationAttributeName(java.lang.String,java.lang.String)
@@ -1200,7 +1203,7 @@ meth public java.lang.String mapSignature(java.lang.String,boolean)
 meth public java.lang.String mapType(java.lang.String)
 meth public java.lang.String[] mapTypes(java.lang.String[])
 supr java.lang.Object
-hfds api
+hfds LAMBDA_FACTORY_ALTMETAFACTORY,LAMBDA_FACTORY_CLASSNAME,LAMBDA_FACTORY_METAFACTORY,api
 
 CLSS public org.objectweb.asm.commons.SerialVersionUIDAdder
 cons protected init(int,org.objectweb.asm.ClassVisitor)
@@ -1247,11 +1250,12 @@ cons public init(java.lang.String,java.lang.String)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.Map<java.lang.String,java.lang.String>)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
-meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
+meth public !varargs java.lang.String mapBasicInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.String map(java.lang.String)
 meth public java.lang.String mapAnnotationAttributeName(java.lang.String,java.lang.String)
 meth public java.lang.String mapFieldName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String mapMethodName(java.lang.String,java.lang.String,java.lang.String)
 supr org.objectweb.asm.commons.Remapper
 hfds mapping

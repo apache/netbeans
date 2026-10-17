@@ -82,6 +82,7 @@ import org.openide.awt.UndoRedo;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.text.Annotation;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -353,7 +354,8 @@ public class EffectivePomMD implements MultiViewDescription, Serializable {
                     @Override public void run() {
                         EditorKit kit = mime.lookup(EditorKit.class);
                         NbEditorDocument doc = (NbEditorDocument) kit.createDefaultDocument();
-                        pane = new JEditorPane(EFF_MIME_TYPE, null);
+                        pane = new JEditorPane();
+                        pane.setEditorKit(CloneableEditorSupport.getEditorKit(EFF_MIME_TYPE));
                         pane.setDocument(doc);
                         JComponent pnl = getVisualRepresentation(); 
                         pnl.removeAll();

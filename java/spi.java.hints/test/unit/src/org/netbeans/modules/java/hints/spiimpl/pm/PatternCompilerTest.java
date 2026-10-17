@@ -134,8 +134,8 @@ public class PatternCompilerTest extends TestBase {
             Tree t = tp.getLeaf();
             SourcePositions sp = info.getTrees().getSourcePositions();
 
-            if (   start == sp.getStartPosition(info.getCompilationUnit(), t)
-                && end   == sp.getEndPosition(info.getCompilationUnit(), t)) {
+            if (   start == sp.getStartPosition(t)
+                && end   == sp.getEndPosition(t)) {
                 break;
             }
 
@@ -159,8 +159,8 @@ public class PatternCompilerTest extends TestBase {
 
         for (Entry<String, TreePath> e : vars.next().getVariables().entrySet()) {
             int[] span = new int[] {
-                (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), e.getValue().getLeaf()),
-                (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), e.getValue().getLeaf())
+                (int) info.getTrees().getSourcePositions().getStartPosition(e.getValue().getLeaf()),
+                (int) info.getTrees().getSourcePositions().getEndPosition(e.getValue().getLeaf())
             };
 
             actual.put(e.getKey(), info.getText().substring(span[0], span[1]));

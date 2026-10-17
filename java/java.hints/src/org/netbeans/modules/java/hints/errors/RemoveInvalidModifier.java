@@ -129,7 +129,7 @@ public class RemoveInvalidModifier implements ErrorRule<Void> {
     }
 
     private String getInvalidModifier(CompilationInfo compilationInfo, TreePath treePath, Set<String> codes) {
-        long start = compilationInfo.getTrees().getSourcePositions().getStartPosition(compilationInfo.getCompilationUnit(), treePath.getLeaf());
+        long start = compilationInfo.getTrees().getSourcePositions().getStartPosition(treePath.getLeaf());
         Diagnostic diagnostic = getDiagnostic(compilationInfo, start, codes);
         if (null==diagnostic){
             return null;

@@ -23,6 +23,7 @@ import java.util.Collections;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.Library;
+import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.Tag;
 import org.netbeans.modules.web.jsfapi.api.TagFeature;
 import org.netbeans.modules.web.jsfapi.spi.TagFeatureProvider;
@@ -66,9 +67,13 @@ public class JsfTagFeatureProvider implements TagFeatureProvider {
         if (libraryNamespace == null) {
             return null;
         }
+        LibraryInfo libraryInfo = DefaultLibraryInfo.forNamespace(libraryNamespace);
+        if (libraryInfo == null) {
+            return null;
+        }
         for (IterableTag iterableTag : IterableTag.values()) {
             if (iterableTag.getName().equals(tag.getName())
-                    && libraryNamespace.equals(iterableTag.getLibraryInfo().getNamespace())) {
+                    && iterableTag.getLibraryInfo().equals(libraryInfo)) {
                 return iterableTag;
             }
         }

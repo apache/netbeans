@@ -300,8 +300,8 @@ public final class NILocationVisualizer implements Consumer<String> {
     }
 
     private static Interval createInterval(CompilationUnitTree cut, SourcePositions sourcePositions, LineMap lineMap, Tree tree, Tree enclosingTree) {
-        long start = sourcePositions.getStartPosition(cut, tree);
-        long end = sourcePositions.getEndPosition(cut, tree);
+        long start = sourcePositions.getStartPosition(tree);
+        long end = sourcePositions.getEndPosition(tree);
         if (start != Diagnostic.NOPOS && end != Diagnostic.NOPOS) {
             int line1 = (int) lineMap.getLineNumber(start);
             int col1 = (int) lineMap.getColumnNumber(start);

@@ -98,14 +98,19 @@ public final class DAPStackTraceAnnotationHolder {
     }
 
     public static boolean contains (Object currentLine, Line line) {
-        if (currentLine == null) return false;
-        final Annotatable[] a = (Annotatable[]) currentLine;
-        int i, k = a.length;
-        for (i = 0; i < k; i++) {
-            if (a [i].equals (line)) return true;
-            if ( a [i] instanceof Line.Part &&
-                 ((Line.Part) a [i]).getLine ().equals (line)
-            ) return true;
+        if (currentLine == null) {
+            return false;
+        }
+        final Annotatable[] a = currentLine instanceof Annotatable[] arr ? arr :
+            currentLine instanceof Annotatable single ? new Annotatable[] { single } :
+            new Annotatable[0];
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].equals(line)) {
+                return true;
+            }
+            if (a[i] instanceof Line.Part part && part.getLine ().equals (line)) {
+                return true;
+            }
         }
         return false;
     }

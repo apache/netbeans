@@ -113,7 +113,7 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
     }
 
     private void handleJavadoc(Tree t) throws BadLocationException, ConcurrentModificationException {
-        int start = (int) sp.getStartPosition(cu, t);
+        int start = (int) sp.getStartPosition(t);
 
         if (start == (-1))
             return ;
@@ -145,14 +145,14 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
     }
 
     private void handleTree(Tree node, Tree javadocTree, boolean handleOnlyJavadoc) {
-        handleTree((int)sp.getStartPosition(cu, node), node, javadocTree, handleOnlyJavadoc);
+        handleTree((int)sp.getStartPosition(node), node, javadocTree, handleOnlyJavadoc);
     }
 
     private void handleTree(int symStart, Tree node, Tree javadocTree, boolean handleOnlyJavadoc) {
         try {
             if (!handleOnlyJavadoc) {
-                int start = (int)sp.getStartPosition(cu, node);
-                int end   = (int)sp.getEndPosition(cu, node);
+                int start = (int)sp.getStartPosition(node);
+                int end   = (int)sp.getEndPosition(node);
 
                 if (start != (-1) && start < end) {
                     addFold(creator.createCodeBlockFold(start, end), symStart);
@@ -176,10 +176,10 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
         try {
             if (p == Boolean.TRUE) {
                 int start = Utilities.findBodyStart(info, node, cu, sp, doc);
-                int end   = (int)sp.getEndPosition(cu, node);
+                int end   = (int)sp.getEndPosition(node);
 
                 if (start != (-1) && start < end) {
-                    addFold(creator.createMethodFold(start, end), (int)sp.getStartPosition(cu, node));
+                    addFold(creator.createMethodFold(start, end), (int)sp.getStartPosition(node));
                   }
             }
 
@@ -198,10 +198,10 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
         try {
             if (p == Boolean.TRUE) {
                 int start = Utilities.findBodyStart(info, node, cu, sp, doc);
-                int end   = (int)sp.getEndPosition(cu, node);
+                int end   = (int)sp.getEndPosition(node);
 
                 if (start != (-1) && start < end) {
-                    addFold(creator.createInnerClassFold(start, end), (int)sp.getStartPosition(cu, node));
+                    addFold(creator.createInnerClassFold(start, end), (int)sp.getStartPosition(node));
                   }
             }
 
@@ -266,8 +266,8 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
             // don't rely on Javac for the end position: in case of missing semicolon the import consumes all whitespace
             // including comments / javadocs up to the following declaration or text. Rather scan tokens and consume only the import
             // identifier + semi.
-            int start = (int) sp.getStartPosition(cu, imp);
-            int identPos = (int) sp.getStartPosition(cu, qualIdent);
+            int start = (int) sp.getStartPosition(imp);
+            int identPos = (int) sp.getStartPosition(qualIdent);
             int end = identPos;
             boolean firstNewline = true;
             ts.move(identPos);
@@ -281,7 +281,7 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
                         end = ts.offset() + tukac.length();
                         break;
                     case SEMICOLON:
-                        end = (int) sp.getEndPosition(cu, imp);
+                        end = (int) sp.getEndPosition(imp);
                         break IDENT;
                     case WHITESPACE: {
                         if (firstNewline) {

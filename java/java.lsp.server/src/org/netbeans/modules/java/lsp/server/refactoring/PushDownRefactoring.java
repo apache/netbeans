@@ -125,8 +125,8 @@ public final class PushDownRefactoring extends CodeRefactoring {
                 continue;
             }
             TreePath mPath = trees.getPath(m);
-            long startMember = mPath != null ? sourcePositions.getStartPosition(mPath.getCompilationUnit(), mPath.getLeaf()) : -1;
-            long endMember = mPath != null ? sourcePositions.getEndPosition(mPath.getCompilationUnit(), mPath.getLeaf()) : -1;
+            long startMember = mPath != null ? sourcePositions.getStartPosition(mPath.getLeaf()) : -1;
+            long endMember = mPath != null ? sourcePositions.getEndPosition(mPath.getLeaf()) : -1;
             boolean selected = offset > startMember && offset < endMember;
             members.add(new QuickPickItem(createLabel(info, m), null, null, selected, new ElementData(m)));
         }

@@ -283,7 +283,7 @@ public final class Archetype {
             if (entry != null) {
                 InputStream in = jf.getInputStream(entry);
                 try {
-                    Document doc = XMLUtil.parse(new InputSource(in), false, false, XMLUtil.defaultErrorHandler(), null);
+                    Document doc = XMLUtil.parse(new InputSource(in), false, false, true, XMLUtil.defaultErrorHandler(), null);
                     NodeList nl = doc.getElementsByTagName("requiredProperty");
                     for (int i = 0; i < nl.getLength(); i++) {
                         Element rP = (Element) nl.item(i);

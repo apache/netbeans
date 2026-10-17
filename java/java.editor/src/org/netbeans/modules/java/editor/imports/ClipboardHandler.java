@@ -417,8 +417,8 @@ public class ClipboardHandler {
                             new ErrorAwareTreePathScanner<Void, Void>() {
                                 private final Set<Element> declaredInCopiedText = new HashSet<>();
                                 @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);
-                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), node);
+                                    int s = (int) trees.getSourcePositions().getStartPosition(node);
+                                    int e = (int) trees.getSourcePositions().getEndPosition(node);
                                     javax.lang.model.element.Element el = trees.getElement(getCurrentPath());
 
                                     if (s >= start && e >= start && e <= end && el != null && !declaredInCopiedText.contains(el)) {
@@ -477,8 +477,8 @@ public class ClipboardHandler {
                                     return super.visitMethod(node, p);
                                 }
                                 private void handleDeclaration() {
-                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
-                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
+                                    int s = (int) trees.getSourcePositions().getStartPosition(getCurrentPath().getLeaf());
+                                    int e = (int) trees.getSourcePositions().getEndPosition(getCurrentPath().getLeaf());
                                     javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
 
                                     if (el != null && ((start <= s && s <= end) || (start <= e && e <= end))) {

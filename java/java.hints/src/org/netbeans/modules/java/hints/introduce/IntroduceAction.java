@@ -143,8 +143,8 @@ public final class IntroduceAction extends HintAction {
                                     
                                     Map<IntroduceKind, Fix> fixes = new EnumMap<IntroduceKind, Fix>(IntroduceKind.class);
                                     Map<IntroduceKind, String> errorMessages = new EnumMap<IntroduceKind, String>(IntroduceKind.class);
-                                    int start = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), currentPath.getLeaf());
-                                    int end   = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), currentPath.getLeaf());
+                                    int start = (int) parameter.getTrees().getSourcePositions().getStartPosition(currentPath.getLeaf());
+                                    int end   = (int) parameter.getTrees().getSourcePositions().getEndPosition(currentPath.getLeaf());
 
                                     if (end > start && start != (-1)) {
                                         IntroduceHint.computeError(parameter, start, end, fixes, errorMessages, cancel);

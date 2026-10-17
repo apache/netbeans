@@ -292,7 +292,7 @@ final class ModuleSourceFileManager implements JavaFileManager {
                         final Collection<? extends ClassPath.Entry> origEntries = l.getModuleEntries();
                         final List<? extends ClassPath.Entry> entries = origEntries.stream()
                                 .filter((e) -> !patches.containsKey(e.getURL()))
-                                .collect(Collectors.toList());
+                                .toList();
                         if (entries.isEmpty()) {
                             return null;
                         } else if (origEntries.size() == entries.size()) {

@@ -20,7 +20,6 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -39,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -117,7 +115,7 @@ public final class ModuleNames {
             //Project binary
             final CacheLine cl = getProjectModuleName(
                     rootUrl,
-                    Arrays.stream(sfbqRes.getRoots()).map(FileObject::toURL).collect(Collectors.toList()),
+                    Arrays.stream(sfbqRes.getRoots()).map(FileObject::toURL).toList(),
                     canUseSources);
             if (cl.getValueNoCheck() != null) {
                 return register(rootUrl, cl);

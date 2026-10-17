@@ -372,9 +372,9 @@ public class UnnecessaryBoxing {
         }
         SourcePositions sp = ci.getTrees().getSourcePositions();
         
-        int invOffset = (int)sp.getEndPosition(ci.getCompilationUnit(), sel) - 1;
-        int origExpStart = (int)sp.getStartPosition(ci.getCompilationUnit(), ctx.getPath().getLeaf());
-        int origExpEnd = (int)sp.getEndPosition(ci.getCompilationUnit(), ctx.getPath().getLeaf());
+        int invOffset = (int)sp.getEndPosition(sel) - 1;
+        int origExpStart = (int)sp.getStartPosition(ctx.getPath().getLeaf());
+        int origExpEnd = (int)sp.getEndPosition(ctx.getPath().getLeaf());
         
         TreePath exp = invPath;
         boolean statement = false;
@@ -471,7 +471,7 @@ public class UnnecessaryBoxing {
             return false;
         }
         
-        int baseIndex = (int)sp.getStartPosition(ci.getCompilationUnit(), exp.getLeaf());
+        int baseIndex = (int)sp.getStartPosition(exp.getLeaf());
         StringBuilder sb = new StringBuilder();
         sb.append(source.subSequence(
                 baseIndex,
@@ -479,13 +479,13 @@ public class UnnecessaryBoxing {
         // instead of the boxing expression, append only the value expression, in parenthesis
         sb.append("("). // NOI18N
             append(source.subSequence(
-                (int)sp.getStartPosition(ci.getCompilationUnit(), valPath.getLeaf()),
-                (int)sp.getEndPosition(ci.getCompilationUnit(), valPath.getLeaf()))).
+                (int)sp.getStartPosition(valPath.getLeaf()),
+                (int)sp.getEndPosition(valPath.getLeaf()))).
             append(")"); // NOI18N
         
         sb.append(source.subSequence(
                 origExpEnd,
-                (int)sp.getEndPosition(ci.getCompilationUnit(), exp.getLeaf())));
+                (int)sp.getEndPosition(exp.getLeaf())));
         
         SourcePositions[] nsp = new SourcePositions[1];
         Tree t;
@@ -496,7 +496,7 @@ public class UnnecessaryBoxing {
             t = ci.getTreeUtilities().parseExpression(sb.toString(), nsp);
         }
         
-        Scope s = ci.getTreeUtilities().scopeFor((int)sp.getStartPosition(ci.getCompilationUnit(), exp.getLeaf()) - 1);
+        Scope s = ci.getTreeUtilities().scopeFor((int)sp.getStartPosition(exp.getLeaf()) - 1);
         ci.getTreeUtilities().attributeTree(t, s);
         
         TreePath newPath = new TreePath(exp.getParentPath(), t);

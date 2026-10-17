@@ -65,14 +65,14 @@ class ConstructorPropertyPromotionOK2 {
 
 class ConstructorPropertyPromotionOK3 {
 
-    public function __construct(private int $optional1 = 1, $optional2 = [1, 2], private string $optional1 = "default value") {
+    public function __construct(private int $optional1 = 1, $optional2 = [1, 2], private string $optional3 = "default value") {
     }
 
 }
 
 class ConstructorPropertyPromotionOK4 {
 
-    public function __construct(private int $optional1 = 1, protected $optional2 = [1, 2], private string $optional1 = "default value") {
+    public function __construct(private int $optional1 = 1, protected $optional2 = [1, 2], private string $optional3 = "default value") {
     }
 
 }

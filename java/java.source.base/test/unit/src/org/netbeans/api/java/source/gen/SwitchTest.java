@@ -354,8 +354,8 @@ public class SwitchTest extends GeneratorTestBase {
                     new ErrorAwareTreePathScanner<Void, Void>() {
                         @Override public Void visitCase(CaseTree node, Void p) {
                             String actual = cc.getText()
-                                              .substring((int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), node),
-                                                         (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), node.getStatements().get(0)))
+                                              .substring((int) cc.getTrees().getSourcePositions().getStartPosition(node),
+                                                         (int) cc.getTrees().getSourcePositions().getStartPosition(node.getStatements().get(0)))
                                               .trim();
                             String expected = tc.expectedCaseText;
                             assertEquals(expected, actual);

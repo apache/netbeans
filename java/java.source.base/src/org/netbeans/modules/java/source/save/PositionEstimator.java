@@ -29,7 +29,6 @@ import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import com.sun.tools.javac.tree.TreeInfo;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import javax.swing.text.StyledDocument;
-import org.netbeans.api.editor.guards.GuardedSection;
 import org.netbeans.api.editor.guards.GuardedSectionManager;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
@@ -222,12 +220,12 @@ public abstract class PositionEstimator {
             if (index == oldL.size()) {
                 return diffContext.getEndPosition(diffContext.origUnit, (JCTree) oldL.get(index - 1));
             }
-            return (int) diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, oldL.get(index));
+            return (int) diffContext.trees.getSourcePositions().getStartPosition(oldL.get(index));
         }
 
         @Override
         public int[] getPositions(int index) {
-            int start = (int) diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, oldL.get(index));
+            int start = (int) diffContext.trees.getSourcePositions().getStartPosition(oldL.get(index));
             int end = diffContext.getEndPosition(diffContext.origUnit, (JCTree) oldL.get(index));
 
             return new int[] {start, end};
@@ -278,8 +276,8 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
                 
                 seq.move(treeStart);
                 seq.moveNext();
@@ -359,7 +357,7 @@ public abstract class PositionEstimator {
                 int typeDeclStart;
                 do {
                     Tree t = cut.getTypeDecls().get(tdpos);
-                    typeDeclStart = (int) positions.getStartPosition(cut, t);
+                    typeDeclStart = (int) positions.getStartPosition(t);
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
                         break;
                     }
@@ -444,8 +442,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);
@@ -510,8 +508,8 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
 
                 seq.move(treeStart);
                 seq.moveNext();
@@ -583,8 +581,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);
@@ -699,8 +697,8 @@ public abstract class PositionEstimator {
             int i = 0;
             
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
                 // stupid hack, we have to remove syntetic constructors --
                 // should be filtered before and shouldn't be part of this
                 // collection (oldL)
@@ -770,8 +768,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);
@@ -865,8 +863,8 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             for (Tree item : oldL) {
                 String separatedText = "";
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
                 seq.move(treeStart);
                 int startIndex = seq.index();
                 int beforer = -1;
@@ -1009,8 +1007,8 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             boolean first = true;
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
                 
                 findNextBoundary(item, treeStart, treeEnd);
                 
@@ -1018,7 +1016,7 @@ public abstract class PositionEstimator {
                 if (item instanceof FieldGroupTree) { //
                     FieldGroupTree fgt = ((FieldGroupTree) item);
                     List<JCVariableDecl> vars = fgt.getVariables();
-                    treeEnd = (int) positions.getEndPosition(compilationUnit, vars.get(vars.size()-1));
+                    treeEnd = (int) positions.getEndPosition(vars.get(vars.size()-1));
                 } else {
                     seq.move(treeEnd);
                     if (seq.movePrevious() && seq.offset() >= sectionStart && nonRelevant.contains(seq.token().id())) {
@@ -1248,8 +1246,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);
@@ -1401,8 +1399,8 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
 
                 seq.move(treeStart);
                 seq.moveNext();
@@ -1454,8 +1452,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);
@@ -1569,14 +1567,14 @@ public abstract class PositionEstimator {
             CompilationUnitTree compilationUnit = diffContext.origUnit;
             
             for (Tree item : oldL) {
-                int treeStart = (int) positions.getStartPosition(compilationUnit, item);
-                int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
+                int treeStart = (int) positions.getStartPosition(item);
+                int treeEnd = (int) positions.getEndPosition(item);
 
                 if (treeEnd == (-1) && item.getKind() == Kind.CLASS) {
                     //unnamed class, use last member, or start pos:
                     ClassTree clazz = (ClassTree) item;
                     Tree lastMember = clazz.getMembers().get(clazz.getMembers().size() - 1);
-                    treeEnd = (int) positions.getEndPosition(compilationUnit, lastMember);
+                    treeEnd = (int) positions.getEndPosition(lastMember);
                     if (treeEnd == (-1)) {
                         //TODO: test
                         treeEnd = treeStart;
@@ -1686,8 +1684,8 @@ public abstract class PositionEstimator {
             assert !oldL.isEmpty() && newL.isEmpty(); // check the call correctness
             SourcePositions positions = diffContext.trees.getSourcePositions();
             CompilationUnitTree compilationUnit = diffContext.origUnit;
-            int sectionStart = (int) positions.getStartPosition(compilationUnit, oldL.get(0));
-            int sectionEnd = (int) positions.getEndPosition(compilationUnit, oldL.get(oldL.size()-1));
+            int sectionStart = (int) positions.getStartPosition(oldL.get(0));
+            int sectionEnd = (int) positions.getEndPosition(oldL.get(oldL.size()-1));
             // end of generalization part
             
             seq.move(sectionStart);

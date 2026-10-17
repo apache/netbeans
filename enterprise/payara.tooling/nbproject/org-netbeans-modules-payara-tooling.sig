@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.27
+#Version 2.28
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -20,21 +20,27 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -57,6 +63,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -122,6 +129,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -511,7 +521,7 @@ meth public static boolean verifyResult(org.netbeans.modules.payara.tooling.admi
 meth public static org.netbeans.modules.payara.tooling.admin.ResultString getVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPayaraPlatformVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion getPayaraVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.modules.payara.tooling.admin.Command
 hfds COMMAND,LOGGER
 
@@ -1091,16 +1101,16 @@ CLSS public org.netbeans.modules.payara.tooling.admin.ServerAdmin
 cons public init()
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.concurrent.ExecutorService executor(int)
 meth public static void init(java.net.Authenticator)
 supr java.lang.Object
@@ -1230,7 +1240,7 @@ supr org.netbeans.modules.payara.tooling.PayaraIdeException
 hfds INVALID_ADMIN_INTERFACE,INVALID_CONTAINER,SERVER_HOME_NONEXISTENT,SERVER_HOME_NO_VERSION,SERVER_HOME_NULL,SERVER_ROOT_NONEXISTENT,SERVER_ROOT_NULL,SERVER_URL_NULL
 
 CLSS public org.netbeans.modules.payara.tooling.data.IdeContext
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 supr java.lang.Object
 
@@ -1400,7 +1410,7 @@ meth public abstract java.lang.String getUrl()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.netbeans.modules.payara.tooling.data.PayaraServerEntity
 cons public init()
@@ -1425,7 +1435,7 @@ meth public java.lang.String getUrl()
 meth public org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setAdminInterface(org.netbeans.modules.payara.tooling.data.PayaraAdminInterface)
 meth public void setAdminPassword(java.lang.String)
 meth public void setAdminPort(int)
@@ -1443,7 +1453,7 @@ meth public void setServerHome(java.lang.String)
 meth public void setServerRoot(java.lang.String)
 meth public void setUrl(java.lang.String)
 meth public void setVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setWSL(boolean)
 supr java.lang.Object
 hfds adminInterface,adminPassword,adminPort,adminUser,containerPath,docker,domainName,domainsFolder,host,hostPath,name,platformVersion,port,serverHome,serverRoot,url,version,wsl
@@ -1483,7 +1493,7 @@ meth public abstract org.netbeans.modules.payara.tooling.data.PayaraStatusCheck 
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraStatusCheckResult getStatus()
 
 CLSS public final !enum org.netbeans.modules.payara.tooling.data.PayaraVersion
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static char SEPARATOR = '.'
 fld public final static int length
 fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
@@ -1639,17 +1649,17 @@ meth public boolean isLoggable(java.util.logging.Level)
 meth public java.lang.String buildKey(java.lang.String,java.lang.String)
 meth public java.lang.String excMsg(java.lang.String,java.lang.String)
 meth public static boolean loggable(java.util.logging.Level)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String excMsg(java.lang.Class,java.lang.String)
 meth public static java.lang.String logMsg(java.lang.Class,java.lang.String)
 meth public static java.util.logging.Logger getLogger()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void exception(java.util.logging.Level,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.Object)
@@ -1706,7 +1716,7 @@ cons public init(java.io.InputStream)
 supr org.netbeans.modules.payara.tooling.server.FetchLog
 
 CLSS public org.netbeans.modules.payara.tooling.server.JpaSupport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 innr public static ApiVersion
 meth public static org.netbeans.modules.payara.tooling.server.JpaSupport$ApiVersion getApiVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
@@ -1798,7 +1808,7 @@ hfds jar
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.Config
 cons public !varargs init(java.net.URL,org.netbeans.modules.payara.tooling.server.config.Config$Next[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public !varargs init(org.netbeans.modules.payara.tooling.server.config.Config$Next[])
 innr public static Next
 supr java.lang.Object
@@ -1807,20 +1817,20 @@ hfds configFiles,index,libraryConfigFiles
 CLSS public static org.netbeans.modules.payara.tooling.server.config.Config$Next
  outer org.netbeans.modules.payara.tooling.server.config.Config
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraVersion,java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(short,java.net.URL)
 supr java.lang.Object
 hfds configFile,majorVersion
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigBuilder
 meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getLibraries(org.netbeans.modules.payara.tooling.data.PayaraVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getPlatformLibraries(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getPlatformJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getPlatformJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 supr java.lang.Object
 hfds classpathHome,config,javaEEConfigCache,javaSEConfigCache,javadocsHome,libraryCache,srcHome,version
@@ -1828,7 +1838,7 @@ hfds classpathHome,config,javaEEConfigCache,javaSEConfigCache,javadocsHome,libra
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigBuilderProvider
 cons public init()
 meth public static java.net.URL getBuilderConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getPlatformBuilderConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public static org.netbeans.modules.payara.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static void destroyBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
@@ -1938,12 +1948,13 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_7
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_8
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v21
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v25
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform toValue(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform>
-hfds V11_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,V21_STR,stringValuesMap
+hfds V11_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,V21_STR,V25_STR,stringValuesMap
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)
@@ -2204,7 +2215,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
 fld public final java.lang.String option
 fld public final java.util.Optional<java.lang.String> vendor
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final java.util.Optional<java.lang.String> vendorOrVM
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> maxVersion
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> minVersion
@@ -2346,7 +2357,7 @@ supr java.lang.Object
 hfds LOGGER,beg,buff,len,size
 
 CLSS public final org.netbeans.modules.payara.tooling.utils.EnumUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public final static boolean eq(java.lang.Enum<? extends java.lang.Enum>,java.lang.Enum<? extends java.lang.Enum>)
 meth public final static boolean ge(java.lang.Enum<? extends java.lang.Enum>,java.lang.Enum<? extends java.lang.Enum>)
@@ -2537,7 +2548,7 @@ meth public static java.lang.String manifestDecode(java.lang.String)
 meth public static java.lang.String serverLogFileRelativePath()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion getServerVersion(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void addComponentToMap(java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.lang.String)
 meth public static void addPathElement(java.lang.StringBuilder,java.lang.String)
 supr java.lang.Object
@@ -2591,6 +2602,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException

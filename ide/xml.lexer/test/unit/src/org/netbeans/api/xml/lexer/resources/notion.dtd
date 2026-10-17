@@ -1,0 +1,3 @@
+<!NOTATION simple PUBLIC "Public Simple">
+<!NOTATION simple PUBLIC "Public Simple" "system/simple">
+<!NOTATION simple SYSTEM "system/simple">

@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 public class ReleaseJsonProperties extends Task {
 
     // how many previous versions to suggest importing configuration from
-    private static final int PREVIOUS_VERSIONS_LIMIT = 3;
+    private static final int PREVIOUS_VERSIONS_LIMIT = 5;
 
     /**
      * current branch we works with

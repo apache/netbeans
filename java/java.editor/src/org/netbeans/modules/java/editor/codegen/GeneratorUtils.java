@@ -167,7 +167,7 @@ public class GeneratorUtils {
         for (Tree member : members) {
             Tree dup = checkDuplicates(wc, clazz, member);
             if (dup != null) {
-                throw new DuplicateMemberException((int) wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), dup));
+                throw new DuplicateMemberException((int) wc.getTrees().getSourcePositions().getStartPosition(dup));
             }
         }
         return GeneratorUtilities.get(wc).insertClassMembers(clazz, members, offset);

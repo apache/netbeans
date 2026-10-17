@@ -64,7 +64,7 @@ public class CreateTestMethodsHint {
 
         CompilationInfo info = context.getInfo();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), method);
+        int startPos = (int) sourcePositions.getStartPosition(method);
         int caret = context.getCaretLocation();
         String code = context.getInfo().getText();
 	if (startPos < 0 || caret < 0 || caret < startPos || caret >= code.length()) {

@@ -129,7 +129,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
 
             if (selStart == selEnd) {
                 if (onlyHeader) {
-                    long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), nct.getClassBody());
+                    long start = info.getTrees().getSourcePositions().getStartPosition(nct.getClassBody());
 
                     if (selStart > start) {
                         return null;
@@ -138,8 +138,8 @@ public class ConvertAnonymousToInner extends AbstractHint {
 
                 break;
             } else {
-                long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), nct);
-                long end = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), nct);
+                long start = info.getTrees().getSourcePositions().getStartPosition(nct);
+                long end = info.getTrees().getSourcePositions().getEndPosition(nct);
 
                 if (start == selStart && end == selEnd) {
                     break;
@@ -459,8 +459,8 @@ public class ConvertAnonymousToInner extends AbstractHint {
                          .append(newClassToConvert.getLeaf().toString());
                     
                     SourcePositions sp = copy.getTrees().getSourcePositions();
-                    int s = (int) sp.getStartPosition(copy.getCompilationUnit(), newClassToConvert.getLeaf());
-                    int e = (int) sp.getEndPosition(copy.getCompilationUnit(), newClassToConvert.getLeaf());
+                    int s = (int) sp.getStartPosition(newClassToConvert.getLeaf());
+                    int e = (int) sp.getEndPosition(newClassToConvert.getLeaf());
                     
                     if (e > s) {
                         debug.append(":");

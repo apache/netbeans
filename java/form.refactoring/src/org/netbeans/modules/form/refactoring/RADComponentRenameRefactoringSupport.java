@@ -166,7 +166,7 @@ public class RADComponentRenameRefactoringSupport implements RenameSupport.Refac
             if (findUsages) {
                 Element el = info.getTrees().getElement(getCurrentPath());
                 if (variableElement != null && variableElement.equals(el)) {
-                    int pos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+                    int pos = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
                     usagesPositions.add(pos);
                 }
             }

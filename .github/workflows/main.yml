@@ -142,18 +142,19 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '21', '25', '27-ea' ]
+        java: [ '21', '25', '27' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-          
+          problem-matcher: false
+
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v7
         with:
@@ -162,7 +163,7 @@ jobs:
           show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -214,12 +215,13 @@ jobs:
           show-progress: false
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
+            problem-matcher: false
       - name: Caching dependencies
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -247,15 +249,16 @@ jobs:
         java: [ '21' ]
         include:
           - os: ubuntu-latest
-            java: 27-ea
+            java: 27
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         if: contains(matrix.os, 'ubuntu') && success()
@@ -325,10 +328,11 @@ jobs:
 
       - name: Set up JDK 25 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Check Commit Headers
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
@@ -336,10 +340,11 @@ jobs:
 
       - name: Set up JDK ${{ matrix.java }} 
         if: ${{ !cancelled() }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}
@@ -389,10 +394,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -453,15 +459,15 @@ jobs:
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
       - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: |
-          export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000
           ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
 
       - name: Create Test Summary
@@ -488,10 +494,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Download Build
         uses: actions/download-artifact@v8
@@ -502,7 +509,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Restoring Cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -533,10 +540,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -686,6 +694,9 @@ jobs:
       - name: ide/languages.env
         run: ant $OPTS -f ide/languages.env test
 
+      - name: ide/languages.go
+        run: ant $OPTS -f ide/languages.go test
+
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
 
@@ -751,6 +762,9 @@ jobs:
 
       - name: ide/projectuiapi.base
         run: ant $OPTS -f ide/projectuiapi.base test
+
+      - name: ide/projectui
+        run: ant $OPTS -f ide/projectui test
 
       - name: ide/refactoring.api
         run: ant $OPTS -f ide/refactoring.api test
@@ -858,17 +872,18 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '21', '25', '27-ea' ]
+        java: [ '21', '25', '27' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -988,10 +1003,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1117,19 +1133,6 @@ jobs:
       - name: platform/openide.util.ui
         run: ant $OPTS -f platform/openide.util.ui test
 
-      # isolation required by netbinox tests
-      - name: isolate platform build
-        run: |
-          cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
-          cp -r nbbuild/netbeans/platform/ _nb_platform/ && cp -r nbbuild/netbeans/harness/ _nb_harness/
-          ant $OPTS -quiet clean && rm -Rf platform/ && rm -Rf harness/
-          mkdir nbbuild/build && mkdir nbbuild/netbeans
-          mv _platform/ platform/ && mv _harness/ harness/ && mv nbantext.jar nbbuild/build/
-          mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
-
-      - name: platform/netbinox
-        run: ant $OPTS -f platform/netbinox test -Dtest.config=stableBTD
-
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
@@ -1151,10 +1154,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1286,10 +1290,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1470,18 +1475,19 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '27-ea' ]
+        java: [ '21', '27' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '27-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '27' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1527,17 +1533,18 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '25', '27-ea' ]
+        java: [ '21', '25', '27' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1583,7 +1590,7 @@ jobs:
   profiler-test:
     name: Profiler on Linux/JDK ${{ matrix.java }}
     # equals env.test_java == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'profiler') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -1594,10 +1601,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1611,6 +1619,10 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: lib.profiler
+        # test-unit's build dependency also compiles this module's legacy QA-functional sources.
+        run: ant $OPTS -f profiler/lib.profiler test-unit -Ddisable.qa-functional.tests=true
 
       - name: profiler
         run: ant $OPTS -f profiler/profiler test-unit
@@ -1639,10 +1651,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1817,10 +1830,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1867,10 +1881,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1918,10 +1933,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1966,10 +1982,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2116,9 +2133,9 @@ jobs:
 #      - name: web.freeform
 #        run: ant $OPTS -f enterprise/web.freeform test
 
-# Fails
-#      - name: web.jsf.editor
-#        run: ant $OPTS -f enterprise/web.jsf.editor test
+# only unit tests, IT fails + slow
+      - name: web.jsf.editor
+        run: ant $OPTS -f enterprise/web.jsf.editor test-unit
 
 # Fails
 #      - name: web.jsf.navigation
@@ -2211,10 +2228,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2304,10 +2322,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2373,10 +2392,11 @@ jobs:
         shell: cmd
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       # linux specific setup
       - name: Setup PHP
@@ -2512,10 +2532,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2575,8 +2596,7 @@ jobs:
     #  * nothing else failed (allows manual restarts)
     #  * the workflow got cancelled
     if: ${{ always() && needs.base-build.result == 'success' && (!contains(needs.*.result, 'failure') || cancelled()) }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+    runs-on: ubuntu-slim
     steps:
 
       - name: Delete Workspace Artifact

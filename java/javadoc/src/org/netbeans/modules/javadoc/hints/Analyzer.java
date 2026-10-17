@@ -263,8 +263,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             Name tagName = startTree.getName();
             HtmlTag tag = getTag(tagName);
             if (tag != null && !tag.hasOptionalEndTag() && !isVoid(tag)) {
-                int s = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
-                int e = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
+                int s = (int) sp.getStartPosition(currentDocPath.getDocComment(), startTree);
+                int e = (int) sp.getEndPosition(currentDocPath.getDocComment(), startTree);
                 errors.add(ErrorDescriptionFactory.forSpan(ctx, s, e, TAG_START_UNMATCHED(tagName)));
             }
         }
@@ -287,8 +287,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             return null;
         }
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
-        int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
-        int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
+        int start = (int) sp.getStartPosition(currentDocPath.getDocComment(), node);
+        int end = (int) sp.getEndPosition(currentDocPath.getDocComment(), node);
 
         final Name treeName = node.getName();
         final HtmlTag t = getTag(treeName);
@@ -319,8 +319,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
                         }
                     }
                     if (found) {
-                        int s = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
-                        int e = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
+                        int s = (int) sp.getStartPosition(currentDocPath.getDocComment(), startTree);
+                        int e = (int) sp.getEndPosition(currentDocPath.getDocComment(), startTree);
                         errors.add(ErrorDescriptionFactory.forSpan(ctx, s, e, TAG_START_UNMATCHED(tagName)));
                         tagStack.pop();
                     } else {
@@ -378,8 +378,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             return null;
         }
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
-        int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
-        int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
+        int start = (int) sp.getStartPosition(currentDocPath.getDocComment(), tree);
+        int end = (int) sp.getEndPosition(currentDocPath.getDocComment(), tree);
         if(ctx.isCanceled()) { return null; }
         boolean typaram = tree.isTypeParameter();
         switch (currentElement.getKind()) {
@@ -547,8 +547,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             return null;
         }
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
-        int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
-        int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
+        int start = (int) sp.getStartPosition(currentDocPath.getDocComment(), node);
+        int end = (int) sp.getEndPosition(currentDocPath.getDocComment(), node);
         if(returnType == null) {
             errors.add(ErrorDescriptionFactory.forSpan(ctx, start, end, WRONG_CONSTRUCTOR_RETURN_DESC(),
                     new RemoveTagFix(dtph, "@return").toEditorFix()));
@@ -619,8 +619,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             return null;
         }
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
-        int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
-        int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
+        int start = (int) sp.getStartPosition(currentDocPath.getDocComment(), node);
+        int end = (int) sp.getEndPosition(currentDocPath.getDocComment(), node);
 
 
         final Name treeName = node.getName();
@@ -674,8 +674,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             return null;
         }
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
-        int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
-        int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
+        int start = (int) sp.getStartPosition(currentDocPath.getDocComment(), tree);
+        int end = (int) sp.getEndPosition(currentDocPath.getDocComment(), tree);
         boolean isType = ex != null && (ex.asType().getKind() == TypeKind.DECLARED || ex.asType().getKind() == TypeKind.TYPEVAR);
         if (ex == null || (isType && types.isAssignable(ex.asType(), throwable))) {
             switch (currentElement.getKind()) {

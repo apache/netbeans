@@ -153,9 +153,9 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
                     if (annTypeElement.getQualifiedName().contentEquals(ANNOTATION)) {
                         String mn = element.getSimpleName().toString();
                         SourcePositions sp = info.getTrees().getSourcePositions();
-                        int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                        int start = (int) sp.getStartPosition(tp.getLeaf());
                         int preferred = info.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf())[0];
-                        int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                        int end = (int) sp.getEndPosition(tp.getLeaf());
                         Document doc = info.getSnapshot().getSource().getDocument(false);
                         try {
                             result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),

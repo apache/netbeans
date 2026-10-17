@@ -283,8 +283,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                     }
                                 };
                                 for (StatementTree st : ((BlockTree)tree).getStatements()) {
-                                    if (sp.getStartPosition(cInfo.getCompilationUnit(), st) >= component.getSelectionStart()) {
-                                        if (sp.getEndPosition(cInfo.getCompilationUnit(), st) <= component.getSelectionEnd()) {
+                                    if (sp.getStartPosition(st) >= component.getSelectionStart()) {
+                                        if (sp.getEndPosition(st) <= component.getSelectionEnd()) {
                                             if (st.getKind() == Tree.Kind.VARIABLE) {
                                                 Element e = trees.getElement(new TreePath(treePath, st));
                                                 if (e != null && e.getKind() == ElementKind.LOCAL_VARIABLE) {
@@ -300,8 +300,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                 Collection<VariableTree> vals = vars.values();
                                 for (VariableTree var : varList) {
                                     if (!vals.contains(var)) {
-                                        int start = (int) sp.getStartPosition(cInfo.getCompilationUnit(), var) - caretOffset;
-                                        int end = (int) sp.getEndPosition(cInfo.getCompilationUnit(), var.getType()) - caretOffset;
+                                        int start = (int) sp.getStartPosition(var) - caretOffset;
+                                        int end = (int) sp.getEndPosition(var.getType()) - caretOffset;
                                         selectionText.delete(start, end);
                                     }
                                 }

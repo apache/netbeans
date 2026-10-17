@@ -192,6 +192,11 @@
                 <package>org.netbeans.modules.css.lib.api</package>
                 <package>org.netbeans.modules.css.lib.api.properties</package>
             </friend-packages>
+            <extra-compilation-unit>
+                <package-root>src-buildtool</package-root>
+                <classpath></classpath>
+                <built-to>build/buildtool</built-to>
+            </extra-compilation-unit>
         </data>
     </configuration>
 </project>

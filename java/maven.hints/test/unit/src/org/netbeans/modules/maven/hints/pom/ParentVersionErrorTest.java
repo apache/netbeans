@@ -45,67 +45,85 @@ public class ParentVersionErrorTest extends NbTestCase {
     }
 
     public void testBasicUsage() throws Exception {
-        TestFileUtils.writeFile(work, "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>common</artifactId>\n" +
-                "    <version>1.1</version>\n" +
-                "</project>\n");
-        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <parent>\n" +
-                "        <groupId>grp</groupId>\n" +
-                "        <artifactId>common</artifactId>\n" +
-                "        <version>1.0</version>\n" +
-                "    </parent>\n" +
-                "    <version>1.0</version>\n" +
-                "    <artifactId>prj</artifactId>\n" +
-                "</project>\n");
+        TestFileUtils.writeFile(work, "pom.xml",
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>common</artifactId>
+                    <version>1.1</version>
+                </project>
+                """);
+        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                        <groupId>grp</groupId>
+                        <artifactId>common</artifactId>
+                        <version>1.0</version>
+                    </parent>
+                    <version>1.0</version>
+                    <artifactId>prj</artifactId>
+                </project>
+                """);
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project prj = ProjectManager.getDefault().findProject(pom.getParent());
         assertEquals(1, new ParentVersionError().getErrorsForDocument(model, prj).size());
     }
 
     public void testSpecialRelativePath() throws Exception { // #194281
-        TestFileUtils.writeFile(work, "common.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>common</artifactId>\n" +
-                "    <version>1.0</version>\n" +
-                "</project>\n");
-        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <parent>\n" +
-                "        <groupId>grp</groupId>\n" +
-                "        <artifactId>common</artifactId>\n" +
-                "        <relativePath>../common.xml</relativePath>\n" +
-                "    </parent>\n" +
-                "    <artifactId>prj</artifactId>\n" +
-                "</project>\n");
+        TestFileUtils.writeFile(work, "common.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>common</artifactId>
+                    <version>1.0</version>
+                </project>
+                """);
+        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                        <groupId>grp</groupId>
+                        <artifactId>common</artifactId>
+                        <relativePath>../common.xml</relativePath>
+                    </parent>
+                    <artifactId>prj</artifactId>
+                </project>
+                """);
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project prj = ProjectManager.getDefault().findProject(pom.getParent());
         assertEquals(Collections.<ErrorDescription>emptyList(), new ParentVersionError().getErrorsForDocument(model, prj));
     }
     
     public void testVariablePresentInVersion() throws Exception { // #194281
-        TestFileUtils.writeFile(work, "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>common</artifactId>\n" +
-                "    <version>${revision}</version>\n" +
-                "    <properties>\n" +
-                "       <revision>1.1</revision>\n" +
-                "    </properties>\n" +
-                "</project>\n");
-        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <parent>\n" +
-                "        <groupId>grp</groupId>\n" +
-                "        <artifactId>common</artifactId>\n" +
-                "        <version>${revision}</version>\n" +
-                "    </parent>\n" +
-                "    <artifactId>prj</artifactId>\n" +
-                "</project>\n");
+        TestFileUtils.writeFile(work, "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>common</artifactId>
+                    <version>${revision}</version>
+                    <properties>
+                       <revision>1.1</revision>
+                    </properties>
+                </project>
+                """);
+        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                        <groupId>grp</groupId>
+                        <artifactId>common</artifactId>
+                        <version>${revision}</version>
+                    </parent>
+                    <artifactId>prj</artifactId>
+                </project>
+                """);
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project prj = ProjectManager.getDefault().findProject(pom.getParent());
         assertEquals(Collections.<ErrorDescription>emptyList(), new ParentVersionError().getErrorsForDocument(model, prj));

@@ -330,7 +330,7 @@ public class PluginIndexManager {
         return Collections.emptyMap();
     }
     private static Map<String,List<String>> parsePhases(String u, String packaging) throws Exception {
-        Document doc = XMLUtil.parse(new InputSource(u), false, false, XMLUtil.defaultErrorHandler(), null);
+        Document doc = XMLUtil.parse(new InputSource(u), false, false, true, XMLUtil.defaultErrorHandler(), null);
         for (Element componentsEl : XMLUtil.findSubElements(doc.getDocumentElement())) {
             for (Element componentEl : XMLUtil.findSubElements(componentsEl)) {
                 if (XMLUtil.findText(XMLUtil.findElement(componentEl, "role", null)).trim().equals("org.apache.maven.lifecycle.mapping.LifecycleMapping")
@@ -379,8 +379,8 @@ public class PluginIndexManager {
             return null;
         }
         LOG.log(Level.FINER, "parsing plugin.xml from {0}", jar);
-            try {
-            return XMLUtil.parse(new InputSource("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, XMLUtil.defaultErrorHandler(), null);
+        try {
+            return XMLUtil.parse(new InputSource("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (Exception x) {
             LOG.log(Level.FINE, "could not parse " + jar, x.toString());
             return null;

@@ -55,12 +55,12 @@ public final class GeneratorUtils {
         } catch (IOException ioe) {}
         Tree lastMember = null;
         for (Tree tree : clazz.getMembers()) {
-            if (offset <= sp.getStartPosition(wc.getCompilationUnit(), tree)) {
+            if (offset <= sp.getStartPosition(tree)) {
                 if (gdoc == null)
                     break;
-                int pos = (int)(lastMember != null ? sp.getEndPosition(wc.getCompilationUnit(), lastMember) : sp.getStartPosition(wc.getCompilationUnit(), clazz));
+                int pos = (int)(lastMember != null ? sp.getEndPosition(lastMember) : sp.getStartPosition(clazz));
                 pos = gdoc.getGuardedBlockChain().adjustToBlockEnd(pos);
-                if (pos <= sp.getStartPosition(wc.getCompilationUnit(), tree))
+                if (pos <= sp.getStartPosition(tree))
                     break;
             }
             index++;

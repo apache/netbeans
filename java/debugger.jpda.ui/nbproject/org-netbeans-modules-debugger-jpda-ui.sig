@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86
+#Version 1.87
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1320,7 +1320,7 @@ intf org.openide.util.HelpCtx$Provider
 meth public org.netbeans.spi.debugger.ui.Controller getController()
 meth public org.openide.util.HelpCtx getHelpCtx()
 supr javax.swing.JPanel
-hfds HELP_ID,actionsPanel,breakpoint,cPanel,conditionsPanel,controller,createBreakpoint,fileURL,jLabel1,jLabel3,jPanel1,logger,pActions,pSettings,tfFileName,tfLineNumber,validityDocumentListener
+hfds HELP_ID,actionsPanel,breakpoint,cPanel,conditionsPanel,controller,createBreakpoint,fileURL,jLabel1,jLabel3,jLabel4,jPanel1,logger,pActions,pSettings,tfFileName,tfLambdaIndexes,tfLineNumber,validityDocumentListener
 hcls LBController,ValidityDocumentListener
 
 CLSS public org.netbeans.modules.debugger.jpda.ui.breakpoints.LineBreakpointType

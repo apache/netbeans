@@ -484,7 +484,7 @@ public class CompilationInfo {
         //preconditions checked by getTopLevelElements or getCompilationUnit:
         if (this.impl.isClassFile()) {
             List<? extends TypeElement> topElement = getTopLevelElements();
-            return !topElement.isEmpty() ? getElements().getModuleOf(topElement.get(0))
+            return !topElement.isEmpty() ? getElements().getModuleOf(topElement.getFirst())
                                          : null;
         } else {
             CompilationUnitTree cu = getCompilationUnit();

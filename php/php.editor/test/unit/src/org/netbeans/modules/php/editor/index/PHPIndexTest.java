@@ -824,6 +824,27 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    // PHP 8.4
+    public void testPHP84PropertyHooks() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksAbstract() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksCPP() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksInterface() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksTrait() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         final File folder = new File(getDataDir(), getTestFolderPath());

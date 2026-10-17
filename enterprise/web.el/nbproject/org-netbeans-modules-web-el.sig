@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.84
+#Version 1.85
 
 CLSS public abstract interface java.io.Serializable
 
@@ -192,6 +192,7 @@ meth public org.netbeans.modules.web.el.CompilationCache cache()
 meth public org.netbeans.modules.web.el.spi.ResolverContext context()
 meth public org.openide.filesystems.FileObject file()
 meth public static org.netbeans.modules.web.el.CompilationContext create(org.openide.filesystems.FileObject,org.netbeans.api.java.source.CompilationInfo)
+meth public static org.netbeans.modules.web.el.CompilationContext create(org.openide.filesystems.FileObject,org.netbeans.api.java.source.CompilationInfo,org.netbeans.modules.web.el.spi.ResolverContext)
 supr java.lang.Object
 hfds cache,context,file,info
 
@@ -294,9 +295,10 @@ meth public java.util.List<org.netbeans.modules.web.el.ELElement> getElementsTo(
 meth public org.netbeans.modules.web.el.ELElement addErrorElement(javax.el.ELException,org.netbeans.modules.web.el.ELPreprocessor,org.netbeans.modules.csl.api.OffsetRange)
 meth public org.netbeans.modules.web.el.ELElement addValidElement(com.sun.el.parser.Node,org.netbeans.modules.web.el.ELPreprocessor,org.netbeans.modules.csl.api.OffsetRange)
 meth public org.netbeans.modules.web.el.ELElement getElementAt(int)
+meth public org.netbeans.modules.web.el.spi.ResolverContext getContext()
 meth public org.openide.filesystems.FileObject getFileObject()
 supr org.netbeans.modules.csl.spi.ParserResult
-hfds elements,file
+hfds context,elements,file
 hcls ELError
 
 CLSS public org.netbeans.modules.web.el.ELPreprocessor

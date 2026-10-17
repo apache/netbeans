@@ -75,7 +75,7 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     private static Preferences prefs() {
         return NbPreferences.forModule(SetMainProject.class);
     }
-    private static RequestProcessor RP = new RequestProcessor(SetMainProject.class);
+    private static final RequestProcessor RP = new RequestProcessor(SetMainProject.class);
     
     protected JMenu subMenu;
     private boolean empty;
@@ -162,7 +162,7 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
         "LBL_NoneMainProject_Name=&None"
     })
     private void createSubMenu(Project[] projects) {    
-        Arrays.sort(projects, OpenProjectList.projectByDisplayName());
+        Arrays.sort(projects, OpenProjectList.projectByPath());
         
         // Enable disable the action according to number of open projects
         if (projects.length == 0) {

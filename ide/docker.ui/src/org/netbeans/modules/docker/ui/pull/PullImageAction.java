@@ -22,6 +22,8 @@ import org.netbeans.modules.docker.ui.output.StatusOutputListener;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -34,6 +36,7 @@ import org.netbeans.modules.docker.api.DockerException;
 import org.netbeans.modules.docker.api.DockerAction;
 import org.netbeans.modules.docker.api.DockerAuthenticationException;
 import org.netbeans.modules.docker.api.DockerName;
+import org.netbeans.modules.docker.api.DockerTag;
 import org.netbeans.modules.docker.ui.credentials.CredentialsUtils;
 import org.netbeans.modules.docker.ui.node.StatefulDockerInstance;
 import org.openide.DialogDescriptor;
@@ -55,6 +58,7 @@ import org.openide.windows.InputOutput;
 public class PullImageAction extends NodeAction {
 
     private static final Logger LOGGER = Logger.getLogger(PullImageAction.class.getName());
+    private static final RequestProcessor PULL_PROCESSOR = new RequestProcessor(PullImageAction.class);
 
     @NbBundle.Messages({
         "LBL_Pull=&Pull",
@@ -62,6 +66,21 @@ public class PullImageAction extends NodeAction {
     })
     @Override
     protected void performAction(Node[] activatedNodes) {
+        // Check if nodes with tags are selected - these can be directly pulled
+        List<DockerTag> tags = new ArrayList<>(activatedNodes.length);
+        for (Node n : activatedNodes) {
+            DockerTag tag = n.getLookup().lookup(DockerTag.class);
+            if (tag != null) {
+                tags.add(tag);
+            }
+        }
+        if (!tags.isEmpty()) {
+            for(DockerTag tag: tags) {
+                perform(tag.getInstance(), tag.getTag());
+            }
+            return;
+        }
+
         DockerInstance instance = activatedNodes[0].getLookup().lookup(DockerInstance.class);
         if (instance != null) {
             JButton pullButton = new JButton();
@@ -91,11 +110,23 @@ public class PullImageAction extends NodeAction {
     }
 
     private void perform(final DockerInstance instance, final String image) {
-        RequestProcessor.getDefault().post(new Pull(instance, image));
+        PULL_PROCESSOR.post(new Pull(instance, image));
     }
 
     @Override
     protected boolean enable(Node[] activatedNodes) {
+        // Check if nodes with tags are selected - these can be directly pulled
+        List<DockerTag> tags = new ArrayList<>(activatedNodes.length);
+        for (Node n : activatedNodes) {
+            DockerTag tag = n.getLookup().lookup(DockerTag.class);
+            if (tag != null) {
+                tags.add(tag);
+            }
+        }
+        if (!tags.isEmpty()) {
+            return true;
+        }
+        // If not check if a docker instance is selected, this will invoke a dialog for tag selection
         if (activatedNodes.length != 1) {
             return false;
         }
@@ -166,7 +197,7 @@ public class PullImageAction extends NodeAction {
                         DockerName name = DockerName.parse(image);
                         Credentials c = CredentialsUtils.askForCredentials(name.getRegistry());
                         if (c != null) {
-                            RequestProcessor.getDefault().post(Pull.this);
+                            PULL_PROCESSOR.post(Pull.this);
                         }
                     }
                 });

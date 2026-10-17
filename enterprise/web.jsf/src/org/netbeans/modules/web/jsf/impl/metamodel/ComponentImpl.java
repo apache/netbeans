@@ -21,8 +21,12 @@ package org.netbeans.modules.web.jsf.impl.metamodel;
 import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObject;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.AnnotationParser;
@@ -41,8 +45,6 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
     private String namespace;
     private String tagName;
     private Boolean createTag;
-
-    private static final String DEFAULT_COMPONENT_NS = "http://xmlns.jcp.org/jsf/component"; //NOI18N
 
     protected ComponentImpl(AnnotationModelHelper helper, TypeElement typeElement) {
         super(helper, typeElement);
@@ -64,8 +66,9 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
 
     /**
      * Gets the {@code @FacesComponent} namespace.
-     * @return namespace
+     * @return namespace (null for JSF 2.1 and previous)
      */
+    @CheckForNull
     public String getNamespace() {
         return namespace;
     }
@@ -111,7 +114,7 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
         }
         namespace = parseResult.get("namespace", String.class);     //NOI18N
         if (namespace == null) {
-            namespace = DEFAULT_COMPONENT_NS;
+            namespace = getDefaultNamespace(annotationMirror);
         }
         tagName = parseResult.get("tagName", String.class);         //NOI18N
         if (tagName == null) {
@@ -119,5 +122,19 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
             tagName = tagName.substring(0, 1).toLowerCase() + tagName.substring(1);
         }
         return true;
+    }
+
+    /**
+     * @return The {@code NAMESPACE} constant of the {@code @FacesComponent} annotation
+     */
+    private static String getDefaultNamespace(AnnotationMirror annotationMirror) {
+        Element annotationType = annotationMirror.getAnnotationType().asElement();
+        for (VariableElement field : ElementFilter.fieldsIn(annotationType.getEnclosedElements())) {
+            if ("NAMESPACE".contentEquals(field.getSimpleName()) // NOI18N
+                    && field.getConstantValue() instanceof String namespace) {
+                return namespace;
+            }
+        }
+        return null; // no namespace field on jsf 2.1-
     }
 }

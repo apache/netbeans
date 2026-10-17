@@ -32,7 +32,6 @@
                destdir="build/server-classes"
                deprecation="${build.compiler.deprecation}"
                debug="${build.compiler.debug}"
-               source="${javac.source}"
                release="8"
                includeantruntime="false"
         >
@@ -64,7 +63,6 @@
                destdir="build/server-jakarta-classes"
                deprecation="${build.compiler.deprecation}"
                debug="${build.compiler.debug}"
-               source="${javac.source}"
                release="8"
                includeantruntime="false">
             <classpath>

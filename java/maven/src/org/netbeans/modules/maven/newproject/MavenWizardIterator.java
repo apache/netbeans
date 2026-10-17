@@ -93,8 +93,8 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
         }
         index = 0;
         ValidationGroup vg = ValidationGroup.create(new WizardDescriptorAdapter(wiz));
-        panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        List<String> steps = new ArrayList<String>();
+        panels = new ArrayList<>();
+        List<String> steps = new ArrayList<>();
         if (archetype == null) {
             panels.add(new ChooseWizardPanel());
             steps.add(LBL_CreateProjectStep());
@@ -104,7 +104,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
         for (int i = 0; i < panels.size(); i++) {
             JComponent c = (JComponent) panels.get(i).getComponent();
             c.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
-            c.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps.toArray(new String[0]));
+            c.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps.toArray(String[]::new));
       }
         if (archetype != null) {
             wiz.putProperty(PROP_ARCHETYPE, archetype);

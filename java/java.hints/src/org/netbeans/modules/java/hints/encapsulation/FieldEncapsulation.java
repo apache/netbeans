@@ -208,9 +208,7 @@ public class FieldEncapsulation {
                         info.toPhase(JavaSource.Phase.PARSED);
                         final TreePath tp = handle.resolve(info);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.VARIABLE) {
-                            pos[0] = (int) info.getTrees().getSourcePositions().getEndPosition(
-                                    tp.getCompilationUnit(),
-                                    ((VariableTree)tp.getLeaf()).getType()) + 1;
+                            pos[0] = (int) info.getTrees().getSourcePositions().getEndPosition(((VariableTree)tp.getLeaf()).getType()) + 1;
                         }
                     }
                 }, true);

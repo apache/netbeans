@@ -64,6 +64,7 @@ public final class GradleInitWizard {
         "LBL_TFW_CPP_TEST=C++ Test",
         "LBL_TFW_JUNIT=JUnit 4",
         "LBL_TFW_JUNIT_5=JUnit 5",
+        "LBL_TFW_JUNIT_JUPITER=JUnit Jupiter",
         "LBL_TFW_KOTLIN_TEST=Kotlin Test",
         "LBL_TFW_SCALA_TEST=Scala Test",
         "LBL_TFW_SPOCK=Spock",
@@ -73,7 +74,9 @@ public final class GradleInitWizard {
     public enum TestFramework {
         CPP_TEST("cpptest"),
         JUNIT("junit"),
+        @Deprecated
         JUNIT_5("junit-jupiter"),
+        JUNIT_JUPITER("junit-jupiter"),
         KOTLIN_TEST("kotlintest"),
         SCALA_TEST("scalatest"),
         SPOCK("spock"),
@@ -96,6 +99,7 @@ public final class GradleInitWizard {
                 case CPP_TEST -> Bundle.LBL_TFW_CPP_TEST();
                 case JUNIT -> Bundle.LBL_TFW_JUNIT();
                 case JUNIT_5 -> Bundle.LBL_TFW_JUNIT_5();
+                case JUNIT_JUPITER -> Bundle.LBL_TFW_JUNIT_JUPITER();
                 case KOTLIN_TEST -> Bundle.LBL_TFW_KOTLIN_TEST();
                 case SCALA_TEST -> Bundle.LBL_TFW_SCALA_TEST();
                 case SPOCK -> Bundle.LBL_TFW_SPOCK();

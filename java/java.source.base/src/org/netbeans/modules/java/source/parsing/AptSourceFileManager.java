@@ -181,7 +181,7 @@ public class AptSourceFileManager extends SourceFileManager {
                             return oml.getModuleRoots().isEmpty() ? null : Collections.singleton((Location)oml);
                         })
                         .filter(locations -> locations != null)
-                        .collect(Collectors.toList());
+                        .toList();
             } else {
                 cachedModuleLocations = Collections.emptySet();
             }

@@ -56,6 +56,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -122,10 +123,10 @@ public final class OpenProjectList {
      */
     static final Mutex MUTEX = new Mutex();
     
-    public static Comparator<Project> projectByDisplayName() {
-        return new ProjectByDisplayNameComparator();
+    public static Comparator<? super Project> projectByPath() {
+        return new ProjectByPathComparator();
     }
-    
+
     // Property names
     public static final String PROPERTY_OPEN_PROJECTS = "OpenProjects";
     public static final String PROPERTY_WILL_OPEN_PROJECTS = "willOpenProjects"; // NOI18N
@@ -428,13 +429,35 @@ public final class OpenProjectList {
             }
             });
             
-            INSTANCE.pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS, new Project[0], lazilyOpenedProjects.toArray(new Project[0]));
+            Project[] opened = lazilyOpenedProjects.toArray(Project[]::new);
+            INSTANCE.pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS, new Project[0], opened);
             Project main = INSTANCE.mainProject;
             if (main != null) { // else PROPERTY_MAIN_PROJECT would be fired spuriously
                 INSTANCE.pchSupport.firePropertyChange(PROPERTY_MAIN_PROJECT, null, main);
             }
 
+            if (checkFirstRun() && opened.length > 0) {
+                OPENING_RP.execute(() -> {
+                    for (Project p : opened) {
+                        Project del = p.getLookup().lookup(Project.class);
+                        ProjectUtilities.openProjectFiles(del == null ? p : del);
+                    }
+                });
+            }
+
             log(Level.FINER, "updateGlobalState, done, notified"); // NOI18N
+        }
+
+        private boolean checkFirstRun() {
+            Preferences prefs = OpenProjectListSettings.getInstance().getPreferences();
+            String prefKey = "projectListVersion"; // NOI18N
+            String build = System.getProperty("netbeans.buildnumber", "0"); // NOI18N
+            if (!prefs.get(prefKey, "").equals(build)) {
+                prefs.put(prefKey, build);
+                return true;
+            } else {
+                return false;
+            }
         }
 
         boolean closeBeforeOpen(final Project[] arr) {
@@ -1899,48 +1922,20 @@ public final class OpenProjectList {
         
     }
     
-    private static class ProjectByDisplayNameComparator implements Comparator<Project> {
-        
-        private static final Comparator<Object> COLLATOR = Collator.getInstance();
-
-        // memoize results since it could be called >1 time per project:
-        private final Map<Project,String> names = new HashMap<Project,String>();
-        private String getDisplayName(Project p) {
-            String n = names.get(p);
-            if (n == null) {
-                n = ProjectUtils.getInformation(p).getDisplayName();
-                names.put(p, n);
-            }
-            return n;
-        }
-        
+    private static class ProjectByPathComparator implements Comparator<Project> {
         @Override
         public int compare(Project p1, Project p2) {
-//            Uncoment to make the main project be the first one
-//            but then needs to listen to main project change
-//            if ( OpenProjectList.getDefault().isMainProject( p1 ) ) {
-//                return -1;
-//            }
-//            
-//            if ( OpenProjectList.getDefault().isMainProject( p2 ) ) {
-//                return 1;
-//            }
-            
-            String n1 = getDisplayName(p1);
-            String n2 = getDisplayName(p2);
-            if (n1 != null && n2 != null) {
-                return COLLATOR.compare(n1, n2);
-            } else if (n1 == null && n2 != null) {
-                log(Level.WARNING, p1 + ": ProjectInformation.getDisplayName() should not return null!");
+            if (p1 == null && p2 == null) {
+                return 0;
+            }
+            if (p1 == null) {
                 return -1;
-            } else if (n1 != null && n2 == null) {
-                log(Level.WARNING, p2 + ": ProjectInformation.getDisplayName() should not return null!");
+            }
+            if (p2 == null) {
                 return 1;
             }
-            return 0; // both null
-            
+            return p1.getProjectDirectory().getPath().compareTo(p2.getProjectDirectory().getPath());
         }
-        
     }
     
     private final class NbProjectDeletionListener extends FileChangeAdapter {

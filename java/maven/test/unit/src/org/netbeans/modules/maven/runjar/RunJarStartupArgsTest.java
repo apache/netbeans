@@ -100,19 +100,21 @@ public class RunJarStartupArgsTest extends NbTestCase {
     
     private Properties doTestSpacedExtender() throws Exception {
         System.setProperty("netbeans.dirs", System.getProperty("cluster.path.final", ""));
-        TestFileUtils.writeFile(d, "pom.xml",
-                "<project>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>testgrp</groupId>\n" +
-                "    <artifactId>testart</artifactId>\n" +
-                "    <version>1.0</version>\n" +
-                "    <properties>\n" +
-                "        <project.mainclass>test.PrintCommandLine</project.mainclass>\n" +
-                "        <exec.java.bin>${java.home}/bin/java</exec.java.bin>\n" +
-                "        <maven.compiler.source>" + System.getProperty("java.specification.version") + "</maven.compiler.source>\n" +
-                "        <maven.compiler.target>" + System.getProperty("java.specification.version") + "</maven.compiler.target>\n" +
-                "    </properties>\n" +
-                "</project>\n");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>testgrp</groupId>
+                    <artifactId>testart</artifactId>
+                    <version>1.0</version>
+                    <properties>
+                        <project.mainclass>test.PrintCommandLine</project.mainclass>
+                        <exec.java.bin>${java.home}/bin/java</exec.java.bin>
+                        <maven.compiler.source>VERSION</maven.compiler.source>
+                        <maven.compiler.target>VERSION</maven.compiler.target>
+                    </properties>
+                </project>
+                """.replace("VERSION", String.valueOf(Runtime.version().feature())));
 
         FileObject f = FileUtil.createFolder(d, "src/main/java/test");
         FileObject source = FileUtil.toFileObject(getDataDir()).getFileObject("exec/PrintCommandLine.java");

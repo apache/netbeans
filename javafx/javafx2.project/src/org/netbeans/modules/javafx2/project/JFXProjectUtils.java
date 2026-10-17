@@ -900,7 +900,7 @@ public final class JFXProjectUtils {
         }
         Document xmlDoc = null;
         try {
-            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.toURL().toExternalForm()), false, true, null, null);
+            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.toURL().toExternalForm()), false, true, true, null, null);
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
         }

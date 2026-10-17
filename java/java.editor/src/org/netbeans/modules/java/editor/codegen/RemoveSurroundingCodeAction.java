@@ -245,7 +245,7 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
             return false;
         }
         SourcePositions sp = controller.getTrees().getSourcePositions();
-        int end = (int) sp.getEndPosition(controller.getCompilationUnit(), ifTree.getThenStatement());
+        int end = (int) sp.getEndPosition(ifTree.getThenStatement());
         return end > 0 && caretPosition > end;
     }
 
@@ -419,7 +419,7 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
         private OffsetsBag createOffsetsBag(JTextComponent component, TreeUtilities tu, SourcePositions sp, TreePath path) throws BadLocationException {
             Document doc = component.getDocument();
             OffsetsBag offsetsBag = new OffsetsBag(doc, true);
-            int start = (int) sp.getStartPosition(path.getCompilationUnit(), path.getLeaf());
+            int start = (int) sp.getStartPosition(path.getLeaf());
             if (start >= 0) {
                 List<int[]> positions = new ArrayList<>();
                 Tree tree = path.getLeaf();
@@ -429,8 +429,8 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
                         if (unwrap) {
                             positions.add(getBounds(tu, sp, path.getCompilationUnit(), it.getThenStatement()));
                         } else {
-                            start = (int) sp.getEndPosition(path.getCompilationUnit(), it.getThenStatement());
-                            int end = (int) sp.getStartPosition(path.getCompilationUnit(), it.getElseStatement());
+                            start = (int) sp.getEndPosition(it.getThenStatement());
+                            int end = (int) sp.getStartPosition(it.getElseStatement());
                             int off = doc.getText(start, end - start).indexOf("else"); //NOI18N
                             if (off > 0) {
                                 start += off;
@@ -490,7 +490,7 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
                         start = bounds[1];
                     }
                 }
-                int end = (int) sp.getEndPosition(path.getCompilationUnit(), path.getLeaf());
+                int end = (int) sp.getEndPosition(path.getLeaf());
                 if (end > start) {
                     offsetsBag.addHighlight(start, end, DELETE_HIGHLIGHT);
                 }
@@ -527,12 +527,12 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
         
         private int getStart(TreeUtilities tu, SourcePositions sp, CompilationUnitTree cut, Tree tree) {
             List<Comment> comments = tu.getComments(tree, true);
-            return comments.isEmpty() ? (int) sp.getStartPosition(cut, tree) : comments.get(0).pos();
+            return comments.isEmpty() ? (int) sp.getStartPosition(tree) : comments.get(0).pos();
         }
 
         private int getEnd(TreeUtilities tu, SourcePositions sp, CompilationUnitTree cut, Tree tree) {
             List<Comment> comments = tu.getComments(tree, false);
-            return comments.isEmpty() ? (int) sp.getEndPosition(cut, tree) : comments.get(comments.size() - 1).endPos();
+            return comments.isEmpty() ? (int) sp.getEndPosition(tree) : comments.get(comments.size() - 1).endPos();
         }
     }
     

@@ -50,7 +50,6 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 import java.util.Collections;
@@ -275,16 +274,8 @@ public class Reindenter implements IndentTask {
                     parsedTree = TreeUtilitiesAccessor.getInstance().parseStatement(javacTask, "{" + text + "}", psp);
                     sp = new SourcePositions() {
                         @Override
-                        public long getStartPosition(CompilationUnitTree file, Tree tree) {
-                            return getStartPosition(tree);
-                        }
-                        @Override
                         public long getStartPosition(Tree tree) {
                             return currentEmbeddingStartOffset + psp[0].getStartPosition(tree) - 1;
-                        }
-                        @Override
-                        public long getEndPosition(CompilationUnitTree file, Tree tree) {
-                            return getEndPosition(tree);
                         }
                         @Override
                         public long getEndPosition(Tree tree) {
@@ -1014,11 +1005,11 @@ public class Reindenter implements IndentTask {
     }
 
     private int getStartPosition(Tree last) {
-        return (int) sp.getStartPosition(cut, last);
+        return (int) sp.getStartPosition(last);
     }
 
     private int getEndPosition(Tree last) {
-        int result = (int) sp.getEndPosition(cut, last);
+        int result = (int) sp.getEndPosition(last);
 
         if (result == -1) {
             //see JDK-8364015:

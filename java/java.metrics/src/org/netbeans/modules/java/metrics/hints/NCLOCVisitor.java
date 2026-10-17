@@ -80,7 +80,7 @@ public final class NCLOCVisitor extends ErrorAwareTreePathScanner<Object, Object
     
     @Override
     public Object scan(Tree tree, Object p) {
-        long startPos = pos.getStartPosition(getCurrentPath().getCompilationUnit(), tree);
+        long startPos = pos.getStartPosition(tree);
         if (lastPos < startPos) {
             lines++;
             

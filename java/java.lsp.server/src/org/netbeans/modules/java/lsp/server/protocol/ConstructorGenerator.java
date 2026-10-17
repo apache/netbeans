@@ -116,8 +116,8 @@ public final class ConstructorGenerator extends CodeActionsProvider {
             int endOffset = getOffset(info, params.getRange().getEnd());
             for (Tree m : ((ClassTree) tp.getLeaf()).getMembers()) {
                 if (m.getKind() != Tree.Kind.VARIABLE) continue;
-                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), m);
-                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), m);
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(m);
+                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(m);
                 if (startOffset <= end && endOffset >= start) {
                     VariableElement var = (VariableElement) info.getTrees().getElement(new TreePath(tp, m));
                     if (uninitializedFields.contains(var)) {

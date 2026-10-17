@@ -47,8 +47,15 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     }
 
     public void testTestSingle() throws Exception {
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstTest.java", "package p1; class FirstTest {}");
         TestFileUtils.writeFile(d, "src/test/java/p1/SecondTest.java", "package p1; class SecondTest {}");
         TestFileUtils.writeFile(d, "src/test/java/p2/deeper/ThirdTest.java", "package p2.deeper; class ThirdTest {}");
@@ -76,8 +83,15 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     }
     
     public void testTestNotIT_GH4587() throws Exception {
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstTest.java", "package p1; class FirstTest {}");
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstIT.java", "package p1; class FirstIT {}");
         Project p = ProjectManager.getDefault().findProject(d);
@@ -101,8 +115,15 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     }
 
     public void testNgSingle() throws Exception {
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstNGTest.java", "package p1; class FirstNGTest {}");
         TestFileUtils.writeFile(d, "src/main/java/p1/First.java", "package p1; class First {}");
 
@@ -114,9 +135,11 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     public void testIntegration2Files() throws Exception {
         pomWithHelperPluginAndExtraTestFolder();
         TestFileUtils.writeFile(d, "src/extra-test/java/p1/ItTest.java",
-                "//license\n"
-                + "package p1;\n"
-                + "class ItTest {}");
+                """
+                //license
+                package p1;
+                class ItTest {}
+                """);
         TestFileUtils.writeFile(d, "src/extra-test/java/p1/a/b/c/ItTestInlined.java",
                 "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //spabe between a and b is allowed
 
@@ -134,12 +157,37 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     }
 
     private void pomWithHelperPluginAndExtraTestFolder() throws IOException {
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version><build>"
-                + "<plugins><plugin><groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId>"
-                + "<executions><execution><id>add-test-source</id><phase>generate-test-sources</phase><goals>"
-                + "<goal>add-test-source</goal></goals><configuration><sources><source>src/extra-test/java</source></sources>"
-                + "</configuration></execution></executions></plugin></plugins></build></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>build-helper-maven-plugin</artifactId>
+                                <executions>
+                                    <execution>
+                                        <id>add-test-source</id>
+                                        <phase>generate-test-sources</phase>
+                                        <goals>
+                                            <goal>add-test-source</goal>
+                                        </goals>
+                                        <configuration>
+                                            <sources>
+                                                <source>src/extra-test/java</source>
+                                            </sources>
+                                        </configuration>
+                                    </execution>
+                                </executions>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
     }
 
     public void testIntegrationPackage() throws Exception {
@@ -162,9 +210,11 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
     public void testIntegration2FilesAndPacakge() throws Exception {
         pomWithHelperPluginAndExtraTestFolder();
         TestFileUtils.writeFile(d, "src/extra-test/java/p1/ItTest.java",
-                "//license\n"
-                + "package p1;\n"
-                + "class ItTest {}");
+                """
+                //license
+                package p1;
+                class ItTest {}
+                """);
         TestFileUtils.writeFile(d, "src/extra-test/java/p1/a/b/c/ItTestInlined.java",
                 "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //space between a and b is allowed
         TestFileUtils.writeFile(d, "src/extra-test/java/p1/d/ItTest3.java",

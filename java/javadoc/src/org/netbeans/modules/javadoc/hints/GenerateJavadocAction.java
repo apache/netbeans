@@ -162,7 +162,7 @@ public final class GenerateJavadocAction extends TextAction {
                     kind = leaf.getKind();
                 }
                 
-                if (leaf == null || positions.getStartPosition(javac.getCompilationUnit(), leaf) < jdBeginOffset) {
+                if (leaf == null || positions.getStartPosition(leaf) < jdBeginOffset) {
                     // not a class member javadoc -> ignore
                     return;
                 }

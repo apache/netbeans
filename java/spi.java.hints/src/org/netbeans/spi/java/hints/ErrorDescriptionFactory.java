@@ -93,8 +93,8 @@ public class ErrorDescriptionFactory {
         int javacEnd;
         
         if (context.getHintMetadata().kind == Hint.Kind.INSPECTION) {
-            start = (int) context.getInfo().getTrees().getSourcePositions().getStartPosition(context.getInfo().getCompilationUnit(), tree);
-            javacEnd = (int) context.getInfo().getTrees().getSourcePositions().getEndPosition(context.getInfo().getCompilationUnit(), tree);
+            start = (int) context.getInfo().getTrees().getSourcePositions().getStartPosition(tree);
+            javacEnd = (int) context.getInfo().getTrees().getSourcePositions().getEndPosition(tree);
             end = Math.min(javacEnd, findLineEnd(context.getInfo(), start));
         } else {
             start = javacEnd = end = context.getCaretLocation();
@@ -182,7 +182,7 @@ public class ErrorDescriptionFactory {
                 int[] span = info.getTreeUtilities().findNameSpan(mst);
 
                 if (span == null) {
-                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(tree);
                     span = new int[] {end - mst.getIdentifier().length(), end};
                 }
                 return span;
@@ -200,7 +200,7 @@ public class ErrorDescriptionFactory {
                         }
                     }
                 }
-                int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
                 if (StatementTree.class.isAssignableFrom(tree.getKind().asInterface())
                         && tree.getKind() != Kind.EXPRESSION_STATEMENT
                         && tree.getKind() != Kind.BLOCK) {
@@ -212,7 +212,7 @@ public class ErrorDescriptionFactory {
                 }
                 return new int[] {
                     start,
-                    Math.min((int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree),
+                    Math.min((int) info.getTrees().getSourcePositions().getEndPosition(tree),
                              findLineEnd(info, start)),
                 };
             }

@@ -103,6 +103,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.PostfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.PrefixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Quote;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
@@ -391,6 +392,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getParameterType());
         scan(node.getParameterName());
         scan(node.getDefaultValue());
+        scan(node.getPropertyHooks());
     }
 
     @Override
@@ -532,6 +534,14 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(PropertyHookDeclaration propertyHook) {
+        scan(propertyHook.getAttributes());
+        scan(propertyHook.getName());
+        scan(propertyHook.getFormalParameters());
+        scan(propertyHook.getBody());
+    }
+
+    @Override
     public void visit(Quote node) {
         scan(node.getExpressions());
     }
@@ -559,6 +569,7 @@ public class DefaultVisitor implements Visitor {
     public void visit(SingleFieldDeclaration node) {
         scan(node.getName());
         scan(node.getValue());
+        scan(node.getPropertyHooks());
     }
 
     @Override

@@ -38,78 +38,241 @@ public class ActionProviderImplTest extends NbTestCase {
 
     
     public void testRunSingleMethodEnabledWhenHaveCoS() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.7</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>3.8.2</version><scope>test</scope></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>all</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>3.8.2</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>all</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), false); // used to be true, but now all is run with maven, not JavaRunner.
     }
 
     public void testRunSingleMethodDisabledWhenDoNotHaveCoSExplicit() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.7</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.2</version><scope>test</scope></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>none</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>4.8.2</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), false);
     }
 
     public void testRunSingleMethodDisabledWhenDoNotHaveCoSImplicit() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.7</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.2</version><scope>test</scope></dependency></dependencies>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>4.8.2</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), false);
     }
 
     public void testRunSingleMethodEnabledForSurefire28() throws Exception { // #196655
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.8</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.2</version><scope>test</scope></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>none</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.8</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>4.8.2</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), true);
     }
 
     public void testRunSingleMethodDisabledForJUnit3() throws Exception { //SUREFIRE-724
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.8</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>3.8.2</version><scope>test</scope></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>none</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.8</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>3.8.2</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), false);
     }
 
     public void testRunSingleMethodEnabledForUnusualJUnitScope() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.8</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.2</version></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>none</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.8</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                            <version>4.8.2</version>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), true);
     }
 
     public void testRunSingleMethodDisabledForJUnit5() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<version>1.0</version>"
-                + "<build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>2.22.2</version></plugin></plugins></build>"
-                + "<dependencies><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter-api</artifactId><version>5.6.0</version><scope>test</scope></dependency><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter-params</artifactId><version>5.6.0</version><scope>test</scope></dependency><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter-engine</artifactId><version>5.6.0</version><scope>test</scope></dependency></dependencies>"
-                + "<properties><netbeans.compile.on.save>none</netbeans.compile.on.save></properties>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.22.2</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-api</artifactId>
+                            <version>5.6.0</version>
+                            <scope>test</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-params</artifactId>
+                            <version>5.6.0</version>
+                            <scope>test</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>5.6.0</version>
+                            <scope>test</scope>
+                        </dependency>
+                    </dependencies>
+                    <properties>
+                        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+                    </properties>
+                </project>
+                """);
         assertSupportsRunSingleMethod(ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir())), true);
     }
     

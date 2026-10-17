@@ -55,6 +55,7 @@ import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
+import org.netbeans.spi.java.platform.JavaPlatformFactory;
 import org.netbeans.spi.java.project.classpath.support.ProjectClassPathSupport;
 import org.netbeans.spi.project.support.ant.AntProjectEvent;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -64,6 +65,7 @@ import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.Parameters;
 import org.openide.util.Utilities;
@@ -83,6 +85,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
 
     private final Object cpLock = new Object();
     private volatile ClassPath boot;
+    private volatile ClassPath moduleBoot;
     private volatile ClassPath source;
     private volatile ClassPath compile;
     private volatile ClassPath execute;
@@ -105,38 +108,47 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
     public ClassPath findClassPath(
             @NonNull final FileObject file,
             @NonNull final String type) {
-        if (type.equals(ClassPath.BOOT)) {
-            ClassPath bcp = boot;
+        if (type.equals(ClassPath.BOOT) || type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
+            ClassPath bcp = type.equals(ClassPath.BOOT) ? boot : moduleBoot;
             if (bcp == null) {
                 bcp = runGuarded(new Mutex.Action<ClassPath>() {
                     @Override
                     public ClassPath run() {
                         if (boot == null) {
                             ClassPathImplementation prependCP = createPathFromProperty(BOOTCLASSPATH_PREPEND);
-                            final String loc = project.evaluator().getProperty(Evaluator.NBJDK_BOOTCLASSPATH_MODULAR);
-                            if(loc != null) {
-                                final File locf = new File(loc);
-                                for (JavaPlatform jp : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                                    final File jpLocf = jp.getInstallFolders().stream()
-                                            .map((fo) -> FileUtil.toFile(fo))
-                                            .filter((f) -> f != null)
-                                            .findFirst()
-                                            .orElse(null);
-                                    if (locf.equals(jpLocf)) {
-                                        boot = ClassPathSupport.createProxyClassPath(
-                                                ClassPathFactory.createClassPath(prependCP),
-                                                jp.getBootstrapLibraries());
-                                        break;
+                            String nbClassPathModular = project.evaluator().getProperty(Evaluator.NBJDK_BOOTCLASSPATH_MODULAR);
+                            JavaPlatform projectPlatform = null;
+                            if (nbClassPathModular != null) {
+                                projectPlatform = findPlatformFor(nbClassPathModular);
+                            }
+                            if (projectPlatform == null) {
+                                String nbJDKHome = project.evaluator().getProperty(Evaluator.NBJDK_HOME);
+                                if (nbJDKHome != null) {
+                                    projectPlatform = findPlatformFor(nbJDKHome);
+                                }
+                                if (projectPlatform == null) {
+                                    for (JavaPlatformFactory.Provider provider : Lookup.getDefault().lookupAll(JavaPlatformFactory.Provider.class)) {
+                                        JavaPlatformFactory factory = provider.forType("j2se");
+                                        if (factory != null) {
+                                            try {
+                                                projectPlatform = factory.create(FileUtil.toFileObject(new File(nbJDKHome)), "temp", false);
+                                                break;
+                                            } catch (IOException ex) {
+                                                Exceptions.printStackTrace(ex);
+                                            }
+                                        }
                                     }
                                 }
-                            } else {
-                                boot = ClassPathFactory.createClassPath(ClassPathSupport.createProxyClassPathImplementation(
-                                        prependCP,
-                                        createPathFromProperty(Evaluator.NBJDK_BOOTCLASSPATH),
-                                        createFxPath()));
                             }
+                            if (projectPlatform == null) {
+                                projectPlatform = JavaPlatform.getDefault();
+                            }
+                            boot = ClassPathSupport.createProxyClassPath(
+                                    ClassPathFactory.createClassPath(prependCP),
+                                    projectPlatform.getBootstrapLibraries());
+                            moduleBoot = projectPlatform.getBootstrapLibraries();
                         }
-                        return boot;
+                        return type.equals(ClassPath.BOOT) ? boot : moduleBoot;
                     }
                 });
             }
@@ -415,7 +427,22 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
         // Something not supported.
         return null;
     }
-    
+
+    private JavaPlatform findPlatformFor(String path) {
+        final File locf = new File(path);
+        for (JavaPlatform jp : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+            final File jpLocf = jp.getInstallFolders().stream()
+                    .map((fo) -> FileUtil.toFile(fo))
+                    .filter((f) -> f != null)
+                    .findFirst()
+                    .orElse(null);
+            if (locf.equals(jpLocf)) {
+                return jp;
+            }
+        }
+        return null;
+    }
+
     private ClassPathImplementation createPathFromProperty(String prop) {
         return ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
             project.getProjectDirectoryFile(), project.evaluator(), new String[] {prop});

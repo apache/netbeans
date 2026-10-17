@@ -67,7 +67,6 @@ import javax.tools.JavaFileObject;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -330,7 +329,7 @@ public final class TreeMaker {
                 return delegate.PatternCaseLabel((PatternTree) p);
             }
             throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
-        }).collect(Collectors.toList());
+        }).toList();
     }
     
     /**

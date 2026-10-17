@@ -1532,18 +1532,8 @@ public class Utilities {
     private record OffsetSourcePositions(SourcePositions delegate, long offset) implements SourcePositions {
 
         @Override
-        public long getStartPosition(CompilationUnitTree cut, Tree tree) {
-            return getStartPosition(tree);
-        }
-
-        @Override
         public long getStartPosition(Tree tree) {
             return delegate.getStartPosition(tree) + offset;
-        }
-
-        @Override
-        public long getEndPosition(CompilationUnitTree cut, Tree tree) {
-            return getEndPosition(tree);
         }
 
         @Override
@@ -1609,18 +1599,8 @@ public class Utilities {
     private record ParserSourcePositions(JavacParser parser) implements SourcePositions {
 
         @Override
-        public long getStartPosition(CompilationUnitTree file, Tree tree) {
-            return getStartPosition(tree);
-        }
-
-        @Override
         public long getStartPosition(Tree tree) {
             return parser.getStartPos((JCTree)tree);
-        }
-
-        @Override
-        public long getEndPosition(CompilationUnitTree file, Tree tree) {
-            return getEndPosition(tree);
         }
 
         @Override

@@ -1341,8 +1341,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 public Void visitMethod(MethodTree tree, Void p) {
                                     Element el = cc.getTrees().getElement(getCurrentPath());
                                     if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
-                                        int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree);
-                                        int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tree);
+                                        int start = (int) cc.getTrees().getSourcePositions().getStartPosition(tree);
+                                        int end = (int) cc.getTrees().getSourcePositions().getEndPosition(tree);
                                         org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(start, end);
                                         List<Object> arguments = new ArrayList<>();
                                         arguments.add(uri);
@@ -2020,9 +2020,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         for (ElementDescription ed : eds) {
                                             Element el = ed.getHandle().resolve(cc);
                                             TreePath tp = trees.getPath(el);
-                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(tp.getLeaf()) : -1;
                                             if (startPos >= 0) {
-                                                long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                                long endPos = trees.getSourcePositions().getEndPosition(tp.getLeaf());
                                                 targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
                                                         cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
                                                         null, null, null, ed.getDisplayName(), true));
@@ -2040,9 +2040,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         if (superType.getKind() == TypeKind.DECLARED) {
                                             Element el = ((DeclaredType) superType).asElement();
                                             TreePath tp = trees.getPath(el);
-                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(tp.getLeaf()) : -1;
                                             if (startPos >= 0) {
-                                                long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                                long endPos = trees.getSourcePositions().getEndPosition(tp.getLeaf());
                                                 targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
                                                         cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
                                                         null, null, null, cc.getElementUtilities().getElementName(el, false).toString(), true));

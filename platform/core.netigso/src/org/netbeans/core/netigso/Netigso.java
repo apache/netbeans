@@ -134,6 +134,9 @@ implements Cloneable, Stamps.Updater {
             if (!startLevel.isEmpty()) {
                 configMap.put("org.osgi.framework.startlevel.beginning", startLevel); // NOI18N
             }
+            // Do not let felix override the URL handler and keep NetBeans handler
+            // by default
+            configMap.put("felix.service.urlhandlers", "false");
             FrameworkFactory frameworkFactory = lkp.lookup(FrameworkFactory.class);
             if (frameworkFactory == null) {
                 throw new IllegalStateException(

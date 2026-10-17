@@ -1321,4 +1321,231 @@ public class PhpTypedBreakInterceptorTest extends PhpTypinghooksTestBase {
         );
     }
 
+    public void testHookedField_01() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {^
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        ^
+                    }
+                }
+                """
+        );
+    }
+
+    public void testHookedField_02() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test1 {
+                    }
+                    public $test2 {^
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test1 {
+                    }
+                    public $test2 {
+                        ^
+                    }
+                }
+                """
+        );
+    }
+
+    public void testPropertyHook_01() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {^
+                    }
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            ^
+                        }
+                    }
+                }
+                """
+        );
+    }
+
+    public void testPropertyHook_02() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                        }
+                        set {^
+                    }
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                        }
+                        set {
+                            ^
+                        }
+                    }
+                }
+                """
+        );
+    }
+
+    public void testInsertBreakBeforeCurlyClose_01() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get { return 100; }
+                    }
+                    public function test() {
+                        return "${test}";
+                    }
+                ^}
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get { return 100; }
+                    }
+                    public function test() {
+                        return "${test}";
+                    }
+                
+                    ^
+                }
+                """
+        );
+    }
+
+    public void testInsertBreakBeforeCurlyClose_02() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                        }
+                    }
+                    public function test() {
+                        return "${test}";
+                    ^}
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                        }
+                    }
+                    public function test() {
+                        return "${test}";
+                   \s
+                        ^
+                    }
+                }
+                """
+        );
+    }
+
+    public void testInsertBreakBeforeCurlyClose_03() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                        }
+                    ^}
+                    public function test() {
+                        return "${test}";
+                    }
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                        }
+                   \s
+                        ^
+                    }
+                    public function test() {
+                        return "${test}";
+                    }
+                }
+                """
+        );
+    }
+
+    public void testInsertBreakBeforeCurlyClose_04() throws Exception {
+        insertBreak(
+                // original
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                        ^}
+                    }
+                    public function test() {
+                        return "${test}";
+                    }
+                }
+                """
+                ,
+                // expected
+                """
+                class PropertyHooksClass {
+                    public $test {
+                        get {
+                            return 100;
+                       \s
+                            ^
+                        }
+                    }
+                    public function test() {
+                        return "${test}";
+                    }
+                }
+                """
+        );
+    }
 }

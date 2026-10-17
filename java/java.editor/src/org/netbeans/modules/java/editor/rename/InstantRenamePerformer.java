@@ -311,8 +311,8 @@ public class InstantRenamePerformer implements DocumentListener, KeyListener {
             Kind parentKind = path.getParentPath().getLeaf().getKind();
             
             if (leafKind == Kind.ARRAY_TYPE && parentKind == Kind.VARIABLE) {
-                long typeEnd = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), path.getLeaf());
-                long variableEnd = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), path.getLeaf());
+                long typeEnd = info.getTrees().getSourcePositions().getEndPosition(path.getLeaf());
+                long variableEnd = info.getTrees().getSourcePositions().getEndPosition(path.getLeaf());
                 
                 if (typeEnd == variableEnd) {
                     path = path.getParentPath();

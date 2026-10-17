@@ -132,8 +132,8 @@ public final class PhpModifiers extends Modifier {
         for (int mode : bitmask) {
             this.mod |= mode;
         }
-        if (!Modifier.isPrivate(mod) && !Modifier.isProtected(mod) && !Modifier.isImplicitPublic(mod)) {
-            mod |= Modifier.PUBLIC;
+        if (!Modifier.isPrivate(mod) && !Modifier.isProtected(mod) && !Modifier.isPublic(mod)) {
+            mod |= Modifier.IMPLICIT_PUBLIC;
         }
     }
 

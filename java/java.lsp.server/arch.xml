@@ -513,6 +513,13 @@
          <li>
              <b>com.dukescript.presenters.browserDebug</b>
          </li>
+         <li>
+             <api type="export" group="systemproperty" name="treeViewProvider.sync" category="private">
+                 Should <code>Children.getNodes(optimalResult)</code> be called
+                 with <code>true</code>? Then set the <code>treeViewProvider.sync</code>
+                 property to <code>"true"</code>. Useful while testing.
+             </api>
+         </li>
      </ul>
  </answer>
 

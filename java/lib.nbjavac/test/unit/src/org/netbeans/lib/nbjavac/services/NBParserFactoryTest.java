@@ -53,8 +53,8 @@ public class NBParserFactoryTest extends NbTestCase {
         ClassTree ct = (ClassTree) parsed.second().getTypeDecls().get(0);
         SourcePositions sp = Trees.instance(parsed.first()).getSourcePositions();
 
-        assertEquals(0, sp.getStartPosition(parsed.second(), ct));
-        assertEquals(14, sp.getEndPosition(parsed.second(), ct));
+        assertEquals(0, sp.getStartPosition(ct));
+        assertEquals(14, sp.getEndPosition(ct));
     }
 
     public void testImplicitClassPositions() throws Exception {
@@ -73,10 +73,10 @@ public class NBParserFactoryTest extends NbTestCase {
         ClassTree ct = (ClassTree) parsed.second().getTypeDecls().get(0);
         SourcePositions sp = Trees.instance(parsed.first()).getSourcePositions();
 
-        assertEquals(19, sp.getStartPosition(parsed.second(), ct));
-        assertEquals(46, sp.getEndPosition(parsed.second(), ct));
-        assertEquals(0, sp.getStartPosition(parsed.second(), parsed.second()));
-        assertEquals(46, sp.getEndPosition(parsed.second(), parsed.second()));
+        assertEquals(19, sp.getStartPosition(ct));
+        assertEquals(46, sp.getEndPosition(ct));
+        assertEquals(0, sp.getStartPosition(parsed.second()));
+        assertEquals(46, sp.getEndPosition(parsed.second()));
     }
 
     public void testErrorRecoveryCompactSourceFilePackage() throws Exception {

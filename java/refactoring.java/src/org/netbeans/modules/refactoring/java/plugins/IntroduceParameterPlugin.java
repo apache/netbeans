@@ -409,8 +409,8 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
 
         for (TreePath p : candidates) {
             Tree leaf = p.getLeaf();
-            int leafStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), leaf);
-            int stPathStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), statement.getLeaf());
+            int leafStart = (int) info.getTrees().getSourcePositions().getStartPosition(leaf);
+            int stPathStart = (int) info.getTrees().getSourcePositions().getStartPosition(statement.getLeaf());
 
             if (leafStart < stPathStart) {
                 statement = p;
@@ -514,7 +514,7 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
                 TypeMirror tm = info.getTrees().getTypeMirror(path);
                 
                 if (tm != null && tm.getKind() == TypeKind.NULL) {
-                    List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf()), new TypeMirror[1], new int[1]);
+                    List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getLeaf()), new TypeMirror[1], new int[1]);
 
                     if (!targetType.isEmpty()) {
                         tm = targetType.get(0);

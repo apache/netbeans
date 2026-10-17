@@ -28,25 +28,21 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.InternalActionDelegate;
-import org.netbeans.modules.maven.api.execute.RunConfig;
-import org.netbeans.modules.maven.execute.AbstractMavenExecutor;
-import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
-import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 import org.openide.util.test.TestFileUtils;
-import org.openide.windows.InputOutput;
 
 /**
  *
  * @author sdedic
  */
+@SuppressWarnings("null")
 public class PrimingActionTest extends NbTestCase {
 
     public PrimingActionTest(String name) {
@@ -60,29 +56,32 @@ public class PrimingActionTest extends NbTestCase {
     }
 
     private void setupBrokenProject() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
-             "<project xmlns='http://maven.apache.org/POM/4.0.0'>"
-            + "  <modelVersion>4.0.0</modelVersion>" 
-            + "  <parent>"
-            + "    <groupId>g</groupId>"
-            + "    <artifactId>par</artifactId>"
-            + "    <version>0</version>"
-            + "  </parent>" 
-            + "  <artifactId>m</artifactId>" 
-            + "  <groupId>g</groupId>"
-            + "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"),
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                      <modelVersion>4.0.0</modelVersion>
+                      <parent>
+                          <groupId>g</groupId>
+                          <artifactId>par</artifactId>
+                          <version>0</version>
+                      </parent>
+                      <artifactId>m</artifactId>
+                      <groupId>g</groupId>
+                </project>
+                """);
         
     }
     
     private void setupOKProject() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
-             "<project xmlns='http://maven.apache.org/POM/4.0.0'>"
-            + "  <modelVersion>4.0.0</modelVersion>" 
-            + "  <artifactId>m</artifactId>" 
-            + "  <groupId>g</groupId>"
-            + "    <version>0</version>"
-            + "</project>");
-        
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"),
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <artifactId>m</artifactId>
+                    <groupId>g</groupId>
+                    <version>0</version>
+                </project>
+                """);
     }
     
     public void testActionPresent() throws Exception {

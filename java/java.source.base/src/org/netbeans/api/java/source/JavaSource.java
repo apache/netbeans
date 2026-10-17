@@ -19,15 +19,11 @@
 
 package org.netbeans.api.java.source;
 
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

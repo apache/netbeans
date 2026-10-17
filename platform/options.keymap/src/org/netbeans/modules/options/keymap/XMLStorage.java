@@ -19,140 +19,10 @@
 
 package org.netbeans.modules.options.keymap;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
-
-import org.openide.filesystems.FileObject;
-import org.openide.util.RequestProcessor;
-import org.openide.xml.XMLUtil;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-
 
 public class XMLStorage {
-
-    private static final Map<Color, String> colorToName = new HashMap<Color, String> ();
-    private static final Map<String, Color> nameToColor = new HashMap<String, Color> ();
-    private static final Map<String, Integer> nameToFontStyle = new HashMap<String, Integer> ();
-    private static final Map<Integer, String> fontStyleToName = new HashMap<Integer, String> ();
-    static {
-        colorToName.put (Color.black, "black");
-        nameToColor.put ("black", Color.black);
-        colorToName.put (Color.blue, "blue");
-        nameToColor.put ("blue", Color.blue);
-        colorToName.put (Color.cyan, "cyan");
-        nameToColor.put ("cyan", Color.cyan);
-        colorToName.put (Color.darkGray, "darkGray");
-        nameToColor.put ("darkGray", Color.darkGray);
-        colorToName.put (Color.gray, "gray");
-        nameToColor.put ("gray", Color.gray);
-        colorToName.put (Color.green, "green");
-        nameToColor.put ("green", Color.green);
-        colorToName.put (Color.lightGray, "lightGray");
-        nameToColor.put ("lightGray", Color.lightGray);
-        colorToName.put (Color.magenta, "magenta");
-        nameToColor.put ("magenta", Color.magenta);
-        colorToName.put (Color.orange, "orange");
-        nameToColor.put ("orange", Color.orange);
-        colorToName.put (Color.pink, "pink");
-        nameToColor.put ("pink", Color.pink);
-        colorToName.put (Color.red, "red");
-        nameToColor.put ("red", Color.red);
-        colorToName.put (Color.white, "white");
-        nameToColor.put ("white", Color.white);
-        colorToName.put (Color.yellow, "yellow");
-        nameToColor.put ("yellow", Color.yellow);
-        
-        nameToFontStyle.put ("plain", Integer.valueOf (Font.PLAIN));
-        fontStyleToName.put (Integer.valueOf (Font.PLAIN), "plain");
-        nameToFontStyle.put ("bold", Integer.valueOf (Font.BOLD));
-        fontStyleToName.put (Integer.valueOf (Font.BOLD), "bold");
-        nameToFontStyle.put ("italic", Integer.valueOf (Font.ITALIC));
-        fontStyleToName.put (Integer.valueOf (Font.ITALIC), "italic");
-        nameToFontStyle.put ("bold+italic", Integer.valueOf (Font.BOLD + Font.ITALIC));
-        fontStyleToName.put (Integer.valueOf (Font.BOLD + Font.ITALIC), "bold+italic");
-    }
-    
-    static String colorToString (Color color) {
-	if (colorToName.containsKey (color))
-	    return (String) colorToName.get (color);
-	return Integer.toHexString (color.getRGB ());
-    }
-    
-    static Color stringToColor (String color) {
-	if (nameToColor.containsKey (color))
-	    return (Color) nameToColor.get (color);
-	return new Color ((int) Long.parseLong (color, 16));
-    }
-    
-    
-    // generics support methods ................................................
-    
-    private static RequestProcessor requestProcessor = new RequestProcessor ("XMLStorage");
-    
-    static void save (final FileObject fo, final String content) {
-        requestProcessor.post (new Runnable () {
-            public void run () {
-                try {
-                    FileLock lock = fo.lock ();
-                    try {
-                        OutputStream os = fo.getOutputStream (lock);
-                        Writer writer = new OutputStreamWriter (os, StandardCharsets.UTF_8);
-                        try {
-                            writer.write (content);
-                        } finally {
-                            writer.close ();
-                        } 
-                    } finally {
-                        lock.releaseLock ();
-                    }
-                } catch (IOException ex) {
-                    ErrorManager.getDefault ().notify (ex);
-                }
-            }
-        });
-    }
-    
-    static Object load (FileObject fo, Handler handler) {
-        try {
-            XMLReader reader = XMLUtil.createXMLReader ();
-            reader.setEntityResolver (handler);
-            reader.setContentHandler (handler);
-            InputStream is = fo.getInputStream ();
-            try {
-                reader.parse (new InputSource (is));
-            } finally {
-                is.close ();
-            }
-            return handler.getResult ();
-        } catch (SAXException ex) {
-	    System.out.println("File: " + fo);
-            ex.printStackTrace ();
-            return handler.getResult ();
-        } catch (IOException ex) {
-	    System.out.println("File: " + fo);
-            ex.printStackTrace ();
-            return handler.getResult ();
-	} catch (Exception ex) {
-	    System.out.println("File: " + fo);
-            ex.printStackTrace ();
-            return handler.getResult ();
-        }
-    }
     
     static StringBuffer generateHeader () {
         StringBuffer sb = new StringBuffer ();
@@ -215,16 +85,6 @@ public class XMLStorage {
             else
             if (i < (k - 1))
                 sb.append (' ');
-        }
-    }
-    
-    static class Handler extends DefaultHandler {
-        private Object result;
-        void setResult (Object result) {
-            this.result = result;
-        }
-        Object getResult () {
-            return result;
         }
     }
     

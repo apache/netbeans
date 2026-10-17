@@ -46,925 +46,997 @@ public class EnablePreviewMavenProjTest extends NbTestCase {
     }
 
     public void testAddEverything() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testOverwriteReleaseProperty() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testOverwriteReleaseConfigOption() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>17</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>17</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>21</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>21</release>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testOverwriteSourceProperty() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>21</maven.compiler.source>\n" +
-                "        <maven.compiler.target>21</maven.compiler.target>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>21</maven.compiler.source>
+                        <maven.compiler.target>21</maven.compiler.target>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testOverwriteSourceConfigOption() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>17</source>\n" +
-                "                    <target>17</target>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>17</source>
+                                    <target>17</target>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>21</source>\n" +
-                "                    <target>21</target>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>21</source>
+                                    <target>21</target>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testReleasePropertyOverSourceProperty() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testSourceConfigOptionOverReleaseProperty() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>17</source>\n" +
-                "                    <target>17</target>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>-Dany=value</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>17</source>
+                                    <target>17</target>
+                                    <compilerArgs>
+                                        <arg>-Dany=value</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>21</source>\n" +
-                "                    <target>21</target>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>-Dany=value</arg>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>17</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>21</source>
+                                    <target>21</target>
+                                    <compilerArgs>
+                                        <arg>-Dany=value</arg>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testReleaseConfigOptionOverSourceConfigOption() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>17</source>\n" +
-                "                    <target>17</target>\n" +
-                "                    <release>17</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>17</source>
+                                    <target>17</target>
+                                    <release>17</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>17</source>\n" +
-                "                    <target>17</target>\n" +
-                "                    <release>21</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>17</source>
+                                    <target>17</target>
+                                    <release>21</release>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
     }
 
     public void testReleaseConfigOptionOverSourceProperty() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>17</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>17</release>
+                                    <compilerArgs>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>21</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>21</release>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testCanChangeSourceLevel() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>${maven.compiler.source}</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>${maven.compiler.source}</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>${maven.compiler.source}</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>${maven.compiler.source}</release>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 false);
     }
 
     public void testOldPluginNoRelease() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.5.1</version>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.5.1</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.5.1</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>21</maven.compiler.source>\n" +
-                "        <maven.compiler.target>21</maven.compiler.target>\n" +
-                "    </properties>\n" +
-                "</project>",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.5.1</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>21</maven.compiler.source>
+                        <maven.compiler.target>21</maven.compiler.target>
+                    </properties>
+                </project>
+                """,
                 true);
     }
 
     public void testNewPluginNoRelease() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.6.0</version>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.6.0</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.6.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.6.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 true);
     }
 
     public void testNoSourceChange1() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 null,
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """,
                 true);
     }
 
     public void testNoSourceChange2() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>21</source>\n" +
-                "                    <target>21</target>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>21</source>
+                                    <target>21</target>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 null,
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <source>21</source>\n" +
-                "                    <target>21</target>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <source>21</source>
+                                    <target>21</target>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 true);
     }
 
     public void testUpdatePluginWithImplicitGroupId() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>21</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>21</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>21</release>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>21</release>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
     }
 
     public void testUpdatePluginInPluginManagement() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <properties>\n" +
-                "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "    <build>\n" +
-                "        <pluginManagement>\n" +
-                "            <plugins>\n" +
-                "                <plugin>\n" +
-                "                    <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                    <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                    <version>3.11.0</version>\n" +
-                "                </plugin>\n" +
-                "            </plugins>\n" +
-                "        </pluginManagement>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                    <build>
+                        <pluginManagement>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>3.11.0</version>
+                                </plugin>
+                            </plugins>
+                        </pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <properties>\n" +
-                "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "    <build>\n" +
-                "        <pluginManagement>\n" +
-                "            <plugins>\n" +
-                "                <plugin>\n" +
-                "                    <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                    <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                    <version>3.11.0</version>\n" +
-                "                    <configuration>\n" +
-                "                        <compilerArgs>\n" +
-                "                            <arg>--enable-preview</arg>\n" +
-                "                        </compilerArgs>\n" +
-                "                    </configuration>\n" +
-                "                </plugin>\n" +
-                "            </plugins>\n" +
-                "        </pluginManagement>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                    <build>
+                        <pluginManagement>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>3.11.0</version>
+                                    <configuration>
+                                        <compilerArgs>
+                                            <arg>--enable-preview</arg>
+                                        </compilerArgs>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
     }
 
     public void testPluginManagement() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <pluginManagement>\n" +
-                "            <plugins>\n" +
-                "                <plugin>\n" +
-                "                    <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                    <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                    <version>3.11.0</version>\n" +
-                "                    <configuration>\n" +
-                "                        <release>17</release>\n" +
-                "                    </configuration>\n" +
-                "                </plugin>\n" +
-                "            </plugins>\n" +
-                "        </pluginManagement>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>${maven.compiler.source}</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <pluginManagement>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>3.11.0</version>
+                                    <configuration>
+                                        <release>17</release>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>${maven.compiler.source}</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <pluginManagement>\n" +
-                "            <plugins>\n" +
-                "                <plugin>\n" +
-                "                    <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                    <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                    <version>3.11.0</version>\n" +
-                "                    <configuration>\n" +
-                "                        <release>21</release>\n" +
-                "                        <compilerArgs>\n" +
-                "                            <arg>--enable-preview</arg>\n" +
-                "                        </compilerArgs>\n" +
-                "                    </configuration>\n" +
-                "                </plugin>\n" +
-                "            </plugins>\n" +
-                "        </pluginManagement>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <release>${maven.compiler.source}</release>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.source>17</maven.compiler.source>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <pluginManagement>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>3.11.0</version>
+                                    <configuration>
+                                        <release>21</release>
+                                        <compilerArgs>
+                                            <arg>--enable-preview</arg>
+                                        </compilerArgs>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <release>${maven.compiler.source}</release>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.source>17</maven.compiler.source>
+                    </properties>
+                </project>
+                """);
     }
 
     public void testHasBuildButNotCompilerPlugin() throws Exception {
-        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-surefire-plugin</artifactId>\n" +
-                "                <version>3.1.0</version>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "</project>",
+        runTest("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>3.1.0</version>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """,
                 "21",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>test</groupId>\n" +
-                "    <artifactId>mavenproject1</artifactId>\n" +
-                "    <version>1.0-SNAPSHOT</version>\n" +
-                "    <packaging>jar</packaging>\n" +
-                "    <build>\n" +
-                "        <plugins>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-surefire-plugin</artifactId>\n" +
-                "                <version>3.1.0</version>\n" +
-                "            </plugin>\n" +
-                "            <plugin>\n" +
-                "                <groupId>org.apache.maven.plugins</groupId>\n" +
-                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-                "                <version>3.11.0</version>\n" +
-                "                <configuration>\n" +
-                "                    <compilerArgs>\n" +
-                "                        <arg>--enable-preview</arg>\n" +
-                "                    </compilerArgs>\n" +
-                "                </configuration>\n" +
-                "            </plugin>\n" +
-                "        </plugins>\n" +
-                "    </build>\n" +
-                "    <properties>\n" +
-                "        <maven.compiler.release>21</maven.compiler.release>\n" +
-                "    </properties>\n" +
-                "</project>");
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>mavenproject1</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>3.1.0</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.11.0</version>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>--enable-preview</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <properties>
+                        <maven.compiler.release>21</maven.compiler.release>
+                    </properties>
+                </project>
+                """);
     }
 
     private void runTest(String original, String newSL, String expected) throws Exception {

@@ -1641,6 +1641,167 @@ public class ModifiersCheckHintErrorTest extends PHPHintsTestBase {
         checkHints(PhpVersion.PHP_83);
     }
 
+    // property hooks
+    public void testPropertyHooksValid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksInvalid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksInvalid_Fix01() throws Exception {
+        applyHint("        final ge^t{} // invalid1", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksInvalid_Fix02() throws Exception {
+        applyHint("        public g^et; // invalid2", "Remove modifier: public");
+    }
+
+    public void testPropertyHooksInvalid_Fix03() throws Exception {
+        applyHint("        static g^et {} // invalid3", "Remove modifier: static");
+    }
+
+    public void testPropertyHooksInvalid_Fix04() throws Exception {
+        applyHint("    public static $invalidSt^atic02 { // invalid4", "Remove modifier: static");
+    }
+
+    public void testPropertyHooksInvalid_Fix05() throws Exception {
+        applyHint("    public readonly int $invalid^Readonly { get{} set{} } // invalid7", "Remove modifier: readonly");
+    }
+
+    public void testPropertyHooksAbstractValid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksAbstractInvalid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksAbstractInvalid_Fix01a() throws Exception {
+        applyHint("    abstract private int $inval^id02 { get; set; } // invalid2", "Remove modifier: private");
+    }
+
+    public void testPropertyHooksAbstractInvalid_Fix01b() throws Exception {
+        applyHint("    abstract private int $inval^id02 { get; set; } // invalid2", "Remove modifier: abstract");
+    }
+
+    public void testPropertyHooksAbstractInvalid_Fix02() throws Exception {
+        applyHint("class NonAbstr^actClass { // invalid3", "Add modifier: abstract");
+    }
+
+    public void testPropertyHooksInterfaceValid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksInterfaceInvalid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix01() throws Exception {
+        applyHint("    abstract public $i^nvalid01 { get; set; } // invalid1", "Remove modifier: abstract");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix02() throws Exception {
+        applyHint("    protected $invali^d02 {get; set;} // invalid2", "Change modifier: protected to public");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix03() throws Exception {
+        applyHint("    private $in^valid03 { // invalid3", "Change modifier: private to public");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix04() throws Exception {
+        applyHint("        final g^et; // invalid4", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix05() throws Exception {
+        applyHint("    final public $invali^d05 { // invalid5", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix06() throws Exception {
+        applyHint("        g^et {} // invalid6", "Remove body of the property hook");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix07() throws Exception {
+        applyHint("        s^et {} // invalid7", "Remove body of the property hook");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix08() throws Exception {
+        applyHint("        g^et {} // invalid8", "Remove body of the property hook");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix09() throws Exception {
+        applyHint("        s^et {} // invalid9", "Remove body of the property hook");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix10() throws Exception {
+        applyHint("    final public int $inv^alid10 { // invalid11", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksInterfaceInvalid_Fix11() throws Exception {
+        applyHint("    public readonly int $inva^lid11 { // invalid12", "Remove modifier: readonly");
+    }
+
+    public void testPropertyHooksTraitValid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksTraitInvalid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix01() throws Exception {
+        applyHint("        final ge^t {} // invalid1", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix02() throws Exception {
+        applyHint("        public ge^t{} // invalid2", "Remove modifier: public");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix03() throws Exception {
+        applyHint("        static g^et {} // invalid3", "Remove modifier: static");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix04() throws Exception {
+        applyHint("    public static $invalidSt^atic02 { // invalid4", "Remove modifier: static");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix05() throws Exception {
+        applyHint("    public readonly int $invalidRead^only { // invalid5", "Remove modifier: readonly");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix06a() throws Exception {
+        applyHint("    private abstract $invalidPrivateAbs^tract { // invalid6", "Remove modifier: private");
+    }
+
+    public void testPropertyHooksTraitInvalid_Fix06b() throws Exception {
+        applyHint("    private abstract $invalidPrivateAbs^tract { // invalid6", "Remove modifier: abstract");
+    }
+
+    public void testPropertyHooksCPPValid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksCPPInvalid() throws Exception {
+        checkHints();
+    }
+
+    public void testPropertyHooksCPPInvalid_Fix01() throws Exception {
+        applyHint("            final ge^t{} // invalid1", "Remove modifier: final");
+    }
+
+    public void testPropertyHooksCPPInvalid_Fix02() throws Exception {
+        applyHint("            public ge^t{} // invalid2", "Remove modifier: public");
+    }
+
+    public void testPropertyHooksCPPInvalid_Fix03() throws Exception {
+        applyHint("            static ge^t {} // invalid3", "Remove modifier: static");
+    }
+
+    public void testPropertyHooksCPPInvalid_Fix04() throws Exception {
+        applyHint("        public readonly int $invalidReado^nly { // invalid4", "Remove modifier: readonly");
+    }
+
     private void checkHints() throws Exception {
         checkHints(String.format("%s.php", getTestName()));
     }

@@ -180,6 +180,7 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
@@ -4730,6 +4731,7 @@ public class ServerTest extends NbTestCase {
         return builder.create();
     }
 
+    @RandomlyFails // causes frequent CI failures
     public void testChangeMethodParameters() throws Exception {
         File src = new File(getWorkDir(), "a/Foo.java");
         src.getParentFile().mkdirs();

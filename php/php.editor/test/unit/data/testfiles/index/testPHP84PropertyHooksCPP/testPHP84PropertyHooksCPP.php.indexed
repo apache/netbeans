@@ -1,0 +1,177 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : propertyhooksconstructorpropertypromotion;PropertyHooksConstructorPropertyPromotion;821;;;;1;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;;0;
+  clz.const : constant;CONSTANT;889;"property hook";0;<TESTURL>/testPHP84PropertyHooksCPP.php;1;string;
+  field : arrowfunction;arrowFunction;3145;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3173,"end":3176,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : closure;closure;2977;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2999,"end":3002,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalidemptyhook;invalidEmptyHook;3381;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[];
+  field : invalidgetparam;invalidGetParam;3720;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3750,"end":3753,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalidprivatefinal;invalidPrivateFinal;3446;2;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3474,"end":3477,"mod":48,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalidpublic01;invalidPublic01;3526;2;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3563,"end":3566,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalidreadonly;invalidReadonly;3873;65;int;int;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3891,"end":3894,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":3897,"end":3900,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalidsetref;invalidSetRef;3949;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"set","start":3977,"end":3980,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":"$value::0::1:1:0:0:0:0::"}];
+  field : invalidstatic01;invalidStatic01;3622;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3659,"end":3662,"mod":40,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalidunknownhook;invalidUnknownHook;4149;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"unknown","start":4182,"end":4189,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalidvariadic;invalidVariadic;4047;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"set","start":4077,"end":4080,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":"$value::0::0:0:1:0:0:0::"}];
+  field : propertyconst;propertyConst;3274;2;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":3302,"end":3305,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid01;valid01;1004;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1026,"end":1029,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1095,"end":1098,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid02;valid02;1187;1;int;int;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1213,"end":1216,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1323,"end":1326,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":"$value::0::1:0:0:0:0:0::"}];
+  field : valid03;valid03;1418;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1451,"end":1454,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1522,"end":1525,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid04;valid04;1563;1;string;string;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1602,"end":1605,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1637,"end":1640,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid05;valid05;1677;1;array;array;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1704,"end":1707,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1739,"end":1742,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid06;valid06;1818;257;string;string;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":1857,"end":1860,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1937,"end":1940,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid07;valid07;1971;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2004,"end":2007,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":2038,"end":2041,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid08;valid08;2103;1;string;string;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"set","start":2125,"end":2128,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":"$param:string|array:1::1:0:0:1:0:0:string|array:"}];
+  field : valid09;valid09;2274;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2305,"end":2308,"mod":32,"isRef":false,"isAttr":true,"hasBody":true,"paramSig":""},{"name":"set","start":2333,"end":2336,"mod":32,"isRef":false,"isAttr":true,"hasBody":true,"paramSig":""}];
+  field : valid10;valid10;2367;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2395,"end":2398,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid11;valid11;2530;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2563,"end":2566,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid12;valid12;2685;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"set","start":2707,"end":2710,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":"$value::0::1:0:0:0:0:0::"}];
+  field : valid13;valid13;2829;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2857,"end":2860,"mod":48,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid15;valid15;2904;1;;;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;[{"name":"get","start":2927,"end":2930,"mod":32,"isRef":true,"isAttr":false,"hasBody":true,"paramSig":""}];
+  method : __construct;__construct;975;$valid01::0::1:0:0:0:1:0::,$valid02:int:1:1:0:0:0:0:1:0:int:,$valid03::0:"string":0:0:0:0:1:0::,$valid04:string:1:self\u003a\u003aCONSTANT:0:0:0:0:1:0:string:,$valid05:array:1:[]:0:0:0:0:1:0:array:,$valid06:string:1:self\u003a\u003aCONSTANT:0:0:0:0:257:0:string:,$valid07::0::1:0:0:0:1:0::,$valid08:string:1::1:0:0:0:1:0:string:,$valid09::0::1:0:0:0:1:0::,$valid10::0:100:0:0:0:0:1:0::,$valid11::0::1:0:0:0:1:0::,$valid12::0::1:0:0:0:1:0::,$valid13::0::1:0:0:0:1:0::,$valid15::0::1:0:0:0:1:0::,$closure::0::1:0:0:0:1:0::,$arrowFunction::0::1:0:0:0:1:0::,$propertyConst::0::1:0:0:0:2:0::,$invalidEmptyHook::0::1:0:0:0:1:0::,$invalidPrivateFinal::0::1:0:0:0:2:0::,$invalidPublic01::0::1:0:0:0:2:0::,$invalidStatic01::0::1:0:0:0:1:0::,$invalidGetParam::0::1:0:0:0:1:0::,$invalidReadonly:int:1::1:0:0:0:65:0:int:,$invalidSetRef::0::1:0:0:0:1:0::,$invalidVariadic::0::1:0:0:0:1:0::,$invalidUnknownHook::0::1:0:0:0:1:0::;;1;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;0;;
+  top : propertyhooksconstructorpropertypromotion
+
+Not Searchable Keys:
+  constructor : $arrowFunction::0::1:0:0:0:1:0::,$closure::0::1:0:0:0:1:0::,$invalidEmptyHook::0::1:0:0:0:1:0::,$invalidGetParam::0::1:0:0:0:1:0::,$invalidPrivateFinal::0::1:0:0:0:2:0::,$invalidPublic01::0::1:0:0:0:2:0::,$invalidReadonly:int:1::1:0:0:0:65:0:int:,$invalidSetRef::0::1:0:0:0:1:0::,$invalidStatic01::0::1:0:0:0:1:0::,$invalidUnknownHook::0::1:0:0:0:1:0::;;1;0;<TESTURL>/testPHP84PropertyHooksCPP.php;0;0;;;,$invalidVariadic::0::1:0:0:0:1:0::,$propertyConst::0::1:0:0:0:2:0::,$valid02:int:1:1:0:0:0:0:1:0:int:,$valid03::0:"string":0:0:0:0:1:0::,$valid04:string:1:self\u003a\u003aCONSTANT:0:0:0:0:1:0:string:,$valid05:array:1:[]:0:0:0:0:1:0:array:,$valid06:string:1:self\u003a\u003aCONSTANT:0:0:0:0:257:0:string:,$valid07::0::1:0:0:0:1:0::,$valid08:string:1::1:0:0:0:1:0:string:,$valid09::0::1:0:0:0:1:0::,$valid10::0:100:0:0:0:0:1:0::,$valid11::0::1:0:0:0:1:0::,$valid12::0::1:0:0:0:1:0::,$valid13::0::1:0:0:0:1:0::,$valid15::0::1:0:0:0:1:0::,propertyhooksconstructorpropertypromotion;PropertyHooksConstructorPropertyPromotion;975;$valid01::0::1:0:0:0:1:0::
+
+
+Document 2
+Searchable Keys:
+  identifier_used : __construct;
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : arrowfunction;
+  identifier_used : arrowfunction;
+  identifier_used : attr1;
+  identifier_used : attr2;
+  identifier_used : closure;
+  identifier_used : closure;
+  identifier_used : constant;
+  identifier_used : constant;
+  identifier_used : constant;
+  identifier_used : exception;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : invalidemptyhook;
+  identifier_used : invalidgetparam;
+  identifier_used : invalidprivatefinal;
+  identifier_used : invalidpublic01;
+  identifier_used : invalidreadonly;
+  identifier_used : invalidsetref;
+  identifier_used : invalidstatic01;
+  identifier_used : invalidunknownhook;
+  identifier_used : invalidvariadic;
+  identifier_used : is_array;
+  identifier_used : join;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : prop1;
+  identifier_used : propertyconst;
+  identifier_used : propertyhooksconstructorpropertypromotion;
+  identifier_used : self;
+  identifier_used : self;
+  identifier_used : sensitiveparameter;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : unknown;
+  identifier_used : valid01;
+  identifier_used : valid01;
+  identifier_used : valid02;
+  identifier_used : valid02;
+  identifier_used : valid02;
+  identifier_used : valid03;
+  identifier_used : valid03;
+  identifier_used : valid04;
+  identifier_used : valid04;
+  identifier_used : valid05;
+  identifier_used : valid05;
+  identifier_used : valid05;
+  identifier_used : valid06;
+  identifier_used : valid06;
+  identifier_used : valid07;
+  identifier_used : valid08;
+  identifier_used : valid08;
+  identifier_used : valid09;
+  identifier_used : valid10;
+  identifier_used : valid10;
+  identifier_used : valid11;
+  identifier_used : valid12;
+  identifier_used : valid13;
+  identifier_used : valid15;
+  identifier_used : valid15;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : value;
+  identifier_used : var_dump;
+
+Not Searchable Keys:

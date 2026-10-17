@@ -39,16 +39,16 @@ class HprofGCRoots {
     private final Object lastThreadObjGCLock = new Object();
     private Map<Long,GCRoot> gcRoots;
     private final Object gcRootLock = new Object();
-    private List gcRootsList;
+    private List<HprofGCRoot> gcRootsList;
 
     HprofGCRoots(HprofHeap h) {
         heap = h;
     }
 
-    Collection<GCRoot> getGCRoots() {
+    Collection<HprofGCRoot> getGCRoots() {
         synchronized (gcRootLock) {
             if (gcRoots == null) {
-                List<GCRoot> rootList = new ArrayList<>();
+                List<HprofGCRoot> rootList = new ArrayList<>();
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_UNKNOWN), rootList);
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_GLOBAL), rootList);
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_LOCAL), rootList);
@@ -67,10 +67,8 @@ class HprofGCRoots {
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_VM_INTERNAL), rootList);
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_MONITOR), rootList);
 
-                rootList.sort(new Comparator() {
-                    public int compare(Object o1, Object o2) {
-                        HprofGCRoot r1 = (HprofGCRoot) o1;
-                        HprofGCRoot r2 = (HprofGCRoot) o2;
+                rootList.sort(new Comparator<HprofGCRoot>() {
+                    public int compare(HprofGCRoot r1, HprofGCRoot r2) {
                         int kind = r1.getKind().compareTo(r2.getKind());
 
                         if (kind != 0) {
@@ -92,8 +90,10 @@ class HprofGCRoots {
             if (gcRoots == null) {
                 heap.getGCRoots();
                 roots = new HashMap<>();
-                for (GCRoot r : getGCRoots()) {
-                    roots.put(r.getInstance().getInstanceId(), r);
+                for (HprofGCRoot root : getGCRoots()) {
+                    // A GC root is identified by its HPROF ID. Some valid root
+                    // records do not have a corresponding heap Instance.
+                    roots.put(root.getInstanceId(), root);
                 }
                 gcRoots = roots;
             } else {
@@ -126,7 +126,7 @@ class HprofGCRoots {
         return map.get(threadSerialNumber);
     }
 
-    private void computeGCRootsFor(TagBounds tagBounds, Collection<GCRoot> roots) {
+    private void computeGCRootsFor(TagBounds tagBounds, Collection<HprofGCRoot> roots) {
         if (tagBounds != null) {
             int rootTag = tagBounds.tag;
             long[] offset = new long[]{tagBounds.startOffset};

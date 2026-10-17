@@ -252,6 +252,12 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
+    public void testInstanceOverrideConstructor_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "__construct"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
     public void testGetterWithType_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
         cgsInfo.setPublicModifier(false);

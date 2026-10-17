@@ -1115,7 +1115,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitClass(ClassTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return super.visitClass(node, p);
@@ -1125,7 +1125,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitMethod(MethodTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return null;
@@ -1135,7 +1135,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitVariable(VariableTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return null;

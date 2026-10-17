@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.50.0
+#Version 2.51.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -775,6 +775,7 @@ fld public final static java.lang.String SETTINGS_FILE_NAME_KTS = "settings.grad
 fld public final static java.lang.String VERSION_CATALOG = "gradle/libs.versions.toml"
 fld public final static java.lang.String WRAPPER_PROPERTIES = "gradle/wrapper/gradle-wrapper.properties"
 innr public final static !enum Kind
+innr public static Searcher
 innr public static SettingsFile
 intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
@@ -816,6 +817,16 @@ fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind VERSION
 meth public static org.netbeans.modules.gradle.spi.GradleFiles$Kind valueOf(java.lang.String)
 meth public static org.netbeans.modules.gradle.spi.GradleFiles$Kind[] values()
 supr java.lang.Enum<org.netbeans.modules.gradle.spi.GradleFiles$Kind>
+
+CLSS public static org.netbeans.modules.gradle.spi.GradleFiles$Searcher
+ outer org.netbeans.modules.gradle.spi.GradleFiles
+cons public init()
+meth public !varargs static java.io.File searchPath(java.io.File,java.lang.String[])
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public !varargs static java.io.File searchPathUp(java.io.File,java.lang.String[])
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds forbiddenFolders,projectScanRoots
 
 CLSS public static org.netbeans.modules.gradle.spi.GradleFiles$SettingsFile
  outer org.netbeans.modules.gradle.spi.GradleFiles
@@ -1144,6 +1155,8 @@ CLSS public final static !enum org.netbeans.modules.gradle.spi.newproject.Gradle
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework CPP_TEST
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework JUNIT
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework JUNIT_5
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework JUNIT_JUPITER
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework KOTLIN_TEST
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework SCALA_TEST
 fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework SPOCK

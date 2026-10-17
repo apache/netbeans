@@ -11,6 +11,13 @@ private ClassA|ClassB|null $unionType;
 
 private ClassA&ClassB $intersectionType;
 
+private string $propertyHook {
+    &get {
+        return $this->propertyHook;
+    }
+    set($value) => $this->propertyHook = $value;
+}
+
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
             echo "a is bigger than b";

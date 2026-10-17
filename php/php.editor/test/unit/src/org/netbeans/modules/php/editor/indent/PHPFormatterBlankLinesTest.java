@@ -2113,4 +2113,77 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
         reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
     }
+
+    // PHP 8.4
+    public void testBetweenPropertyHooks_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_PROPERTY_HOOKS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php84/BetweenPropertyHooks.php", options, false, true);
+    }
+
+    public void testBetweenPropertyHooks_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_PROPERTY_HOOKS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php84/BetweenPropertyHooks.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, false);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, true);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, false);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, false);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_02c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, false);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.PRESERVE_EXISTING);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_03a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, true);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, true);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
+
+    public void testEmptyPropertyHookBody_03c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, true);
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.PRESERVE_EXISTING);
+        reformatFileContents("testfiles/formatting/blankLines/php84/EmptyPropertyHookBody.php", options, false, true);
+    }
 }

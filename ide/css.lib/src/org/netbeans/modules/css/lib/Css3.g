@@ -1080,6 +1080,7 @@ slAttributeValue
 
 pseudo
     : (( COLON | DCOLON ) {tokenNameEquals("host")}? IDENT (ws? LPAREN))=> ( COLON | DCOLON ) IDENT ( ws? LPAREN ws? ( selector ws?)? RPAREN )?
+    | (( COLON | DCOLON ) {tokenNameEquals("host-context")}? IDENT (ws? LPAREN))=> ( COLON | DCOLON ) IDENT ( ws? LPAREN ws? ( selector ws?)? RPAREN )?
     | (( COLON | DCOLON ) {tokenNameEquals("slotted")}? IDENT (ws? LPAREN))=> ( COLON | DCOLON ) IDENT ( ws? LPAREN ws? ( selector ws?)? RPAREN )
     | ( COLON | DCOLON )
              (

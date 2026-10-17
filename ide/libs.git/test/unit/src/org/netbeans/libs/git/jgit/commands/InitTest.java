@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
@@ -40,7 +39,7 @@ public class InitTest extends AbstractGitTestCase {
 
     private File workDir;
 
-    public InitTest (String testName) throws IOException {
+    public InitTest(String testName) throws IOException {
         super(testName);
     }
 
@@ -50,7 +49,7 @@ public class InitTest extends AbstractGitTestCase {
         workDir = getWorkingDirectory();
     }
 
-    public void testInit () throws Exception {
+    public void testInit() throws Exception {
         File repo2 = new File(workDir.getParentFile(), "other");
         GitClient client = GitRepository.getInstance(repo2).createClient();
         Field f = GitClient.class.getDeclaredField("gitRepository");
@@ -59,7 +58,7 @@ public class InitTest extends AbstractGitTestCase {
         f = JGitRepository.class.getDeclaredField("repository");
         f.setAccessible(true);
         Repository repo = (Repository) f.get(jgitRepo);
-        
+
         assertFalse(repo.getDirectory().exists());
         assertFalse(repo.getIndexFile().exists());
         assertNull(repo.getBranch());
@@ -69,7 +68,7 @@ public class InitTest extends AbstractGitTestCase {
         DirCache index = repo.readDirCache();
         assertEquals(0, index.getEntryCount());
         assertTrue(repo.getDirectory().exists());
-        assertEquals("master", repo.getBranch());
+        assertEquals(getDefaultBranch(), repo.getBranch());
         assertConfig(new FileBasedConfig(new File(repo.getDirectory(), "config"), repo.getFS()));
 
         // test failure when repository already exists
@@ -81,7 +80,7 @@ public class InitTest extends AbstractGitTestCase {
         }
     }
 
-    private void assertConfig (FileBasedConfig config) throws Exception {
+    private void assertConfig(FileBasedConfig config) throws Exception {
         config.load();
         // filemode
         assertEquals(isWindows() ? "false" : "true", config.getString(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_FILEMODE));

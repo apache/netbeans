@@ -32,6 +32,7 @@ public final class IconsUtils {
 
     private static final String PNG_EXTENSION = ".png"; //NOI18N
     private static final String GIF_EXTENSION = ".gif"; //NOI18N
+    private static final String SVG_EXTENSION = ".svg"; //NOI18N
     private static final String ICON_BASE = "org/netbeans/modules/php/editor/resources/"; //NOI18N
     private static final String EMPTY_FILE_ICON_BASE = "org/netbeans/modules/csl/source/resources/icons/emptyfile-icon"; //NOI18N
 
@@ -39,31 +40,16 @@ public final class IconsUtils {
     }
 
     public static ImageIcon getElementIcon(PhpElementKind elementKind, Collection<Modifier> modifiers) {
-        ImageIcon imageIcon;
-        switch (elementKind) {
-            case CLASS:
-                imageIcon = loadClassIcon();
-                break;
-            case IFACE:
-                imageIcon = loadInterfaceIcon();
-                break;
-            case TRAIT:
-                imageIcon = loadTraitIcon();
-                break;
-            case ENUM:
-                imageIcon = loadEnumIcon();
-                break;
-            case CONSTANT:
-                imageIcon = loadConstantIcon();
-                break;
-            case FUNCTION:
-                imageIcon = loadFunctionIcon();
-                break;
-            default:
-                imageIcon = ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
-                break;
-        }
-        return imageIcon;
+        return switch (elementKind) {
+            case CLASS -> loadClassIcon();
+            case IFACE -> loadInterfaceIcon();
+            case TRAIT -> loadTraitIcon();
+            case ENUM -> loadEnumIcon();
+            case CONSTANT -> loadConstantIcon();
+            case FUNCTION -> loadFunctionIcon();
+            case PROPERTY_HOOK -> loadPropertyHookIcon();
+            default -> ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
+        };
     }
 
     public static ImageIcon getElementIcon(PhpElementKind elementKind) {
@@ -92,6 +78,10 @@ public final class IconsUtils {
 
     public static ImageIcon loadFunctionIcon() {
         return ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadPropertyHookIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "hook" + SVG_EXTENSION, false); // NOI18N
     }
 
     public static ImageIcon loadConstantIcon() {

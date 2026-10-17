@@ -23,7 +23,9 @@
         </Comments>
         <Statements>
             <ASTError start='815' end='824'/>
-            <ASTError start='825' end='849'/>
+            <ASTError start='825' end='846'/>
+            <Block start='847' end='849' isCurly='true'>
+            </Block>
         </Statements>
     </Program>
 </testresult>

@@ -95,8 +95,8 @@ public class TreeNode extends AbstractNode implements OffsetProvider {
         this.tree = tree;
         this.info = info;
         this.synthetic = info.getTreeUtilities().isSynthetic(tree);
-        int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree.getCompilationUnit(), tree.getLeaf());
-        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tree.getCompilationUnit(), tree.getLeaf());
+        int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree.getLeaf());
+        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tree.getLeaf());
         String text;
 
         if (start >= 0 && end >= 0 && end > start) {
@@ -130,11 +130,11 @@ public class TreeNode extends AbstractNode implements OffsetProvider {
     }
     
     public int getStart() {
-        return (int)info.getTrees().getSourcePositions().getStartPosition(tree.getCompilationUnit(), tree.getLeaf());
+        return (int)info.getTrees().getSourcePositions().getStartPosition(tree.getLeaf());
     }
 
     public int getEnd() {
-        return (int)info.getTrees().getSourcePositions().getEndPosition(tree.getCompilationUnit(), tree.getLeaf());
+        return (int)info.getTrees().getSourcePositions().getEndPosition(tree.getLeaf());
     }
 
     public int getPreferredPosition() {

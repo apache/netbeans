@@ -138,8 +138,8 @@ public class CreateJavaClassFileFromClipboard extends PasteType {
         parse:
         try {
             for (CompilationUnitTree compilationUnitTree : ((JavacTask) task).parse()) {
-                packageStartOffset = sourcePositions.getStartPosition(compilationUnitTree, compilationUnitTree.getPackage());
-                packageEndOffset = sourcePositions.getEndPosition(compilationUnitTree, compilationUnitTree.getPackage());
+                packageStartOffset = sourcePositions.getStartPosition(compilationUnitTree.getPackage());
+                packageEndOffset = sourcePositions.getEndPosition(compilationUnitTree.getPackage());
                 for (Tree tree : compilationUnitTree.getTypeDecls()) {
                     if (tree instanceof ClassTree) {
                         final ClassTree classTree = (ClassTree) tree;

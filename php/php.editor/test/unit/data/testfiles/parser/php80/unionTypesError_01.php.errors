@@ -1,8 +1,8 @@
 [[850,851]-Syntax error
  unexpected:	|
- expected:	variable, &] 850-851:Syntax error
+ expected:	variable, &, ..., &] 850-851:Syntax error
  unexpected:	|
- expected:	variable, &
+ expected:	variable, &, ..., &
 [[857,864]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$number'] 857-864:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$number'

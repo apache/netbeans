@@ -170,7 +170,7 @@ public class GradleAuxiliaryConfigImpl implements AuxiliaryConfiguration {
 
     private Document loadConfig(FileObject config) throws IOException, SAXException {
         synchronized (configIOLock) {
-            return XMLUtil.parse(new InputSource(config.toURL().toString()), false, true, null, null);
+            return XMLUtil.parse(new InputSource(config.toURL().toString()), false, true, true, null, null);
         }
     }
 
@@ -281,7 +281,7 @@ public class GradleAuxiliaryConfigImpl implements AuxiliaryConfiguration {
             if (str != null) {
                 Document doc;
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                     return XMLUtil.findElement(doc.getDocumentElement(), elementName, namespace);
                 } catch (SAXException ex) {
                     LOG.log(Level.FINE, "cannot parse", ex);
@@ -327,7 +327,7 @@ public class GradleAuxiliaryConfigImpl implements AuxiliaryConfiguration {
             String str = (String) projectDirectory.getAttribute(AUX_CONFIG);
             if (str != null) {
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                 } catch (SAXException ex) {
                     LOG.log(Level.FINE, "cannot parse", ex);
                 } catch (IOException ex) {
@@ -396,7 +396,7 @@ public class GradleAuxiliaryConfigImpl implements AuxiliaryConfiguration {
             String str = (String) projectDirectory.getAttribute(AUX_CONFIG);
             if (str != null) {
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                 } catch (SAXException | IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

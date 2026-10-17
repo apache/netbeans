@@ -766,11 +766,26 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             if (J2eePlatform.TOOL_PROP_JVM_OPTS.equals(propertyName)) {
                 if(domainPath != null) {
                     StringBuilder sb = new StringBuilder();
-                    sb.append("-Djava.endorsed.dirs=");
-                     sb.append(quotedString(new File(root,"lib/endorsed").getAbsolutePath()));
-                    sb.append(File.pathSeparator);
-                     sb.append(quotedString(new File(root,"modules/endorsed").getAbsolutePath()));
-                     sb.append(" -javaagent:");
+                    // The endorsed standards mechanism (-Djava.endorsed.dirs) was
+                    // removed in JDK 9 (JEP 220); passing it aborts JVM startup.
+                    // Only emit it for the endorsed directories that actually exist
+                    // (legacy servers on JDK 8 or earlier); modern GlassFish ships
+                    // none, so the option is omitted and the app client can run on
+                    // JDK 9+.
+                    StringBuilder endorsedDirs = new StringBuilder();
+                    for (String endorsedDir : new String[] {"lib/endorsed", "modules/endorsed"}) { // NOI18N
+                        File dir = new File(root, endorsedDir);
+                        if (dir.isDirectory()) {
+                            if (endorsedDirs.length() > 0) {
+                                endorsedDirs.append(File.pathSeparator);
+                            }
+                            endorsedDirs.append(quotedString(dir.getAbsolutePath()));
+                        }
+                    }
+                    if (endorsedDirs.length() > 0) {
+                        sb.append("-Djava.endorsed.dirs=").append(endorsedDirs).append(' '); // NOI18N
+                    }
+                     sb.append("-javaagent:");
                      String url = dm.getCommonServerSupport().getInstanceProperties().get(GlassfishModule.URL_ATTR);
                      File f = new File(root,"lib/gf-client.jar"); // NOI18N
                      if (f.exists()) {

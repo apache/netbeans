@@ -400,7 +400,7 @@ public final class TreePathHandle {
             this.enclosingElement = element;
             this.correspondingEl = correspondingEl;
             if (kindPath != null) {
-                this.kind = kindPath.kindPath.get(0);
+                this.kind = kindPath.kindPath.getFirst();
             } else {
                 if (correspondingEl != null) {
                     ElementKind k = correspondingEl.getKind();

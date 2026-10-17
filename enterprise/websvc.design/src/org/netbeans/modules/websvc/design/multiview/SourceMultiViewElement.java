@@ -132,7 +132,7 @@ public class SourceMultiViewElement extends CloneableEditor
                                 Tree tree = methodBody;
                                 if(!methodBody.getStatements().isEmpty())
                                     tree = methodBody.getStatements().get(0);
-                                position = (int) srcPos.getStartPosition(workingCopy.getCompilationUnit(), tree);
+                                position = (int) srcPos.getStartPosition(tree);
                             }
                             if(position>0) {
                                 getEditorPane().setCaretPosition(position);

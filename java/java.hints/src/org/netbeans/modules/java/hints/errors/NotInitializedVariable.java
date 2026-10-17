@@ -300,7 +300,7 @@ public class NotInitializedVariable implements ErrorRule<Void> {
             this.ctorHeader = ElementHeaders.getHeader(tp, compilationInfo, ElementHeaders.NAME + ElementHeaders.PARAMETERS);
             this.tph = TreePathHandle.create(tp, compilationInfo);
             MethodTree method = (MethodTree) tp.getLeaf();
-            Scope scope = compilationInfo.getTreeUtilities().scopeFor((int) compilationInfo.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), method.getBody()) - 1);
+            Scope scope = compilationInfo.getTreeUtilities().scopeFor((int) compilationInfo.getTrees().getSourcePositions().getEndPosition(method.getBody()) - 1);
             List<? extends VariableTree> parameters = method.getParameters();
             ChangeParametersRefactoring.ParameterInfo[] parameterInfo = new ChangeParametersRefactoring.ParameterInfo[parameters.size() + 1];
             for (int i = 0; i < parameters.size(); i++) {

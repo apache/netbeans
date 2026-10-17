@@ -81,7 +81,7 @@ $ ant javadoc
 ```
 
 #### Notes:
-* On JDK 24 or later, building javadoc may require to raise the jaxp entity limit by setting `export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000`
+
 * Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
 
 ### Running NetBeans

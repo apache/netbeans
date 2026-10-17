@@ -430,6 +430,26 @@ public class PHPDocCommentParserTest extends PHPTestBase {
         perform(comment, "ReturnTypeObjectShapes02");
     }
 
+    public void testVarargsParam01() throws Exception {
+        String comment = " * @param string ...$param";
+        perform(comment, "VarargsParam01");
+    }
+
+    public void testVarargsParam02() throws Exception {
+        String comment = " * @param ...$param";
+        perform(comment, "VarargsParam02");
+    }
+
+    public void testNonvarargsParam01() throws Exception {
+        String comment = " * @param string $param";
+        perform(comment, "NonvarargsParam01");
+    }
+
+    public void testNonvarargsParam02() throws Exception {
+        String comment = " * @param $param";
+        perform(comment, "NonvarargsParam02");
+    }
+
     public void perform(String comment, String filename) throws Exception {
         PHPDocCommentParser parser = new PHPDocCommentParser();
         PHPDocBlock block = parser.parse(0, comment.length(), comment);

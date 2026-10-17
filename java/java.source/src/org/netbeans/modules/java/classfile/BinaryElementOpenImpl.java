@@ -64,7 +64,7 @@ public class BinaryElementOpenImpl implements BinaryElementOpen {
 
                         if (p == null) return ;
 
-                        pos[0] = (int) parameter.getTrees().getSourcePositions().getStartPosition(p.getCompilationUnit(), p.getLeaf());
+                        pos[0] = (int) parameter.getTrees().getSourcePositions().getStartPosition(p.getLeaf());
                     }
                 }, true);
             } catch (IOException ex) {

@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -134,7 +133,7 @@ class QueryUtil {
         qFiltered.add(
             new TermInSetQuery(
                     DocumentUtil.FIELD_PACKAGE_NAME,
-                    pkgs.stream().map(s -> new BytesRef(s)).collect(Collectors.toList())
+                    pkgs.stream().map(s -> new BytesRef(s)).toList()
             ),
             Occur.MUST);
         qFiltered.add(q, Occur.MUST);

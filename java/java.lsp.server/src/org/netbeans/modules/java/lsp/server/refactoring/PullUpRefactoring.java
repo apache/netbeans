@@ -206,8 +206,8 @@ public final class PullUpRefactoring extends CodeRefactoring {
                             }
                         default: {
                             TreePath path = trees.getPath(e);
-                            long startMember = path != null ? sourcePositions.getStartPosition(path.getCompilationUnit(), path.getLeaf()) : -1;
-                            long endMember = path != null ? sourcePositions.getEndPosition(path.getCompilationUnit(), path.getLeaf()) : -1;
+                            long startMember = path != null ? sourcePositions.getStartPosition(path.getLeaf()) : -1;
+                            long endMember = path != null ? sourcePositions.getEndPosition(path.getLeaf()) : -1;
                             boolean selected = offset > startMember && offset < endMember;
                             members.add(new QuickPickItem(createLabel(info, e), null, null, selected, new ElementData(e)));
                         }

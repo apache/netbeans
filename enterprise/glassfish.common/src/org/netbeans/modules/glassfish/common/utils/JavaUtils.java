@@ -223,6 +223,43 @@ public class JavaUtils {
     }
 
     /**
+     * Build a human readable description of the Java SE versions supported
+     * by the given GlassFish server instance.
+     * <p/>
+     * The result is a compact range (e.g. <code>"17 - 25"</code>) when the
+     * supported set spans more than one version, the single version otherwise,
+     * or an empty <code>String</code> when nothing is declared as supported.
+     * <p/>
+     * @param instance GlassFish server instance to inspect.
+     * @return Description of the supported Java SE version range.
+     */
+    public static String supportedJavaSERange(
+            @NonNull final GlassfishInstance instance) {
+        Parameters.notNull("instance", instance);
+        GlassFishJavaSEConfig javaSEConfig
+                = ConfigBuilderProvider.getBuilder(instance)
+                .getJavaSEConfig(instance.getVersion());
+        Set<JavaSEPlatform> supportedPlatforms
+                = javaSEConfig != null ? javaSEConfig.getPlatforms() : null;
+        if (supportedPlatforms == null || supportedPlatforms.isEmpty()) {
+            return "";
+        }
+        JavaSEPlatform min = null;
+        JavaSEPlatform max = null;
+        for (JavaSEPlatform platform : supportedPlatforms) {
+            if (min == null || platform.ordinal() < min.ordinal()) {
+                min = platform;
+            }
+            if (max == null || platform.ordinal() > max.ordinal()) {
+                max = platform;
+            }
+        }
+        return min == max
+                ? min.toString()
+                : min.toString() + " - " + max.toString();
+    }
+
+    /**
      * Search for first available installed folder in Java SE platform.
      * <p/>
      * @param platform Java SE platform to search for first available

@@ -493,8 +493,8 @@ public class BatchSearch {
                         continue;
                     }
                     int[] span = new int[] {
-                        (int) ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), tp.getLeaf()),
-                        (int) ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), tp.getLeaf())
+                        (int) ci.getTrees().getSourcePositions().getStartPosition(tp.getLeaf()),
+                        (int) ci.getTrees().getSourcePositions().getEndPosition(tp.getLeaf())
                     };
 
                     result.add(span);

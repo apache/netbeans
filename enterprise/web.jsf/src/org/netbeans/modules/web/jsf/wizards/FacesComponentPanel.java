@@ -52,7 +52,7 @@ class FacesComponentPanel implements WizardDescriptor.Panel<WizardDescriptor>, C
     @Override
     public FacesComponentPanelVisual getComponent() {
         if (gui == null) {
-            gui = new FacesComponentPanelVisual();
+            gui = new FacesComponentPanelVisual(isUrnNamespace());
         }
         return gui;
     }
@@ -115,6 +115,18 @@ class FacesComponentPanel implements WizardDescriptor.Panel<WizardDescriptor>, C
 
     private void fireChangeEvent() {
         changeSupport.fireChange();
+    }
+
+    private boolean isUrnNamespace() {
+        Project project = Templates.getProject(descriptor);
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if (webModule != null) {
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(webModule);
+            if (jsfVersion != null && jsfVersion.isAtMost(JsfVersion.JSF_3_0)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

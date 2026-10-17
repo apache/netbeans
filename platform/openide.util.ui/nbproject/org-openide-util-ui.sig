@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.41
+#Version 9.42
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -1802,6 +1802,7 @@ meth public static java.lang.String toElementContent(java.lang.String) throws ja
 meth public static java.lang.String toHex(byte[],int,int)
 meth public static java.util.List<org.w3c.dom.Element> findSubElements(org.w3c.dom.Element)
 meth public static org.w3c.dom.Document createDocument(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public static org.w3c.dom.Document parse(org.xml.sax.InputSource,boolean,boolean,boolean,org.xml.sax.ErrorHandler,org.xml.sax.EntityResolver) throws java.io.IOException,org.xml.sax.SAXException
 meth public static org.w3c.dom.Document parse(org.xml.sax.InputSource,boolean,boolean,org.xml.sax.ErrorHandler,org.xml.sax.EntityResolver) throws java.io.IOException,org.xml.sax.SAXException
 meth public static org.w3c.dom.Element findElement(org.w3c.dom.Element,java.lang.String,java.lang.String)
 meth public static org.w3c.dom.Element translateXML(org.w3c.dom.Element,java.lang.String)
@@ -1809,6 +1810,7 @@ meth public static org.xml.sax.ErrorHandler defaultErrorHandler()
 meth public static org.xml.sax.XMLReader createXMLReader() throws org.xml.sax.SAXException
 meth public static org.xml.sax.XMLReader createXMLReader(boolean) throws org.xml.sax.SAXException
 meth public static org.xml.sax.XMLReader createXMLReader(boolean,boolean) throws org.xml.sax.SAXException
+meth public static org.xml.sax.XMLReader createXMLReader(boolean,boolean,boolean) throws org.xml.sax.SAXException
 meth public static void appendChildElement(org.w3c.dom.Element,org.w3c.dom.Element,java.lang.String[])
 meth public static void copyDocument(org.w3c.dom.Element,org.w3c.dom.Element,java.lang.String)
 meth public static void validate(org.w3c.dom.Element,javax.xml.validation.Schema) throws org.xml.sax.SAXException

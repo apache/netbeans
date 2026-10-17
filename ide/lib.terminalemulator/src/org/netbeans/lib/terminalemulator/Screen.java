@@ -199,7 +199,7 @@ class Screen extends JComponent implements Accessible {
         }
 
         // cache for getCharacterAttribute
-        private int last_attr;
+        private Attr last_attr;
         private MutableAttributeSet last_as;
 
         @Override
@@ -209,10 +209,10 @@ class Screen extends JComponent implements Accessible {
                 return null;
             }
             BCoord b = c.toBCoord(term.firsta());
-            int attr;
+            Attr attr;
             try {
                 Line l = term.buf().lineAt(b.row);
-                int[] attrs = l.attrArray();
+                Attr[] attrs = l.attrArray();
                 attr = attrs[b.col];
             } catch (Exception x) {
                 return null;
@@ -224,14 +224,14 @@ class Screen extends JComponent implements Accessible {
 
             MutableAttributeSet as = new SimpleAttributeSet();
 
-            if (Attr.UNDERSCORE.isSet(attr)) {
+            if (attr.isUnderscore()) {
                 as.addAttribute(StyleConstants.Underline, Boolean.TRUE);
             }
-            if (Attr.BRIGHT.isSet(attr)) {
+            if (attr.isBright()) {
                 as.addAttribute(StyleConstants.Bold, Boolean.TRUE);
             }
 
-            boolean reverse = Attr.REVERSE.isSet(attr);
+            boolean reverse = attr.isReverse();
 
             Color color;
             color = term.foregroundColor(reverse, attr);

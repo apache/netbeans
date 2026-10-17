@@ -27,6 +27,7 @@ package org.netbeans.lib.terminalemulator;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 public class ActiveTerm extends StreamTerm {
 
@@ -146,8 +147,8 @@ public class ActiveTerm extends StreamTerm {
 	}
         region.setParentAttrs(attrSave());
 	if (hyperlink) {
-	    setAttribute(34);		// fg -> blue
-	    setAttribute(4);		// underline
+	    setAttribute(List.of(34));		// fg -> blue
+	    setAttribute(List.of(4));		// underline
 	}
 	return region;
     }

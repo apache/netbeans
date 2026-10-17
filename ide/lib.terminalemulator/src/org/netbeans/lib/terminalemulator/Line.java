@@ -24,10 +24,12 @@
 
 package org.netbeans.lib.terminalemulator;
 
+import java.util.Arrays;
+import java.util.List;
+
 final class Line {
     private char buf[];		// actual characters
-    private int attr[];		// attributes (allocated on demand)
-
+    private Attr attr[];	// attributes (allocated on demand)
     // SHOULD use shorts?
     private int capacity;	// == buf.length == attr.length
     private int length;		// how much of buf and attr is filled
@@ -47,7 +49,7 @@ final class Line {
         about_to_wrap = false;
     }
 
-    public void reset(Term term, int end, int eraseAttr) {
+    public void reset(Term term, int end, Attr eraseAttr) {
         reset();
         clearToEndFrom(term, 0, end, eraseAttr);
     }
@@ -114,9 +116,10 @@ final class Line {
      * Return true if we've already seen attributes for this line
      * or 'a' is the first one, in which case we allocate the 'attr' array.
      */
-    private boolean haveAttributes(int a) {
-        if (attr == null && a != 0) {
-            attr = new int[capacity];
+    private boolean haveAttributes(boolean allocate) {
+        if (attr == null && allocate) {
+            attr = new Attr[capacity];
+            Arrays.setAll(attr, i -> new Attr());
         }
         return attr != null;
     }
@@ -145,7 +148,7 @@ final class Line {
         return array;
     }
 
-    public int [] attrArray() {
+    public Attr[] attrArray() {
         return attr;
     }
 
@@ -227,21 +230,26 @@ final class Line {
         buf = new_buf;
 
         if (attr != null) {
-            int new_attr[] = new int[new_capacity];
+            Attr new_attr[] = new Attr[new_capacity];
             System.arraycopy(attr, 0, new_attr, 0, length);
+            for(int i = length; i < new_capacity; i++) {
+                assert new_attr[i] == null;
+                new_attr[i] = new Attr();
+            }
             attr = new_attr;
         }
 
         capacity = new_capacity;
     }
 
-    private void fillGap(int col, int eraseAttr) {
+    private void fillGap(int col, Attr eraseAttr) {
         // fill any newly opened gap (between length and col) with SP
         for (int cx = length; cx < col; cx++)
             charAtPut(cx, ' ');
-        if (haveAttributes(eraseAttr)) {
-            for (int cx = length; cx < col; cx++)
+        if (haveAttributes(!eraseAttr.isEmpty())) {
+            for (int cx = length; cx < col; cx++) {
                 attr[col] = eraseAttr;
+            }
         }
     }
 
@@ -249,26 +257,27 @@ final class Line {
      * Insert character and attribute at 'column' and shift everything
      * past 'column' right.
      */
-    public void insertCharAt(Term term, char c, int column, int a) {
+    public void insertCharAt(Term term, char c, int column, Attr a) {
         int new_length = length + 1;
 
         if (column >= length) {
             new_length = column+1;
             ensureCapacity(term, new_length);
-            fillGap(column, 0);                 // SHOULD be eraseAttr?
+            fillGap(column, new Attr()); // SHOULD be eraseAttr?
         } else {
             ensureCapacity(term, new_length);
             System.arraycopy(buf, column, buf, column + 1, length - column);
-            if (haveAttributes(a))
+            if (haveAttributes(! a.isEmpty())) {
                 System.arraycopy(attr, column, attr, column + 1, length - column);
+            }
         }
 
         term.checkForMultiCell(c);
 
         charAtPut(column, c);
-        if (haveAttributes(a))
+        if (haveAttributes(!a.isEmpty())) {
             attr[column] = a;
-
+        }
         length = new_length;
     }
 
@@ -276,7 +285,7 @@ final class Line {
      * Generic addition and modification.
      * Line will grow to accomodate column.
      */
-    public void setCharAt(Term term, char c, int column, int a, int eraseAttr) {
+    public void setCharAt(Term term, char c, int column, Attr a, Attr eraseAttr) {
         if (column >= length) {
             ensureCapacity(term, column+1);
             fillGap(column, eraseAttr);
@@ -287,7 +296,7 @@ final class Line {
             throw new IllegalArgumentException(String.format("column=%d; buf_length=%d; buf_capacity=%d", column, length, capacity));   //NOI18N
         }
         charAtPut(column, c);
-        if (haveAttributes(a)) {
+        if (haveAttributes(!a.isEmpty())) {
             attr[column] = a;
         }
     }
@@ -299,41 +308,44 @@ final class Line {
         charAtPut(length-1, (char) 0);
         if (attr != null) {
             System.arraycopy(attr, column+1, attr, column, length-column-1);
-            attr[length-1] = 0;
+            attr[length-1] = new Attr();
         }
         // SHOULD move this up
         length--;
     }
 
-    public void clearToEndFrom(Term term, int from, int end, int eraseAttr) {
+    public void clearToEndFrom(Term term, int from, int end, Attr eraseAttr) {
         ensureCapacity(term, end+1);
         fillGap(end, eraseAttr);
 
         // Grrr, why is there a System.arrayCopy() but no System.arrayClear()?
-        for (int cx = from; cx <= end; cx++)
+        for (int cx = from; cx <= end; cx++) {
             charAtPut(cx, ' ');
-        if (haveAttributes(eraseAttr)) {
-            for (int cx = from; cx <= end; cx++)
+        }
+        if (haveAttributes(!eraseAttr.isEmpty())) {
+            for (int cx = from; cx <= end; cx++) {
                 attr[cx] = eraseAttr;
+            }
         }
         length = end+1;
     }
 
-    public void clearTo(Term term, int col, int eraseAttr) {
+    public void clearTo(Term term, int col, Attr eraseAttr) {
         ensureCapacity(term, col+1);
         fillGap(col, eraseAttr);
 
         for (int cx = 0; cx <= col; cx++)
             charAtPut(cx, ' ');
-        if (haveAttributes(eraseAttr)) {
-            for (int cx = 0; cx <= col; cx++)
+        if (haveAttributes(!eraseAttr.isEmpty())) {
+            for (int cx = 0; cx <= col; cx++) {
                 attr[cx] = eraseAttr;
+            }
         }
         if (length < col+1)
             length = col+1;
     }
 
-    public void clearFromTo(Term term, int from, int to, int eraseAttr) {
+    public void clearFromTo(Term term, int from, int to, Attr eraseAttr) {
         if (from > to)
             return;
         ensureCapacity(term, to+1);
@@ -341,9 +353,10 @@ final class Line {
 
         for (int cx = from; cx <= to; cx++)
             charAtPut(cx, ' ');
-        if (haveAttributes(eraseAttr)) {
-            for (int cx = from; cx <= to; cx++)
+        if (haveAttributes(!eraseAttr.isEmpty())) {
+            for (int cx = from; cx <= to; cx++) {
                 attr[cx] = eraseAttr;
+            }
         }
         if (length < to+1)
             length = to+1;
@@ -394,16 +407,24 @@ final class Line {
             int value, boolean on) {
         // HACK: value is the ANSI code, haveAttributes takes out own
         // compact encoding, but it only checks for 0 so it's OK.
-        if (!haveAttributes(value))
+        if (!haveAttributes(value != 0)) {
             return;
+        }
 
 	try {
 	    if (on) {
 		for (int c = bcol; c <= ecol; c++)
-		    attr[c] = Attr.setAttribute(attr[c], value);
+                    if(attr[c] != null) {
+                        attr[c] = new Attr();
+                    } else {
+                        attr[c].setAttribute(List.of(value));
+                    }
 	    } else {
-		for (int c = bcol; c <= ecol; c++)
-		    attr[c] = Attr.unsetAttribute(attr[c], value);
+		for (int c = bcol; c <= ecol; c++) {
+                    if(attr[c] != null) {
+                        attr[c].unsetAttribute(value);
+                    }
+                }
 	    }
 	} catch (ArrayIndexOutOfBoundsException x) {
 	    System.out.printf("bcol %d  ecol %d  capacity %d  length %d buf %d  attr %d", // NOI18N

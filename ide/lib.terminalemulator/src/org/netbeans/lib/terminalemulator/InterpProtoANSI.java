@@ -18,6 +18,8 @@
  */
 package org.netbeans.lib.terminalemulator;
 
+import java.util.List;
+
 /**
  * Stuff common to InterpANSI, InterpDtTerm and InterpXTerm.
  * @author ivan
@@ -443,13 +445,11 @@ class InterpProtoANSI extends InterpDumb {
 	    public String action(AbstractInterp ai, char c) {
 		// set graphics modes (bold, reverse video etc)
 		if (ai.noNumber()) {
-		    ai.ops.op_attr(0);	// reset everything
+		    ai.ops.op_attr(List.of(0));	// reset everything
 		} else {
-		    for (int n = 0; n <= ai.nNumbers(); n++) {
-                        final int attr = ai.numberAt(n);
-                        if (!((InterpProtoANSI) ai).dispatchAttr(ai, attr))
-                            return "ACT_ATTR: unrecognized attribute " + attr;  // NOI18N
-                    }
+                    List<Integer> numbers = ai.numbers();
+                    if (!((InterpProtoANSI) ai).dispatchAttr(ai, numbers))
+                        return "ACT_ATTR: unrecognized attribute " + numbers;  // NOI18N
 		}
 		return null;
 	    }
@@ -516,6 +516,16 @@ class InterpProtoANSI extends InterpDumb {
      * @return Whether the attribute code is valid for the Interp.
      */
     protected boolean dispatchAttr(AbstractInterp ai, int n) {
+        return false;
+    }
+
+    /**
+     * Process an attrib code in an Interp-specific manner.
+     * @param ai
+     * @param n The attribute code.
+     * @return Whether the attribute code is valid for the Interp.
+     */
+    protected boolean dispatchAttr(AbstractInterp ai, List<Integer> n) {
         return false;
     }
 

@@ -35,7 +35,7 @@ public class ActiveRegion {
     private final boolean nested;
     private LinkedList<ActiveRegion> children;
     private boolean has_end;
-    private int parentAttrs;      // attrs at the time this region began
+    private Attr parentAttrs;      // attrs at the time this region began
 
     ActiveRegion(ActiveRegion parent, Coord begin, boolean nested) {
         this.parent = parent;
@@ -43,11 +43,11 @@ public class ActiveRegion {
         this.nested = nested;
     }
 
-    void setParentAttrs(int attrs) {
+    void setParentAttrs(Attr attrs) {
         this.parentAttrs = attrs;
     }
 
-    int getParentAttrs() {
+    Attr getParentAttrs() {
         return parentAttrs;
     }
 

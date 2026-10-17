@@ -20,6 +20,8 @@
 package org.netbeans.lib.terminalemulator;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractInterp implements Interp {
 
@@ -112,9 +114,7 @@ public abstract class AbstractInterp implements Interp {
     private final String number[] = new String[MAX_NUMBERS];
 
     protected void resetNumber() {
-	for (int x = 0; x < MAX_NUMBERS; x++) {
-	    number[x] = "";
-	}
+	Arrays.setAll(number, i -> "");
 	numberx = 0;
     }
     protected void remember_digit(char c) {
@@ -140,5 +140,21 @@ public abstract class AbstractInterp implements Interp {
     }
     protected int nNumbers() {
 	return numberx;
+    }
+    protected List<Integer> numbers() {
+        int lastIndexToConsider = numberx;
+        if (!number[numberx].isEmpty()) {
+            lastIndexToConsider++;
+        }
+        return Arrays
+                .stream(number, 0, numberx + 1)
+                .map(s -> {
+                    try {
+                        return Integer.valueOf(s);
+                    } catch (NumberFormatException x) {
+                        return 0;
+                    }
+                })
+                .toList();
     }
 }

@@ -24,12 +24,12 @@ package org.netbeans.lib.terminalemulator;
  */
 class InterpProtoANSI extends InterpDumb {
 
-    protected static class Ascii {
+    private static class Ascii {
         public static final char ESC = 27;
         public static final char CTRL_N = 14;   // ASCII SO/ShiftOut
         public static final char CTRL_O = 15;   // ASCII SI/ShiftIn
     }
-    
+
     protected static class InterpTypeProtoANSI extends InterpTypeDumb {
 	protected final Actor act_reset_number = new ACT_RESET_NUMBER();
 	protected final Actor act_remember_digit = new ACT_REMEMBER_DIGIT();
@@ -160,7 +160,7 @@ class InterpProtoANSI extends InterpDumb {
                 return null;
             }
         }
-        
+
         private static final class ACT_AE implements Actor {
 	    @Override
             public String action(AbstractInterp ai, char c) {
@@ -229,19 +229,19 @@ class InterpProtoANSI extends InterpDumb {
 	private static final class ACT_SETG implements Actor {
 	    @Override
 	    public String action(AbstractInterp ai, char c) {
-                int gx = 0;
                 InterpProtoANSI i = (InterpProtoANSI) ai;
-                switch (i.rememberedChar) {
-                    case '(':           gx = 0;  break;
-                    case ')':           gx = 1;  break;
-                    case '*':           gx = 2;  break;
-                    case '+':           gx = 3;  break;
-                }
-                int fx = 0;
-                switch (c) {
-                    case 'B': fx = 0;   break;
-                    case '0': fx = 1;   break;
-                }
+                int gx = switch (i.rememberedChar) {
+                    case '(' -> 0;
+                    case ')' -> 1;
+                    case '*' -> 2;
+                    case '+' -> 3;
+                    default -> 0;
+                };
+                int fx = switch (c) {
+                    case 'B' -> 0;
+                    case '0' -> 1;
+                    default -> 0;
+                };
                 ai.ops.op_setG(gx, fx);
 		return null;
 	    }
@@ -308,7 +308,7 @@ class InterpProtoANSI extends InterpDumb {
 		    ai.ops.op_ho();
 		} else {
 		    ai.ops.op_cm(ai.numberAt(0), ai.numberAt(1));// row, col
-		} 
+		}
 		return null;
 	    }
 	}
@@ -321,15 +321,12 @@ class InterpProtoANSI extends InterpDumb {
 		} else {
 		    final int code = ai.numberAt(0);
                     switch (code) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            ai.ops.op_ed(code);
-                            break;
-                        default:
+                        case 0, 1, 2 -> ai.ops.op_ed(code);
+                        default -> {
                             return "ACT J: count of > 2 not supported";	// NOI18N
+                        }
                     }
-		} 
+		}
 		return null;
 	    }
 	}
@@ -342,15 +339,12 @@ class InterpProtoANSI extends InterpDumb {
 		} else {
                     final int code = ai.numberAt(0);
                     switch (code) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            ai.ops.op_el(code);
-                            break;
-                        default:
+                        case 0, 1, 2 -> ai.ops.op_el(code);
+                        default -> {
                             return "ACT K: count of > 2 not supported";	// NOI18N
+                        }
                     }
-		} 
+		}
 		return null;
 	    }
 	}
@@ -362,7 +356,7 @@ class InterpProtoANSI extends InterpDumb {
 		    ai.ops.op_al(1);
 		} else {
 		    ai.ops.op_al(ai.numberAt(0));
-		} 
+		}
 		return null;
 	    }
 	}
@@ -374,7 +368,7 @@ class InterpProtoANSI extends InterpDumb {
 		    ai.ops.op_dl(1);
 		} else {
 		    ai.ops.op_dl(ai.numberAt(0));
-		} 
+		}
 		return null;
 	    }
 	}
@@ -419,18 +413,14 @@ class InterpProtoANSI extends InterpDumb {
 		if (ai.noNumber()) {
 		    // Print screen
 		} else {
+                    // Ignored are:
+                    // 1 -> Print line
+                    // 4 -> Stop Print Log
+                    // 5 -> Start Print Log
 		    switch (ai.numberAt(0)) {
-			case 1:	// Print Line
-			case 4:	// Stop Print Log
-			case 5:	// Start Print Log
-			    break;
-			case 10:
-			    ai.ops.op_time(true);
-			    break;
-			case 11:
-			    ai.ops.op_time(false);
-			    break;
-		    } 
+			case 10 -> ai.ops.op_time(true);
+			case 11 -> ai.ops.op_time(false);
+		    }
 		}
 		return null;
 	    }
@@ -501,18 +491,18 @@ class InterpProtoANSI extends InterpDumb {
 	super(ops, type_singleton);
 	this.type = type_singleton;
 	setup();
-    } 
+    }
 
     protected InterpProtoANSI(Ops ops, InterpTypeProtoANSI type) {
 	super(ops, type);
 	this.type = type;
 	setup();
-    } 
+    }
 
     @Override
     public String name() {
 	return "proto-ansi";	// NOI18N
-    } 
+    }
 
     @Override
     public void reset() {

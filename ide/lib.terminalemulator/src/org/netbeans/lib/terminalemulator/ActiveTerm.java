@@ -46,6 +46,7 @@ public class ActiveTerm extends StreamTerm {
     /** Remember what cursor is currently active */
     private Cursor currentCursor;
 
+    @SuppressWarnings("this-escape")
     public ActiveTerm() {
 	super();
 
@@ -87,11 +88,11 @@ public class ActiveTerm extends StreamTerm {
 		ActiveRegion hl_region = findRegionToHilite(region);
 		if (hl_region == null)
 		    hilite(null, null);
-		else 
+		else
 		    hilite(hl_region.begin, hl_region.end);
 	    }
 	} );
-    } 
+    }
 
     private void setCursorEfficiently(Cursor cursor) {
         if (cursor == currentCursor)
@@ -113,7 +114,7 @@ public class ActiveTerm extends StreamTerm {
 
     public void setActionListener(ActiveTermListener listener) {
 	this.at_listener = listener;
-    } 
+    }
 
     private void hilite_help(Coord begin, Coord end, boolean on) {
 	if (begin == null && end == null)
@@ -122,17 +123,19 @@ public class ActiveTerm extends StreamTerm {
     }
 
     public void hilite(Coord begin, Coord end) {
-	if (end != null && end.row == 1 && end.col == 0)
-	    end = getCursorCoord();
+        Coord last_end_work = end;
+	if (last_end_work != null && last_end_work.row == 1 && last_end_work.col == 0) {
+	    last_end_work = getCursorCoord();
+        }
 	hilite_help(last_begin, last_end, false);
 	last_begin = (begin == null)? null: (Coord) begin.clone();
-	last_end = (end == null)? null: (Coord) end.clone();
-        hilite_help(begin, end, true);        
+        last_end = (last_end_work == null) ? null : (Coord) last_end_work.clone();
+        hilite_help(begin, last_end_work, true);
     }
 
     public void hilite(ActiveRegion region) {
 	hilite(region.begin, region.end);
-    } 
+    }
 
     public ActiveRegion beginRegion(boolean hyperlink) {
 	ActiveRegion region;
@@ -140,7 +143,7 @@ public class ActiveTerm extends StreamTerm {
 	    region = rm.beginRegion(getCursorCoord());
 	} catch (RegionException x) {
             return new ActiveRegion(null, new Coord(), false);
-	} 
+	}
         region.setParentAttrs(attrSave());
 	if (hyperlink) {
 	    setAttribute(34);		// fg -> blue
@@ -167,7 +170,7 @@ public class ActiveTerm extends StreamTerm {
 	}
 	// OLD setAttribute(0);		// reset
         attrRestore(endedRegion.getParentAttrs());
-    } 
+    }
 
     public ActiveRegion findRegion(Coord coord) {
 	return rm.findRegion(coord);
@@ -179,9 +182,9 @@ public class ActiveTerm extends StreamTerm {
 	    rm.cancelRegion();
 	} catch (RegionException x) {
 	    ;
-	} 
+	}
     }
-    
+
     @Override
     public void clear() {
         nullLasts();
@@ -209,9 +212,9 @@ public class ActiveTerm extends StreamTerm {
             ops().op_char(c);
         endRegion();
     }
-    
+
     private void nullLasts() {
         last_begin = null;
-        last_end = null;        
+        last_end = null;
     }
 }

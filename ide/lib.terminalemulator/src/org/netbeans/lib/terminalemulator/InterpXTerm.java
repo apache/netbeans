@@ -100,24 +100,19 @@ class InterpXTerm extends InterpProtoANSIX {
                 String p2 = i.text.substring(semix+1);
                 int code = Integer.parseInt(p1);
                 switch (code) {
-                    case 0:
+                    case 0 -> {
                         ai.ops.op_icon_name(p2);
                         ai.ops.op_win_title(p2);
-                        break;
-                    case 1:
-                        ai.ops.op_icon_name(p2);
-                        break;
-                    case 2:
-                        ai.ops.op_win_title(p2);
-                        break;
-                    case 3:
+                    }
+                    case 1 -> ai.ops.op_icon_name(p2);
+                    case 2 -> ai.ops.op_win_title(p2);
+                    case 3 -> {
                         /* LATER
                         cwd is a dttermism. For xterm we're supposed to set X properties
                         ai.ops.op_cwd(p2);
-                        */
-                        break;
-
-                    case 10: {
+                         */
+                    }
+                    case 10 -> {
                         // This is specific to nbterm!
                         int semix2 = p2.indexOf(';');
                         if (semix2 == -1)

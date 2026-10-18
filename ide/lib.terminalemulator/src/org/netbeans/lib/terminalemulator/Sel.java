@@ -93,8 +93,8 @@ class Sel implements ClipboardOwner {
     // Used by 'track()'.
     private Extent initial_word;
 
-    private Term term;
-    private State state;
+    private final Term term;
+    private final State state;
 
     // properties:
     private Color color = new Color(204, 204, 255);  // swing color
@@ -219,38 +219,38 @@ class Sel implements ClipboardOwner {
     }
 
     private boolean extend_work(Coord p, int tracking) {
-	/*
-	 * return true if a screen refresh is needed
-	 */
-	if (tracking == Sel.SEL_NONE) {
-	    return false;
-
-	} else if (tracking == Sel.SEL_CHAR) {
-	    sel_extent = p;
-
-	} else if (tracking == Sel.SEL_WORD) {
-	    BExtent Bnew_range = term.buf().find_word(term.getWordDelineator(), p.toBCoord(term.firsta()));
-	    Extent new_range = Bnew_range.toExtent(term.firsta());
-	    if (p.compareTo(initial_word.begin) < 0) {
-		sel_origin = new Coord(new_range.begin);
-		sel_extent = initial_word.end;
-	    } else if (p.compareTo(initial_word.end) > 0) {
-		sel_origin = initial_word.begin;
-		sel_extent = new Coord(new_range.end);
-	    } else {
-		sel_origin = initial_word.begin;
-		sel_extent = initial_word.end;
-	    }
-
-	} else if (tracking == Sel.SEL_LINE) {
-	    if (p.compareTo(sel_origin) > 0) {
-		sel_origin = Coord.make(sel_origin.row, 0);
-		sel_extent = Coord.make(p.row, term.buf().totalCols());
-	    } else {
-		sel_origin = Coord.make(sel_origin.row, term.buf().totalCols());
-		sel_extent = Coord.make(p.row, 0);
-	    }
-	}
+        /*
+         * return true if a screen refresh is needed
+         */
+        switch (tracking) {
+            case Sel.SEL_NONE -> {
+                return false;
+            }
+            case Sel.SEL_CHAR -> sel_extent = p;
+            case Sel.SEL_WORD -> {
+                BExtent Bnew_range = term.buf().find_word(term.getWordDelineator(), p.toBCoord(term.firsta()));
+                Extent new_range = Bnew_range.toExtent(term.firsta());
+                if (p.compareTo(initial_word.begin) < 0) {
+                    sel_origin = new Coord(new_range.begin);
+                    sel_extent = initial_word.end;
+                } else if (p.compareTo(initial_word.end) > 0) {
+                    sel_origin = initial_word.begin;
+                    sel_extent = new Coord(new_range.end);
+                } else {
+                    sel_origin = initial_word.begin;
+                    sel_extent = initial_word.end;
+                }
+            }
+            case Sel.SEL_LINE -> {
+                if (p.compareTo(sel_origin) > 0) {
+                    sel_origin = Coord.make(sel_origin.row, 0);
+                    sel_extent = Coord.make(p.row, term.buf().totalCols());
+                } else {
+                    sel_origin = Coord.make(sel_origin.row, term.buf().totalCols());
+                    sel_extent = Coord.make(p.row, 0);
+                }
+            }
+        }
 	return true;
     }
 
@@ -310,6 +310,7 @@ class Sel implements ClipboardOwner {
 	term.fireSelectionExtentChanged();
     }
 
+    @Override
     public void lostOwnership(Clipboard cb, Transferable c) {
 	/*
 	 * Part of the ClipboardOwner interface.
@@ -331,12 +332,11 @@ class Sel implements ClipboardOwner {
 
         if (x.begin != null && x.end != null) {
             final StringBuffer text = new StringBuffer();
-            term.visitLines(x.begin, x.end, true, new LineVisitor() {
-                public boolean visit(Line l, int row, int bcol, int ecol) {
-                    text.append(l.text(bcol, ecol));
-                    return true;
-                }
-            } );
+            term.visitLines(x.begin, x.end, true,
+                    (Line l, int row, int bcol, int ecol) -> {
+                        text.append(l.text(bcol, ecol));
+                        return true;
+                    });
             return text.toString();
         }
 
@@ -422,22 +422,21 @@ class Sel implements ClipboardOwner {
     }
 
     void paint(final Graphics g) {
-	/*
+        /*
 	 * Paint the selection.
-	 */
+         */
 
-	Extent x = getExtent();
-	if (x == null)
-	    return;
-	x.order();
+        Extent x = getExtent();
+        if (x == null) {
+            return;
+        }
+        x.order();
 
-	// DEBUG System.out.println("Sel.paint extent: " + x);	// NOI18N
-
-	term.visitLines(x.begin, x.end, true, new LineVisitor() {
-	    public boolean visit(Line l, int row, int bcol, int ecol) {
-		paint(g, row, bcol, ecol);
-		return true;
-	    }
-	} );
+        // DEBUG System.out.println("Sel.paint extent: " + x);	// NOI18N
+        term.visitLines(x.begin, x.end, true,
+                (Line l, int row, int bcol, int ecol) -> {
+                    paint(g, row, bcol, ecol);
+                    return true;
+                });
     }
 }

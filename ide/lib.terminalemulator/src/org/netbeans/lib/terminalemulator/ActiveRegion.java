@@ -31,8 +31,8 @@ public class ActiveRegion {
     public Coord end = new Coord();
 
     // accessible to RegionManager
-    ActiveRegion parent;
-    boolean nested;
+    private final ActiveRegion parent;
+    private final boolean nested;
     private LinkedList<ActiveRegion> children;
     private boolean has_end;
     private int parentAttrs;      // attrs at the time this region began
@@ -53,6 +53,10 @@ public class ActiveRegion {
 
     public ActiveRegion parent() {
         return this.parent;
+    }
+
+    boolean isNested() {
+        return nested;
     }
 
     public Extent getExtent() {
@@ -148,6 +152,8 @@ public class ActiveRegion {
      * Mark this region as one that may be converted to a selection.
      * <p>
      * This is just a convenience state-keeping flag
+     *
+     * @param selectable
      */
     public void setSelectable(boolean selectable) {
         this.selectable = selectable;
@@ -155,6 +161,8 @@ public class ActiveRegion {
 
     /**
      * Return the value set using setSelectable().
+     *
+     * @return
      */
     public boolean isSelectable() {
         return selectable;
@@ -166,6 +174,8 @@ public class ActiveRegion {
      * over it.
      * <p>
      * This is just a convenience state-keeping flag
+     *
+     * @param feedback
      */
     public void setFeedbackEnabled(boolean feedback) {
         this.feedback_enabled = feedback;
@@ -173,6 +183,8 @@ public class ActiveRegion {
 
     /**
      * Return the value set using setFeedback().
+     *
+     * @return
      */
     public boolean isFeedbackEnabled() {
         return feedback_enabled;
@@ -182,6 +194,8 @@ public class ActiveRegion {
     /**
      * Mark this region as one that will provide feedback in it's containing
      * region.
+     *
+     * @param feedback_via_parent
      */
     public void setFeedbackViaParent(boolean feedback_via_parent) {
         this.feedback_via_parent = feedback_via_parent;
@@ -206,14 +220,18 @@ public class ActiveRegion {
 
     /**
      * Associate additional data with this ActiveRegion.
+     *
+     * @param object
      */
     public void setUserObject(Object object) {
         this.user_object = object;
     }
 
     /**
-     * Retrieve the additional data associated with this ActiveRegion through 
+     * Retrieve the additional data associated with this ActiveRegion through
      * setUserObject.
+     *
+     * @return
      */
     public Object getUserObject() {
         return user_object;
@@ -222,15 +240,15 @@ public class ActiveRegion {
 
     // siblings
     //
-    // I've chosen to delegate finding of siblings to the parent instead of 
+    // I've chosen to delegate finding of siblings to the parent instead of
     // using explicit sibling links. Here are the reasons:
-    // - explicit links take up memory. I believe in the long run that is 
+    // - explicit links take up memory. I believe in the long run that is
     //   more costly than dumb searches.
     // - AR's get created when stuff gets rendered. We want to render stuff
     //   as fast as possible. So instead of doing work at creation time
     //   which needs to be supra-human speed, we do the work at query time
     //   which is usualy in reponse to human actions and need not be too fast.
-    // 
+    //
     // Ultimately a Vector is probably a better substitute for LinkedList
     // In that case each child could remember it's index in it's parents
     // vector (less storage than two pointers, and vector has less overhead
@@ -238,6 +256,7 @@ public class ActiveRegion {
     // because ActiveRegions are not editable.
     /**
      * Return the first child of this
+     * @return
      */
     public ActiveRegion firstChild() {
         if (children == null) {
@@ -248,6 +267,8 @@ public class ActiveRegion {
 
     /**
      * Return the last child of this
+     *
+     * @return
      */
     public ActiveRegion lastChild() {
         if (children == null) {
@@ -258,6 +279,8 @@ public class ActiveRegion {
 
     /**
      * Get the previous sibling of this region
+     *
+     * @return
      */
     public ActiveRegion getPreviousSibling() {
         if (parent != null) {

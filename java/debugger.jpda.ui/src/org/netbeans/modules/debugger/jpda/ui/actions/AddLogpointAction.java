@@ -60,7 +60,7 @@ public final class AddLogpointAction implements ActionListener {
 
         LineBreakpoint lb = LineBreakpoint.create(where, at);
         lb.setSuspend(JPDABreakpoint.SUSPEND_NONE);
-        lb.setPrintText(Bundle.MSG_LogpointAt("{className}", "{methodName}", at, "{locals}"));
+        lb.setPrintText(Bundle.MSG_LogpointAt("{className}", "{methodName}", "{lineNumber}", "{locals}"));
 
         DebuggerManager.getDebuggerManager().addBreakpoint(lb);
     }

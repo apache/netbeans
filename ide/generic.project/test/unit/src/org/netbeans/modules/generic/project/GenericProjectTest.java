@@ -20,9 +20,11 @@
 package org.netbeans.modules.generic.project;
 
 import java.io.File;
+import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -65,6 +67,25 @@ public class GenericProjectTest extends NbTestCase {
         assertNotNull(node);
         Node[] children = node.getChildren().getNodes(true);
         assertEquals(2, children.length);
+    }
+
+    public void testSubprojectsAreFirstLevelOnly() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject child = FileUtil.createFolder(root, "child"); // NOI18N
+        FileUtil.createData(child, GenericProject.MARKER_FILE);
+        FileUtil.createFolder(root, "plain"); // NOI18N
+        FileUtil.createData(root, "readme.txt"); // NOI18N
+        FileObject deep = FileUtil.createFolder(FileUtil.createFolder(child, "inner"), "deep"); // NOI18N
+        FileUtil.createData(deep, GenericProject.MARKER_FILE);
+
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        SubprojectProvider spp = prj.getLookup().lookup(SubprojectProvider.class);
+        assertNotNull(spp);
+        Set<? extends Project> subs = spp.getSubprojects();
+        assertEquals(1, subs.size());
+        assertEquals(child, subs.iterator().next().getProjectDirectory());
     }
 
     private FileObject newProjectDir() throws Exception {

@@ -24,6 +24,7 @@ import java.io.File;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -52,6 +53,10 @@ import org.openide.util.NbBundle.Messages;
     "LBL_CreatedFolder=Project &Folder:",
     "LBL_Browse=Br&owse...",
     "LBL_BrowseDialogTitle=Select Project Location",
+    "LBL_LocalMarker=Keep repository &clean (store marker locally)",
+    "TT_LocalMarker=<html>"
+            + "<p>The project marker is stored in the <b>IDE's user directory</b> instead of the .nbgp file in the project folder.</p><br>"
+            + "<p>The project is then only recognized by this IDE installation at this location.</p></html>",
     "MSG_DefaultProjectName=MyGenericProject",
     "ERR_InvalidName=Project Name is not a valid folder name.",
     "ERR_InvalidPath=Project Folder is not a valid path.",
@@ -70,6 +75,7 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
     private final JTextField projectLocation = new JTextField();
     private final JTextField createdFolder = new JTextField();
     private final JButton browseButton = new JButton();
+    private final JCheckBox localMarker = new JCheckBox();
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
     @Override
@@ -119,6 +125,7 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
         String name = (String) wiz.getProperty("name"); // NOI18N
         projectName.setText(name == null ? Bundle.MSG_DefaultProjectName() : name);
         projectName.selectAll();
+        localMarker.setSelected(false);
         updateCreatedFolder();
     }
 
@@ -126,6 +133,7 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
     public void storeSettings(WizardDescriptor settings) {
         settings.putProperty("name", projectName.getText().strip()); // NOI18N
         settings.putProperty("projdir", new File(createdFolder.getText().strip())); // NOI18N
+        settings.putProperty("localMarker", localMarker.isSelected()); // NOI18N
     }
 
     @Override
@@ -181,6 +189,8 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
         createdFolder.setEditable(false);
         Mnemonics.setLocalizedText(browseButton, Bundle.LBL_Browse());
         browseButton.addActionListener(e -> browse());
+        Mnemonics.setLocalizedText(localMarker, Bundle.LBL_LocalMarker());
+        localMarker.setToolTipText(Bundle.TT_LocalMarker());
 
         // Making all labels stretchable snaps the shorter ones to
         // the widest label, so the fields start at the same x and
@@ -205,6 +215,9 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
                         .addComponent(browseButton))
                     .addComponent(createdFolder, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(localMarker))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(Alignment.LEADING)
@@ -221,6 +234,8 @@ final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(folderLabel)
                     .addComponent(createdFolder))
+                .addGap(18, 18, 18)
+                .addComponent(localMarker)
                 .addGap(0, 0, Short.MAX_VALUE)
             )
         );

@@ -75,6 +75,7 @@ PropertyChangeListener {
         ("\\\\");
     private static final String threadNamePattern = "{threadName}";
     private static final String classNamePattern = "{className}";
+    private static final String localsPattern = "{locals}";
     private static final Pattern methodNamePattern = Pattern.compile
         ("\\{methodName\\}");
     private static final Pattern lineNumberPattern = Pattern.compile
@@ -375,6 +376,11 @@ PropertyChangeListener {
                 printText = selectCondition(printText, threadStartedCondition, false);
             }
         }
+
+        int printLocals = printText.indexOf(localsPattern);
+        if (printLocals != -1) {
+            printText = printText.substring(0, printLocals) + printText.substring(printLocals + localsPattern.length());
+        }
              
         // 5) resolve all expressions {=expression}
         printExpressions(event, printText, (msg, action) -> {
@@ -382,6 +388,33 @@ PropertyChangeListener {
         }, (msg) -> {
             io.println(msg, null);
         });
+
+        if (printLocals != -1) {
+            CallStackFrame csf = findTopFrame(event);
+            if (csf != null) {
+                try {
+                    for (var refValue : csf.getLocalVariables()) {
+                        io.printWithAction("  ", null, false);
+                        io.printWithAction(refValue.getName(), null, false);
+                        io.printWithAction(" = ", null, false);
+                        if (refValue instanceof ObjectVariable obj && !isNull(obj)) {
+                            var sessionRef = new WeakReference<>(session);
+                            io.printWithAction(obj.getValue(), () -> {
+                                var s = sessionRef.get();
+                                var ok = s != null && ObjectInfoProvider.showObjectInfo(s, obj);
+                                if (!ok) {
+                                    io.println("Cannot display details of " + obj.getValue(), null);
+                                }
+                            }, true);
+                        } else {
+                            io.println(refValue.getValue(), null);
+                        }
+                    }
+                } catch (AbsentInformationException ex) {
+                    // no locals info
+                }
+            }
+        }
     }
 
     /* Processing all expressions. Expressions take form of {=expression}.
@@ -415,16 +448,7 @@ PropertyChangeListener {
                 String beforeExpression = printText.substring(0, m.start());
                 print.accept(beforeExpression, null);
 
-                CallStackFrame csf = null;
-                JPDAThread t = event.getThread();
-                if (t != null && !event.isThreadDeath()) {
-                    try {
-                        CallStackFrame[] topFramePtr = t.getCallStack(0, 1);
-                        if (topFramePtr.length > 0) {
-                            csf = topFramePtr[0];
-                        }
-                    } catch (AbsentInformationException aiex) {}
-                }
+                CallStackFrame csf = findTopFrame(event);
                 Variable refValue = theDebugger.evaluate(expression, csf);
                 if (refValue instanceof ObjectVariable obj && !isNull(obj)) {
                     var sessionRef = new WeakReference<>(session);
@@ -466,6 +490,19 @@ PropertyChangeListener {
         for (var errors : dumpErrors) {
             errors.run();
         }
+    }
+
+    private CallStackFrame findTopFrame(JPDABreakpointEvent event) {
+        if (event.getThread() != null && !event.isThreadDeath()) {
+            try {
+                CallStackFrame[] topFramePtr = event.getThread().getCallStack(0, 1);
+                if (topFramePtr.length > 0) {
+                    return topFramePtr[0];
+                }
+            } catch (AbsentInformationException aiex) {
+            }
+        }
+        return null;
     }
 
     private static boolean isNull(ObjectVariable obj) {

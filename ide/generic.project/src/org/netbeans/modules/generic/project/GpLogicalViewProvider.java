@@ -36,7 +36,7 @@ import org.openide.util.lookup.Lookups;
  * The logical view of a generic project simply shows all files contained
  * in the project directory.
  */
-public record GenericProjectLogicalViewProvider(GenericProject project) implements LogicalViewProvider {
+public record GpLogicalViewProvider(GenericProject project) implements LogicalViewProvider {
 
     @Override
     public Node createLogicalView() {

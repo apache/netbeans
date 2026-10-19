@@ -45,13 +45,13 @@ public class GenericProjectTest extends NbTestCase {
 
     public void testNoMarkerNotProject() throws Exception {
         FileObject root = newProjectDir();
-        assertFalse(new GenericProject.GenericProjectFactory().isProject(root));
+        assertFalse(new GenericProject.GpFactory().isProject(root));
     }
 
     public void testMarkerFileIsProject() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
-        assertTrue(new GenericProject.GenericProjectFactory().isProject(root));
+        assertTrue(new GenericProject.GpFactory().isProject(root));
     }
 
     public void testLogicalViewShowsAllFiles() throws Exception {
@@ -86,6 +86,20 @@ public class GenericProjectTest extends NbTestCase {
         Set<? extends Project> subs = spp.getSubprojects();
         assertEquals(1, subs.size());
         assertEquals(child, subs.iterator().next().getProjectDirectory());
+    }
+
+    public void testCreateProject() throws Exception {
+        clearWorkDir();
+        File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
+        Set<FileObject> created = GpWizardIterator.createProject(dir);
+        assertEquals(1, created.size());
+        FileObject dirFo = created.iterator().next();
+        FileObject marker = dirFo.getFileObject(GenericProject.MARKER_FILE);
+        assertNotNull(marker);
+        assertEquals(dir.getName(), marker.getAttribute("displayName")); // NOI18N
+        Project prj = ProjectManager.getDefault().findProject(dirFo);
+        assertNotNull(prj);
+        assertTrue(prj instanceof GenericProject);
     }
 
     private FileObject newProjectDir() throws Exception {

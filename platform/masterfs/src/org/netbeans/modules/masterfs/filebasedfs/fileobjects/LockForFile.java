@@ -19,27 +19,17 @@
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
 import org.netbeans.modules.masterfs.filebasedfs.utils.Utils;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * FileLock with support for fine grained hard locking to ensure better performance
@@ -50,7 +40,6 @@ public class LockForFile extends FileLock {
     private static final ConcurrentHashMap<String, Namesakes> name2Namesakes = new ConcurrentHashMap<>();
             static final String PREFIX = ".LCK";
             static final String SUFFIX = "~";
-    private static final Logger LOGGER = Logger.getLogger(LockForFile.class.getName());
     private File file;
     private File lock;
     private boolean valid = false;
@@ -288,97 +277,4 @@ public class LockForFile extends FileLock {
         return filename.startsWith(PREFIX) && filename.endsWith(SUFFIX);
     }
 
-    public static interface HardLockRegistry {
-        public static HardLockRegistry getInstance() {
-            return HardLockRegistryInstance.INSTANCE;
-        }
-
-        public void doHardLock(File hardLock, String absolutePath) throws IOException;
-
-        public boolean doHardUnlock(File hardLock);
-
-        public boolean hardLockExists(File hardLock) throws IOException;
-
-        public String getHardLockContent(File hardLock);
-
-    }
-
-    //init the HardLockRegistry instance lazily:
-    private static final class HardLockRegistryInstance {
-        public static final HardLockRegistry INSTANCE = Lookup.getDefault().lookup(HardLockRegistry.class);
-    }
-
-    @ServiceProvider(service=HardLockRegistry.class, position=100)
-    public static final class FileBaseHardLockRegistry implements HardLockRegistry {
-
-        public void doHardLock(File hardLock, String absolutePath) throws IOException {
-            hardLock.getParentFile().mkdirs();
-            hardLock.createNewFile();
-            try (OutputStream os = Files.newOutputStream(hardLock.toPath())) {
-                os.write(absolutePath.getBytes());
-            }
-        }
-
-        public boolean doHardUnlock(File hardLock) {
-            return hardLock.delete();
-        }
-
-        public boolean hardLockExists(File hardLock) throws IOException {
-            return FileChangedManager.getInstance().exists(hardLock);
-        }
-
-        public String getHardLockContent(File hardLock) {
-            if (FileChangedManager.getInstance().exists(hardLock)) {
-                try (InputStream is = new FileInputStream(hardLock)) {
-                    byte[] path = new byte[is.available()];
-                    if (path.length > 0 && is.read(path) == path.length) {
-                        return new String(path);
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-
-            return null;
-        }
-
-    }
-
-    @ServiceProvider(service=HardLockRegistry.class, position=1000)
-    public static final class InMemoryHardLockRegistry implements HardLockRegistry {
-        private final ConcurrentHashMap<String, String> hardLocks2Content =
-                new ConcurrentHashMap<>();
-
-        private static String getKey(File hardLock) throws IOException {
-            Path realParentPath = hardLock.toPath().getParent().toRealPath();
-            return realParentPath.resolve(hardLock.getName()).toString();
-        }
-
-        public void doHardLock(File hardLock, String absolutePath) throws IOException {
-            hardLocks2Content.put(getKey(hardLock), absolutePath);
-        }
-
-        public boolean doHardUnlock(File hardLock) {
-            try {
-                return hardLocks2Content.remove(getKey(hardLock)) != null;
-            } catch (IOException ex) {
-                LOGGER.log(Level.FINE, null, ex);
-                return false;
-            }
-        }
-
-        public boolean hardLockExists(File hardLock) throws IOException {
-            return hardLocks2Content.containsKey(getKey(hardLock));
-        }
-
-        public String getHardLockContent(File hardLock) {
-            try {
-                return hardLocks2Content.get(getKey(hardLock));
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                return null;
-            }
-        }
-
-    }
 }

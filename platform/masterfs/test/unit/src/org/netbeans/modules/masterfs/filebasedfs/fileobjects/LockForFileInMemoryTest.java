@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
-import org.netbeans.modules.masterfs.filebasedfs.fileobjects.LockForFile.HardLockRegistry;
-import org.netbeans.modules.masterfs.filebasedfs.fileobjects.LockForFile.InMemoryHardLockRegistry;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.HardLockRegistry;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.InMemoryHardLockRegistry;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;

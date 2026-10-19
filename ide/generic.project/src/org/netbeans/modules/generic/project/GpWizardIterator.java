@@ -59,7 +59,8 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
     @Override
     public Set<FileObject> instantiate() throws IOException {
         File projectDir = FileUtil.normalizeFile((File) wiz.getProperty("projdir")); // NOI18N
-        Set<FileObject> created = createProject(projectDir);
+        boolean localMarker = Boolean.TRUE.equals(wiz.getProperty("localMarker")); // NOI18N
+        Set<FileObject> created = createProject(projectDir, localMarker);
         File parent = projectDir.getParentFile();
         if (parent != null && parent.exists()) {
             ProjectChooser.setProjectsFolder(parent);
@@ -68,9 +69,11 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
     }
 
     /**
-     * Creates the project directory containing the marker file.
+     * Creates the project directory containing the marker file, or —
+     * for {@code localMarker} — marks it as a local project by the
+     * FileObject attribute only.
      */
-    static Set<FileObject> createProject(File projectDir) throws IOException {
+    static Set<FileObject> createProject(File projectDir, boolean localMarker) throws IOException {
         if (!projectDir.exists() && !projectDir.mkdirs()) {
             throw new IOException("Cannot create folder: " + projectDir); // NOI18N
         }
@@ -78,7 +81,11 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
         if (dir == null) {
             throw new IOException("Cannot map folder to the file system: " + projectDir); // NOI18N
         }
-        GenericProject.createMarker(dir);
+        if (localMarker) {
+            GenericProject.setMarkerState(dir, false);
+        } else {
+            GenericProject.createMarker(dir);
+        }
         return Set.of(dir);
     }
 
@@ -101,6 +108,7 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
     public void uninitialize(WizardDescriptor wiz) {
         this.wiz.putProperty("projdir", null); // NOI18N
         this.wiz.putProperty("name", null); // NOI18N
+        this.wiz.putProperty("localMarker", null); // NOI18N
         this.wiz = null;
         panels = null;
     }

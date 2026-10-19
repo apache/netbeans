@@ -43,13 +43,21 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * A generic project. Any directory containing the {@link #MARKER_FILE} is
- * recognized as a generic project. The logical view of the project simply shows
+ * A generic project. A directory is recognized as a generic project
+ * if it contains the {@link #MARKER_FILE} or, for local
+ * (private) projects, if it carries the {@link #MARKER_ATTRIBUTE}
+ * FileObject attribute. The logical view of the project simply shows
  * all files contained in the project directory.
  */
 public final class GenericProject implements Project {
 
     public static final String MARKER_FILE = ".nbgp"; // NOI18N
+
+    /**
+     * Name of the FileObject attribute that marks a project directory
+     * as a generic project without the marker file (local project).
+     */
+    public static final String MARKER_ATTRIBUTE = "org.netbeans.modules.generic.project"; // NOI18N
 
     /**
      * The project type key used for this project type's contributions
@@ -87,7 +95,23 @@ public final class GenericProject implements Project {
 
     static boolean isProject(FileObject projectDirectory) {
         return projectDirectory != null
-            && projectDirectory.getFileObject(MARKER_FILE) != null;
+            && (hasMarker(projectDirectory) || isAttributeProject(projectDirectory));
+    }
+
+    /**
+     * Whether the given directory contains the marker file.
+     */
+    public static boolean hasMarker(FileObject dir) {
+        return dir != null && dir.getFileObject(MARKER_FILE) != null;
+    }
+
+    /**
+     * Whether the given directory is marked as a generic project by
+     * the {@link #MARKER_ATTRIBUTE} FileObject attribute (local
+     * project).
+     */
+    public static boolean isAttributeProject(FileObject dir) {
+        return dir != null && Boolean.TRUE.equals(dir.getAttribute(MARKER_ATTRIBUTE));
     }
 
     /**
@@ -101,6 +125,34 @@ public final class GenericProject implements Project {
             marker.setAttribute("displayName", dir.getNameExt()); // NOI18N
         }
         return marker;
+    }
+
+    /**
+     * Adjusts the directory so the marker is (or isn't) a file in the
+     * working tree.
+     *
+     * <p>Turning the marker off stores the {@link #MARKER_ATTRIBUTE}
+     * <em>before</em> deleting the marker file, and turning it on
+     * creates the marker <em>before</em> clearing the attribute, so
+     * the directory is never in a state where it is unrecognized.
+     *
+     * @param dir the project directory
+     * @param markerFile whether the marker file should exist in the
+     *        working tree afterwards
+     */
+    public static void setMarkerState(FileObject dir, boolean markerFile) throws IOException {
+        if (markerFile) {
+            createMarker(dir);
+            if (isAttributeProject(dir)) {
+                dir.setAttribute(MARKER_ATTRIBUTE, null);
+            }
+        } else {
+            dir.setAttribute(MARKER_ATTRIBUTE, Boolean.TRUE);
+            FileObject marker = dir.getFileObject(MARKER_FILE);
+            if (marker != null) {
+                marker.delete();
+            }
+        }
     }
 
     @ServiceProvider(service=ProjectFactory.class)
@@ -121,7 +173,14 @@ public final class GenericProject implements Project {
 
         @Override
         public void saveProject(Project project) throws IOException, ClassCastException {
-            createMarker(project.getProjectDirectory());
+            FileObject dir = project.getProjectDirectory();
+            if (isAttributeProject(dir)) {
+                // local project: recognition lives in the FileObject
+                // attribute, never (re)create the marker file
+                dir.setAttribute(MARKER_ATTRIBUTE, Boolean.TRUE);
+            } else {
+                createMarker(dir);
+            }
         }
 
     }

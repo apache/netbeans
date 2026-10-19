@@ -19,8 +19,12 @@
 
 package org.netbeans.modules.generic.project.ui.customizer;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +34,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.generic.project.GenericProject;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -45,6 +50,10 @@ import org.openide.util.NbBundle.Messages;
     "LBL_General=General",
     "LBL_Name=Name:",
     "LBL_Location=Location:",
+    "LBL_MarkerFile=Marker file in project directory",
+    "TT_MarkerFile=<html>"
+            + "<p>When unchecked, the <b>.nbgp</b> marker file is <b>removed</b> from the project directory.</p>"
+            + "<p>The project becomes a <b>local</b> (private) project.</p></html>",
 })
 public final class GpCompositeCategoryProvider implements ProjectCustomizer.CompositeCategoryProvider {
 
@@ -70,13 +79,17 @@ public final class GpCompositeCategoryProvider implements ProjectCustomizer.Comp
     public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
         Project prj = context.lookup(Project.class);
         ProjectInformation info = prj != null ? prj.getLookup().lookup(ProjectInformation.class) : null;
+        FileObject projectDir = prj != null ? prj.getProjectDirectory() : null;
 
         JLabel nameLabel = new JLabel(Bundle.LBL_Name());
         JLabel locationLabel = new JLabel(Bundle.LBL_Location());
         JTextField nameField = new JTextField(info != null ? info.getName() : "");
-        JTextField locationField = new JTextField(prj != null ? prj.getProjectDirectory().getPath() : "");
+        JTextField locationField = new JTextField(projectDir != null ? projectDir.getPath() : "");
         nameField.setEditable(false);
         locationField.setEditable(false);
+        JCheckBox markerBox = new JCheckBox(Bundle.LBL_MarkerFile());
+        markerBox.setToolTipText(Bundle.TT_MarkerFile());
+        markerBox.setSelected(projectDir != null && GenericProject.hasMarker(projectDir));
 
         JPanel panel = new JPanel();
         GroupLayout layout = new GroupLayout(panel);
@@ -93,6 +106,9 @@ public final class GpCompositeCategoryProvider implements ProjectCustomizer.Comp
                     .addComponent(nameField, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                     .addComponent(locationField, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(markerBox))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(Alignment.LEADING)
@@ -104,8 +120,21 @@ public final class GpCompositeCategoryProvider implements ProjectCustomizer.Comp
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(locationLabel)
                     .addComponent(locationField))
+                .addGap(18, 18, 18)
+                .addComponent(markerBox)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+        if (projectDir != null) {
+            // invoked on OK, off the AWT thread, in ProjectManager write access
+            category.setStoreListener(evt -> {
+                try {
+                    GenericProject.setMarkerState(projectDir, markerBox.isSelected());
+                } catch (IOException ex) {
+                    Logger.getLogger(GpCompositeCategoryProvider.class.getName())
+                        .log(Level.WARNING, "Cannot change marker state", ex);
+                }
+            });
+        }
         return panel;
     }
 

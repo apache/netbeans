@@ -54,6 +54,12 @@ public class GenericProjectTest extends NbTestCase {
         assertTrue(new GenericProject.GpFactory().isProject(root));
     }
 
+    public void testAttributeOnlyIsProject() throws Exception {
+        FileObject root = newProjectDir();
+        root.setAttribute(GenericProject.MARKER_ATTRIBUTE, Boolean.TRUE);
+        assertTrue(new GenericProject.GpFactory().isProject(root));
+    }
+
     public void testLogicalViewShowsAllFiles() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
@@ -91,7 +97,7 @@ public class GenericProjectTest extends NbTestCase {
     public void testCreateProject() throws Exception {
         clearWorkDir();
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
-        Set<FileObject> created = GpWizardIterator.createProject(dir);
+        Set<FileObject> created = GpWizardIterator.createProject(dir, false);
         assertEquals(1, created.size());
         FileObject dirFo = created.iterator().next();
         FileObject marker = dirFo.getFileObject(GenericProject.MARKER_FILE);
@@ -100,6 +106,46 @@ public class GenericProjectTest extends NbTestCase {
         Project prj = ProjectManager.getDefault().findProject(dirFo);
         assertNotNull(prj);
         assertTrue(prj instanceof GenericProject);
+    }
+
+    public void testCreateProjectLocal() throws Exception {
+        clearWorkDir();
+        File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
+        Set<FileObject> created = GpWizardIterator.createProject(dir, true);
+        assertEquals(1, created.size());
+        FileObject dirFo = created.iterator().next();
+        assertNull(dirFo.getFileObject(GenericProject.MARKER_FILE));
+        assertEquals(Boolean.TRUE, dirFo.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+        Project prj = ProjectManager.getDefault().findProject(dirFo);
+        assertNotNull(prj);
+        assertTrue(prj instanceof GenericProject);
+    }
+
+    public void testSetMarkerStateLocalAndBack() throws Exception {
+        FileObject root = newProjectDir();
+        GenericProject.createMarker(root);
+        assertTrue(GenericProject.hasMarker(root));
+
+        GenericProject.setMarkerState(root, false);
+        assertFalse(GenericProject.hasMarker(root));
+        assertEquals(Boolean.TRUE, root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+        assertTrue(new GenericProject.GpFactory().isProject(root));
+
+        GenericProject.setMarkerState(root, true);
+        assertTrue(GenericProject.hasMarker(root));
+        assertNull(root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+    }
+
+    public void testSaveProjectLocalKeepsNoMarker() throws Exception {
+        clearWorkDir();
+        File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
+        GpWizardIterator.createProject(dir, true);
+        FileObject root = FileUtil.toFileObject(dir);
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        new GenericProject.GpFactory().saveProject(prj);
+        assertNull(root.getFileObject(GenericProject.MARKER_FILE));
+        assertEquals(Boolean.TRUE, root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
     }
 
     private FileObject newProjectDir() throws Exception {

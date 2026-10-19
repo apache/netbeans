@@ -20,14 +20,18 @@ package org.netbeans.modules.debugger.jpda.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.modules.debugger.jpda.ui.EditorContextBridge;
-import org.openide.cookies.EditorCookie;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionState;
+import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
@@ -35,9 +39,13 @@ import org.openide.util.NbBundle.Messages;
         id = "org.netbeans.modules.debugger.jpda.ui.actions.AddLogpointAction"
 )
 @ActionRegistration(
-        displayName = "#CTL_AddLogpointAction"
+        displayName = "#CTL_AddLogpointAction",
+        enabledOn = @ActionState( property = "hasJavaSource", type = Action.class )
 )
-@ActionReference(path = "Editors/text/x-java/Popup", position = 1900)
+@ActionReferences({
+    @ActionReference(path = "Editors/text/x-java/Popup", position = 1900),
+    @ActionReference(path = "Editors/AnnotationTypes/BreakpointActionsWithToggleNew", position = 400)
+})
 @Messages({
         "CTL_AddLogpointAction=Add &Logpoint",
         "# {0} - clazz name",
@@ -46,12 +54,22 @@ import org.openide.util.NbBundle.Messages;
         "# {3} - suffix",
         "MSG_LogpointAt=Logpoint at {0}.{1}:{2} {3}"
 })
-public final class AddLogpointAction implements ActionListener {
-    private final EditorCookie context;
+public final class AddLogpointAction extends AbstractAction {
+    private final DataObject context;
 
-    public AddLogpointAction(EditorCookie context) {
+    public AddLogpointAction(DataObject context) {
         this.context = context;
     }
+
+    @Override
+    public Object getValue(String key) {
+        if ("hasJavaSource".equals(key)) {
+            String mime = context.getPrimaryFile().getMIMEType("text/x-java");
+            return "text/x-java".equals(mime);
+        }
+        return super.getValue(key);
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent ev) {

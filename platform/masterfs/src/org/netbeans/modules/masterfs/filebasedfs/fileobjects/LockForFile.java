@@ -52,7 +52,7 @@ public class LockForFile extends FileLock {
             static final String SUFFIX = "~";
     private static final Logger LOGGER = Logger.getLogger(LockForFile.class.getName());
     private File file;
-    private HardLockPath lock;
+    private File lock;
     private boolean valid = false;
 
     static {
@@ -159,7 +159,7 @@ public class LockForFile extends FileLock {
             throw new FileAlreadyLockedException(file.getAbsolutePath());
         }
 
-        HardLockPath hardLock = getLock();
+        File hardLock = getLock();
 
         HardLockRegistry.getInstance().doHardLock(hardLock, getFile().getAbsolutePath());
 
@@ -190,7 +190,7 @@ public class LockForFile extends FileLock {
         return result;
     }
 
-    public HardLockPath getLock() {
+    public File getLock() {
         return lock;
     }
 
@@ -215,7 +215,7 @@ public class LockForFile extends FileLock {
 
     }
 
-    public static HardLockPath getLockFile(File file) {
+    public static File getLockFile(File file) {
         file = FileUtil.normalizeFile(file);
 
         final File parentFile = file.getParentFile();
@@ -227,7 +227,7 @@ public class LockForFile extends FileLock {
 
         final String lckName = sb.toString();
         final File lck = new File(parentFile, lckName);
-        return new HardLockPath(lck.getAbsoluteFile());
+        return lck.getAbsoluteFile();
     }
 
     @Override
@@ -288,28 +288,18 @@ public class LockForFile extends FileLock {
         return filename.startsWith(PREFIX) && filename.endsWith(SUFFIX);
     }
 
-    public static final class HardLockPath {
-        public final File file;
-
-        public HardLockPath(File file) {
-            this.file = file;
-        }
-
-    }
-
-    /*not private for tests*/
     public static interface HardLockRegistry {
         public static HardLockRegistry getInstance() {
             return HardLockRegistryInstance.INSTANCE;
         }
 
-        public void doHardLock(HardLockPath hardLock, String absolutePath) throws IOException;
+        public void doHardLock(File hardLock, String absolutePath) throws IOException;
 
-        public boolean doHardUnlock(HardLockPath hardLock);
+        public boolean doHardUnlock(File hardLock);
 
-        public boolean hardLockExists(HardLockPath hardLock) throws IOException;
+        public boolean hardLockExists(File hardLock) throws IOException;
 
-        public String getHardLockContent(HardLockPath hardLock);
+        public String getHardLockContent(File hardLock);
 
     }
 
@@ -321,26 +311,25 @@ public class LockForFile extends FileLock {
     @ServiceProvider(service=HardLockRegistry.class, position=100)
     public static final class FileBaseHardLockRegistry implements HardLockRegistry {
 
-        public void doHardLock(HardLockPath hardLock, String absolutePath) throws IOException {
-            File hardLockFile = hardLock.file;
-            hardLockFile.getParentFile().mkdirs();
-            hardLockFile.createNewFile();
-            try (OutputStream os = Files.newOutputStream(hardLockFile.toPath())) {
+        public void doHardLock(File hardLock, String absolutePath) throws IOException {
+            hardLock.getParentFile().mkdirs();
+            hardLock.createNewFile();
+            try (OutputStream os = Files.newOutputStream(hardLock.toPath())) {
                 os.write(absolutePath.getBytes());
             }
         }
 
-        public boolean doHardUnlock(HardLockPath hardLock) {
-            return hardLock.file.delete();
+        public boolean doHardUnlock(File hardLock) {
+            return hardLock.delete();
         }
 
-        public boolean hardLockExists(HardLockPath hardLock) throws IOException {
-            return FileChangedManager.getInstance().exists(hardLock.file);
+        public boolean hardLockExists(File hardLock) throws IOException {
+            return FileChangedManager.getInstance().exists(hardLock);
         }
 
-        public String getHardLockContent(HardLockPath hardLock) {
-            if (FileChangedManager.getInstance().exists(hardLock.file)) {
-                try (InputStream is = new FileInputStream(hardLock.file)) {
+        public String getHardLockContent(File hardLock) {
+            if (FileChangedManager.getInstance().exists(hardLock)) {
+                try (InputStream is = new FileInputStream(hardLock)) {
                     byte[] path = new byte[is.available()];
                     if (path.length > 0 && is.read(path) == path.length) {
                         return new String(path);
@@ -360,16 +349,16 @@ public class LockForFile extends FileLock {
         private final ConcurrentHashMap<String, String> hardLocks2Content =
                 new ConcurrentHashMap<>();
 
-        private static String getKey(HardLockPath hardLock) throws IOException {
-            Path realParentPath = hardLock.file.toPath().getParent().toRealPath();
-            return realParentPath.resolve(hardLock.file.getName()).toString();
+        private static String getKey(File hardLock) throws IOException {
+            Path realParentPath = hardLock.toPath().getParent().toRealPath();
+            return realParentPath.resolve(hardLock.getName()).toString();
         }
 
-        public void doHardLock(HardLockPath hardLock, String absolutePath) throws IOException {
+        public void doHardLock(File hardLock, String absolutePath) throws IOException {
             hardLocks2Content.put(getKey(hardLock), absolutePath);
         }
 
-        public boolean doHardUnlock(HardLockPath hardLock) {
+        public boolean doHardUnlock(File hardLock) {
             try {
                 return hardLocks2Content.remove(getKey(hardLock)) != null;
             } catch (IOException ex) {
@@ -378,11 +367,11 @@ public class LockForFile extends FileLock {
             }
         }
 
-        public boolean hardLockExists(HardLockPath hardLock) throws IOException {
+        public boolean hardLockExists(File hardLock) throws IOException {
             return hardLocks2Content.containsKey(getKey(hardLock));
         }
 
-        public String getHardLockContent(HardLockPath hardLock) {
+        public String getHardLockContent(File hardLock) {
             try {
                 return hardLocks2Content.get(getKey(hardLock));
             } catch (IOException ex) {

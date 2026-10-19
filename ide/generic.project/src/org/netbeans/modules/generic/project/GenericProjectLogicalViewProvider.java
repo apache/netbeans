@@ -51,6 +51,7 @@ public record GenericProjectLogicalViewProvider(GenericProject project) implemen
             @Override
             public Action[] getActions(boolean context) {
                 return new Action[] {
+                    CommonProjectActions.openSubprojectsAction(),
                     CommonProjectActions.closeProjectAction(),
                 };
             }

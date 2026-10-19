@@ -21,14 +21,21 @@ package org.netbeans.modules.generic.project;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.SubprojectProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.ChangeSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -54,7 +61,7 @@ public final class GenericProject implements Project {
         this.lookup = Lookups.fixed(
                 new GenericProjectLogicalViewProvider(this),
                 new GenericProjectInfo(this),
-                new SubprojectProviderImpl(this),
+                new GenericSubprojectProvider(this),
                 this
         );
     }
@@ -138,6 +145,46 @@ public final class GenericProject implements Project {
 
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {}
+
+    }
+
+    /**
+     * Exposes the projects contained directly in the project directory
+     * as subprojects. Adds "Open Required Projects" and "Open Selected Project" actions.
+     */
+    private static final class GenericSubprojectProvider implements SubprojectProvider {
+
+        private final GenericProject prj;
+        private final ChangeSupport changeSupport = new ChangeSupport(this);
+
+        GenericSubprojectProvider(GenericProject prj) {
+            this.prj = prj;
+        }
+
+        @Override
+        public Set<? extends Project> getSubprojects() {
+            Set<Project> subprojects = new LinkedHashSet<>();
+            FileObject[] children = prj.getProjectDirectory().getChildren();
+            if (children != null) {
+                for (FileObject child : children) {
+                    Project owner = FileOwnerQuery.getOwner(child);
+                    if (owner != null && !owner.equals(prj)) {
+                        subprojects.add(owner);
+                    }
+                }
+            }
+            return Collections.unmodifiableSet(subprojects);
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener listener) {
+            changeSupport.addChangeListener(listener);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener listener) {
+            changeSupport.removeChangeListener(listener);
+        }
 
     }
 

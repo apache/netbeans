@@ -40,20 +40,20 @@ import org.openide.util.NbBundle.Messages;
  */
 @TemplateRegistration(
         folder = "Project/Generic", // NOI18N
-        displayName = "#GenericProjectWizard_displayName", // NOI18N
-        description = "GenericProjectTemplateDescription.html", // NOI18N
+        displayName = "#GpWizard_displayName", // NOI18N
+        description = "GpTemplateDescription.html", // NOI18N
         iconBase = GenericProject.ICON,
         position = 1000
 )
-@Messages("GenericProjectWizard_displayName=New Generic Project")
-public final class GenericProjectWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
+@Messages("GpWizard_displayName=New Generic Project")
+public final class GpWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     private WizardDescriptor wiz;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private int index;
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
-        return List.of(new GenericProjectWizardPanel());
+        return List.of(new GpWizardPanel());
     }
 
     @Override

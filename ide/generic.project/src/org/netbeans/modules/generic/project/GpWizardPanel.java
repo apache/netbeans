@@ -58,7 +58,7 @@ import org.openide.util.NbBundle.Messages;
     "ERR_NotWritable=Project Folder cannot be created.",
     "ERR_FolderExists=Project Folder already exists and is not empty.",
 })
-final class GenericProjectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
+final class GpWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
         WizardDescriptor.ValidatingPanel<WizardDescriptor>,
         WizardDescriptor.FinishablePanel<WizardDescriptor>,
         DocumentListener {

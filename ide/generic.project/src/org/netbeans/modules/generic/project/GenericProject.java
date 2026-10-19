@@ -59,9 +59,9 @@ public final class GenericProject implements Project {
     private GenericProject(FileObject projectDirectory) {
         this.projectDirectory = projectDirectory;
         this.lookup = Lookups.fixed(
-                new GenericProjectLogicalViewProvider(this),
-                new GenericProjectInfo(this),
-                new GenericSubprojectProvider(this),
+                new GpLogicalViewProvider(this),
+                new GpInfo(this),
+                new GpSubprojectProvider(this),
                 this
         );
     }
@@ -95,7 +95,7 @@ public final class GenericProject implements Project {
     }
 
     @ServiceProvider(service=ProjectFactory.class)
-    public static final class GenericProjectFactory implements ProjectFactory {
+    public static final class GpFactory implements ProjectFactory {
 
         @Override
         public boolean isProject(FileObject projectDirectory) {
@@ -117,7 +117,7 @@ public final class GenericProject implements Project {
 
     }
 
-    private record GenericProjectInfo(GenericProject prj) implements ProjectInformation {
+    private record GpInfo(GenericProject prj) implements ProjectInformation {
 
         @Override
         public String getName() {
@@ -152,12 +152,12 @@ public final class GenericProject implements Project {
      * Exposes the projects contained directly in the project directory
      * as subprojects. Adds "Open Required Projects" and "Open Selected Project" actions.
      */
-    private static final class GenericSubprojectProvider implements SubprojectProvider {
+    private static final class GpSubprojectProvider implements SubprojectProvider {
 
         private final GenericProject prj;
         private final ChangeSupport changeSupport = new ChangeSupport(this);
 
-        GenericSubprojectProvider(GenericProject prj) {
+        GpSubprojectProvider(GenericProject prj) {
             this.prj = prj;
         }
 

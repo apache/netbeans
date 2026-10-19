@@ -2886,6 +2886,49 @@ public class IntroduceHintTest extends NbTestCase {
                                 "ERR_Different_Yield_Values");
     }
 
+    public void testYieldFullyInside() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           public static String test(boolean a, boolean b) {
+                               |return switch (0) {
+                                   default -> {
+                                       if (a) {
+                                           yield "a";
+                                       } else if (b) {
+                                           yield "b";
+                                       }
+                                       yield "c";
+                                   }
+                               };|
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           public static String test(boolean a, boolean b) {
+                               return name(a, b);
+                           }
+                           private static String name(boolean a, boolean b) {
+                               return switch (0) {
+                                   default -> {
+                                       if (a) {
+                                           yield "a";
+                                       } else if (b) {
+                                           yield "b";
+                                       }
+                                       yield "c";
+                                   }
+                               };
+                           }
+                       }
+                       """,
+                       new DialogDisplayerImpl3("name", null, true),
+                       1, 0);
+    }
+
     protected void prepareTest(String code) throws Exception {
         clearWorkDir();
 

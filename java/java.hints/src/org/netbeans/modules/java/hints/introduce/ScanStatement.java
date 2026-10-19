@@ -241,7 +241,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
 
     @Override
     public Void visitYield(YieldTree node, Void p) {
-        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION) {
+        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION && !treesSeensInSelection.contains(info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath()))) {
             selectionExits.add(getCurrentPath());
             hasYields = true;
         }

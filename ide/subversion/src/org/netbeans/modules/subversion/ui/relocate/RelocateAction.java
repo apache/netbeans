@@ -18,21 +18,28 @@
  */
 package org.netbeans.modules.subversion.ui.relocate;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
+
 import org.netbeans.modules.subversion.FileInformation;
 import org.netbeans.modules.subversion.FileStatusCache;
 import org.netbeans.modules.subversion.Subversion;
+import org.netbeans.modules.subversion.SvnModuleConfig;
 import org.netbeans.modules.subversion.client.SvnClient;
 import org.netbeans.modules.subversion.client.SvnClientExceptionHandler;
 import org.netbeans.modules.subversion.client.SvnProgressSupport;
 import org.netbeans.modules.subversion.ui.actions.ContextAction;
+import org.netbeans.modules.subversion.ui.repository.RepositoryConnection;
 import org.netbeans.modules.subversion.util.Context;
 import org.netbeans.modules.subversion.util.SvnUtils;
 import org.openide.DialogDescriptor;
@@ -76,14 +83,29 @@ public class RelocateAction extends ContextAction {
              & ~FileInformation.STATUS_NOTVERSIONED_EXCLUDED 
              & ~FileInformation.STATUS_NOTVERSIONED_NEWLOCALLY;
     }
-       
-    public void validate(RelocatePanel panel, JButton btnOk) {
+
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    public static void validate(RelocatePanel panel, JButton btnOk) {
+        String urlString = getNewUrl(panel);
+        if (urlString.isEmpty() || urlString.equals(panel.getCurrentURL().getText().trim())) {
+            btnOk.setEnabled(false);
+            return;
+        }
         try {
-            new SVNUrl(panel.getNewURL().getText());
+            new SVNUrl(urlString);
             btnOk.setEnabled(true);
         } catch (MalformedURLException e) {
             btnOk.setEnabled(false);
         }
+    }
+
+    private static String getNewUrl(RelocatePanel panel) {
+        Component editor = panel.getNewURL().getEditor().getEditorComponent();
+        if (editor instanceof JTextComponent jTextComponent) {
+            return jTextComponent.getText().trim();
+        }
+        Object item = panel.getNewURL().getEditor().getItem();
+        return item != null ? item.toString().trim() : "";
     }
 
     @Override
@@ -114,7 +136,7 @@ public class RelocateAction extends ContextAction {
         // the action will affect the whole working copy
         final File root = roots[0];
 
-        SVNUrl repositoryUrl = null;
+        SVNUrl repositoryUrl;
         try {
             repositoryUrl = SvnUtils.getRepositoryRootUrl(root);
         } catch (SVNClientException ex) {
@@ -128,27 +150,40 @@ public class RelocateAction extends ContextAction {
         final String wc = root.getAbsolutePath();
         panel.getCurrentURL().setText(repositoryUrl.toString());
         panel.getWorkingCopy().setText(wc);
-        
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        SvnUtils.getKnownRepositoryUrls().forEach(model::addElement);
+        panel.getNewURL().setModel(model);
+        panel.getNewURL().setSelectedItem("");
+        Component editor = panel.getNewURL().getEditor().getEditorComponent();
+        if (editor instanceof JTextComponent jTextComponent) {
+            jTextComponent.setText("");
+        }
+
         final JButton btnRelocate = new JButton(loc.getString("CTL_Relocate_Action_Name"));
         btnRelocate.setEnabled(false);
         btnRelocate.setToolTipText(loc.getString("TT_Relocate_Action"));
-        
-        panel.getNewURL().getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent event) {
-                validate(panel, btnRelocate);
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent event) {
-                validate(panel, btnRelocate);
-            }
+        if (editor instanceof JTextComponent jTextComponent) {
+            jTextComponent.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    validate(panel, btnRelocate);
+                }
 
-            @Override
-            public void changedUpdate(DocumentEvent event) {
-                validate(panel, btnRelocate);
-            }          
-        });
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    validate(panel, btnRelocate);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    validate(panel, btnRelocate);
+                }
+            });
+        }
+        panel.getNewURL().addActionListener(e -> validate(panel, btnRelocate));
+
         JButton btnCancel = new JButton(loc.getString("CTL_Relocate_Action_Cancel"));
         btnCancel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(RelocateAction.class, "ACSD_Relocate_Action_Cancel"));  // NOI18N
         DialogDescriptor descriptor = new DialogDescriptor(panel,  loc.getString("CTL_Relocate_Dialog_Title"),  true, new Object [] {btnRelocate, btnCancel}, btnRelocate, DialogDescriptor.BOTTOM_ALIGN, null, null);
@@ -161,18 +196,29 @@ public class RelocateAction extends ContextAction {
         if (descriptor.getValue() != btnRelocate) 
             return;
         
-        final String newUrl = panel.getNewURL().getText();
-        
-        RequestProcessor rp = Subversion.getInstance().getRequestProcessor(repositoryUrl);
-        final SVNUrl url = repositoryUrl;
+        final String newUrl = getNewUrl(panel);
+        final SVNUrl newSvnUrl;
+        try {
+            newSvnUrl = new SVNUrl(newUrl);
+        } catch (MalformedURLException ex) {
+            // shouldn't happen since newUrl has been validated
+            return;
+        }
+
+        RequestProcessor rp = Subversion.getInstance().getRequestProcessor(newSvnUrl);
+        final SVNUrl fromUrl = repositoryUrl;
         SvnProgressSupport support = new SvnProgressSupport() {
-            SvnClient client = null;
             @Override
             protected void perform() {                    
                 try {
-                    client = Subversion.getInstance().getClient(url);
-                    client.relocate(url.toString(), newUrl, wc, true);
+                    SvnClient client = Subversion.getInstance().getClient(newSvnUrl, this);
+                    client.relocate(fromUrl.toString(), newUrl, wc, true);
                     patchCache();
+                    RepositoryConnection rc = SvnModuleConfig.getDefault().getRepositoryConnection(newSvnUrl.toString());
+                    if (rc == null) {
+                        rc = new RepositoryConnection(newUrl);
+                    }
+                    SvnModuleConfig.getDefault().insertRecentUrl(rc);
                 } catch (SVNClientException ex) {
                     annotate(ex);
                 } 
@@ -191,6 +237,6 @@ public class RelocateAction extends ContextAction {
                 }
             }
         };
-        support.start(rp, repositoryUrl, loc.getString("LBL_Relocate_Progress"));
+        support.start(rp, newSvnUrl, loc.getString("LBL_Relocate_Progress"));
     }
 }

@@ -53,6 +53,7 @@ public record GpLogicalViewProvider(GenericProject project) implements LogicalVi
                 return new Action[] {
                     CommonProjectActions.openSubprojectsAction(),
                     CommonProjectActions.closeProjectAction(),
+                    CommonProjectActions.customizeProjectAction(),
                 };
             }
 

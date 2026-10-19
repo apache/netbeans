@@ -31,6 +31,7 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.modules.generic.project.ui.customizer.GpCustomizerProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.SubprojectProvider;
@@ -50,6 +51,13 @@ public final class GenericProject implements Project {
 
     public static final String MARKER_FILE = ".nbgp"; // NOI18N
 
+    /**
+     * The project type key used for this project type's contributions
+     * in the layer filesystem
+     * (e.g. {@code Projects/org-netbeans-modules-generic-project/Customizer}).
+     */
+    public static final String PROJECT_KEY = "org-netbeans-modules-generic-project"; // NOI18N
+
     @StaticResource
     public static final String ICON = "org/netbeans/modules/generic/project/gp.svg"; // NOI18N
 
@@ -62,6 +70,7 @@ public final class GenericProject implements Project {
                 new GpLogicalViewProvider(this),
                 new GpInfo(this),
                 new GpSubprojectProvider(this),
+                new GpCustomizerProvider(this),
                 this
         );
     }

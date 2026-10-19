@@ -20,10 +20,13 @@
 package org.netbeans.modules.generic.project;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
@@ -31,10 +34,12 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.generic.project.ui.customizer.GpCustomizerProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.SubprojectProvider;
+import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.ImageUtilities;
@@ -60,9 +65,17 @@ public final class GenericProject implements Project {
     public static final String MARKER_ATTRIBUTE = "org.netbeans.modules.generic.project"; // NOI18N
 
     /**
-     * The project type key used for this project type's contributions
-     * in the layer filesystem
-     * (e.g. {@code Projects/org-netbeans-modules-generic-project/Customizer}).
+     * The project type key under which this project type is registered
+     * in the layer filesystem:
+     * <ul>
+     * <li>{@code Projects/<key>/Actions} — the stock actions of the
+     *     project node's popup menu (loaded via
+     *     {@code CommonProjectActions.forType}),</li>
+     * <li>{@code Projects/<key>/Lookup} — services contributed via
+     *     {@code @ProjectServiceProvider} / {@code LookupProvider},
+     *     mixed into the project's lookup (see
+     *     {@code LookupProviderSupport}).</li>
+     * </ul>
      */
     public static final String PROJECT_KEY = "org-netbeans-modules-generic-project"; // NOI18N
 
@@ -72,15 +85,33 @@ public final class GenericProject implements Project {
     private final FileObject projectDirectory;
     private final Lookup lookup;
 
+    /**
+     * Whether this project instance has been explicitly deleted
+     * (stock delete operation). Set before the marker file and the
+     * recognition attribute are removed so that
+     * {@link GpFactory#saveProject} never resurrects the project
+     * (e.g. when a preferences flush saves it afterwards).
+     */
+    private volatile boolean deleted;
+
+    void markDeleted() {
+        deleted = true;
+    }
+
     private GenericProject(FileObject projectDirectory) {
         this.projectDirectory = projectDirectory;
-        this.lookup = Lookups.fixed(
+        // mix the project's own services with the layer contributions
+        // registered for this project type ("Projects/<key>/Lookup",
+        // e.g. via @ProjectServiceProvider in other modules)
+        this.lookup = LookupProviderSupport.createCompositeLookup(Lookups.fixed(
                 new GpLogicalViewProvider(this),
                 new GpInfo(this),
                 new GpSubprojectProvider(this),
                 new GpCustomizerProvider(this),
+                new GpProjectOperations(this),
+                new GpActionProvider(this),
                 this
-        );
+        ), "Projects/" + PROJECT_KEY + "/Lookup"); // NOI18N
     }
 
     @Override
@@ -155,6 +186,55 @@ public final class GenericProject implements Project {
         }
     }
 
+    /**
+     * Key of the display name override in the project's private
+     * preferences ({@link ProjectUtils#getPreferences}).
+     */
+    static final String DISPLAY_NAME_KEY = "displayName"; // NOI18N
+
+    /**
+     * Returns the display name override of the project, or
+     * {@code null} if none is stored, in which case the display name
+     * defaults to the project folder name.
+     */
+    public static String getDisplayNameOverride(GenericProject prj) {
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        if (prefs == null) {
+            return null;
+        }
+        String name = prefs.get(DISPLAY_NAME_KEY, null);
+        return (name == null || name.isBlank()) ? null : name;
+    }
+
+    /**
+     * Stores the display name override of the project, or clears it
+     * for {@code null}. A name equal to the project folder name is
+     * treated as no override.
+     *
+     * <p>Fires {@link ProjectInformation#PROP_DISPLAY_NAME} on the
+     * project's {@link ProjectInformation} if the effective display
+     * name changes, so that the project view updates its label.
+     */
+    public static void setDisplayNameOverride(GenericProject prj, String name) {
+        if (name != null && name.equals(prj.getProjectDirectory().getNameExt())) {
+            name = null;
+        }
+        if (Objects.equals(name, getDisplayNameOverride(prj))) {
+            return;
+        }
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        if (prefs == null) {
+            return;
+        }
+        if (name == null) {
+            prefs.remove(DISPLAY_NAME_KEY);
+        } else {
+            prefs.put(DISPLAY_NAME_KEY, name);
+        }
+        GpInfo info = (GpInfo) prj.getLookup().lookup(ProjectInformation.class);
+        info.fireDisplayNameChanged();
+    }
+
     @ServiceProvider(service=ProjectFactory.class)
     public static final class GpFactory implements ProjectFactory {
 
@@ -173,6 +253,11 @@ public final class GenericProject implements Project {
 
         @Override
         public void saveProject(Project project) throws IOException, ClassCastException {
+            if (project instanceof GenericProject gp && gp.deleted) {
+                // the project was explicitly deleted: never
+                // resurrect the marker or the attribute
+                return;
+            }
             FileObject dir = project.getProjectDirectory();
             if (isAttributeProject(dir)) {
                 // local project: recognition lives in the FileObject
@@ -185,7 +270,14 @@ public final class GenericProject implements Project {
 
     }
 
-    private record GpInfo(GenericProject prj) implements ProjectInformation {
+    private static final class GpInfo implements ProjectInformation {
+
+        private final GenericProject prj;
+        private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+
+        GpInfo(GenericProject prj) {
+            this.prj = prj;
+        }
 
         @Override
         public String getName() {
@@ -194,7 +286,8 @@ public final class GenericProject implements Project {
 
         @Override
         public String getDisplayName() {
-            return prj.getProjectDirectory().getNameExt();
+            String override = getDisplayNameOverride(prj);
+            return override != null ? override : prj.getProjectDirectory().getNameExt();
         }
 
         @Override
@@ -208,11 +301,22 @@ public final class GenericProject implements Project {
             return prj;
         }
 
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener listener) {}
+        /**
+         * Notifies listeners that the display name changed.
+         */
+        void fireDisplayNameChanged() {
+            changeSupport.firePropertyChange(PROP_DISPLAY_NAME, null, null);
+        }
 
         @Override
-        public void removePropertyChangeListener(PropertyChangeListener listener) {}
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            changeSupport.addPropertyChangeListener(listener);
+        }
+
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            changeSupport.removePropertyChangeListener(listener);
+        }
 
     }
 

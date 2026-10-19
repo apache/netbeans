@@ -49,6 +49,9 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL_General=General",
     "LBL_Name=Name:",
+    "TT_Name=<html>"
+            + "<p>The name of the project as shown in the project view.</p>"
+            + "<p>Changing it does not rename the project folder. Enter the folder name to reset.</p></html>",
     "LBL_Location=Location:",
     "LBL_MarkerFile=Marker file in project directory",
     "TT_MarkerFile=<html>"
@@ -83,9 +86,9 @@ public final class GpCompositeCategoryProvider implements ProjectCustomizer.Comp
 
         JLabel nameLabel = new JLabel(Bundle.LBL_Name());
         JLabel locationLabel = new JLabel(Bundle.LBL_Location());
-        JTextField nameField = new JTextField(info != null ? info.getName() : "");
+        JTextField nameField = new JTextField(info != null ? info.getDisplayName() : "");
+        nameField.setToolTipText(Bundle.TT_Name());
         JTextField locationField = new JTextField(projectDir != null ? projectDir.getPath() : "");
-        nameField.setEditable(false);
         locationField.setEditable(false);
         JCheckBox markerBox = new JCheckBox(Bundle.LBL_MarkerFile());
         markerBox.setToolTipText(Bundle.TT_MarkerFile());
@@ -124,14 +127,18 @@ public final class GpCompositeCategoryProvider implements ProjectCustomizer.Comp
                 .addComponent(markerBox)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        if (projectDir != null) {
+        if (prj != null && projectDir != null) {
             // invoked on OK, off the AWT thread, in ProjectManager write access
             category.setStoreListener(evt -> {
                 try {
                     GenericProject.setMarkerState(projectDir, markerBox.isSelected());
+                    String name = nameField.getText().strip();
+                    if (!name.isEmpty()) {
+                        GenericProject.setDisplayNameOverride((GenericProject) prj, name);
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(GpCompositeCategoryProvider.class.getName())
-                        .log(Level.WARNING, "Cannot change marker state", ex);
+                        .log(Level.WARNING, "Cannot update project settings", ex);
                 }
             });
         }

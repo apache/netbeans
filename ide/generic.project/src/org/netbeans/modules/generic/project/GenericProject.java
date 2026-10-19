@@ -74,6 +74,19 @@ public final class GenericProject implements Project {
             && projectDirectory.getFileObject(MARKER_FILE) != null;
     }
 
+    /**
+     * Creates the marker file in the given directory if it does not
+     * exist yet, returning the marker.
+     */
+    static FileObject createMarker(FileObject dir) throws IOException {
+        FileObject marker = dir.getFileObject(MARKER_FILE);
+        if (marker == null) {
+            marker = dir.createData(MARKER_FILE);
+            marker.setAttribute("displayName", dir.getNameExt()); // NOI18N
+        }
+        return marker;
+    }
+
     @ServiceProvider(service=ProjectFactory.class)
     public static final class GenericProjectFactory implements ProjectFactory {
 
@@ -92,11 +105,7 @@ public final class GenericProject implements Project {
 
         @Override
         public void saveProject(Project project) throws IOException, ClassCastException {
-            FileObject dir = project.getProjectDirectory();
-            if (dir.getFileObject(MARKER_FILE) == null) {
-                FileObject marker = dir.createData(MARKER_FILE);
-                marker.setAttribute("displayName", dir.getNameExt());
-            }
+            createMarker(project.getProjectDirectory());
         }
 
     }

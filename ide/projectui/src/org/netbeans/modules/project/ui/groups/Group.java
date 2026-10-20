@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.net.URL;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -57,12 +58,14 @@ import org.netbeans.modules.project.ui.OpenProjectListSettings;
 import org.netbeans.modules.project.ui.ProjectTab;
 import org.netbeans.modules.project.ui.ProjectUtilities;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
+import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
 import org.openide.cookies.CloseCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
@@ -90,14 +93,19 @@ public abstract class Group {
     protected static final String KEY_NAME = "name"; // NOI18N
     /** Preferences key for kind of group (see constants in subclasses). */
     protected static final String KEY_KIND = "kind"; // NOI18N
-    /** Preferences key for path (space-separated) of project URLs for AdHocGroup, or single project dir URL for SubprojectsGroup, or dir URL for DirectoryGroup. */
+    /** Preferences key for path (space-separated) of project URLs for AdHocGroup, or single project dir URL for SubprojectsGroup. */
     protected static final String KEY_PATH = "path"; // NOI18N
-    /** Preferences key for main project path URL for AdHocGroup or DirectoryGroup. */
+    /** Preferences key for main project path URL for AdHocGroup. */
     protected static final String KEY_MAIN = "main"; // NOI18N
     /** Preferences for None group. */
     protected static final Preferences NONE_GROUP_NODE = NbPreferences.forModule(Group.class).node("nonegroup");
     protected static final String NONE_GROUP = "(none)"; // NOI18N
     protected static final String noneGroupSanitizedId = "none_group"; // NOI18N
+    /**
+     * Kind of legacy directory groups, persisted before that kind was
+     * replaced. See {@link #migrateLegacyDirectoryGroup(String)}.
+     */
+    private static final String LEGACY_DIRECTORY_KIND = "directory"; // NOI18N
     
     List<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
 
@@ -110,11 +118,44 @@ public abstract class Group {
             return new AdHocGroup(id);
         } else if (SubprojectsGroup.KIND.equals(kind)) {
             return new SubprojectsGroup(id);
-        } else if (DirectoryGroup.KIND.equals(kind)) {
-            return new DirectoryGroup(id);
+        } else if (LEGACY_DIRECTORY_KIND.equals(kind)) {
+            migrateLegacyDirectoryGroup(id);
+            return new SubprojectsGroup(id);
         } else {
             LOG.log(Level.WARNING, "Cannot find project group kind for id={0}", id);
             return null;
+        }
+    }
+
+    /**
+     * Migrate a legacy directory group to a subprojects group. 
+     * The stored directory is resolved to a project, promoting it if necessary.
+     */
+    private static void migrateLegacyDirectoryGroup(String id) {
+        Preferences node = NODE.node(id);
+        try {
+            Project p = null;
+            String path = node.get(KEY_PATH, null);
+            if (path != null) {
+                FileObject dir = URLMapper.findFileObject(URI.create(path).toURL());
+                if (dir != null && dir.isFolder()) {
+                    p = ProjectManager.getDefault().findProject(dir);
+                    if (p == null) {
+                        DirectoryProjectProvider prov = Lookup.getDefault().lookup(DirectoryProjectProvider.class);
+                        if (prov != null) {
+                            p = prov.createProject(dir);
+                        }
+                    }
+                }
+            }
+            if (p == null) {
+                throw new IOException("no group project created");
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            LOG.log(Level.WARNING, "Cannot migrate legacy directory group id=" + id + " to a subprojects group, the group will be empty", e);
+        } finally {
+            // write in every case; if above fails it remains empty but is still useable
+            node.put(KEY_KIND, SubprojectsGroup.KIND);
         }
     }
 

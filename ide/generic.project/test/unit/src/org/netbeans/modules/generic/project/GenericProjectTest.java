@@ -21,6 +21,7 @@ package org.netbeans.modules.generic.project;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.List;
@@ -33,21 +34,27 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.queries.SharabilityQuery;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
 import org.netbeans.modules.generic.project.ui.wizard.GpWizardIterator;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.AuxiliaryProperties;
+import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
+import org.netbeans.spi.queries.SharabilityQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.test.MockLookup;
 
+@SuppressWarnings("null")
 public class GenericProjectTest extends NbTestCase {
 
     static {
@@ -92,7 +99,7 @@ public class GenericProjectTest extends NbTestCase {
         assertEquals(2, children.length);
     }
 
-    public void testSubprojectsAreFirstLevelOnly() throws Exception {
+    public void testSubprojectsAreContainedProjects() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
         FileObject child = FileUtil.createFolder(root, "child"); // NOI18N
@@ -106,9 +113,118 @@ public class GenericProjectTest extends NbTestCase {
         assertNotNull(prj);
         SubprojectProvider spp = prj.getLookup().lookup(SubprojectProvider.class);
         assertNotNull(spp);
-        Set<? extends Project> subs = spp.getSubprojects();
-        assertEquals(1, subs.size());
-        assertEquals(child, subs.iterator().next().getProjectDirectory());
+        assertEquals("projects nested deeper than the directory are not exposed",
+        Set.of(child), projectDirectories(spp.getSubprojects()));
+    }
+
+    public void testContainerProviderCompleteContainedSet() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject child = FileUtil.createFolder(root, "child"); // NOI18N
+        FileUtil.createData(child, GenericProject.MARKER_FILE);
+        FileObject deep = FileUtil.createFolder(FileUtil.createFolder(child, "inner"), "deep"); // NOI18N
+        FileUtil.createData(deep, GenericProject.MARKER_FILE);
+
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        ProjectContainerProvider pcp = prj.getLookup().lookup(ProjectContainerProvider.class);
+        assertNotNull(pcp);
+        ProjectContainerProvider.Result res = pcp.getContainedProjects();
+        assertEquals("projects nested deeper than the directory are not exposed",
+                Set.of(child), projectDirectories(res.getProjects()));
+        for (Project p : res.getProjects()) {
+            assertNotSame("the container must not list itself", prj, p);
+        }
+        SubprojectProvider spp = prj.getLookup().lookup(SubprojectProvider.class);
+        assertNotNull(spp);
+        assertEquals("legacy and container views must agree",
+                projectDirectories(res.getProjects()), projectDirectories(spp.getSubprojects()));
+    }
+
+    public void testContainerProviderSkipsNotSharableSubtrees() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject hidden = FileUtil.createFolder(root, "hidden"); // NOI18N
+        FileObject inside = FileUtil.createFolder(hidden, "inside"); // NOI18N
+        FileUtil.createData(inside, GenericProject.MARKER_FILE);
+        FileObject visible = FileUtil.createFolder(root, "visible"); // NOI18N
+        FileUtil.createData(visible, GenericProject.MARKER_FILE);
+
+        MockLookup.setInstances(sharabilityFor(hidden, SharabilityQuery.Sharability.NOT_SHARABLE));
+        try {
+            Project prj = ProjectManager.getDefault().findProject(root);
+            assertNotNull(prj);
+            ProjectContainerProvider pcp = prj.getLookup().lookup(ProjectContainerProvider.class);
+            assertNotNull(pcp);
+            assertEquals(new HashSet<>(List.of(visible)),
+                    projectDirectories(pcp.getContainedProjects().getProjects()));
+        } finally {
+            MockLookup.setInstances();
+        }
+    }
+
+    public void testPromotePlainDirectory() throws Exception {
+        FileObject dir = newProjectDir();
+        Project prj = GenericProject.promoteToProject(dir);
+        assertNotNull(prj);
+        assertTrue(prj instanceof GenericProject);
+        assertEquals(Boolean.TRUE, dir.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+        assertNull("promotion must not touch the working tree",
+                dir.getFileObject(GenericProject.MARKER_FILE));
+        assertEquals(prj, ProjectManager.getDefault().findProject(dir));
+    }
+
+    public void testPromoteIsIdempotent() throws Exception {
+        FileObject dir = newProjectDir();
+        Project first = GenericProject.promoteToProject(dir);
+        Project second = GenericProject.promoteToProject(dir);
+        assertSame(first, second);
+    }
+
+    public void testPromoteExistingProjectIsNoOp() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        Project existing = ProjectManager.getDefault().findProject(root);
+        assertNotNull(existing);
+        assertSame(existing, GenericProject.promoteToProject(root));
+        assertFalse("the marker project must not gain a local attribute",
+                GenericProject.isAttributeProject(root));
+    }
+
+    public void testPromoteNotSharableDirectory() throws Exception {
+        FileObject dir = newProjectDir();
+        MockLookup.setInstances(sharabilityFor(dir, SharabilityQuery.Sharability.NOT_SHARABLE));
+        try {
+            assertNull(GenericProject.promoteToProject(dir));
+            assertNull(dir.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+        } finally {
+            MockLookup.setInstances();
+        }
+    }
+
+    public void testDirectoryProjectProviderService() throws Exception {
+        DirectoryProjectProvider provider = Lookup.getDefault().lookup(DirectoryProjectProvider.class);
+        assertNotNull("the promotion service must be registered in the default lookup", provider);
+        FileObject dir = newProjectDir();
+        Project prj = provider.createProject(dir);
+        assertNotNull(prj);
+        assertTrue(prj instanceof GenericProject);
+        assertEquals(Boolean.TRUE, dir.getAttribute(GenericProject.MARKER_ATTRIBUTE));
+        assertNull(dir.getFileObject(GenericProject.MARKER_FILE));
+    }
+
+    private Set<FileObject> projectDirectories(Set<? extends Project> projects) {
+        Set<FileObject> dirs = new HashSet<>();
+        for (Project p : projects) {
+            dirs.add(p.getProjectDirectory());
+        }
+        return dirs;
+    }
+
+    private static SharabilityQueryImplementation2 sharabilityFor(FileObject dir, SharabilityQuery.Sharability answer) {
+        return (URI uri) -> dir.toURI().equals(uri)
+                ? answer
+                : SharabilityQuery.Sharability.UNKNOWN;
     }
 
     public void testCreateProject() throws Exception {

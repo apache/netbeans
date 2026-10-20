@@ -55,19 +55,19 @@ public class GenericProjectTest extends NbTestCase {
 
     public void testNoMarkerNotProject() throws Exception {
         FileObject root = newProjectDir();
-        assertFalse(new GenericProject.GpFactory().isProject(root));
+        assertFalse(new GpFactory().isProject(root));
     }
 
     public void testMarkerFileIsProject() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
-        assertTrue(new GenericProject.GpFactory().isProject(root));
+        assertTrue(new GpFactory().isProject(root));
     }
 
     public void testAttributeOnlyIsProject() throws Exception {
         FileObject root = newProjectDir();
         root.setAttribute(GenericProject.MARKER_ATTRIBUTE, Boolean.TRUE);
-        assertTrue(new GenericProject.GpFactory().isProject(root));
+        assertTrue(new GpFactory().isProject(root));
     }
 
     public void testLogicalViewShowsAllFiles() throws Exception {
@@ -139,7 +139,7 @@ public class GenericProjectTest extends NbTestCase {
         GenericProject.setMarkerState(root, false);
         assertFalse(GenericProject.hasMarker(root));
         assertEquals(Boolean.TRUE, root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
-        assertTrue(new GenericProject.GpFactory().isProject(root));
+        assertTrue(new GpFactory().isProject(root));
 
         GenericProject.setMarkerState(root, true);
         assertTrue(GenericProject.hasMarker(root));
@@ -153,7 +153,7 @@ public class GenericProjectTest extends NbTestCase {
         FileObject root = FileUtil.toFileObject(dir);
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
-        new GenericProject.GpFactory().saveProject(prj);
+        new GpFactory().saveProject(prj);
         assertNull(root.getFileObject(GenericProject.MARKER_FILE));
         assertEquals(Boolean.TRUE, root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
     }
@@ -285,7 +285,7 @@ public class GenericProjectTest extends NbTestCase {
         op.notifyDeleting();
         root.getFileObject(GenericProject.MARKER_FILE).delete(); // simulate the stock flow
 
-        new GenericProject.GpFactory().saveProject(prj);
+        new GpFactory().saveProject(prj);
         assertNull("a saved deleted project must not be resurrected", root.getFileObject(GenericProject.MARKER_FILE));
     }
 
@@ -300,7 +300,7 @@ public class GenericProjectTest extends NbTestCase {
         op.notifyDeleting();
 
         assertNull("the recognition attribute must be dropped", root.getAttribute(GenericProject.MARKER_ATTRIBUTE));
-        new GenericProject.GpFactory().saveProject(prj);
+        new GpFactory().saveProject(prj);
         assertNull("a saved deleted local project must not gain a marker file", root.getFileObject(GenericProject.MARKER_FILE));
     }
 

@@ -19,35 +19,20 @@
 
 package org.netbeans.modules.generic.project;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.prefs.Preferences;
-import javax.swing.Icon;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.generic.project.ui.actions.GpActionProvider;
 import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
 import org.netbeans.modules.generic.project.ui.customizer.GpCustomizerProvider;
-import org.netbeans.spi.project.ProjectFactory;
-import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.util.ChangeSupport;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A generic project. A directory is recognized as a generic project
@@ -104,7 +89,15 @@ public final class GenericProject implements Project {
         deleted = true;
     }
 
-    private GenericProject(FileObject projectDirectory) {
+    /**
+     * Whether this project instance has been explicitly deleted,
+     * see {@link #deleted}.
+     */
+    boolean isDeleted() {
+        return deleted;
+    }
+
+    GenericProject(FileObject projectDirectory) {
         this.projectDirectory = projectDirectory;
         // mix the project's own services with the layer contributions
         // registered for this project type ("Projects/<key>/Lookup",
@@ -240,130 +233,4 @@ public final class GenericProject implements Project {
         GpInfo info = (GpInfo) prj.getLookup().lookup(ProjectInformation.class);
         info.fireDisplayNameChanged();
     }
-
-    @ServiceProvider(service=ProjectFactory.class)
-    public static final class GpFactory implements ProjectFactory {
-
-        @Override
-        public boolean isProject(FileObject projectDirectory) {
-            return GenericProject.isProject(projectDirectory);
-        }
-
-        @Override
-        public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
-            if (GenericProject.isProject(projectDirectory)) {
-                return new GenericProject(projectDirectory);
-            }
-            return null;
-        }
-
-        @Override
-        public void saveProject(Project project) throws IOException, ClassCastException {
-            if (project instanceof GenericProject gp && gp.deleted) {
-                // the project was explicitly deleted: never
-                // resurrect the marker or the attribute
-                return;
-            }
-            FileObject dir = project.getProjectDirectory();
-            if (isAttributeProject(dir)) {
-                // local project: recognition lives in the FileObject
-                // attribute, never (re)create the marker file
-                dir.setAttribute(MARKER_ATTRIBUTE, Boolean.TRUE);
-            } else {
-                createMarker(dir);
-            }
-        }
-
-    }
-
-    private static final class GpInfo implements ProjectInformation {
-
-        private final GenericProject prj;
-        private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
-        GpInfo(GenericProject prj) {
-            this.prj = prj;
-        }
-
-        @Override
-        public String getName() {
-            return prj.getProjectDirectory().getNameExt();
-        }
-
-        @Override
-        public String getDisplayName() {
-            String override = getDisplayNameOverride(prj);
-            return override != null ? override : prj.getProjectDirectory().getNameExt();
-        }
-
-        @Override
-        public Icon getIcon() {
-            Icon icon = ImageUtilities.loadIcon(ICON);
-            return icon != null ? icon : UIManager.getIcon("Nb.Explorer.Folder.icon"); // NOI18N
-        }
-
-        @Override
-        public Project getProject() {
-            return prj;
-        }
-
-        /**
-         * Notifies listeners that the display name changed.
-         */
-        void fireDisplayNameChanged() {
-            changeSupport.firePropertyChange(PROP_DISPLAY_NAME, null, null);
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener listener) {
-            changeSupport.addPropertyChangeListener(listener);
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener listener) {
-            changeSupport.removePropertyChangeListener(listener);
-        }
-
-    }
-
-    /**
-     * Exposes the projects contained directly in the project directory
-     * as subprojects. Adds "Open Required Projects" and "Open Selected Project" actions.
-     */
-    private static final class GpSubprojectProvider implements SubprojectProvider {
-
-        private final GenericProject prj;
-        private final ChangeSupport changeSupport = new ChangeSupport(this);
-
-        GpSubprojectProvider(GenericProject prj) {
-            this.prj = prj;
-        }
-
-        @Override
-        public Set<? extends Project> getSubprojects() {
-            Set<Project> subprojects = new LinkedHashSet<>();
-            FileObject[] children = prj.getProjectDirectory().getChildren();
-            if (children != null) {
-                for (FileObject child : children) {
-                    Project owner = FileOwnerQuery.getOwner(child);
-                    if (owner != null && !owner.equals(prj)) {
-                        subprojects.add(owner);
-                    }
-                }
-            }
-            return Collections.unmodifiableSet(subprojects);
-        }
-
-        @Override
-        public void addChangeListener(ChangeListener listener) {
-            changeSupport.addChangeListener(listener);
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener listener) {
-            changeSupport.removeChangeListener(listener);
-        }
-
-    }
-
 }

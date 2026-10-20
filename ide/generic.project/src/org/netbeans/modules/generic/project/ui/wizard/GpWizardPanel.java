@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui.wizard;
 
 import java.awt.Component;
 import java.io.File;

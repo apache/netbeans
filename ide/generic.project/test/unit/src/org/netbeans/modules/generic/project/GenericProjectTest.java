@@ -29,6 +29,8 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
+import org.netbeans.modules.generic.project.ui.wizard.GpWizardIterator;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SubprojectProvider;

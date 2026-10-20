@@ -17,8 +17,9 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui.actions;
 
+import org.netbeans.modules.generic.project.GenericProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -35,11 +36,11 @@ import org.openide.util.Lookup;
  * project through the {@link GpProjectOperations} registered in
  * the lookup.
  */
-final class GpActionProvider implements ActionProvider {
+public final class GpActionProvider implements ActionProvider {
 
     private final GenericProject prj;
 
-    GpActionProvider(GenericProject prj) {
+    public GpActionProvider(GenericProject prj) {
         this.prj = prj;
     }
 

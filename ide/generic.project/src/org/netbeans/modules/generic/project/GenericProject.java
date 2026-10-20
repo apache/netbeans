@@ -35,6 +35,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.generic.project.ui.actions.GpActionProvider;
+import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
 import org.netbeans.modules.generic.project.ui.customizer.GpCustomizerProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
@@ -94,7 +96,11 @@ public final class GenericProject implements Project {
      */
     private volatile boolean deleted;
 
-    void markDeleted() {
+    /**
+     * Marks this project instance as explicitly deleted, see
+     * {@link #deleted}.
+     */
+    public void markDeleted() {
         deleted = true;
     }
 

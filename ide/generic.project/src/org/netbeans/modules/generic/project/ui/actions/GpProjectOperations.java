@@ -17,7 +17,9 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui.actions;
+
+import org.netbeans.modules.generic.project.GenericProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,11 +54,11 @@ import org.openide.filesystems.FileObject;
  * name. When the folder is renamed or moved, the (new) folder
  * name is authoritative again and any override is dropped.
  */
-final class GpProjectOperations implements MoveOrRenameOperationImplementation, CopyOperationImplementation, DeleteOperationImplementation {
+public final class GpProjectOperations implements MoveOrRenameOperationImplementation, CopyOperationImplementation, DeleteOperationImplementation {
 
     private final GenericProject prj;
 
-    GpProjectOperations(GenericProject prj) {
+    public GpProjectOperations(GenericProject prj) {
         this.prj = prj;
     }
 

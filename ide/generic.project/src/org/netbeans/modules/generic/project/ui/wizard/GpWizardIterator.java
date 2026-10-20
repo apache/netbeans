@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui.wizard;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.modules.generic.project.GenericProject;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -73,7 +74,7 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
      * for {@code localMarker} — marks it as a local project by the
      * FileObject attribute only.
      */
-    static Set<FileObject> createProject(File projectDir, boolean localMarker) throws IOException {
+    public static Set<FileObject> createProject(File projectDir, boolean localMarker) throws IOException {
         if (!projectDir.exists() && !projectDir.mkdirs()) {
             throw new IOException("Cannot create folder: " + projectDir); // NOI18N
         }
@@ -81,11 +82,9 @@ public final class GpWizardIterator implements WizardDescriptor.InstantiatingIte
         if (dir == null) {
             throw new IOException("Cannot map folder to the file system: " + projectDir); // NOI18N
         }
-        if (localMarker) {
-            GenericProject.setMarkerState(dir, false);
-        } else {
-            GenericProject.createMarker(dir);
-        }
+        // local project: recognition attribute only,
+        // otherwise the marker file in the working tree
+        GenericProject.setMarkerState(dir, !localMarker);
         return Set.of(dir);
     }
 

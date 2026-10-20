@@ -104,6 +104,8 @@ final class FoldView extends EditorView {
     private AttributeSet    selectedColors;
     
     private int options;
+    
+    private boolean showTooltip;
 
     /**
      * Coloring that will be used for code folding icons displayed in editor
@@ -116,7 +118,13 @@ final class FoldView extends EditorView {
     public static final String COLORING_PLACEHOLDER_BORDER = "code-folding-border"; // NOI18N
 
     
-    public FoldView(JTextComponent textComponent, Fold fold, FontColorSettings colorSettings, int options) {
+    public FoldView(
+            JTextComponent textComponent,
+            Fold fold,
+            FontColorSettings colorSettings,
+            int options,
+            boolean showTooltip
+    ) {
         super(null);
         int offset = fold.getStartOffset();
         int len = fold.getEndOffset() - offset;
@@ -128,6 +136,7 @@ final class FoldView extends EditorView {
         this.selectedColors = colorSettings.getFontColors(FontColorNames.SELECTION_COLORING);
         this.foldingBorderColors = colorSettings.getFontColors(COLORING_PLACEHOLDER_BORDER);
         this.options = options;
+        this.showTooltip = showTooltip;
     }
 
     @Override
@@ -320,6 +329,10 @@ final class FoldView extends EditorView {
 
     @Override
     public JComponent getToolTip(double x, double y, Shape allocation) {
+        if (!showTooltip) {
+            return null;
+        }
+        
         Container container = getContainer();
         if (container instanceof JEditorPane) {
             JEditorPane editorPane = (JEditorPane) getContainer();

@@ -21,6 +21,7 @@ package org.netbeans.modules.project.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -40,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -48,6 +51,8 @@ import org.netbeans.junit.Log;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FolderObj;
+import org.netbeans.modules.masterfs.filebasedfs.naming.NamingFactory;
 import org.netbeans.modules.project.ui.actions.TestSupport;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -56,6 +61,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -63,7 +69,6 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Jiri Rechtacek
  */
-@RandomlyFails
 public class OpenProjectListTest extends NbTestCase {
     FileObject f1_1_open, f1_2_open, f1_3_close;
     FileObject f2_1_open;
@@ -112,6 +117,7 @@ public class OpenProjectListTest extends NbTestCase {
         OpenProjectList.getDefault().close(OpenProjectList.getDefault().getOpenProjects(), false);
     }
     
+    @RandomlyFails
     public void testOpen () throws Exception {
         assertTrue ("No project is open.", OpenProjectList.getDefault ().getOpenProjects ().length == 0);
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
@@ -130,6 +136,7 @@ public class OpenProjectListTest extends NbTestCase {
         */
     }
 
+    @RandomlyFails
     public void testListenerOpenClose () throws Exception {
         assertTrue ("No project is open.", OpenProjectList.getDefault ().getOpenProjects ().length == 0); 
         ChangeListener list = new ChangeListener();
@@ -187,6 +194,7 @@ public class OpenProjectListTest extends NbTestCase {
         assertTrue ("Document f2_1_open is still loaded.", handler.openFiles.contains (f2_1_open.toURL ().toExternalForm ()));
     }
 
+    @RandomlyFails
     public void testSerialize() throws Exception {
         testOpen();
         
@@ -209,6 +217,7 @@ public class OpenProjectListTest extends NbTestCase {
         }
     }
     
+    @RandomlyFails
     public void testOpenDependingProject () throws Exception {
         assertTrue ("No project is open.", OpenProjectList.getDefault ().getOpenProjects ().length == 0);        
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
@@ -226,6 +235,7 @@ public class OpenProjectListTest extends NbTestCase {
         assertTrue ("Document f2_1_open is loaded.", handler.openFiles.contains (f2_1_open.toURL ().toExternalForm ()));
     }
     
+    @RandomlyFails
     public void testCloseProjectWithoutOpenDocuments () throws Exception {
         assertTrue ("No project is open.", OpenProjectList.getDefault ().getOpenProjects ().length == 0);        
         OpenProjectList.getDefault ().open (project2, false);        
@@ -242,6 +252,7 @@ public class OpenProjectListTest extends NbTestCase {
         assertFalse ("Project2 is closed.", OpenProjectList.getDefault ().isOpen (project2));
     }
     
+    @RandomlyFails
     public void testProjectOpenedClosed() throws Exception {
         ((TestSupport.TestProject) project1).setLookup(Lookups.fixed(new Object[] {
             new TestProjectOpenedHookImpl(),
@@ -263,6 +274,7 @@ public class OpenProjectListTest extends NbTestCase {
         assertEquals("both close hooks were called", 2, TestProjectOpenedHookImpl.closed);
     }
     
+    @RandomlyFails
     public void testNotifyDeleted() throws Exception {
         FileObject workDir = FileUtil.toFileObject (getWorkDir ());
         
@@ -299,6 +311,7 @@ public class OpenProjectListTest extends NbTestCase {
         assertFalse("project2 is not in recent projects list", OpenProjectList.getDefault().getRecentProjects().contains(prj2));
     }
     
+    @RandomlyFails
     public void testMainProject() throws Exception {
         FileObject workDir = FileUtil.toFileObject (getWorkDir ());
         
@@ -348,6 +361,7 @@ public class OpenProjectListTest extends NbTestCase {
         OpenProjectList.getDefault().setMainProject(prj1);
     }
 
+    @RandomlyFails
     public void testProjectClosedRace() throws Exception {
 
         final class POHImpl extends ProjectOpenedHook {
@@ -425,6 +439,43 @@ public class OpenProjectListTest extends NbTestCase {
         assertEquals("No projects", 0, projects.length);            //NOI18N
 
 
+    }
+
+    public void testChildrenFirstPathComparator() throws Exception {
+        // keep relative or this will fail on windows due to File conversion
+        List<PathProject> paths = Stream.of(
+                "a/maven",
+                "a/maven-indexer",
+                "a/maven-indexer/indexer-core",
+                "a/maven/maven-model"
+        ).map(s -> new File(s.replace("/", File.separator))).map(PathProject::new).toList();
+        
+        List<Project> sorted = new ArrayList<>(paths);
+        sorted.sort(OpenProjectList.projectByPath());
+        assertEquals(
+                "maven-indexer must be last",
+                "[a/maven, a/maven/maven-model, a/maven-indexer, a/maven-indexer/indexer-core]",
+                sorted.toString()
+        );
+    }
+
+    private record PathProject(File file) implements Project {
+
+        @Override
+        public FileObject getProjectDirectory() {
+            return new FolderObj(file, NamingFactory.fromFile(file));
+        }
+
+        @Override
+        public Lookup getLookup() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String toString() {
+            return file.toString().replace(File.separator, "/");
+        }
+        
     }
 
     // helper code

@@ -565,13 +565,11 @@ public class JavaI18nFinder implements I18nFinder {
      * @return <code>true<code> if string is internationalized and <code>i18nSearch</code> flag is <code>true</code>
      *   or if if string is non-internationalized and <code>i18nSearch</code> flag is <code>false</code> */
     protected boolean isSearchedString(String partHardLine, String hardString) {
-        String lineToMatch = UtilConvert.unicodesToChars(partHardLine);
-
         Boolean regexpTestResult;
         Exception ex = null;
         try {
             String regexp = createRegularExpression(hardString);
-            regexpTestResult = (Pattern.compile(regexp).matcher(lineToMatch).find()
+            regexpTestResult = (Pattern.compile(regexp).matcher(partHardLine).find()
                                 == i18nSearch);     //auto-boxing
         } catch (ParseException ex1) {
             ex = ex1;

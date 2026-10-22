@@ -38,21 +38,22 @@ import org.openide.util.Exceptions;
  */
 public class InlineHintsPanel extends javax.swing.JPanel {
 
-    public static final String JAVA_INLINE_HINT_PARAMETER_NAME = "javaInlineHintParameterName"; //NOI18N
-    public static final String JAVA_INLINE_HINT_CHAINED_TYPES = "javaInlineHintChainedTypes"; //NOI18N
-    public static final String JAVA_INLINE_HINT_VAR_TYPE = "javaInlineHintVarType"; //NOI18N
-
     private static final Map<String, Boolean> DEFAULT_VALUES;
 
     static {
         Map<String, Boolean> defaultValuesBuilder = new HashMap<>();
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_PARAMETER_NAME, true);
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_CHAINED_TYPES, false);
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_VAR_TYPE, false);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_PARAMETER_NAME, true);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_CHAINED_TYPES, false);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_VAR_TYPE, false);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT, true);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT_METHODS, true);
+        defaultValuesBuilder.put(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT_TYPES, true);
         DEFAULT_VALUES = Collections.unmodifiableMap(defaultValuesBuilder);
     }
 
-    private List<JCheckBox> parameterBoxes;
+    private List<JCheckBox> settingsBoxes;
+    private List<JCheckBox> inlineHintBoxes;
+    private List<JCheckBox> referenceCountBoxes;
     private InlineHintsOptionsPanelController controller;
     private boolean changed = false;
 
@@ -69,7 +70,7 @@ public class InlineHintsPanel extends javax.swing.JPanel {
 
         Preferences node = InlineHintsSettings.getCurrentNode();
 
-        for (JCheckBox box : parameterBoxes) {
+        for (JCheckBox box : settingsBoxes) {
             box.setSelected(node.getBoolean(box.getActionCommand(), DEFAULT_VALUES.get(box.getActionCommand())));
         }
 
@@ -86,7 +87,7 @@ public class InlineHintsPanel extends javax.swing.JPanel {
 
         Preferences node = InlineHintsSettings.getCurrentNode();
 
-        for (JCheckBox box : parameterBoxes) {
+        for (JCheckBox box : settingsBoxes) {
             boolean value = box.isSelected();
             boolean original = node.getBoolean(box.getActionCommand(),
                     DEFAULT_VALUES.get(box.getActionCommand()));
@@ -127,6 +128,9 @@ public class InlineHintsPanel extends javax.swing.JPanel {
         javaInlineHintParameterNameCB = new javax.swing.JCheckBox();
         javaInlineHintChainedTypesCB = new javax.swing.JCheckBox();
         javaInlineHintVarTypeCB = new javax.swing.JCheckBox();
+        javaInlineHintReferenceCountCB = new javax.swing.JCheckBox();
+        javaInlineHintReferenceCountMethodsCB = new javax.swing.JCheckBox();
+        javaInlineHintReferenceCountTypesCB = new javax.swing.JCheckBox();
         javaInlineHintsCB = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -136,6 +140,12 @@ public class InlineHintsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintChainedTypesCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintChainedTypesCB.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintVarTypeCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintVarTypeCB.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintReferenceCountCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintReferenceCountCB.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintReferenceCountMethodsCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintReferenceCountMethodsCB.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintReferenceCountTypesCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintReferenceCountTypesCB.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintsCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintsCB.text")); // NOI18N
 
@@ -149,9 +159,15 @@ public class InlineHintsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(javaInlineHintReferenceCountCB)
                             .addComponent(javaInlineHintVarTypeCB)
                             .addComponent(javaInlineHintChainedTypesCB)
-                            .addComponent(javaInlineHintParameterNameCB)))
+                            .addComponent(javaInlineHintParameterNameCB)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(javaInlineHintReferenceCountMethodsCB)
+                                    .addComponent(javaInlineHintReferenceCountTypesCB)))))
                     .addComponent(javaInlineHintsCB))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -166,16 +182,22 @@ public class InlineHintsPanel extends javax.swing.JPanel {
                 .addComponent(javaInlineHintChainedTypesCB)
                 .addGap(6, 6, 6)
                 .addComponent(javaInlineHintVarTypeCB)
+                .addGap(6, 6, 6)
+                .addComponent(javaInlineHintReferenceCountCB)
+                .addGap(6, 6, 6)
+                .addComponent(javaInlineHintReferenceCountMethodsCB)
+                .addGap(6, 6, 6)
+                .addComponent(javaInlineHintReferenceCountTypesCB)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateCheckBoxEnabledState(ActionEvent evt) {
-        if (javaInlineHintsCB.isSelected() && parameterBoxes.stream().noneMatch(JCheckBox::isSelected)) {
+        if (javaInlineHintsCB.isSelected() && inlineHintBoxes.stream().noneMatch(JCheckBox::isSelected)) {
             if (evt != null && evt.getSource() == javaInlineHintsCB) {
                 // restore default if hints are toggled on and no other parameter boxes are selected
                 // this ensures that the view aciton won't become a no-op
-                for (JCheckBox box : parameterBoxes) {
+                for (JCheckBox box : inlineHintBoxes) {
                     box.setSelected(DEFAULT_VALUES.get(box.getActionCommand()));
                 }
             } else {
@@ -183,33 +205,59 @@ public class InlineHintsPanel extends javax.swing.JPanel {
                 javaInlineHintsCB.setSelected(false);
             }
         }
-        // enable parameter boxes only if inline hints are active
-        parameterBoxes.forEach(box -> box.setEnabled(javaInlineHintsCB.isSelected()));
+        inlineHintBoxes.forEach(box -> box.setEnabled(javaInlineHintsCB.isSelected()));
+        javaInlineHintReferenceCountCB.setEnabled(true);
+        referenceCountBoxes.forEach(box -> box.setEnabled(javaInlineHintReferenceCountCB.isSelected()));
+        if (javaInlineHintReferenceCountCB.isSelected() && referenceCountBoxes.stream().noneMatch(JCheckBox::isSelected)) {
+            if (evt != null && evt.getSource() == javaInlineHintReferenceCountCB) {
+                for (JCheckBox box : referenceCountBoxes) {
+                    box.setSelected(DEFAULT_VALUES.get(box.getActionCommand()));
+                }
+            } else {
+                javaInlineHintReferenceCountCB.setSelected(false);
+                referenceCountBoxes.forEach(box -> box.setEnabled(false));
+            }
+        }
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox javaInlineHintChainedTypesCB;
     private javax.swing.JCheckBox javaInlineHintParameterNameCB;
+    private javax.swing.JCheckBox javaInlineHintReferenceCountCB;
+    private javax.swing.JCheckBox javaInlineHintReferenceCountMethodsCB;
+    private javax.swing.JCheckBox javaInlineHintReferenceCountTypesCB;
     private javax.swing.JCheckBox javaInlineHintVarTypeCB;
     private javax.swing.JCheckBox javaInlineHintsCB;
     // End of variables declaration//GEN-END:variables
 
     private void fillBoxes() {
-        parameterBoxes = new ArrayList<>();
-        parameterBoxes.add(javaInlineHintParameterNameCB);
-        parameterBoxes.add(javaInlineHintChainedTypesCB);
-        parameterBoxes.add(javaInlineHintVarTypeCB);
+        inlineHintBoxes = new ArrayList<>();
+        inlineHintBoxes.add(javaInlineHintParameterNameCB);
+        inlineHintBoxes.add(javaInlineHintChainedTypesCB);
+        inlineHintBoxes.add(javaInlineHintVarTypeCB);
 
-        javaInlineHintParameterNameCB.setActionCommand(JAVA_INLINE_HINT_PARAMETER_NAME);
-        javaInlineHintChainedTypesCB.setActionCommand(JAVA_INLINE_HINT_CHAINED_TYPES);
-        javaInlineHintVarTypeCB.setActionCommand(JAVA_INLINE_HINT_VAR_TYPE);
+        referenceCountBoxes = new ArrayList<>();
+        referenceCountBoxes.add(javaInlineHintReferenceCountMethodsCB);
+        referenceCountBoxes.add(javaInlineHintReferenceCountTypesCB);
+
+        settingsBoxes = new ArrayList<>();
+        settingsBoxes.addAll(inlineHintBoxes);
+        settingsBoxes.add(javaInlineHintReferenceCountCB);
+        settingsBoxes.addAll(referenceCountBoxes);
+
+        javaInlineHintParameterNameCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_PARAMETER_NAME);
+        javaInlineHintChainedTypesCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_CHAINED_TYPES);
+        javaInlineHintVarTypeCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_VAR_TYPE);
+        javaInlineHintReferenceCountCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT);
+        javaInlineHintReferenceCountMethodsCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT_METHODS);
+        javaInlineHintReferenceCountTypesCB.setActionCommand(InlineHintsSettings.JAVA_INLINE_HINT_REFERENCE_COUNT_TYPES);
     }
 
     private void addListeners() {
         ActionListener al = e -> checkBoxChanged(e);
         javaInlineHintsCB.addActionListener(al);
-        for (JCheckBox box : parameterBoxes) {
+        for (JCheckBox box : settingsBoxes) {
             box.addActionListener(al);
         }
     }
@@ -221,7 +269,7 @@ public class InlineHintsPanel extends javax.swing.JPanel {
             return;
         }        
         Preferences node = InlineHintsSettings.getCurrentNode();
-        for (JCheckBox box : parameterBoxes) {
+        for (JCheckBox box : settingsBoxes) {
             if (node.getBoolean(box.getActionCommand(), DEFAULT_VALUES.get(box.getActionCommand())) != box.isSelected()) {
                 changed = true;
                 return;

@@ -20,6 +20,7 @@ package org.netbeans.modules.refactoring.java.test;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,8 +28,11 @@ import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.refactoring.api.Scope;
 import org.netbeans.modules.refactoring.java.WhereUsedElement;
+import org.netbeans.modules.refactoring.java.api.ui.JavaWhereUsedSupport;
 import org.netbeans.modules.refactoring.java.plugins.FindUsagesVisitor;
 import org.netbeans.modules.refactoring.java.spi.JavaWhereUsedFilters;
 import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.writeFilesAndWaitForScan;
@@ -227,10 +231,71 @@ public class FindUsagesFilterTest extends RefactoringTestBase {
                 Pair.of("lijst[4] = lijst[5];", JavaWhereUsedFilters.ReadWrite.READ),
                 Pair.of("lijst = null;", JavaWhereUsedFilters.ReadWrite.WRITE));
     }
+
+    public void testDirectMethodReferencesIgnoreOverrides() throws Exception {
+        String source;
+        writeFilesAndWaitForScan(src, new RefactoringTestBase.File("t/A.java", source = "package t;\n"
+                + "interface DirectBase {\n"
+                + "    void ping();\n"
+                + "}\n"
+                + "class DirectImpl implements DirectBase {\n"
+                + "    @Override public void ping() {}\n"
+                + "}\n"
+                + "public class A {\n"
+                + "    void invoke() {\n"
+                + "        DirectBase base = new DirectImpl();\n"
+                + "        base.ping();\n"
+                + "        new DirectImpl().ping();\n"
+                + "    }\n"
+                + "}\n"));
+
+        performFind(src.getFileObject("t/A.java"), source.indexOf("void ping") + 6, false, false, false, false,
+                Pair.of("base.ping();", (JavaWhereUsedFilters.ReadWrite) null),
+                Pair.of("new DirectImpl().ping();", (JavaWhereUsedFilters.ReadWrite) null));
+        performFind(src.getFileObject("t/A.java"), source.indexOf("void ping") + 6, false, false, false, true,
+                Pair.of("base.ping();", (JavaWhereUsedFilters.ReadWrite) null));
+    }
+
+    public void testDirectMethodReferenceCount() throws Exception {
+        String source;
+        writeFilesAndWaitForScan(src, new RefactoringTestBase.File("t/A.java", source = "package t;\n"
+                + "interface DirectBase {\n"
+                + "    void ping();\n"
+                + "}\n"
+                + "class DirectImpl implements DirectBase {\n"
+                + "    @Override public void ping() {}\n"
+                + "}\n"
+                + "public class A {\n"
+                + "    void invoke() {\n"
+                + "        DirectBase base = new DirectImpl();\n"
+                + "        base.ping();\n"
+                + "        new DirectImpl().ping();\n"
+                + "    }\n"
+                + "}\n"));
+        final TreePathHandle[] handle = new TreePathHandle[1];
+        JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
+
+            @Override
+            public void run(CompilationController javac) throws Exception {
+                javac.toPhase(JavaSource.Phase.RESOLVED);
+                TreePath tp = javac.getTreeUtilities().pathFor(source.indexOf("void ping") + 6);
+                handle[0] = TreePathHandle.create(tp, javac);
+            }
+        }, true);
+
+        assertEquals(1, JavaWhereUsedSupport.getDirectReferenceCount(handle[0], Scope.create(Arrays.asList(src), null, null), new AtomicBoolean()));
+    }
     
     @SuppressWarnings("null")
     private void performFind(FileObject source, final int absPos, final boolean searchInComments,
                              boolean inImport, boolean inComment, Pair<String, JavaWhereUsedFilters.ReadWrite>... expected) throws Exception {
+        performFind(source, absPos, searchInComments, inImport, inComment, false, expected);
+    }
+
+    @SuppressWarnings("null")
+    private void performFind(FileObject source, final int absPos, final boolean searchInComments,
+                             boolean inImport, boolean inComment, final boolean directReferencesOnly,
+                             Pair<String, JavaWhereUsedFilters.ReadWrite>... expected) throws Exception {
         final FindUsagesVisitor[] r = new FindUsagesVisitor[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {
 
@@ -243,7 +308,7 @@ public class FindUsagesFilterTest extends RefactoringTestBase {
                 Element el = javac.getTrees().getElement(tp);
                 AtomicBoolean isCancelled = new AtomicBoolean();
                 AtomicBoolean inImport = new AtomicBoolean();
-                r[0] = new FindUsagesVisitor(javac, isCancelled, searchInComments, false, false, false, false, inImport);
+                r[0] = new FindUsagesVisitor(javac, isCancelled, searchInComments, false, directReferencesOnly, false, false, false, inImport);
                 r[0].scan(cut, el);
             }
         }, true);

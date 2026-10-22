@@ -661,6 +661,9 @@ jobs:
       - name: ide/extexecution.base
         run: ant $OPTS -f ide/extexecution.base test
 
+      - name: ide/generic.project
+        run: ant $OPTS -f ide/generic.project test
+
       - name: ide/gsf.testrunner.ui
         run: ant $OPTS -f ide/gsf.testrunner.ui test
 

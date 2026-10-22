@@ -145,10 +145,18 @@ implements LookupListener, Runnable {
             if (pf.getClass().getName().contains("AntBasedProjectFactorySingleton")) { // NOI18N
                 continue;
             }
+            // #162517 
             if (pf.getClass().getName().startsWith("org.netbeans.modules.ide.ergonomics")) { // NOI18N
                 continue;
             }
+            // #248615
             if (pf.getClass().getName().startsWith("org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory")) { // NOI18N
+                continue;
+            }
+            // generic.project ships in the base ide cluster: its factory is
+            // always present and must not count as an "additional" project,
+            // or an empty IDE would never be detected as empty.
+            if (pf.getClass().getName().startsWith("org.netbeans.modules.generic.project")) { // NOI18N
                 continue;
             }
             return false;

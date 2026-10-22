@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
 public class DBScriptWizardDescriptor implements WizardDescriptor.FinishablePanel, ChangeListener {
     
     private DBScriptPanel.WizardPanel p;
-    private List changeListeners = new ArrayList();
+    private List<javax.swing.event.ChangeListener> changeListeners = new ArrayList<>();
     private WizardDescriptor wizardDescriptor;
     private Project project;
     

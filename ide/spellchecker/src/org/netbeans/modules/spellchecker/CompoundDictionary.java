@@ -29,22 +29,19 @@ import org.netbeans.modules.spellchecker.spi.dictionary.ValidityType;
  *
  * @author Jan Lahoda
  */
-public class CompoundDictionary implements Dictionary {
+public final class CompoundDictionary implements Dictionary {
 
     private static final Logger LOGGER = Logger.getLogger(CompoundDictionary.class.getName());
-    private Dictionary[] delegates;
-    
-    private CompoundDictionary(Dictionary... delegates) {
-        this.delegates = delegates.clone();
+    private final List<Dictionary> delegates;
+
+    public CompoundDictionary(List<Dictionary> delegates) {
+        this.delegates = List.copyOf(delegates);
     }
-    
-    public static Dictionary create(Dictionary... delegates) {
-        return new CompoundDictionary(delegates);
-    }
-    
+
+    @Override
     public ValidityType validateWord(CharSequence word) {
         ValidityType result = ValidityType.INVALID;
-        
+
         for (Dictionary d : delegates) {
             ValidityType thisResult = d.validateWord(word);
             if (LOGGER.isLoggable(Level.FINE)) {
@@ -54,32 +51,34 @@ public class CompoundDictionary implements Dictionary {
             if (thisResult == ValidityType.VALID || thisResult == ValidityType.BLACKLISTED) {
                 return thisResult;
             }
-            
+
             if (thisResult == ValidityType.PREFIX_OF_VALID && result == ValidityType.INVALID) {
                 result = ValidityType.PREFIX_OF_VALID;
             }
         }
-        
+
         return result;
     }
 
+    @Override
     public List<String> findValidWordsForPrefix(CharSequence word) {
-        List<String> result = new LinkedList<String>();
-        
+        List<String> result = new LinkedList<>();
+
         for (Dictionary d : delegates) {
             result.addAll(d.findValidWordsForPrefix(word));
         }
-        
+
         return result;
     }
 
+    @Override
     public List<String> findProposals(CharSequence word) {
-        List<String> result = new LinkedList<String>();
-        
+        List<String> result = new LinkedList<>();
+
         for (Dictionary d : delegates) {
             result.addAll(d.findProposals(word));
         }
-        
+
         return result;
     }
 

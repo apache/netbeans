@@ -145,9 +145,18 @@ public class EditorModule extends ModuleInstall {
         initAndCheckEditorKitTypeRegistry("text/html", HTMLEditorKit.class.getName()); //NOI18N
         initAndCheckEditorKitTypeRegistry("text/rtf", RTFEditorKit.class.getName()); //NOI18N
         initAndCheckEditorKitTypeRegistry("application/rtf", RTFEditorKit.class.getName()); //NOI18N
-            
+
         // Now hook up to the JDK's editor kit registry
-        // XXX: This all should be removed, see IZ #80110
+        // TODO: This all should be removed, see IZ #80110 or #9523
+        if (!Boolean.parseBoolean(System.getProperty("nb.disable.editorkit.hack", "false" /*TODO true in future*/))) {
+            LOG.log(Level.WARNING, 
+                """
+                Setting content type by mime type String for NetBeans editor kits is no longer supported and will fail on JDK 27 and later, obtain the EditorKit instead:
+                    jtextarea.setContentType("text/x-properties") =>
+                    jtextarea.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"))
+                Set the sytem property 'nb.disable.editorkit.hack=true' to disable this warning.
+                """
+            );
         try {
             Field keyField = JEditorPane.class.getDeclaredField("kitRegistryKey");  // NOI18N
             keyField.setAccessible(true);
@@ -166,21 +175,10 @@ public class EditorModule extends ModuleInstall {
 //            Hashtable kitMapping = (Hashtable)sun.awt.AppContext.getAppContext().get(key);
 //            sun.awt.AppContext.getAppContext().put(key, new HackMap(kitMapping));
         } catch (Throwable t) {
-            if (debug) {
-                LOG.log(Level.WARNING, "Can't hack in to the JEditorPane's registry for kits.", t);
-            } else {
-                LOG.log(Level.WARNING, "Can''t hack in to the JEditorPane''s registry for kits: {0}", new Object[] {t});
-            }
+            LOG.log(Level.WARNING, "Can't hack in to the JEditorPane's registry to replace editor kits.");
         }
-            
-        // Registration of the editor kits to JEditorPane
-//        for (int i = 0; i < replacements.length; i++) {
-//            JEditorPane.registerEditorKitForContentType(
-//                replacements[i].contentType,
-//                replacements[i].newKitClassName,
-//                getClass().getClassLoader()
-//            );
-//        }
+        }
+        // removeme end
 
         // ------------------------------------------------------------
         

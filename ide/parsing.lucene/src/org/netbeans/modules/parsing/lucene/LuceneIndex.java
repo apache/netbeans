@@ -230,8 +230,12 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
 
             changeIndexReader(adapter, in);
             try {
-                for(LeafReaderContext lrc: in.leaves()) {
-                    TermsEnum te = lrc.reader().terms(field).iterator();
+                for (LeafReaderContext lrc: in.leaves()) {
+                    Terms terms = lrc.reader().terms(field);
+                    if (terms == null) {
+                        continue;
+                    }
+                    TermsEnum te = terms.iterator();
                     if (te.seekCeil(startBytesRef) != TermsEnum.SeekStatus.END) {
                         do {
                             if (cancel != null && cancel.get()) {

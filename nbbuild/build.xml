@@ -2192,16 +2192,27 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <excludesfile name="build/rat-exclusions-licenseinfo.txt" />
         </fileset>
         
-        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" outputStyle="plain-rat" outputfile="nbbuild/build/rat-report.txt">
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" outputStyle="xml" outputfile="${nb.build.dir}/rat-report.xml">
             <resources refid="rat.files" />
         </rat:report>
-        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" outputStyle="xml" outputfile="nbbuild/build/rat-report.xml">
-            <resources refid="rat.files" />
-        </rat:report>
+
+        <!-- reduce size of file by removing full path -->
+        <taskdef name="ratrelativize" classname="org.netbeans.nbbuild.RatRelativize" classpath="${build.ant.classes.dir}"/>
+        <ratrelativize file="${nb.build.dir}/rat-report.xml" />
+
+        <xslt in="${nb.build.dir}/rat-report.xml" out="${nb.build.dir}/rat-report.txt">
+            <style>
+                <javaresource name="org/apache/rat/plain-rat.xsl">
+                    <classpath>
+                        <pathelement location="external/apache-rat-0.18.jar"/>
+                    </classpath>
+                </javaresource>
+            </style>
+        </xslt>
         <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
         <loadproperties srcFile="cluster.properties" />
         <property name="rat-report.haltonfailure" value="false" />
-        <rattotest source="build/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
+        <rattotest source="${nb.build.dir}/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
         
         <reportFromLicenseinfo nball=".." report="${nb.build.dir}/rat-appendix.txt" />
     </target>

@@ -35,11 +35,14 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
 import static org.netbeans.modules.project.ui.groups.ManageGroupsPanel.NONE_GOUP;
+import org.netbeans.modules.project.ui.OpenProjectList;
+import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.NotificationLineSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -218,7 +221,26 @@ public class NewGroupPanel extends JPanel {
         } else {
             assert Type.DIR == type;
             FileObject f = FileUtil.toFileObject(FileUtil.normalizeFile(new File(directory)));
-            return DirectoryGroup.create(name, f);
+            // Ask a project type to promote the directory to a project
+            // of its own (e.g. a local generic project): the group is
+            // then a stock subprojects group of the promoted project,
+            // so nested projects are discovered through the project's
+            // own lookup.
+            DirectoryProjectProvider provider = Lookup.getDefault().lookup(DirectoryProjectProvider.class);
+            if (provider == null) {
+                throw new IllegalStateException("Cannot create a project group: no provider found");
+            }
+            Project prj;
+            try {
+                prj = provider.createProject(f);
+            } catch (IOException x) {
+                throw new AssertionError(x);
+            }
+            if (prj == null) {
+                throw new IllegalStateException("Cannot create a project group for directory: " + f.getName());
+            }
+            OpenProjectList.getDefault().open(new Project[] {prj}, false, false, true, null);
+            return SubprojectsGroup.create(name, prj);
         }
     }
 

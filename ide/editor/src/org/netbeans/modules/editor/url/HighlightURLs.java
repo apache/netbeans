@@ -254,7 +254,7 @@ public final class HighlightURLs implements DocumentListener, Runnable {
         return bag;
     }
 
-    @MimeRegistration(mimeType="", service=HighlightsLayerFactory.class)
+    @MimeRegistration(mimeType = "", service = HighlightsLayerFactory.class, position = 790)
     public static final class FactoryImpl implements HighlightsLayerFactory {
 
         @Override

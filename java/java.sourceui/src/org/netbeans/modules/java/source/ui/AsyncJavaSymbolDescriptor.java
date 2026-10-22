@@ -19,59 +19,38 @@
 
 package org.netbeans.modules.java.source.ui;
 
-import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.api.JavacTool;
-import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.jvm.ClassReader;
-import com.sun.tools.javac.model.JavacElements;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.swing.Icon;
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
-import org.netbeans.modules.java.source.indexing.JavaIndex;
-import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
-import org.netbeans.modules.java.source.parsing.CachingFileManager;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.support.AsyncDescriptor;
 import org.netbeans.spi.jumpto.support.DescriptorChangeEvent;
 import org.netbeans.spi.jumpto.support.DescriptorChangeListener;
 import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
@@ -85,30 +64,33 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
 
     private static final RequestProcessor WORKER = new RequestProcessor(AsyncJavaSymbolDescriptor.class);
     private static final String INIT = "<init>"; //NOI18N
-    private static final Logger LOG = Logger.getLogger(AsyncJavaSymbolDescriptor.class.getName());
-    private static volatile boolean pkgROELogged = false;
-    private static volatile boolean clzROELogged = false;
-
-    private static Reference<JavacTaskImpl> javacRef;
+    private final ConcurrentHashMap<FileObject,JavacTaskImpl> javacCache;
 
     private final String ident;
     private final boolean caseSensitive;
     private final List<DescriptorChangeListener<SymbolDescriptor>> listeners;
     private final AtomicBoolean initialized;
 
+    /**
+     * @param javacCache a cache map to be shared between instances during a single search, to avoid
+     *        creating a JavacTaskImpl for every symbol
+     */
     AsyncJavaSymbolDescriptor (
             @NullAllowed final ProjectInformation projectInformation,
             @NonNull final FileObject root,
             @NonNull final ClassIndexImpl ci,
             @NonNull final ElementHandle<TypeElement> owner,
             @NonNull final String ident,
-            final boolean caseSensitive) {
+            final boolean caseSensitive,
+            ConcurrentHashMap<FileObject,JavacTaskImpl> javacCache)
+    {
         super(owner, projectInformation, root, ci);
         assert ident != null;
         this.ident = ident;
         this.listeners = new CopyOnWriteArrayList<>();
         this.initialized = new AtomicBoolean();
         this.caseSensitive = caseSensitive;
+        this.javacCache = javacCache;
     }
 
     @Override
@@ -131,8 +113,20 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
     @Override
     public void open() {
         final Collection<? extends SymbolDescriptor> symbols = resolve();
-        if (!symbols.isEmpty()) {
-            symbols.iterator().next().open();
+        if (symbols.isEmpty()) {
+            return;
+        }
+        SymbolDescriptor sd = symbols.iterator().next();
+        if (sd != this) {
+            sd.open();
+        } else {
+            /* The case where resolve() returns an un-enriched Collections.singleton(this) because
+            of some error (e.g. javac threw CompletionFailure). Fall back to opening the type by
+            its ElementHandle via ElementOpen, which goes through ClassIndex/SourceUtils. */
+            final FileObject file = getFileObject();
+            if (file != null) {
+                ElementOpen.open(ClasspathInfo.create(file), getOwner());
+            }
         }
     }
 
@@ -196,27 +190,30 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
     }
 
     @NonNull
+    private JavacTaskImpl getOrCreateJavac(@NonNull FileObject root) {
+        return javacCache.computeIfAbsent(root, r -> {
+            final ClasspathInfo cpInfo = ClasspathInfo.create(root);
+            JavacTaskImpl ret = JavacParser.createJavacTask(
+                    cpInfo, null, null, null, null, null, null, null,
+                    Collections.<JavaFileObject>emptyList());
+            // Force JTImpl.prepareCompiler to get JTImpl into Context
+            ret.enter();
+            return ret;
+        });
+    }
+
+    @NonNull
     private Collection<? extends SymbolDescriptor> resolve() {
+        final List<SymbolDescriptor> symbols = new ArrayList<>();
         try {
-            final List<SymbolDescriptor> symbols = new ArrayList<>();
-            final JavacTaskImpl jt = getJavac(getRoot());
-//            final JavaFileManager fm = jt.getContext().get(JavaFileManager.class);
-//            final ClassReader cr = ClassReader.instance(jt.getContext());
-//            final Names names = Names.instance(jt.getContext());
-//            final String binName = ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0];
-//            final Name jcName = names.fromString(binName);
-//            final Symbol.ClassSymbol te = cr.enterClass((com.sun.tools.javac.util.Name) jcName);
-//            te.owner.completer = null;
-//            te.classfile = fm.getJavaFileForInput(
-//                StandardLocation.CLASS_PATH,
-//                FileObjects.convertFolder2Package(binName),
-//                JavaFileObject.Kind.CLASS);
-            final Symtab syms = Symtab.instance(jt.getContext());
-            final Set<?> pkgs = new HashSet<>(getPackages(syms).keySet());
-            final Set<?> clzs = new HashSet<>(getClasses(syms).keySet());
-            jt.getElements().getTypeElement("java.lang.Object"); // Ensure proper javac initialization
-            final TypeElement te = ElementUtils.getTypeElementByBinaryName(jt,
-                    ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0]);
+            final String binName = ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0];
+            final JavacTaskImpl jt = getOrCreateJavac(getRoot());
+            final TypeElement te;
+            /* Keep access to shared JavacTaskImpl instances thread-safe in case javacCache gets
+            shared across threads. */
+            synchronized (jt) {
+                te = ElementUtils.getTypeElementByBinaryName(jt, binName);
+            }
             if (te != null) {
                 if (ident.equals(getSimpleName(te, null, caseSensitive))) {
                     final String simpleName = te.getSimpleName().toString();
@@ -252,69 +249,25 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
                     }
                 }
             }
-            getClasses(syms).keySet().retainAll(clzs);
-            getPackages(syms).keySet().retainAll(pkgs);
-            return symbols;
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
+            /* Swallow so that unexpected javac failures (e.g. CompletionFailure, which is a
+            RuntimeException) fall through to the "no enriched symbols" path below rather than
+            propagating into the WORKER thread and leaving the descriptor in a half-initialized
+            state. */
             Exceptions.printStackTrace(e);
-           return Collections.<SymbolDescriptor>emptyList();
         }
-    }
-
-    @NonNull
-    private Map<?,?> getPackages(final Symtab cr) {
-        Map<?,?> res = Collections.emptyMap();
-        try {
-            final Field fld = ClassReader.class.getDeclaredField("packages");    //NOI18N
-            fld.setAccessible(true);
-            final Map<?,?> pkgs = (Map<?,?>) fld.get(cr);
-            if (pkgs != null) {
-                res = pkgs;
-            }
-        } catch (ReflectiveOperationException e) {
-            if (!pkgROELogged) {
-                LOG.warning(e.getMessage());
-                pkgROELogged = true;
-            }
+        /* The async path is meant to *enrich* a descriptor that the (Lucene-backed)
+        JavaSymbolProvider already produced, not to delete it. If javac couldn't load the
+        TypeElement (te==null), no enclosed element matched ident, or the lookup threw, the entry is
+        still a valid match from the index and must remain in the list. Returning an empty
+        collection here would cause Models.MutableListModelImpl#descriptorChanged to remove the
+        source from the live model, causing Lucene-based search results to appear briefly then
+        disappear in the Go to Symbol dialog. Fall back to keeping the AsyncJavaSymbolDescriptor
+        itself. */
+        if (symbols.isEmpty()) {
+            return Collections.<SymbolDescriptor>singleton(this);
         }
-        return res;
-    }
-
-    @NonNull
-    private Map<?,?> getClasses(final Symtab cr) {
-        Map<?,?> res = Collections.emptyMap();
-        try {
-            final Field fld = ClassReader.class.getDeclaredField("classes");    //NOI18N
-            fld.setAccessible(true);
-            Map<?,?> clzs = (Map<?,?>) fld.get(cr);
-            if (clzs != null) {
-                res = clzs;
-            }
-        } catch (ReflectiveOperationException e) {
-            if (!clzROELogged) {
-                LOG.warning(e.getMessage());
-                clzROELogged = true;
-            }
-        }
-        return res;
-    }
-
-    private static JavacTaskImpl getJavac(FileObject root) throws IOException {
-        JavacTaskImpl javac;
-        Reference<JavacTaskImpl> ref = javacRef;
-        if (ref == null || (javac = ref.get()) == null) {
-            String sourceLevel = SourceLevelQuery.getSourceLevel(root);
-            javac = (JavacTaskImpl)JavacTool.create().getTask(null,
-                    new RootChange(root),
-                    new Listener(),
-                    sourceLevel != null ? Arrays.asList("-source", sourceLevel) : Collections.<String>emptySet(), //NOI18N
-                    Collections.<String>emptySet(),
-                    Collections.<JavaFileObject>emptySet());
-            javacRef = new WeakReference<>(javac);
-        }
-        final JavaFileManager fm = javac.getContext().get(JavaFileManager.class);
-        ((RootChange)fm).setRoot(root);
-        return javac;
+        return symbols;
     }
 
     @NonNull
@@ -332,104 +285,4 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
         return result;
     }
 
-    @ClientCodeWrapper.Trusted
-    private static final class RootChange implements JavaFileManager {
-
-        private FileObject currentRoot;
-        private JavaFileManager delegate;
-
-        RootChange(@NonNull final FileObject root) throws IOException {
-            setRoot(root);
-        }
-
-        void setRoot(@NonNull final FileObject root) throws IOException {
-            if (root != currentRoot) {
-                final File classes = JavaIndex.getClassFolder(root.toURL());
-                final CachingFileManager fm = new CachingFileManager(
-                        CachingArchiveProvider.getDefault(),
-                        ClassPathSupport.createClassPath(BaseUtilities.toURI(classes).toURL()),
-                        null,
-                        false,
-                        true);
-                this.delegate = fm;
-                this.currentRoot = root;
-            }
-        }
-
-        @Override
-        public ClassLoader getClassLoader(Location location) {
-            return delegate.getClassLoader(location);
-        }
-
-        @Override
-        public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
-            return delegate.list(location, packageName, kinds, recurse);
-        }
-
-        @Override
-        public String inferBinaryName(Location location, JavaFileObject file) {
-            return delegate.inferBinaryName(location, file);
-        }
-
-        @Override
-        public boolean isSameFile(javax.tools.FileObject a, javax.tools.FileObject b) {
-            return delegate.isSameFile(a, b);
-        }
-
-        @Override
-        public boolean handleOption(String current, Iterator<String> remaining) {
-            return delegate.handleOption(current, remaining);
-        }
-
-        @Override
-        public boolean hasLocation(Location location) {
-            return location == StandardLocation.CLASS_PATH || location == StandardLocation.PLATFORM_CLASS_PATH;
-        }
-
-        @Override
-        public JavaFileObject getJavaFileForInput(Location location, String className, JavaFileObject.Kind kind) throws IOException {
-            return delegate.getJavaFileForInput(location, className, kind);
-        }
-
-        @Override
-        public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, javax.tools.FileObject sibling) throws IOException {
-            return delegate.getJavaFileForOutput(location, className, kind, sibling);
-        }
-
-        @Override
-        public javax.tools.FileObject getFileForInput(Location location, String packageName, String relativeName) throws IOException {
-            return delegate.getFileForInput(location, packageName, relativeName);
-        }
-
-        @Override
-        public javax.tools.FileObject getFileForOutput(Location location, String packageName, String relativeName, javax.tools.FileObject sibling) throws IOException {
-            return delegate.getFileForOutput(location, packageName, relativeName, sibling);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            delegate.flush();
-        }
-
-        @Override
-        public void close() throws IOException {
-            delegate.close();
-        }
-
-        @Override
-        public int isSupportedOption(String option) {
-            return delegate.isSupportedOption(option);
-        }
-
-        @Override
-        public Iterable<Set<Location>> listLocationsForModules(Location location) throws IOException {
-            return Collections.emptyList();
-        }
-    }
-
-    private static final class Listener implements DiagnosticListener<JavaFileObject> {
-        @Override
-        public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-        }
-    }
 }

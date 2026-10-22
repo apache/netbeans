@@ -74,7 +74,7 @@ public class Runtime {
             return Collections.emptyList();
         }
         JSONArray array = (JSONArray)result.get("result"); // NOI18N
-        for (Object o : array) {
+        if ( array != null ) for (Object o : array) {
             res.add(APIFactory.createPropertyDescriptor((JSONObject)o, webkit));
         }
         return res;

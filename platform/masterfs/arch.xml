@@ -112,13 +112,13 @@ cases. FileObjects erlier returned from <code>URLMapper</code> or
 <code>CvsFileSystem</code> will be now provided by <code>MasterFileSystem</code>. 
 There will be guaranteed that there won't be more instances of FileObject 
 addressing one <code>java.ioFile</code>.
-<api name="Disable .LCK files" group="lookup" type="export" category="devel">
+<p><api name="disable.LCK.files" group="lookup" type="export" category="devel">
 To disable hard locks as on-disk files, remove class <code>org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileBaseHardLockRegistry</code>
 from the global <code>Lookup</code>, e.g. by creating file:
 <code>META-INF/services/org.netbeans.modules.masterfs.filebasedfs.fileobjects.HardLockRegistry</code> with this content:
 <code>#-org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileBaseHardLockRegistry</code>.
 This is an API under development and may be replaced or changed in the future.
-</api>
+</api></p>
 </answer>
 
 

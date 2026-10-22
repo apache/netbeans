@@ -22,7 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import org.openide.util.Lookup;
 
-/** A pluggable hard lock handler. */
+/** A pluggable hard lock handler.
+ * @see <a href="@TOP@/architecture-summary.html#lookup-disable.LCK.files">the API usecase.</a>.
+ */
 public interface HardLockRegistry {
 
     public static HardLockRegistry getInstance() {

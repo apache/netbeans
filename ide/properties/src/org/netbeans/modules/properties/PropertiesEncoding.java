@@ -266,7 +266,9 @@ public final class PropertiesEncoding extends FileEncodingQueryImplementation {
         }
 
         private static final byte ZERO_BYTE = (byte) '0';
-        private static final byte[] hexadecimalChars = UtilConvert.hexDigit;
+        private static final byte[] hexadecimalChars = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f'}; // #168629
 
         @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
         private int encodeChar(final char c) {

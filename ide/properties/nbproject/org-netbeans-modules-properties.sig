@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.88
+#Version 1.90
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1241,7 +1241,7 @@ meth public void open()
 meth public void saveAs(org.openide.filesystems.FileObject,java.lang.String) throws java.io.IOException
 supr org.openide.text.CloneableEditorSupport
 hfds LOG,charset,fsStatusListener,myEntry,serialVersionUID
-hcls Env,Environment,EnvironmentListener,FsStatusListener,PropertiesEditorLookup,SaveImpl,StampFlag,UndoRedoStampFlagManager
+hcls Environment,EnvironmentListener,FsStatusListener,PropertiesEditorLookup,SaveImpl,StampFlag,UndoRedoStampFlagManager
 
 CLSS public org.netbeans.modules.properties.PropertiesEditorSupport$PropertiesEditAt
  outer org.netbeans.modules.properties.PropertiesEditorSupport
@@ -1520,16 +1520,7 @@ CLSS public org.netbeans.modules.properties.UtilConvert
 fld public final static java.lang.String keyValueSeparators = "=: \u0009\r\n\u000c"
 fld public final static java.lang.String strictKeyValueSeparators = "=:"
 fld public final static java.lang.String whiteSpaceChars = " \u0009\r\n\u000c"
-meth public static java.lang.String charsToUnicodes(java.lang.String)
-meth public static java.lang.String charsToUnicodes(java.lang.String,boolean)
-meth public static java.lang.String escapeComment(java.lang.String)
-meth public static java.lang.String escapeJavaSpecialChars(java.lang.String)
-meth public static java.lang.String escapeLineContinuationChar(java.lang.String)
-meth public static java.lang.String escapeOutsideSpaces(java.lang.String)
-meth public static java.lang.String escapePropertiesSpecialChars(java.lang.String)
 meth public static java.lang.String loadConvert(java.lang.String)
-meth public static java.lang.String saveConvert(java.lang.String)
-meth public static java.lang.String unicodesToChars(java.lang.String)
 supr java.lang.Object
 hfds hexDigit,specialSaveChars
 

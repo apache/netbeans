@@ -24,6 +24,7 @@
 
 package org.netbeans.modules.subversion.ui.relocate;
 
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 /**
@@ -50,7 +51,7 @@ public class RelocatePanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         tfCurrentURL = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tfNewURL = new javax.swing.JTextField();
+        tfNewURL = new javax.swing.JComboBox<>();
 
         jLabel1.setLabelFor(tfWorkingCopy);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(RelocatePanel.class, "RelocatePanel.jLabel1.text")); // NOI18N
@@ -64,6 +65,8 @@ public class RelocatePanel extends javax.swing.JPanel {
 
         jLabel3.setLabelFor(tfNewURL);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(RelocatePanel.class, "RelocatePanel.jLabel3.text")); // NOI18N
+
+        tfNewURL.setEditable(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,7 +82,7 @@ public class RelocatePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfCurrentURL, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(tfWorkingCopy, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(tfNewURL, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                    .addComponent(tfNewURL, 0, 380, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -117,7 +120,7 @@ public class RelocatePanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField tfCurrentURL;
-    private javax.swing.JTextField tfNewURL;
+    private javax.swing.JComboBox<String> tfNewURL;
     private javax.swing.JTextField tfWorkingCopy;
     // End of variables declaration//GEN-END:variables
     
@@ -129,7 +132,7 @@ public class RelocatePanel extends javax.swing.JPanel {
         return tfCurrentURL;
     }
     
-    public JTextField getNewURL() {
+    public JComboBox<String> getNewURL() {
         return tfNewURL;
     }
 }

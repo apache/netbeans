@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.terminalemulator;
 
+import java.util.List;
+
 
 class InterpXTerm extends InterpProtoANSIX {
 
@@ -100,24 +102,19 @@ class InterpXTerm extends InterpProtoANSIX {
                 String p2 = i.text.substring(semix+1);
                 int code = Integer.parseInt(p1);
                 switch (code) {
-                    case 0:
+                    case 0 -> {
                         ai.ops.op_icon_name(p2);
                         ai.ops.op_win_title(p2);
-                        break;
-                    case 1:
-                        ai.ops.op_icon_name(p2);
-                        break;
-                    case 2:
-                        ai.ops.op_win_title(p2);
-                        break;
-                    case 3:
+                    }
+                    case 1 -> ai.ops.op_icon_name(p2);
+                    case 2 -> ai.ops.op_win_title(p2);
+                    case 3 -> {
                         /* LATER
                         cwd is a dttermism. For xterm we're supposed to set X properties
                         ai.ops.op_cwd(p2);
-                        */
-                        break;
-
-                    case 10: {
+                         */
+                    }
+                    case 10 -> {
                         // This is specific to nbterm!
                         int semix2 = p2.indexOf(';');
                         if (semix2 == -1)
@@ -151,7 +148,7 @@ class InterpXTerm extends InterpProtoANSIX {
 
     @Override
     public String name() {
-	return "xterm-16color";	// NOI18N
+	return "xterm-256color";	// NOI18N
     }
 
     @Override
@@ -163,8 +160,11 @@ class InterpXTerm extends InterpProtoANSIX {
      * {@inheritDoc}
      */
     @Override
-    protected boolean dispatchAttr(AbstractInterp ai, int n) {
-        switch (n) {
+    protected boolean dispatchAttr(AbstractInterp ai, List<Integer> n) {
+        if(n.isEmpty()) {
+            return false;
+        }
+        switch ((int) n.getFirst()) {
             case 0:
             case 1:
             case 4:
@@ -219,6 +219,10 @@ class InterpXTerm extends InterpProtoANSIX {
 	    case 105:
 	    case 106:
 	    case 107:
+
+            // 256 Color palette and true color mode
+            case 38:
+            case 48:
                 ai.ops.op_attr(n);
                 return true;
             default:

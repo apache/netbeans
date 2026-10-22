@@ -56,6 +56,10 @@ public class EvalApp {
         return 4.3f;
     }
 
+    private static int toLen(String str) {
+        return str.length();
+    }
+
     private static int      ix = 74;
     private static float    fx = 10.0f;
     private static double   dx = 10.0;

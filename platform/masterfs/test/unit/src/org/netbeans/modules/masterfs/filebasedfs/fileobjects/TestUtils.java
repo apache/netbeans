@@ -20,6 +20,7 @@
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.watcher.Watcher;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
+import org.openide.util.Exceptions;
 
 public class TestUtils {
     private static final Logger LOG = Logger.getLogger(TestUtils.class.getName());
@@ -106,5 +108,24 @@ public class TestUtils {
         Assert.assertTrue("Can only be used when proper property is set", Boolean.getBoolean("org.netbeans.modules.masterfs.watcher.disable"));
         Assert.assertFalse("Watcher is really disabled", Watcher.isEnabled());
         return rs;
+    }
+
+    public static File getAssociatedLockFile(File file)  {
+        try {
+            file = file.getCanonicalFile();
+        } catch (IOException iex) {
+            Exceptions.printStackTrace(iex);
+        }
+
+        final File parentFile = file.getParentFile();
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append(LockForFile.PREFIX);//NOI18N
+        sb.append(file.getName());//NOI18N
+        sb.append(LockForFile.SUFFIX);//NOI18N
+
+        final String lckName = sb.toString();
+        final File lck = new File(parentFile, lckName);
+        return lck;
     }
 }

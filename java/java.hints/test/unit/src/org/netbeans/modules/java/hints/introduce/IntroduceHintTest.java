@@ -2929,6 +2929,48 @@ public class IntroduceHintTest extends NbTestCase {
                        1, 0);
     }
 
+    public void testReturnRefersToMovedVariable() throws Exception {
+        sourceLevel = "17";
+        performErrorMessageTest(
+                       """
+                       package test;
+                       public class Test {
+                           public static String test(boolean a, boolean b) {
+                               |if (true) {
+                                   String j = "a";
+                                   return j;
+                               }|
+                               return "c";
+                           }
+                       }
+                       """,
+                       IntroduceKind.CREATE_METHOD,
+                       "ERR_Too_Many_Different_Exits");
+    }
+
+    public void testYieldRefersToMovedVariable() throws Exception {
+        sourceLevel = "17";
+        performErrorMessageTest(
+                       """
+                       package test;
+                       public class Test {
+                           public static String test(boolean a, boolean b) {
+                               return switch (0) {
+                                   default -> {
+                                       |if (true) {
+                                           String j = "a";
+                                           yield j;
+                                       }|
+                                       yield "c";
+                                   }
+                               };
+                           }
+                       }
+                       """,
+                       IntroduceKind.CREATE_METHOD,
+                       "ERR_Too_Many_Different_Exits");
+    }
+
     protected void prepareTest(String code) throws Exception {
         clearWorkDir();
 

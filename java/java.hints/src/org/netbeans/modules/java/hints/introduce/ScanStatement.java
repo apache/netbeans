@@ -34,6 +34,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -344,7 +345,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
                         default -> throw new IllegalStateException(tp.getLeaf().getKind().name());
                     };
 
-                    String errorKey = switch (tp.getLeaf().getKind()) {
+                    String differentValuesErrorKey = switch (tp.getLeaf().getKind()) {
                         case RETURN -> "ERR_Different_Return_Values"; // NOI18N
                         case YIELD -> "ERR_Different_Yield_Values"; // NOI18N
                         default -> throw new IllegalStateException(tp.getLeaf().getKind().name());
@@ -359,12 +360,31 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
                         if (returnValue != null && currentReturnValue != null) {
                             Set<TreePath> candidates = SourceUtils.computeDuplicates(info, returnValue, currentReturnValue, cancel);
                             if (candidates.size() != 1 || candidates.iterator().next().getLeaf() != value) {
-                                return errorKey;
+                                return differentValuesErrorKey;
                             }
                         } else {
                             if (returnValue != currentReturnValue) {
-                                return errorKey;
+                                return differentValuesErrorKey;
                             }
+                        }
+                    }
+
+                    if (currentReturnValue != null) {
+                        AtomicBoolean usesSelectionLocalVariableInValue = new AtomicBoolean();
+
+                        new TreePathScanner<Void, Void>() {
+                            @Override
+                            public Void visitIdentifier(IdentifierTree node, Void p) {
+                                if (selectionLocalVariables.contains(info.getTrees().getElement(getCurrentPath()))) {
+                                    usesSelectionLocalVariableInValue.set(true);
+                                }
+                                return super.visitIdentifier(node, p);
+                            }
+
+                        }.scan(currentReturnValue, null);
+
+                        if (usesSelectionLocalVariableInValue.get()) {
+                            return "ERR_Too_Many_Different_Exits"; // NOI18N
                         }
                     }
                 }

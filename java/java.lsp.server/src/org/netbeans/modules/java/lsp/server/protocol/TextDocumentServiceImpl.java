@@ -311,6 +311,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS = "completion-insert-text-parameters";// NOI18N
     private static final String URL = "url";// NOI18N
     private static final String INDEX = "index";// NOI18N
+    private static final String SLOT = "slot";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -1083,13 +1084,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return ds;
     }
 
-    private List<LazyCodeAction> lastCodeActions = null;
+            static final int MAX_CODE_ACTION_SLOTS = 2;
+    private final AtomicInteger codeActionsSlot = new AtomicInteger();
+    private final Map<Integer, List<LazyCodeAction>> slot2CodeActions = new LinkedHashMap<>();
     
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-        lastCodeActions = new ArrayList<>();
-        AtomicInteger index = new AtomicInteger(0);
-
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
@@ -1100,6 +1100,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         StyledDocument doc = (StyledDocument)rawDoc;
+        int slot = codeActionsSlot.getAndIncrement();
+        AtomicInteger codeActionIndex = new AtomicInteger(0);
+        List<LazyCodeAction> codeActions = new ArrayList<>();
 
         List<Either<Command, CodeAction>> result = new ArrayList<>();
         Range range = params.getRange();
@@ -1168,12 +1171,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
                                 action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
                             }
-                            if (inputAction instanceof LazyCodeAction && ((LazyCodeAction) inputAction).getLazyEdit() != null) {
-                                lastCodeActions.add((LazyCodeAction) inputAction);
+                            if (inputAction instanceof LazyCodeAction lazyInputAction && lazyInputAction.getLazyEdit() != null) {
                                 Map<String, Object> data = new HashMap<>();
                                 data.put(URL, uri);
-                                data.put(INDEX, index.getAndIncrement());
+                                data.put(SLOT, slot);
+                                data.put(INDEX, codeActionIndex.getAndIncrement());
                                 action.setData(data);
+                                codeActions.add(lazyInputAction);
                             } else if (inputAction.getEdit() != null) {
                                 action.setEdit(Utils.workspaceEditFromApi(inputAction.getEdit(), uri, client));
                             }
@@ -1222,7 +1226,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 resultFuture.complete(result);
             }
         });
-        return resultFuture;
+        return resultFuture.thenApply(actions -> {
+            synchronized (slot2CodeActions) {
+                slot2CodeActions.put(slot, codeActions);
+                while (slot2CodeActions.size() > MAX_CODE_ACTION_SLOTS) {
+                    Iterator<Integer> it = slot2CodeActions.keySet().iterator();
+
+                    it.next();
+                    it.remove();
+                }
+            }
+            return actions;
+        });
     }
 
     @Override
@@ -1245,8 +1260,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             return;
                         }
                     }
-                } else if (data.has(URL) && data.has(INDEX)) {
-                    LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
+                } else if (data.has(URL) && data.has(SLOT) && data.has(INDEX)) {
+                    List<LazyCodeAction> codeActions;
+                    synchronized (slot2CodeActions) {
+                        codeActions = slot2CodeActions.get(data.getAsJsonPrimitive(SLOT).getAsInt());
+                    }
+                    LazyCodeAction inputAction =
+                            codeActions != null ? codeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt())
+                                                : null;
                     if (inputAction != null) {
                         try {
                             unresolved.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));

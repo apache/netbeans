@@ -25,8 +25,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.debugger.ActionsManagerListener;
@@ -53,6 +51,7 @@ import org.netbeans.modules.debugger.jpda.DebuggerConsoleIO;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.ui.models.BreakpointsActionsProvider;
 import org.netbeans.modules.debugger.jpda.ui.models.BreakpointsNodeModel;
+import org.netbeans.modules.debugger.jpda.ui.views.BreakpointOutputWriter;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.jpda.ObjectInfoProvider;
 import org.netbeans.spi.viewmodel.NodeModel;
@@ -75,6 +74,7 @@ PropertyChangeListener {
         ("\\\\");
     private static final String threadNamePattern = "{threadName}";
     private static final String classNamePattern = "{className}";
+    private static final String localsPattern = "{locals}";
     private static final Pattern methodNamePattern = Pattern.compile
         ("\\{methodName\\}");
     private static final Pattern lineNumberPattern = Pattern.compile
@@ -375,13 +375,18 @@ PropertyChangeListener {
                 printText = selectCondition(printText, threadStartedCondition, false);
             }
         }
+
+        int printLocals = printText.indexOf(localsPattern);
+        if (printLocals != -1) {
+            printText = printText.substring(0, printLocals) + printText.substring(printLocals + localsPattern.length());
+        }
              
         // 5) resolve all expressions {=expression}
-        printExpressions(event, printText, (msg, action) -> {
-            io.printWithAction(msg, action, false);
-        }, (msg) -> {
-            io.println(msg, null);
-        });
+        printExpressions(event, printText, io::printWithAction);
+
+        if (printLocals != -1) {
+            printLocals(event, io::printWithAction);
+        }
     }
 
     /* Processing all expressions. Expressions take form of {=expression}.
@@ -390,8 +395,7 @@ PropertyChangeListener {
     final void printExpressions(
         JPDABreakpointEvent event,
         String message,
-        BiConsumer<String, Runnable> print,
-        Consumer<String> println
+        BreakpointOutputWriter io
     ) {
         String printText = message;
         Session session = event.getDebugger().getSession();
@@ -413,31 +417,22 @@ PropertyChangeListener {
                 }
 
                 String beforeExpression = printText.substring(0, m.start());
-                print.accept(beforeExpression, null);
+                io.print(beforeExpression, null, false);
 
-                CallStackFrame csf = null;
-                JPDAThread t = event.getThread();
-                if (t != null && !event.isThreadDeath()) {
-                    try {
-                        CallStackFrame[] topFramePtr = t.getCallStack(0, 1);
-                        if (topFramePtr.length > 0) {
-                            csf = topFramePtr[0];
-                        }
-                    } catch (AbsentInformationException aiex) {}
-                }
+                CallStackFrame csf = findTopFrame(event);
                 Variable refValue = theDebugger.evaluate(expression, csf);
                 if (refValue instanceof ObjectVariable obj && !isNull(obj)) {
                     var sessionRef = new WeakReference<>(session);
-                    print.accept(obj.getValue(), () -> {
+                    io.print(obj.getValue(), () -> {
                         var s = sessionRef.get();
                         var ok = s != null && ObjectInfoProvider.showObjectInfo(s, obj);
                         if (!ok) {
-                            println.accept("Cannot display details of " + obj.getValue());
+                            io.print("Cannot display details of " + obj.getValue(), null, true);
                         }
-                    });
+                    }, false);
                 } else {
                     String textualValue = refValue == null ? "null" : refValue.getValue();
-                    print.accept(textualValue, null);
+                    io.print(textualValue, null, false);
                 }
             } catch (Exception e) {
                 // expression is invalid or cannot be evaluated
@@ -448,11 +443,10 @@ PropertyChangeListener {
                     BreakpointsActionsProvider.customize(bp);
                 };
                 dumpErrors.add(() -> {
-                    print.accept("  ", null);
-                    print.accept(msg, configure);
-                    println.accept("");
+                    io.print("  ", null, false);
+                    io.print(msg, configure, true);
                 });
-                print.accept("{=" + expression + "}", configure);
+                io.print("{=" + expression + "}", configure, false);
             }
             // process the rest of the text
             printText = printText.substring(m.end());
@@ -462,10 +456,51 @@ PropertyChangeListener {
             printText = printText + "\n***\n"+ thr.getLocalizedMessage()+"\n***\n";
         }
         // remaining of the text with a new line
-        println.accept(printText);
+        io.print(printText, null, true);
         for (var errors : dumpErrors) {
             errors.run();
         }
+    }
+
+    final void printLocals(JPDABreakpointEvent event, BreakpointOutputWriter io) {
+        CallStackFrame csf = findTopFrame(event);
+        if (csf != null) {
+            try {
+                for (var refValue : csf.getLocalVariables()) {
+                    io.print("  ", null, false);
+                    io.print(refValue.getName(), null, false);
+                    io.print(" = ", null, false);
+                    if (refValue instanceof ObjectVariable obj && !isNull(obj)) {
+                        var sessionRef = new WeakReference<>(event.getDebugger().getSession());
+                        io.print(obj.getValue(), () -> {
+                            var s = sessionRef.get();
+                            var ok = s != null && ObjectInfoProvider.showObjectInfo(s, obj);
+                            if (!ok) {
+                                io.print("Cannot display details of " + obj.getValue(), null, true);
+                            }
+                        }, true);
+                    } else {
+                        io.print(refValue.getValue(), null, true);
+                    }
+                }
+            } catch (AbsentInformationException ex) {
+                // no locals info
+            }
+        }
+    }
+
+
+    private CallStackFrame findTopFrame(JPDABreakpointEvent event) {
+        if (event.getThread() != null && !event.isThreadDeath()) {
+            try {
+                CallStackFrame[] topFramePtr = event.getThread().getCallStack(0, 1);
+                if (topFramePtr.length > 0) {
+                    return topFramePtr[0];
+                }
+            } catch (AbsentInformationException aiex) {
+            }
+        }
+        return null;
     }
 
     private static boolean isNull(ObjectVariable obj) {

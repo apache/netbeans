@@ -110,6 +110,8 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
     
     private int viewFlags = 0;
     
+    private boolean showTooltip = true;
+    
     private final FoldHierarchyListener weakL;
 
     public FoldViewFactory(View documentView) {
@@ -139,13 +141,15 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
         prefs = lkp.lookup(Preferences.class);
         prefs.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, this, prefs));
         
-        initViewFlags();
+        initFlags();
     }
     
-    private void initViewFlags() {
+    private void initFlags() {
         viewFlags =
                 (prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW, true) ? 1 : 0) |
                 (prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true) ? 2 : 0);
+        
+        showTooltip = prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_TOOLTIP, true);
     }
 
     @Override
@@ -157,8 +161,9 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
     public void preferenceChange(PreferenceChangeEvent evt) {
         String k = evt.getKey();
         if (FoldUtilitiesImpl.PREF_CONTENT_PREVIEW.equals(k) ||
-            FoldUtilitiesImpl.PREF_CONTENT_SUMMARY.equals(k)) {
-            initViewFlags();
+            FoldUtilitiesImpl.PREF_CONTENT_SUMMARY.equals(k) ||
+            FoldUtilitiesImpl.PREF_CONTENT_TOOLTIP.equals(k)) {
+            initFlags();
             final Document d = document();
             if (d != null) {
                 d.render(new Runnable() {
@@ -229,7 +234,7 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
     EditorView origView, int nextOrigViewOffset) {
         assert (startOffset == foldStartOffset) : "startOffset=" + startOffset + " != foldStartOffset=" + foldStartOffset; // NOI18N
         if (fold.getEndOffset() <= limitOffset || !forcedLimit) {
-            return new FoldView(textComponent(), fold, colorSettings, viewFlags);
+            return new FoldView(textComponent(), fold, colorSettings, viewFlags, showTooltip);
         } else {
             return null;
         }

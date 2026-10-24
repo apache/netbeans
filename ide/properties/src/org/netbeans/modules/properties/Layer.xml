@@ -132,4 +132,20 @@
             </folder>
         </folder>
     </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="Editor">
+            <folder name="Formatting">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="x-properties">
+                        <file name="Encoding.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.properties.formatter.FmtEncoding.getController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

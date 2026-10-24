@@ -372,6 +372,7 @@
                 <friend>org.netbeans.modules.php.editor</friend>
                 <friend>org.netbeans.modules.php.project</friend>
                 <friend>org.netbeans.modules.php.twig</friend>
+                <friend>org.netbeans.modules.properties</friend>
                 <friend>org.netbeans.modules.python.editor</friend>
                 <friend>org.netbeans.modules.python.source</friend>
                 <friend>org.netbeans.modules.ruby</friend>

@@ -30,6 +30,7 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.properties.formatter.CodeStyle;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 
@@ -56,11 +57,15 @@ public final class PropertiesEncoding extends FileEncodingQueryImplementation {
     public Charset getEncoding(FileObject file) {
         assert !file.isValid() || file.isData();
         Object attribute = file.getAttribute(PropertiesDataNode.PROPERTY_ENCODING);
-        if (attribute != null) {
-            boolean useProjectEncoding = (Boolean) attribute;
-            if (useProjectEncoding) {
-                return null;
-            }
+        Boolean useProjectEncoding = null;
+        if (attribute instanceof Boolean) {
+            useProjectEncoding = (Boolean) attribute;
+        }
+        if (useProjectEncoding == null) {
+            useProjectEncoding = CodeStyle.get(file).useProjectEncoding();
+        }
+        if (useProjectEncoding) {
+            return null;
         }
         return new PropCharset();
     }

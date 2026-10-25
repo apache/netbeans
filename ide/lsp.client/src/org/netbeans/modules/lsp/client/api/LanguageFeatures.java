@@ -19,7 +19,6 @@
 package org.netbeans.modules.lsp.client.api;
 
 import java.io.IOException;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFactoryImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl.FactoryImpl;
@@ -27,29 +26,42 @@ import org.netbeans.modules.lsp.client.options.GenericEditorKit;
 import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
 import org.openide.filesystems.FileObject;
 
-/**Callbacks that can be put into the layer to get various features based on the
- * {@code language-configuration.json}. To be registered in the {@link MimeLookup}.
+/**
+ * Callbacks that can be put into the layer to enable various editor features
+ * driven by a {@code language-configuration.json} file.
+ *
+ * <p>Each method is a factory suitable for use as a layer
+ * {@code instanceCreate} target and should be registered under the
+ * {@code Editors/<mime-type>}/...} folder or an appropriate sub-folder.
+ *
  * @since 1.38
  */
+//javadoc partially by qwen3.8
 public class LanguageFeatures {
-    /**creates an editor kit.
-     * requires attribute {@code mimeType} of type String, or {@code text/plain} will be used; will be used as the content type for the EditorKit.
-     * sample registration:
+
+    /**
+     * Creates a {@code GenericEditorKit} for the given MIME type.
+     *
+     * <p>Requires the {@code mimeType} attribute (String) on the registration
+     * file. If absent, {@code text/plain} is used as a fallback.
+     *
+     * <p>Sample registration:
      * {@snippet language="xml":
      * <folder name="Editors">
-     *     <folder name="mime">
-     *         <folder name="type">
+     *     <folder name="text">
+     *         <folder name="x-c++">
      *             <file name="EditorKit.instance">
      *                 <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.editorKit" name="instanceCreate"/>
      *                 <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
-     *                 <attr name="mimeType" stringvalue="<mime-type>"/>
+     *                 <attr name="mimeType" stringvalue="text/x-c++"/>
      *             </file>
      *         </folder>
      *     </folder>
      * </folder>
      * }
-     * @param file the registration file, typically provided by the infrastructure.
-     * @return
+     *
+     * @param file the registration file, typically provided by the layer infrastructure.
+     * @return a {@link GenericEditorKit} configured for the specified MIME type.
      */
     public static Object editorKit(FileObject file) {
         String mimeType = "text/plain";
@@ -58,68 +70,115 @@ public class LanguageFeatures {
         }
         return new GenericEditorKit(mimeType);
     }
+
     /**
-     * registers the {@code language-configuration.json}. The content of the file is the configuration.
-     * The content can be given using {@code nbres}.
+     * Loads and registers a {@code language-configuration.json} for the given
+     * MIME type.
      *
-     * @param file the registration file, typically provided by the infrastructure.
-     * @return
-     * @throws IOException if cannot read the file.
+     * <p>The configuration content can be supplied either inline (as file text)
+     * or referenced via a {@code url} attribute (e.g. {@code nbresloc:}).
+     *
+     * <p>Sample registration:
+     * {@snippet language="xml":
+     * <folder name="Editors">
+     *     <folder name="text">
+     *         <folder name="x-c++">
+     *             <file name="languageConfiguration.instance"
+     *                   url="nbresloc:/org/netbeans/modules/.../resources/language-configuration.json">
+     *                 <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.languageConfiguration" name="instanceCreate"/>
+     *             </file>
+     *         </folder>
+     *     </folder>
+     * </folder>
+     * }
+     *
+     * @param file the registration file, typically provided by the layer infrastructure.
+     * @return a parsed {@link LanguageConfiguration} instance.
+     * @throws IOException if the configuration content cannot be read or parsed.
      */
     public static Object languageConfiguration(FileObject file) throws IOException {
         return LanguageConfiguration.from(file.asText());
     }
+
+    /**
+     * Creates a {@code BracesMatcherFactory} that pairs braces according to the
+     * language configuration.
+     *
+     * <p>Sample registration:
+     * {@snippet language="xml":
+     * <folder name="Editors">
+     *     <folder name="text">
+     *         <folder name="x-c++">
+     *             <folder name="BracesMatchers">
+     *                 <file name="languageConfigurationMatcher.instance">
+     *                     <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.braceMatcher" name="instanceCreate"/>
+     *                     <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory"/>
+     *                 </file>
+     *             </folder>
+     *         </folder>
+     *     </folder>
+     * </folder>
+     * }
+     *
+     * @return a {@link BracesMatcherFactoryImpl} instance.
+     */
     public static Object braceMatcher() {
         return new BracesMatcherFactoryImpl();
     }
+
+    /**
+     * Creates a {@code TypedTextInterceptor.Factory} that drives typing
+     * completion (e.g. auto-close braces, auto-indent) based on the language
+     * configuration.
+     *
+     * <p>Sample registration:
+     * {@snippet language="xml":
+     * <folder name="Editors">
+     *     <folder name="text">
+     *         <folder name="x-c++">
+     *             <file name="typingCompletion.instance">
+     *                 <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.typingCompletion" name="instanceCreate"/>
+     *                 <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.typinghooks.TypedTextInterceptor$Factory"/>
+     *             </file>
+     *         </folder>
+     *     </folder>
+     * </folder>
+     * }
+     *
+     * @return a {@link FactoryImpl} instance.
+     */
     public static Object typingCompletion() {
         return new FactoryImpl();
     }
+
     /**
-     * requires an EditorKit that returns an appropriate MIME type/content type out of {@linkplain EditorKit#getContentType}.
-     * @return
+     * Creates a {@code TextAction} that toggles comments on the current
+     * selection or line, using the comment delimiters from the language
+     * configuration.
+     *
+     * <p>Requires that an appropriate {@code EditorKit} (as created by
+     * {@link #editorKit(FileObject)}) is registered for the same MIME type so
+     * that {@code EditorKit#getContentType()} resolves correctly.
+     *
+     * <p>Sample registration:
+     * {@snippet language="xml":
+     * <folder name="Editors">
+     *     <folder name="text">
+     *         <folder name="x-c++">
+     *             <folder name="Actions">
+     *                 <file name="toggleComment.instance">
+     *                     <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.toggleCommentAction" name="instanceCreate"/>
+     *                     <attr name="instanceOf" stringvalue="javax.swing.text.TextAction"/>
+     *                 </file>
+     *             </folder>
+     *         </folder>
+     *     </folder>
+     * </folder>
+     * }
+     *
+     * @return a {@link ToggleCommentActionImpl} instance.
      */
     public static Object toggleCommentAction() {
         return new ToggleCommentActionImpl();
     }
 }
-/*
-actual existing registrations, for reference when writing the javadoc above
-    <folder name="Editors">
-        <folder name="text">
-            <folder name="X-c++">
-                <file name="EditorKit.instance">
-                    <!--org.netbeans.modules.cpplite.editor.file.CPPDataObject-->
-                    <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.editorKit" name="instanceCreate"/>
-                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
-                    <attr name="mimeType" stringvalue="text/X-c++"/>
-                </file>
-                <file name="languageConfiguration.instance" url="nbresloc:/org/netbeans/modules/cpplite/editor/file/resources/language-configuration.json">
-                    <!--org.netbeans.modules.cpplite.editor.file.CPPDataObject-->
-                    <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.languageConfiguration" name="instanceCreate"/>
-                </file>
-                <folder name="BracesMatchers">
-                    <file name="languageConfigurationMatcher.instance">
-                        <!--org.netbeans.modules.cpplite.editor.file.CPPDataObject-->
-                        <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.braceMatcher" name="instanceCreate"/>
-                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory"/>
-                    </file>
-                </folder>
-                <file name="typingCompletion.instance">
-                    <!--org.netbeans.modules.cpplite.editor.file.CPPDataObject-->
-                    <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.typingCompletion" name="instanceCreate"/>
-                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.typinghooks.TypedTextInterceptor$Factory"/>
-                </file>
-                <folder name="Actions">
-                    <file name="toggleComment.instance">
-                        <!--org.netbeans.modules.cpplite.editor.file.CPPDataObject-->
-                        <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.toggleCommentAction" name="instanceCreate"/>
-                        <attr name="instanceOf" stringvalue="javax.swing.text.TextAction"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
-
-
-*/

@@ -31,6 +31,8 @@ import org.openide.util.Exceptions;
 
 //based on the VS Code API's "LanguageConfiguration" (MIT)
 //TODO: the language-configuration.json is more broad, should be enhanced to support language-configuration.json:
+/**Represents language configuration, potentially coming from language-configuration.json.
+ */
 public final class LanguageConfiguration {
     public final @NullAllowed CommentRule comments;
     public final @NullAllowed CharacterPair[] brackets;

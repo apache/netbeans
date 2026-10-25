@@ -47,6 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
@@ -167,6 +168,8 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     private final ApplyChangesTask changeTask = new ApplyChangesTask();
     private final RequestProcessor.Task refreshNodesRPTask = RP.create(refreshNodesTask);
     private final RequestProcessor.Task changeRPTask = RP.create(changeTask);
+    private final AtomicLong refreshGeneration = new AtomicLong();
+    private volatile boolean closed;
     private static final String TEXT_DIFF = "text/x-diff"; //NOI18N
     private GitProgressSupport multiTextDiffSupport;
     private static final String PROP_SEARCH_CONTAINER = "diff.search.container"; //NOI18N
@@ -426,12 +429,18 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     }
 
     public void componentClosed () {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        refreshGeneration.incrementAndGet();
+        cancelBackgroundTasks();
         setSetups(Collections.<File, Setup>emptyMap(), Collections.<File, EditorCookie>emptyMap());
         prevAction.setEnabled(false);
         nextAction.setEnabled(false);
-        cancelBackgroundTasks();
         setups.clear();
         editorCookies.clear();
+        currentSetup = null;
 
         if (list != null) {
             Git.getInstance().getFileStatusCache().removePropertyChangeListener(list);
@@ -448,6 +457,9 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         if (multiTextDiffSupport != null) {
             multiTextDiffSupport.cancel();
         }
+        if (dpt != null) {
+            dpt.cancel();
+        }
         if (prepareTask != null) {
             prepareTask.cancel();
         }
@@ -457,6 +469,11 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         }
         refreshNodesTask.cancel();
         refreshNodesRPTask.cancel();
+        changeTask.cancel();
+        changeRPTask.cancel();
+        if (refreshComboTask != null) {
+            refreshComboTask.cancel();
+        }
     }
 
     void setFocused (boolean focused) {
@@ -641,17 +658,24 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     }
 
     private void setSetups (Map<File, Setup> setups, Map<File, EditorCookie> editorCookies) {
-        for (Map.Entry<File, Setup> e : this.setups.entrySet()) {
-            Setup setup = e.getValue();
-            if (setup != null) {
-                setup.getFirstSource().close();
-                setup.getSecondSource().close();
-            }
-        }
+        closeSetups(this.setups);
         this.setups.clear();
         this.setups.putAll(setups);
         this.editorCookies.clear();
         this.editorCookies.putAll(editorCookies);
+    }
+
+    private void closeSetups(Map<File, Setup> setups) {
+        for (Setup setup : setups.values()) {
+            if (setup != null) {
+                DiffController view = setup.getView();
+                if (view != null) {
+                    view.removePropertyChangeListener(this);
+                }
+                setup.getFirstSource().close();
+                setup.getSecondSource().close();
+            }
+        }
     }
 
     private void onNextButton() {
@@ -1274,7 +1298,8 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
 
     // <editor-fold defaultstate="collapsed" desc="refreshing tasks">
     private void refreshNodes () {
-        if (context != null) {
+        if (context != null && !closed) {
+            refreshGeneration.incrementAndGet();
             synchronized (changes) {
                 changes.clear();
             }
@@ -1388,6 +1413,18 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     }
 
     private void setupsChanged (final Map<File, Setup> newSetups, final List<DiffNode> nodes) {
+        setupsChanged(newSetups, nodes, refreshGeneration.incrementAndGet());
+    }
+
+    private boolean isCurrent(long generation) {
+        return !closed && refreshGeneration.get() == generation;
+    }
+
+    private void setupsChanged (final Map<File, Setup> newSetups, final List<DiffNode> nodes, final long generation) {
+        if (!isCurrent(generation)) {
+            closeSetups(newSetups);
+            return;
+        }
         final Map<File, EditorCookie> cookies = getCookiesFromSetups(newSetups);
         final DiffNode[] nodeArray = nodes.toArray(new DiffNode[0]);
         final Object modelDataList = fileListComponent.prepareModel(nodeArray);
@@ -1395,6 +1432,13 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         Mutex.EVENT.readAccess(new Runnable() {
             @Override
             public void run() {
+                // Cancellation may happen after model preparation but before
+                // this EDT handoff. Never publish into a newer comparison or
+                // a window that has already closed.
+                if (!isCurrent(generation)) {
+                    closeSetups(newSetups);
+                    return;
+                }
                 dividerSet = false;
                 setSetups(newSetups, cookies);
                 fileListComponent.setModel(nodeArray, new HashMap<File, EditorCookie>(cookies), modelDataList);
@@ -1409,6 +1453,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
 
         @Override
         public void run() {
+            final long generation = refreshGeneration.get();
             canceled = false;
             final List<DiffNode> nodes = new LinkedList<DiffNode>();
             final Map<File, Setup> localSetups;
@@ -1421,10 +1466,11 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             } else {
                 localSetups = getRevisionToRevisionSetups(nodes);
             }
-            if (canceled) {
+            if (canceled || !isCurrent(generation)) {
+                closeSetups(localSetups);
                 return;
             }
-            setupsChanged(localSetups, nodes);
+            setupsChanged(localSetups, nodes, generation);
         }
 
         @Override
@@ -1552,6 +1598,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
 
         @Override
         public void run() {
+            final long generation = refreshGeneration.get();
             canceled = false;
             final Set<FileStatusCache.ChangedEvent> events;
             synchronized (changes) {
@@ -1637,6 +1684,10 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             Mutex.EVENT.readAccess(new Runnable() {
                 @Override
                 public void run() {
+                    if (canceled || !isCurrent(generation)) {
+                        closeSetups(localSetups);
+                        return;
+                    }
                     for (DiffNode node : toAdd) {
                         setups.put(node.getFile(), localSetups.get(node.getFile()));
                         EditorCookie cookie = cookies.get(node.getFile());
@@ -1705,6 +1756,9 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run () {
+                    if (closed) {
+                        return;
+                    }
                     panel.cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[0])));
                     panel.cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[0])));
                     panel.cmbDiffTreeFirst.setEnabled(true);
@@ -1719,28 +1773,32 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         private final Setup[] prepareSetups;
         private Setup selectedSetup;
         private volatile boolean canceled;
+        private final long generation;
 
         public DiffPrepareTask(Setup[] prepareSetups) {
             assert EventQueue.isDispatchThread();
             assert !Arrays.asList(prepareSetups).contains(null);
             this.prepareSetups = prepareSetups;
             this.selectedSetup = prepareSetups[0];
+            this.generation = refreshGeneration.get();
         }
 
         @Override
         public void run() {
-            canceled = false;
+            if (canceled || !isCurrent(generation)) {
+                return;
+            }
             IOException exception = null;
             DiffNode[] neighbourNodes = prepareSetupsToRefresh();
             for (DiffNode n : neighbourNodes) {
                 final Setup s = n.getSetup();
-                if (canceled) return;
+                if (canceled || !isCurrent(generation)) return;
                 if (s.getView() != null) {
                     continue;
                 }
                 try {
                     s.initSources();  // slow network I/O
-                    if (canceled) {
+                    if (canceled || !isCurrent(generation)) {
                         return;
                     }
                     StreamSource ss1 = s.getFirstSource();
@@ -1749,14 +1807,17 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                         requestedLeftLine = getMatchingLine(ss2, ss1, requestedRightLine);
                     }
                     final DiffController view = DiffController.createEnhanced(ss1, ss2);  // possibly executing slow external diff
-                    view.addPropertyChangeListener(MultiDiffPanelController.this);
-                    if (canceled) {
+                    if (canceled || !isCurrent(generation)) {
                         return;
                     }
-                    s.setView(view);
                     EventQueue.invokeLater(new Runnable() {
                         @Override
                         public void run() {
+                            if (canceled || !isCurrent(generation)) {
+                                return;
+                            }
+                            view.addPropertyChangeListener(MultiDiffPanelController.this);
+                            s.setView(view);
                             if (s.equals(currentSetup)) {
                                 setDiffIndex(s, 0, false);
                             }

@@ -269,7 +269,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         Map<File, Setup> localSetups = Collections.singletonMap(file, s);
         setSetups(localSetups, getCookiesFromSetups(localSetups));
         setDiffIndex(s, 0, false);
-        dpt = new DiffPrepareTask(setups.values().toArray(new Setup[setups.size()]));
+        dpt = new DiffPrepareTask(setups.values().toArray(new Setup[setups.size()]), refreshGeneration.get());
         prepareTask = RP.create(dpt);
         prepareTask.schedule(0);
     }
@@ -1320,7 +1320,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
 
     private void startPrepareTask (Setup activeSetup) {
         if (setups.size() > 0) {
-            dpt = new DiffPrepareTask(setups.values().toArray(new Setup[setups.size()]));
+            dpt = new DiffPrepareTask(setups.values().toArray(new Setup[setups.size()]), refreshGeneration.get());
             dpt.setSelectedSetup(activeSetup);
             prepareTask = RP.create(dpt);
             prepareTask.schedule(0);
@@ -1775,12 +1775,12 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         private volatile boolean canceled;
         private final long generation;
 
-        public DiffPrepareTask(Setup[] prepareSetups) {
+        public DiffPrepareTask(Setup[] prepareSetups, long generation) {
             assert EventQueue.isDispatchThread();
             assert !Arrays.asList(prepareSetups).contains(null);
             this.prepareSetups = prepareSetups;
             this.selectedSetup = prepareSetups[0];
-            this.generation = refreshGeneration.get();
+            this.generation = generation;
         }
 
         @Override

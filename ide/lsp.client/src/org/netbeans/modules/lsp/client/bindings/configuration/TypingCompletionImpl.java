@@ -213,9 +213,5 @@ public class TypingCompletionImpl implements TypedTextInterceptor {
             LanguageConfiguration lc = MimeLookup.getLookup(mimePath).lookup(LanguageConfiguration.class);
             return lc != null && lc.autoClosingPairs != null && lc.autoClosingPairs.length > 0 ? new TypingCompletionImpl(lc) : null;
         }
-
-        public static FactoryImpl create(Map map) {
-            return new FactoryImpl();
-        }
     }
 }

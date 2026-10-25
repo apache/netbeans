@@ -50,10 +50,6 @@ public class BracesMatcherFactoryImpl implements BracesMatcherFactory {
         return null;
     }
 
-    public static BracesMatcherFactoryImpl create(Map<?, ?> attributes) {
-        return new BracesMatcherFactoryImpl();
-    }
-
     //an adjusted copy of: ide/editor.bracesmatching/src/org/netbeans/spi/editor/bracesmatching/support/CharacterMatcher.java
     private static final class StringMatcher implements BracesMatcher {
 

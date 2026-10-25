@@ -40,6 +40,7 @@ import org.netbeans.modules.lsp.client.debugger.api.RegisterDAPBreakpoints;
 import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
+import org.netbeans.modules.lsp.client.api.LanguageFeatures;
 import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFactoryImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl;
@@ -175,28 +176,28 @@ public class LanguageStorage {
                     multiViewRegistration.setAttribute("method", "createEditor");
 
                     FileObject editorKit = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/EditorKit.instance");
-                    Method createGenericEditorKit = GenericEditorKit.class.getDeclaredMethod("create", Map.class);
+                    Method createGenericEditorKit = LanguageFeatures.class.getDeclaredMethod("editorKit", FileObject.class);
                     editorKit.setAttribute("methodvalue:instanceCreate", createGenericEditorKit);
                     editorKit.setAttribute("instanceOf", EditorKit.class.getName());
                     editorKit.setAttribute("mimeType", description.mimeType);
 
                     FileObject bracesMatcher = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/BracesMatchers/languageConfigurationMatcher.instance");
-                    Method createBracesMatcherImpl = BracesMatcherFactoryImpl.class.getDeclaredMethod("create", Map.class);
+                    Method createBracesMatcherImpl = LanguageFeatures.class.getDeclaredMethod("braceMatcher");
                     bracesMatcher.setAttribute("methodvalue:instanceCreate", createBracesMatcherImpl);
                     bracesMatcher.setAttribute("instanceOf", BracesMatcherFactory.class.getName());
 
                     FileObject typingCompletion = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/typingCompletionImpl.instance");
-                    Method createTypingCompletionFactory = TypingCompletionImpl.FactoryImpl.class.getDeclaredMethod("create", Map.class);
+                    Method createTypingCompletionFactory = LanguageFeatures.class.getDeclaredMethod("typingCompletion");
                     typingCompletion.setAttribute("methodvalue:instanceCreate", createTypingCompletionFactory);
                     typingCompletion.setAttribute("instanceOf", TypedTextInterceptor.Factory.class.getName());
 
                     FileObject toggleCommentAction = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/Actions/toggleComment.instance");
-                    Method createToggleCommentActionImpl = ToggleCommentActionImpl.class.getDeclaredMethod("create", Map.class);
+                    Method createToggleCommentActionImpl = LanguageFeatures.class.getDeclaredMethod("toggleCommentAction");
                     toggleCommentAction.setAttribute("methodvalue:instanceCreate", createToggleCommentActionImpl);
                     toggleCommentAction.setAttribute("instanceOf", TextAction.class.getName());
 
-                    FileObject languageConfiguration = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/LanguageConfiguration.instance");
-                    Method createLanguageConfiguration = LanguageConfiguration.class.getDeclaredMethod("create", FileObject.class);
+                    FileObject languageConfiguration = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/languageConfiguration.instance");
+                    Method createLanguageConfiguration = LanguageFeatures.class.getDeclaredMethod("languageConfiguration", FileObject.class);
                     languageConfiguration.setAttribute("methodvalue:instanceCreate", createLanguageConfiguration);
                     languageConfiguration.setAttribute("instanceOf", org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.class.getName());
                     FileObject languageConfigurationSource = FileUtil.toFileObject(Path.of(description.languageConfiguration));

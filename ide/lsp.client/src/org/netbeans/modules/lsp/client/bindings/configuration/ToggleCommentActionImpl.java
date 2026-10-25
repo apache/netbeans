@@ -217,8 +217,4 @@ public class ToggleCommentActionImpl extends BaseAction {
             offset = Utilities.getRowStart(doc, offset, +1);
         }
     }
-
-    public static ToggleCommentActionImpl create(Map attributes) {
-        return new ToggleCommentActionImpl();
-    }
 }

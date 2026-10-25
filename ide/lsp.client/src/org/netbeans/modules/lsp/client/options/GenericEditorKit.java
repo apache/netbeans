@@ -32,10 +32,4 @@ public class GenericEditorKit extends NbEditorKit {
     public String getContentType() {
         return mimeType;
     }
-
-    public static GenericEditorKit create(Map<String, Object> attributes) {
-        return new GenericEditorKit((String) attributes.getOrDefault("mimeType", "text/plain"));
-    }
 }
-//TODO cast fix:
-//        return new GenericEditorKit(attributes.getOrDefault("mimeType", "text/plain"));

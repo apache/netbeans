@@ -18,15 +18,16 @@
  */
 package org.netbeans.modules.lsp.client.spi.friend;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.google.gson.Gson;
-import java.io.IOException;
 import org.eclipse.tm4e.core.internal.parser.PropertySettable.ArrayList;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 //based on the VS Code API's "LanguageConfiguration" (MIT)
 //TODO: the language-configuration.json is more broad, should be enhanced to support language-configuration.json:
@@ -195,10 +196,21 @@ public final class LanguageConfiguration {
         }
     }
 
-    private static final Gson GSON = new Gson();
+    //the language-configuration.json often does not fully follow the JSON spec,
+    //be lenient in parsing:
+    private static final JsonMapper MAPPER = JsonMapper.builder()
+                .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+                .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
+                .build();
     public static LanguageConfiguration from(String source) {
         //TODO resilience against "incorrect" config:
-        Map<String, Object> config = GSON.fromJson(source, HashMap.class);
+        Map<String, Object> config;
+        try {
+            config = MAPPER.readValue(source, HashMap.class);
+        } catch (JsonProcessingException ex) {
+            Exceptions.printStackTrace(ex);
+            config = Map.of();
+        }
         CommentRule comments = null;
         Map<String, Object> commentsConfig = (Map<String, Object>) config.get("comments");
         if (commentsConfig != null) {
@@ -262,9 +274,5 @@ public final class LanguageConfiguration {
         }
 
         return result;
-    }
-
-    public static LanguageConfiguration create(FileObject source) throws IOException {
-        return from(source.asText());
     }
 }

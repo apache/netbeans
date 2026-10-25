@@ -35,6 +35,10 @@
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
                     <attr name="position" intvalue="100"/>
                 </file>
+                <file name="org-netbeans-modules-project-ui-NewProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewProject.instance"/>
+                    <attr name="position" intvalue="150"/>
+                </file>
                 <file name="sep-1.instance">
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="200"/>

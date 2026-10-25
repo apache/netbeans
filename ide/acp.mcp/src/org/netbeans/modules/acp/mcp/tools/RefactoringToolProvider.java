@@ -57,7 +57,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         List<McpToolDefinition> tools = new ArrayList<>();
 
         tools.add(new McpToolDefinition(
-                "rename",
+                "rename_file",
                 "Rename a file, class, or package. For Java files, this performs a full refactoring: "
                 + "renaming the class and updating all references across the project. "
                 + "For other files, it renames the file.",
@@ -92,7 +92,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         ));
 
         tools.add(new McpToolDefinition(
-                "safe_delete",
+                "safe_delete_file",
                 "Safely delete a file or class after checking for usages. If usages are found, "
                 + "the operation reports them instead of deleting. "
                 + "For Java files, checks references across the project.",
@@ -109,7 +109,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         ));
 
         tools.add(new McpToolDefinition(
-                "find_usages",
+                "find_file_usages",
                 "Find all usages/references of a file or class across the project. "
                 + "Returns a list of files and locations where the element is referenced.",
                 Map.of(
@@ -149,10 +149,10 @@ public final class RefactoringToolProvider implements McpToolProvider {
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
         LOG.log(Level.FINE, "Executing refactoring tool: {0}", name);
         Map<String, Object> result = switch (name) {
-            case "rename" -> doRename(arguments);
+            case "rename_file" -> doRename(arguments);
             case "move_refactor" -> doMove(arguments);
-            case "safe_delete" -> doSafeDelete(arguments);
-            case "find_usages" -> doFindUsages(arguments);
+            case "safe_delete_file" -> doSafeDelete(arguments);
+            case "find_file_usages" -> doFindUsages(arguments);
             case "copy_class" -> doCopy(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };

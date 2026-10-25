@@ -53,10 +53,10 @@ public class RefactoringToolProviderTest extends NbTestCase {
         Set<String> names = provider.getTools().stream()
                 .map(McpToolProvider.McpToolDefinition::name)
                 .collect(Collectors.toSet());
-        assertTrue(names.contains("rename"));
+        assertTrue(names.contains("rename_file"));
         assertTrue(names.contains("move_refactor"));
-        assertTrue(names.contains("safe_delete"));
-        assertTrue(names.contains("find_usages"));
+        assertTrue(names.contains("safe_delete_file"));
+        assertTrue(names.contains("find_file_usages"));
         assertTrue(names.contains("copy_class"));
     }
 
@@ -78,7 +78,7 @@ public class RefactoringToolProviderTest extends NbTestCase {
     }
 
     public void testRenameRequiredParams() {
-        McpToolProvider.McpToolDefinition rename = findTool("rename");
+        McpToolProvider.McpToolDefinition rename = findTool("rename_file");
         @SuppressWarnings("unchecked")
         List<String> required = (List<String>) rename.inputSchema().get("required");
         assertTrue(required.contains("filePath"));
@@ -94,14 +94,14 @@ public class RefactoringToolProviderTest extends NbTestCase {
     }
 
     public void testSafeDeleteRequiredParams() {
-        McpToolProvider.McpToolDefinition safeDelete = findTool("safe_delete");
+        McpToolProvider.McpToolDefinition safeDelete = findTool("safe_delete_file");
         @SuppressWarnings("unchecked")
         List<String> required = (List<String>) safeDelete.inputSchema().get("required");
         assertTrue(required.contains("filePath"));
     }
 
     public void testFindUsagesRequiredParams() {
-        McpToolProvider.McpToolDefinition findUsages = findTool("find_usages");
+        McpToolProvider.McpToolDefinition findUsages = findTool("find_file_usages");
         @SuppressWarnings("unchecked")
         List<String> required = (List<String>) findUsages.inputSchema().get("required");
         assertTrue(required.contains("filePath"));
@@ -130,12 +130,12 @@ public class RefactoringToolProviderTest extends NbTestCase {
         Map<String, Object> args = new HashMap<>();
         args.put("filePath", null);
         args.put("newName", "NewName");
-        Map<String, Object> result = provider.executeTool("rename", args);
+        Map<String, Object> result = provider.executeTool("rename_file", args);
         assertEquals("error", result.get("status"));
     }
 
     public void testRenameBlankFilePath() throws Exception {
-        Map<String, Object> result = provider.executeTool("rename",
+        Map<String, Object> result = provider.executeTool("rename_file",
                 Map.of("filePath", "  ", "newName", "NewName"));
         assertEquals("error", result.get("status"));
     }
@@ -144,12 +144,12 @@ public class RefactoringToolProviderTest extends NbTestCase {
         Map<String, Object> args = new HashMap<>();
         args.put("filePath", "/some/File.java");
         args.put("newName", null);
-        Map<String, Object> result = provider.executeTool("rename", args);
+        Map<String, Object> result = provider.executeTool("rename_file", args);
         assertEquals("error", result.get("status"));
     }
 
     public void testRenameBlankNewName() throws Exception {
-        Map<String, Object> result = provider.executeTool("rename",
+        Map<String, Object> result = provider.executeTool("rename_file",
                 Map.of("filePath", "/some/File.java", "newName", ""));
         assertEquals("error", result.get("status"));
     }
@@ -173,14 +173,14 @@ public class RefactoringToolProviderTest extends NbTestCase {
     public void testSafeDeleteNullFilePath() throws Exception {
         Map<String, Object> args = new HashMap<>();
         args.put("filePath", null);
-        Map<String, Object> result = provider.executeTool("safe_delete", args);
+        Map<String, Object> result = provider.executeTool("safe_delete_file", args);
         assertEquals("error", result.get("status"));
     }
 
     public void testFindUsagesNullFilePath() throws Exception {
         Map<String, Object> args = new HashMap<>();
         args.put("filePath", null);
-        Map<String, Object> result = provider.executeTool("find_usages", args);
+        Map<String, Object> result = provider.executeTool("find_file_usages", args);
         assertEquals("error", result.get("status"));
     }
 

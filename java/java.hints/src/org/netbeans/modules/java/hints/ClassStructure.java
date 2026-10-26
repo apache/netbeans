@@ -50,6 +50,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.Hint.Options;
@@ -58,6 +59,8 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.netbeans.spi.java.hints.support.FixFactory;
 import org.openide.util.NbBundle;
+
+import static org.netbeans.modules.java.hints.Bundle.*;
 
 /**
  *
@@ -74,6 +77,62 @@ public class ClassStructure {
                     FixFactory.removeModifiersFix(context.getInfo(), TreePath.getPath(context.getPath(), cls.getModifiers()), EnumSet.of(Modifier.FINAL), NbBundle.getMessage(ClassStructure.class, "FIX_RemoveFinalFromClass", cls.getSimpleName()))); //NOI18N
         }
         return null;
+    }
+
+    @NbBundle.Messages({
+        "# {0} - name",
+        "# {1} - modifier",
+        "MSG_FinalStaticValueClass=The value based class {0} is declared {1}",
+        "# {0} - name",
+        "# {1} - modifier",
+        "MSG_FinalStaticRecord=The record {0} is declared {1}",
+        "# {0} - modifier",
+        "# {1} - name",
+        "FIX_RemoveModifierFromClass=Remove {0} modifier from the {1} type declaration",
+        "DN_RedundantFinalOrStaticOnClass=A record or value based class is declared final or static", 
+        "DESC_RedundantFinalOrStaticOnClass=Reports records or value based classes being declared final or static. Both records and value types are implicitly final and static."
+    })
+    @Hint(
+        displayName = "#DN_RedundantFinalOrStaticOnClass",
+        description = "#DESC_RedundantFinalOrStaticOnClass",
+        category = "class_structure", enabled = true, suppressWarnings = "RedundantFinalOrStaticOnType"
+    )
+    @TriggerTreeKind({Tree.Kind.RECORD, Tree.Kind.CLASS})
+    public static ErrorDescription redundantStaticOrFinalOnType(HintContext context) {
+        ClassTree cls = (ClassTree) context.getPath().getLeaf();
+        Set<Modifier> flags = cls.getModifiers().getFlags();
+        if (cls.getKind() == Kind.CLASS && !contains(flags, "value")) {
+            return null;
+        } 
+        Modifier remove = null;
+        if (flags.contains(Modifier.FINAL)) {
+            remove = Modifier.FINAL;
+        } else if(flags.contains(Modifier.STATIC)) {
+            remove = Modifier.STATIC;
+        }
+        if (remove != null) {
+            Fix fix = FixFactory.removeModifiersFix(
+                    context.getInfo(),
+                    TreePath.getPath(context.getPath(), cls.getModifiers()),
+                    EnumSet.of(remove),
+                    FIX_RemoveModifierFromClass(remove.toString(), cls.getSimpleName())
+            );
+            String desc = cls.getKind() == Kind.RECORD
+                    ? MSG_FinalStaticRecord(cls.getSimpleName(), remove.toString())
+                    : MSG_FinalStaticValueClass(cls.getSimpleName(), remove.toString());
+            return ErrorDescriptionFactory.forName(context, cls, desc, fix);
+        }
+        return null;
+    }
+
+    // TODO removeme
+    private static boolean contains(Set<Modifier> flags, String value) {
+        for (Modifier flag : flags) {
+            if (flag.toString().equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.ClassStructure.finalMethod", description = "#DESC_org.netbeans.modules.java.hints.ClassStructure.finalMethod", category = "class_structure", enabled = false, suppressWarnings = {"FinalMethod"}) //NOI18N

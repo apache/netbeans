@@ -40,10 +40,22 @@ import org.openide.util.lookup.Lookups;
  * (private) projects, if it carries the {@link #MARKER_ATTRIBUTE}
  * FileObject attribute. The logical view of the project simply shows
  * all files contained in the project directory.
+ *
+ * <p>The marker file doubles as the project's auxiliary data file
+ * (see {@link GpAuxiliaryProperties}): it marks the directory as a
+ * project and stores what {@link ProjectUtils#getPreferences}
+ * persists (e.g. the display name override). For local (marker-less)
+ * projects the same data lives in the user configuration.
  */
 public final class GenericProject implements Project {
 
-    public static final String MARKER_FILE = ".nbgp"; // NOI18N
+    /**
+     * Name of the marker file: identical to the auxiliary data file
+     * ({@link GpAuxiliaryProperties#dataFileName}), which thus has a
+     * dual role — it both marks the directory as a project and
+     * stores the project's auxiliary data.
+     */
+    public static final String MARKER_FILE = GpAuxiliaryProperties.dataFileName();
 
     /**
      * Name of the FileObject attribute that marks a project directory
@@ -109,6 +121,7 @@ public final class GenericProject implements Project {
                 new GpCustomizerProvider(this),
                 new GpProjectOperations(this),
                 new GpActionProvider(this),
+                new GpAuxiliaryProperties(this),
                 this
         ), "Projects/" + PROJECT_KEY + "/Lookup"); // NOI18N
     }

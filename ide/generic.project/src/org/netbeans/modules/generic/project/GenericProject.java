@@ -38,8 +38,11 @@ import org.openide.util.lookup.Lookups;
  * A generic project. A directory is recognized as a generic project
  * if it contains the {@link #MARKER_FILE} or, for local
  * (private) projects, if it carries the {@link #MARKER_ATTRIBUTE}
- * FileObject attribute. The logical view of the project simply shows
- * all files contained in the project directory.
+ * FileObject attribute. The logical view of the project shows the
+ * files contained in the project directory, subject to the IDE's
+ * global "ignored files" filter (see
+ * {@link #isGlobalFileFilterEnabled}) and the project's own
+ * additional pattern (see {@link #getFilesFilterPattern}).
  *
  * <p>The marker file doubles as the project's auxiliary data file
  * (see {@link GpAuxiliaryProperties}): it marks the directory as a
@@ -245,5 +248,88 @@ public final class GenericProject implements Project {
         }
         GpInfo info = (GpInfo) prj.getLookup().lookup(ProjectInformation.class);
         info.fireDisplayNameChanged();
+    }
+
+    /**
+     * Key of the global file filter toggle in the project's private
+     * preferences ({@link ProjectUtils#getPreferences}).
+     */
+    static final String GLOBAL_FILE_FILTER_KEY = "useGlobalFileFilter"; // NOI18N
+
+    /**
+     * Whether the project's logical view applies the IDE's global
+     * "ignored files" filter (Tools/Options/File Types). Enabled by
+     * default.
+     */
+    public static boolean isGlobalFileFilterEnabled(GenericProject prj) {
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        if (prefs == null) {
+            return true;
+        }
+        return prefs.getBoolean(GLOBAL_FILE_FILTER_KEY, true);
+    }
+
+    /**
+     * Stores the state of the global file filter toggle. The enabled
+     * state is the default, so it is stored by removing the key and a
+     * project with no other overrides keeps an empty data file.
+     */
+    public static void setGlobalFileFilterEnabled(GenericProject prj, boolean enabled) {
+        if (isGlobalFileFilterEnabled(prj) == enabled) {
+            return;
+        }
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        if (prefs == null) {
+            return;
+        }
+        if (enabled) {
+            prefs.remove(GLOBAL_FILE_FILTER_KEY);
+        } else {
+            prefs.put(GLOBAL_FILE_FILTER_KEY, "false"); // NOI18N
+        }
+    }
+
+    /**
+     * Key of the additional files filter pattern in the project's
+     * <em>shared</em> preferences ({@link ProjectUtils#getPreferences})
+     * — the pattern is project content, like a {@code .gitignore}.
+     */
+    static final String FILES_FILTER_PATTERN_KEY = "fileFilterPattern"; // NOI18N
+
+    /**
+     * Returns the project's additional "ignored files" pattern — a
+     * regular expression matched with {@code find()} on the file name
+     * only — or {@code null} if none is stored.
+     */
+    public static String getFilesFilterPattern(GenericProject prj) {
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, true);
+        if (prefs == null) {
+            return null;
+        }
+        String pattern = prefs.get(FILES_FILTER_PATTERN_KEY, null);
+        return (pattern == null || pattern.isBlank()) ? null : pattern;
+    }
+
+    /**
+     * Stores the project's additional "ignored files" pattern, or
+     * clears it for {@code null} or a blank string (the default, which
+     * keeps the data file clean).
+     */
+    public static void setFilesFilterPattern(GenericProject prj, String pattern) {
+        if (pattern != null && pattern.isBlank()) {
+            pattern = null;
+        }
+        if (Objects.equals(pattern, getFilesFilterPattern(prj))) {
+            return;
+        }
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, true);
+        if (prefs == null) {
+            return;
+        }
+        if (pattern == null) {
+            prefs.remove(FILES_FILTER_PATTERN_KEY);
+        } else {
+            prefs.put(FILES_FILTER_PATTERN_KEY, pattern);
+        }
     }
 }

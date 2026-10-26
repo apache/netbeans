@@ -28,7 +28,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataFilter;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.loaders.DataFolder;
@@ -40,8 +39,10 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * The logical view of a generic project simply shows all files contained
- * in the project directory.
+ * The logical view of a generic project shows the files contained
+ * in the project directory, filtered by the IDE's global "ignored
+ * files" pattern unless the project has disabled it in its
+ * customizer (see {@link GpFileFilter}).
  *
  * <p>The root node exposes the project, the project directory
  * {@link FileObject} and the directory's {@link DataObject} in its
@@ -60,7 +61,7 @@ public record GpLogicalViewProvider(GenericProject project) implements LogicalVi
         FileObject dir = project.getProjectDirectory();
         Children children;
         try {
-            children = DataFolder.findFolder(dir).createNodeChildren(DataFilter.ALL);
+            children = DataFolder.findFolder(dir).createNodeChildren(new GpFileFilter(project));
         } catch (Exception ex) {
             children = Children.LEAF;
         }

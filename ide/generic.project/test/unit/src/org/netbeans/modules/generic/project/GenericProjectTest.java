@@ -23,12 +23,15 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
 import org.netbeans.modules.generic.project.ui.wizard.GpWizardIterator;
@@ -519,6 +522,131 @@ public class GenericProjectTest extends NbTestCase {
         // persisted to disk
         GenericProject nue = new GenericProject(root);
         assertEquals("My Fancy Project", GenericProject.getDisplayNameOverride(nue));
+    }
+
+    public void testGlobalFileFilterEnabledByDefault() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        assertTrue("the global file filter must be enabled by default",
+                GenericProject.isGlobalFileFilterEnabled(prj));
+    }
+
+    public void testGlobalFileFilterToggleRoundTrip() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        GenericProject.setGlobalFileFilterEnabled(prj, false);
+        assertFalse(GenericProject.isGlobalFileFilterEnabled(prj));
+        // the disabled state is the only one that must be stored
+        assertEquals("false", ProjectUtils.getPreferences(prj, GenericProject.class, false)
+                .get(GenericProject.GLOBAL_FILE_FILTER_KEY, null)); // NOI18N
+
+        GenericProject.setGlobalFileFilterEnabled(prj, true);
+        assertTrue(GenericProject.isGlobalFileFilterEnabled(prj));
+        // the enabled state is the default and keeps the data file clean
+        assertNull(ProjectUtils.getPreferences(prj, GenericProject.class, false)
+                .get(GenericProject.GLOBAL_FILE_FILTER_KEY, null)); // NOI18N
+    }
+
+    public void testFilterHidesFilesTheIdeIgnores() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileUtil.createData(root, "readme.txt");
+        FileObject git = FileUtil.createData(root, ".git");
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        // sanity: in the test environment the IDE's global filter
+        // (masterfs' implementation) hides ".git"
+        assertFalse(VisibilityQuery.getDefault().isVisible(git));
+
+        GpFileFilter filter = new GpFileFilter(prj);
+        assertFalse("the filter must hide files the IDE ignores",
+                filter.acceptFileObject(git));
+        assertTrue("regular files must stay visible",
+                filter.acceptFileObject(root.getFileObject("readme.txt")));
+
+        CountDownLatch latch = new CountDownLatch(1);
+        filter.addChangeListener(evt -> latch.countDown());
+        GenericProject.setGlobalFileFilterEnabled(prj, false);
+        assertTrue("the filter must be notified when the toggle changes",
+                latch.await(10, TimeUnit.SECONDS));
+        assertTrue("disabling the filter must show everything",
+                filter.acceptFileObject(git));
+    }
+
+    public void testFilesFilterPatternRoundTrip() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        assertNull("no additional pattern by default",
+                GenericProject.getFilesFilterPattern(prj));
+
+        GenericProject.setFilesFilterPattern(prj, ".*-old.*"); // NOI18N
+        assertEquals(".*-old.*", GenericProject.getFilesFilterPattern(prj));
+        // the pattern is project content and lives in the shared area
+        assertEquals(".*-old.*", ProjectUtils.getPreferences(prj, GenericProject.class, true)
+                .get(GenericProject.FILES_FILTER_PATTERN_KEY, null)); // NOI18N
+
+        // a blank pattern is the same as none
+        GenericProject.setFilesFilterPattern(prj, "   "); // NOI18N
+        assertNull(GenericProject.getFilesFilterPattern(prj));
+        assertNull(ProjectUtils.getPreferences(prj, GenericProject.class, true)
+                .get(GenericProject.FILES_FILTER_PATTERN_KEY, null)); // NOI18N
+    }
+
+    public void testAdditionalFilterPattern() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileUtil.createData(root, "readme.txt");
+        FileUtil.createData(root, "readme-old.txt");
+        FileObject git = FileUtil.createData(root, ".git");
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        GpFileFilter filter = new GpFileFilter(prj);
+        assertTrue(filter.acceptFileObject(root.getFileObject("readme.txt")));
+
+        // an additional pattern hides its matches on top of the global
+        // filter (the two are AND-combined)
+        CountDownLatch latch = new CountDownLatch(1);
+        filter.addChangeListener(evt -> latch.countDown());
+        GenericProject.setFilesFilterPattern(prj, ".*-old.*"); // NOI18N
+        assertTrue("the filter must be notified when the pattern changes",
+                latch.await(10, TimeUnit.SECONDS));
+        assertFalse("files matching the additional pattern must be hidden",
+                filter.acceptFileObject(root.getFileObject("readme-old.txt")));
+        assertTrue("other files must stay visible",
+                filter.acceptFileObject(root.getFileObject("readme.txt")));
+        assertFalse("the global filter must still apply",
+                filter.acceptFileObject(git));
+
+        // clearing the pattern shows the files again
+        final CountDownLatch latch2 = new CountDownLatch(1);
+        filter.addChangeListener(evt -> latch2.countDown());
+        GenericProject.setFilesFilterPattern(prj, null);
+        assertTrue(latch2.await(10, TimeUnit.SECONDS));
+        assertTrue(filter.acceptFileObject(root.getFileObject("readme-old.txt")));
+    }
+
+    public void testInvalidAdditionalPatternIsIgnored() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileUtil.createData(root, "readme-old.txt");
+        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        // simulate a hand-edited data file with a broken pattern:
+        // it must act as no additional filter (a warning is logged)
+        GenericProject.setFilesFilterPattern(prj, ".*-old("); // NOI18N
+        GpFileFilter filter = new GpFileFilter(prj);
+        assertTrue("an invalid pattern must not hide files",
+                filter.acceptFileObject(root.getFileObject("readme-old.txt")));
     }
 
     private FileObject newProjectDir() throws Exception {

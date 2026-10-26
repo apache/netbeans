@@ -32,27 +32,20 @@ import org.netbeans.spi.project.MoveOrRenameOperationImplementation;
 import org.openide.filesystems.FileObject;
 
 /**
- * Supports the default move, rename, copy and delete operations
- * of generic projects.
+ * Supports the default move, rename, copy and delete operations of
+ * generic projects.
  *
- * <p>The project is just a directory, so the marker file (when
- * present) is the only metadata and everything contained in the
- * directory is data. For move/rename nothing has to be updated:
- * the directory — marker file and project attributes included —
- * is relocated as a whole (the default move implementation does
- * not use the data file list). For copy the stock flow duplicates
- * the visible directory content as-is, so the new project needs
- * no bookkeeping either. For delete the stock flow deletes the
- * metadata, optionally the data, and finally the project folder
- * if it is empty then, hence the data files are listed
- * deepest-first.
+ * <p>The project is just a directory, everything in it is data (the
+ * marker file, when present, being the only metadata), so move and
+ * copy relocate or duplicate the directory as a whole; data files
+ * are listed deepest-first for the delete flow. Since the copy thus
+ * also inherits the project-local auxiliary data, {@link #notifyCopied}
+ * drops the display name override from the original, just like a
+ * move or folder rename, after which the folder name is
+ * authoritative again.
  *
- * <p>A pure rename (the "Also rename project folder" option
- * unchecked) does not touch the project directory; the new name
- * is stored as a display name override, so the project's display
- * name reports it while the programmatic name keeps the folder
- * name. When the folder is renamed or moved, the (new) folder
- * name is authoritative again and any override is dropped.
+ * <p>A pure rename (the folder is not renamed) does not touch the
+ * directory; the new name is kept as a display name override.
  */
 public final class GpProjectOperations implements MoveOrRenameOperationImplementation, CopyOperationImplementation, DeleteOperationImplementation {
 
@@ -133,10 +126,10 @@ public final class GpProjectOperations implements MoveOrRenameOperationImplement
     public void notifyCopied(Project original, File originalPath, String nueName) throws IOException {
         if (original != null) {
             // Called on the new project instance: keep the folder
-            // name authoritative, like after a move. In practice
-            // this is a no-op — the display name override lives in
-            // per-project preferences keyed by location, which the
-            // copy does not inherit.
+            // name authoritative, like after a move. The copy
+            // duplicates the project-local auxiliary data file (when
+            // the marker is present) as-is, so this drops the
+            // display name override inherited from the original.
             GenericProject.setDisplayNameOverride(prj, nueName);
         }
     }

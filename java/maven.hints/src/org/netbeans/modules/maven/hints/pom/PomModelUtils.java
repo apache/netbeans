@@ -146,7 +146,21 @@ public final class PomModelUtils {
                 continue;
             }
             try {
-                err.add(ErrorDescriptionFactory.createErrorDescription(problem.getSeverity() == ModelProblem.Severity.WARNING ? Severity.WARNING : Severity.ERROR, problem.getMessage(), model.getBaseDocument(), line));
+                Severity severity=Severity.WARNING;
+                String problemMessage=problem.getMessage();
+                switch (problem.getSeverity()){
+                    case FATAL:
+                        severity= Severity.ERROR;
+                        problemMessage =problem.getSeverity().toString()+" the bundled maven (version "
+                                + getActiveMavenVersion().toString()
+                                + ") detected a problem: "+problem.getMessage();
+                        break;
+                    case ERROR:
+                        severity= Severity.ERROR;
+                    case WARNING:// nothing to do
+                        break;
+                }
+                err.add(ErrorDescriptionFactory.createErrorDescription( severity,problemMessage, model.getBaseDocument(),line));
             } catch (IndexOutOfBoundsException x) {
                 LOG.log(Level.WARNING, "improper line number: {0}", problem);
             }

@@ -30,7 +30,7 @@ import org.openide.util.ImageUtilities;
 /**
  * The {@link ProjectInformation} of a generic project. The display
  * name is the project folder name unless a display name override is
- * stored in the project's private preferences (see
+ * stored in the project's shared preferences (see
  * {@link GenericProject#getDisplayNameOverride}).
  */
 final class GpInfo implements ProjectInformation {

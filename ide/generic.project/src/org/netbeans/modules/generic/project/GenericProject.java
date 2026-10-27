@@ -202,8 +202,11 @@ public final class GenericProject implements Project {
     }
 
     /**
-     * Key of the display name override in the project's private
-     * preferences ({@link ProjectUtils#getPreferences}).
+     * Key of the display name override in the project's <em>shared</em>
+     * preferences ({@link ProjectUtils#getPreferences}): the name is
+     * project content, so for a marker project it is versioned along
+     * with the project and for a local project it lives in the user
+     * configuration.
      */
     static final String DISPLAY_NAME_KEY = "displayName"; // NOI18N
 
@@ -213,7 +216,7 @@ public final class GenericProject implements Project {
      * defaults to the project folder name.
      */
     public static String getDisplayNameOverride(GenericProject prj) {
-        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, true);
         if (prefs == null) {
             return null;
         }
@@ -237,7 +240,7 @@ public final class GenericProject implements Project {
         if (Objects.equals(name, getDisplayNameOverride(prj))) {
             return;
         }
-        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, false);
+        Preferences prefs = ProjectUtils.getPreferences(prj, GenericProject.class, true);
         if (prefs == null) {
             return;
         }

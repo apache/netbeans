@@ -20,7 +20,9 @@
 package org.netbeans.modules.generic.project;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -372,23 +374,74 @@ public class GenericProjectTest extends NbTestCase {
                 prj.getLookup().lookup(AuxiliaryProperties.class));
     }
 
-    public void testMarkerProjectStoresAuxDataInProjectDir() throws Exception {
+    public void testMarkerProjectStoresSharedAuxDataInProjectDir() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
 
-        GenericProject.setDisplayNameOverride((GenericProject) prj, "My Fancy Project");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        GenericProject.setFilesFilterPattern((GenericProject) prj, ".*-ignored");
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
 
-        // the data must live in the project directory (the marker file
-        // is the data file)...
-        assertNotNull("the auxiliary data file must exist in the project directory",
-                root.getFileObject(GpAuxiliaryProperties.dataFileName()));
+        // the shared data must live in the project directory (the
+        // marker file is the data file)...
+        FileObject dataFile = root.getFileObject(GpAuxiliaryProperties.dataFileName());
+        assertNotNull("the auxiliary data file must exist in the project directory", dataFile);
+        Properties data = readDataFile(dataFile);
+        assertTrue("the shared setting must be stored in the data file",
+                data.containsKey(auxKey("shared", GenericProject.FILES_FILTER_PATTERN_KEY)));
         // ...and not in the user configuration
-        assertNull("no auxiliary data may be created in the user configuration for marker projects",
+        assertNull("no shared auxiliary data may be created in the user configuration for marker projects",
                 FileUtil.getConfigRoot().getFileObject(
                         GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.dataFileName()));
+    }
+
+    public void testRenameOverrideIsStoredInTheMarkerFile() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        // a pure rename (the folder is not renamed) stores the new
+        // name as a display name override...
+        GpProjectOperations op = prj.getLookup().lookup(GpProjectOperations.class);
+        assertNotNull(op);
+        op.notifyRenamed("Renamed Project");
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
+
+        // ...in the shared area, i.e. the marker file, so the name is
+        // versioned along with the project...
+        Properties data = readDataFile(root.getFileObject(GenericProject.MARKER_FILE));
+        assertTrue("the display name override must be stored in the data file",
+                data.containsKey(auxKey("shared", GenericProject.DISPLAY_NAME_KEY)));
+        // ...and not in the user configuration
+        assertNull("no private auxiliary data may be created in the user configuration",
+                FileUtil.getConfigRoot().getFileObject(
+                        GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.privateDataFileName()));
+    }
+
+    public void testMarkerProjectKeepsPrivateDataOutOfWorkingTree() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        GenericProject.setGlobalFileFilterEnabled((GenericProject) prj, false);
+        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+
+        // the private data must live in the user configuration...
+        FileObject privateFile = FileUtil.getConfigRoot().getFileObject(
+                GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.privateDataFileName());
+        assertNotNull("the private auxiliary data file must be created in the user configuration", privateFile);
+        Properties privateData = readDataFile(privateFile);
+        assertTrue("the private setting must be stored in the private data file",
+                privateData.containsKey(auxKey("private", GenericProject.GLOBAL_FILE_FILTER_KEY)));
+        // ...and no private setting may be written into the working tree
+        Properties markerData = readDataFile(root.getFileObject(GenericProject.MARKER_FILE));
+        for (String key : markerData.stringPropertyNames()) {
+            assertFalse("no private setting may be written into the working tree: " + key,
+                    key.startsWith("private.")); // NOI18N
+        }
     }
 
     public void testRepeatedWritesReuseTheDataFile() throws Exception {
@@ -400,11 +453,13 @@ public class GenericProjectTest extends NbTestCase {
         // several consecutive writes to the existing data file must
         // not fail (createData throws if the file already exists)
         GenericProject.setDisplayNameOverride((GenericProject) prj, "First Name");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
         GenericProject.setDisplayNameOverride((GenericProject) prj, "Second Name");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
 
-        assertNotNull("the auxiliary data file must exist",
+        // the display name is shared: the data file is the marker file
+        // in the project directory
+        assertNotNull("the auxiliary data file must exist in the project directory",
                 root.getFileObject(GpAuxiliaryProperties.dataFileName()));
         // a fresh instance (fresh cache) must see the second value,
         // i.e. the second write has really reached the disk
@@ -419,33 +474,40 @@ public class GenericProjectTest extends NbTestCase {
         assertNotNull(prj);
 
         GenericProject.setDisplayNameOverride((GenericProject) prj, "My Fancy Project");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
 
         // the data must live in the user configuration...
-        assertNotNull("the auxiliary data file must be created in the user configuration",
+        assertNotNull("the shared auxiliary data file must be created in the user configuration",
                 FileUtil.getConfigRoot().getFileObject(
                         GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.dataFileName()));
         // ...and nowhere in the project's working tree
         assertNull("no auxiliary data file may appear in the project directory",
                 root.getFileObject(GpAuxiliaryProperties.dataFileName()));
+        // no private setting was stored: no private data file either
+        assertNull("no private auxiliary data file may be created for local projects",
+                FileUtil.getConfigRoot().getFileObject(
+                        GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.privateDataFileName()));
         assertNull("no auxiliary configuration attribute may be set on the project directory",
                 root.getAttribute("org.netbeans.spi.project.AuxiliaryConfiguration"
                         + ".http://www.netbeans.org/ns/auxiliary-configuration-preferences/1#preferences"));
     }
 
-    public void testMarkerToggledMovesAuxData() throws Exception {
+    public void testMarkerToggledMovesSharedAuxData() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
 
-        GenericProject.setDisplayNameOverride((GenericProject) prj, "My Fancy Project");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        // the shared data lives in the marker file (the marker file
+        // is the shared data file)
+        GenericProject.setFilesFilterPattern((GenericProject) prj, ".*-ignored"); // NOI18N
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
         assertNotNull(root.getFileObject(GpAuxiliaryProperties.dataFileName()));
 
-        // turning the marker off moves the data to the user configuration
+        // turning the marker off moves the shared data to the user
+        // configuration
         GenericProject.setMarkerState(root, false);
-        assertEquals("My Fancy Project", GenericProject.getDisplayNameOverride((GenericProject) prj));
+        assertEquals(".*-ignored", GenericProject.getFilesFilterPattern((GenericProject) prj));
         assertNull("the project-local data file must be removed",
                 root.getFileObject(GpAuxiliaryProperties.dataFileName()));
         assertNotNull("the data must now live in the user configuration",
@@ -454,36 +516,43 @@ public class GenericProjectTest extends NbTestCase {
 
         // and back on moves it back into the project directory
         GenericProject.setMarkerState(root, true);
-        assertEquals("My Fancy Project", GenericProject.getDisplayNameOverride((GenericProject) prj));
+        assertEquals(".*-ignored", GenericProject.getFilesFilterPattern((GenericProject) prj));
         assertNotNull("the data must be back in the project directory",
                 root.getFileObject(GpAuxiliaryProperties.dataFileName()));
-        assertNull("no auxiliary data may remain in the user configuration",
+        assertNull("no shared auxiliary data may remain in the user configuration",
                 FileUtil.getConfigRoot().getFileObject(
                         GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.dataFileName()));
     }
 
-    public void testMarkerDeletedExternallyDropsAuxData() throws Exception {
+    public void testMarkerDeletedExternallyDropsSharedDataOnly() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
 
         GenericProject.setDisplayNameOverride((GenericProject) prj, "My Fancy Project");
+        GenericProject.setFilesFilterPattern((GenericProject) prj, ".*-ignored"); // NOI18N
+        GenericProject.setGlobalFileFilterEnabled((GenericProject) prj, false);
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
         ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
 
-        // the marker file is the auxiliary data file: deleting it
+        // the marker file is the shared data file: deleting it
         // outside of the IDE (while no instance is open to migrate
-        // the data) drops the data with it
+        // the data) drops the shared data with it...
         root.getFileObject(GenericProject.MARKER_FILE).delete();
         root.setAttribute(GenericProject.MARKER_ATTRIBUTE, Boolean.TRUE);
 
-        // a fresh instance must start with no auxiliary data and no
-        // file at either location
         GenericProject nue = new GenericProject(root);
-        assertNull("the auxiliary data must be gone with the marker file",
+        assertNull("the shared filter pattern must be gone with the marker file",
+                GenericProject.getFilesFilterPattern(nue));
+        assertNull("the shared display name override must be gone with the marker file",
                 GenericProject.getDisplayNameOverride(nue));
+        // ...while the private data, which lives in the user
+        // configuration, survives
+        assertFalse("the private filter toggle must survive the marker deletion",
+                GenericProject.isGlobalFileFilterEnabled(nue));
         assertNull(root.getFileObject(GpAuxiliaryProperties.dataFileName()));
-        assertNull("no auxiliary data may appear in the user configuration",
+        assertNull("no shared auxiliary data may appear in the user configuration",
                 FileUtil.getConfigRoot().getFileObject(
                         GpAuxiliaryProperties.dataFolder(root) + "/" + GpAuxiliaryProperties.dataFileName()));
     }
@@ -515,7 +584,7 @@ public class GenericProjectTest extends NbTestCase {
         assertNotNull(prj);
 
         GenericProject.setDisplayNameOverride((GenericProject) prj, "My Fancy Project");
-        ProjectUtils.getPreferences(prj, GenericProject.class, false).flush();
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
 
         // a fresh instance (bypassing the ProjectManager's project
         // cache) must see the value, i.e. it has really been
@@ -654,6 +723,26 @@ public class GenericProjectTest extends NbTestCase {
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
         assertTrue(dir.mkdirs() || dir.isDirectory());
         return FileUtil.toFileObject(dir);
+    }
+
+    /**
+     * The key under which the given setting of this module is stored
+     * in an auxiliary data file: the area prefix ({@code shared} or
+     * {@code private}, plus a dot) and the code-name-base of the
+     * module owning {@link GenericProject} (dots replaced by dashes,
+     * as the auxiliary properties preferences provider builds the
+     * key).
+     */
+    private static String auxKey(String area, String key) {
+        return area + ".org-netbeans-modules-generic-project." + key; // NOI18N
+    }
+
+    private static Properties readDataFile(FileObject file) throws Exception {
+        Properties props = new Properties();
+        try (InputStream is = file.getInputStream()) {
+            props.load(is);
+        }
+        return props;
     }
 
     public interface TestMarker {

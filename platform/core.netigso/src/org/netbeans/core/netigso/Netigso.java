@@ -144,6 +144,16 @@ implements Cloneable, Stamps.Updater {
                         " Is org.netbeans.libs.felix module or similar enabled?" // NOI18N
                         );
             }
+            // Align packages that are delegated to the JDK with equinox to
+            // limit incompatibilities. By default Apache Felix only delegates
+            // java.*
+            //
+            // https://github.com/eclipse-equinox/equinox/blob/7d9c3b69eae96c977f7f97add730a4d679060002/bundles/org.eclipse.osgi/JavaSE-9.profile#L244-L251
+            configMap.merge(
+                    Constants.FRAMEWORK_BOOTDELEGATION,
+                    "javax.*, org.ietf.jgss, org.omg.*, org.w3c.*, org.xml.*, sun.*, com.sun.*",
+                    (v1, v2) -> ((String) v1) + ", " + ((String) v2)
+            );
             framework = frameworkFactory.newFramework(configMap);
             try {
                 System.clearProperty("java.security.manager");

@@ -33,57 +33,62 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
 
 /**
- * The {@link AuxiliaryProperties} of a generic project, stored in a
- * single {@link Properties} file per project (name brandable via the
+ * The {@link AuxiliaryProperties} of a generic project, stored in
+ * {@link Properties} file(s) per project (name brandable via the
  * module bundle, defaults to {@code .nbgp}).
  *
- * <p>The file's location depends on the project's nature: for a
- * project with the marker file the marker
- * ({@link GenericProject#MARKER_FILE}) <em>is</em> the data file, so
- * the data is versioned along with the project; for a local
- * (marker-less) project it lives in the user configuration
- * (see {@link #dataFolder}), so that nothing auxiliary is written
- * into the working tree. Shared and private settings are
- * distinguished by a {@code shared} / {@code private} key prefix.
+ * <p>Shared and private settings are kept in separate files:
  *
- * <p>The location is re-evaluated on every access: if the marker
- * file is created or deleted while the project is open, the data is
- * moved to the new location on the next access (the file at the old
- * one is removed); if it is deleted while no instance of the project
- * is open, the data is lost with it.
+ * <ul>
+ * <li>the <em>shared</em> settings live in the data file whose
+ *     location depends on the project's nature: for a project with
+ *     the marker file the marker
+ *     ({@link GenericProject#MARKER_FILE}) <em>is</em> the data file,
+ *     so the data is versioned along with the project; for a local
+ *     (marker-less) project it lives in the user configuration
+ *     (see {@link #dataFolder});</li>
+ * <li>the <em>private</em> settings always live in the user
+ *     configuration (see {@link #privateDataFileName}), even for
+ *     marker projects, so that nothing private is ever written into
+ *     the working tree.</li>
+ * </ul>
+ *
+ * <p>The location of the shared file is re-evaluated on every access:
+ * if the marker file is created or deleted while the project is open,
+ * the shared data is moved to the new location on the next access
+ * (the file at the old one is removed); if it is deleted while no
+ * instance of the project is open, the shared data is lost with it.
+ * Private data is not affected by the marker state.
  */
 final class GpAuxiliaryProperties implements AuxiliaryProperties {
 
     private static final Logger LOG = Logger.getLogger(GpAuxiliaryProperties.class.getName());
 
-    private static final String PROJECTS_FOLDER = "Projects"; // NOI18N
-    private static final String SHARED_PREFIX = "shared.";   // NOI18N
-    private static final String PRIVATE_PREFIX = "private."; // NOI18N
-
     private final GenericProject prj;
-    private final Properties data = new Properties();
+    private final Properties sharedData = new Properties();
+    private final Properties privateData = new Properties();
     private boolean loaded;
-    private Boolean loadedInProject;
+    private boolean sharedLoadedInProject;
 
     GpAuxiliaryProperties(GenericProject prj) {
         this.prj = prj;
     }
 
     /**
-     * The path of the folder in the user configuration that holds the
-     * auxiliary data of a local project with the given directory.
+     * The path of the folder in the user configuration that holds
+     * the user-local auxiliary data of a project with the given
+     * directory: the shared data of a local project and, always, the
+     * private data.
      */
     static String dataFolder(FileObject projectDirectory) {
-        return PROJECTS_FOLDER + "/" // NOI18N
-                + projectDirectory.getNameExt().replace('/', '_')
-                + "-" // NOI18N
-                + "%08x".formatted(projectDirectory.getPath().hashCode());
+        return "Projects/" + projectDirectory.getNameExt() // NOI18N
+                + "-%08x".formatted(projectDirectory.getPath().hashCode()); // NOI18N
     }
 
     /**
-     * The name of the auxiliary data file, brandable via the module
-     * bundle, defaults to {@code .nbgp}: identical to the name of
-     * the marker file ({@link GenericProject#MARKER_FILE}).
+     * The name of the shared auxiliary data file, brandable via the
+     * module bundle, defaults to {@code .nbgp}: identical to the name
+     * of the marker file ({@link GenericProject#MARKER_FILE}).
      */
     @Messages({
         "LBL_aux_data_file_name=.nbgp",
@@ -93,98 +98,135 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
     }
 
     /**
-     * Whether the auxiliary data is stored inside the project
+     * The name of the file holding the private auxiliary settings,
+     * derived from the (brandable) shared data file name.
+     */
+    static String privateDataFileName() {
+        return dataFileName() + ".private";  // NOI18N
+    }
+
+    /**
+     * Whether the shared auxiliary data is stored inside the project
      * directory: this is the case when the marker file is present,
      * i.e. the project is a "real", shareable project.
      */
-    private boolean inProject() {
+    private boolean hasMarker() {
         return GenericProject.hasMarker(prj.getProjectDirectory());
     }
 
     @Override
     public String get(String key, boolean shared) {
-        synchronized (data) {
+        synchronized (this) {
             ensureLoaded();
-            return data.getProperty(keyPrefix(shared) + key);
+            return storeOf(shared).getProperty(keyPrefix(shared) + key);
         }
     }
 
     @Override
     public void put(String key, String value, boolean shared) {
-        synchronized (data) {
+        synchronized (this) {
             ensureLoaded();
             String storedKey = keyPrefix(shared) + key;
+            Properties store = storeOf(shared);
             if (value == null) {
-                data.remove(storedKey);
+                store.remove(storedKey);
             } else {
-                data.setProperty(storedKey, value);
+                store.setProperty(storedKey, value);
             }
-            save();
+            save(shared);
         }
     }
 
     @Override
     public Iterable<String> listKeys(boolean shared) {
         List<String> keys = new ArrayList<>();
-        synchronized (data) {
+        synchronized (this) {
             ensureLoaded();
             String prefix = keyPrefix(shared);
-            for (Object stored : data.keySet()) {
-                String key = (String) stored;
-                if (key.startsWith(prefix)) {
-                    keys.add(key.substring(prefix.length()));
+            for (String stored : storeOf(shared).stringPropertyNames()) {
+                if (stored.startsWith(prefix)) {
+                    keys.add(stored.substring(prefix.length()));
                 }
             }
         }
         return keys;
     }
 
+    private Properties storeOf(boolean shared) {
+        return shared ? sharedData : privateData;
+    }
+
+    private boolean save(boolean shared) {
+        return shared ? saveShared() : savePrivate();
+    }
+
     private static String keyPrefix(boolean shared) {
-        return shared ? SHARED_PREFIX : PRIVATE_PREFIX;
+        return shared ? "shared." : "private."; // NOI18N
+    }
+
+    private static String dataFileName(boolean shared) {
+        return shared ? dataFileName() : privateDataFileName();
     }
 
     /**
-     * Resolves the data file at the given location, returning
-     * {@code null} if it does not exist.
+     * Resolves the data file of the given channel at the location it
+     * has when the shared data is (or is not) stored in the project
+     * directory, returning {@code null} if the file does not exist.
+     * The location of the private file does not depend on the marker
+     * state.
+     *
+     * @param inProject whether to resolve the shared data file in the
+     *        project directory (or in the user configuration)
+     * @param shared whether to resolve the shared or the private data
+     *        file
      */
-    private FileObject locateFile(boolean inProject) {
-        if (inProject) {
+    private FileObject locateFile(boolean inProject, boolean shared) {
+        if (shared && inProject) {
             return prj.getProjectDirectory().getFileObject(dataFileName());
         }
         FileObject root = FileUtil.getConfigRoot();
-        FileObject dir = root != null
-                ? root.getFileObject(dataFolder(prj.getProjectDirectory()))
-                : null;
-        return dir != null ? dir.getFileObject(dataFileName()) : null;
+        if (root != null) {
+            FileObject dir = root.getFileObject(dataFolder(prj.getProjectDirectory()));
+            if (dir != null) {
+                return dir.getFileObject(dataFileName(shared));
+            }
+        }
+        return null;
     }
 
     /**
-     * Loads the data if necessary. If the storage location has changed
-     * since the data was last loaded (the marker file was created or
-     * deleted), the cached data is moved to the new location and the
-     * file at the old location is removed.
+     * Loads the data if necessary.
+     *
+     * <p>If the marker state has changed since the data was last
+     * loaded (the marker file was created or deleted), the cached
+     * shared data is moved to the new location and the file at the
+     * old one is removed; the private data is not affected.
      */
     private void ensureLoaded() {
-        boolean here = inProject();
-        if (loaded && loadedInProject == here) {
+        boolean hasMarker = hasMarker();
+        if (loaded && sharedLoadedInProject == hasMarker) {
             return;
         }
         if (!loaded) {
             loaded = true;
-            loadedInProject = here;
-            FileObject file = locateFile(here);
-            if (file != null) {
-                readFile(file);
+            sharedLoadedInProject = hasMarker;
+            FileObject privateFile = locateFile(false, false);
+            if (privateFile != null) {
+                readFileInto(privateFile, privateData);
+            }
+            FileObject sharedFile = locateFile(hasMarker, true);
+            if (sharedFile != null) {
+                readFileInto(sharedFile, sharedData);
             }
             return;
         }
-        // the location has changed since the last access: move the
-        // cached data to the new location and remove the file at the
+        // the marker state has changed since the last access: move the
+        // shared data to the new location and remove the file at the
         // old one
-        boolean old = loadedInProject;
-        loadedInProject = here;
-        if (save()) {
-            FileObject oldFile = locateFile(old);
+        boolean old = sharedLoadedInProject;
+        sharedLoadedInProject = hasMarker;
+        if (saveShared()) {
+            FileObject oldFile = locateFile(old, true);
             if (oldFile != null) {
                 try {
                     oldFile.delete();
@@ -193,27 +235,25 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
                 }
             }
         }
-        // the cache already holds what is now stored at the new
-        // location
     }
 
-    private void readFile(FileObject file) {
+    private void readFileInto(FileObject file, Properties into) {
         try (InputStream is = file.getInputStream()) {
-            data.load(is);
+            into.load(is);
         } catch (IOException ex) {
-            LOG.log(Level.WARNING, "Cannot read auxiliary data of " + prj, ex);
+            LOG.log(Level.WARNING, "Cannot read auxiliary data file of " + prj + ": " + file, ex);
         }
     }
 
     /**
-     * Saves the cached data to the current location.
+     * Saves the shared data to its current location.
      *
      * @return whether the data has been written
      */
-    private boolean save() {
+    private boolean saveShared() {
         try {
             FileObject dir;
-            if (inProject()) {
+            if (hasMarker()) {
                 dir = prj.getProjectDirectory();
             } else {
                 FileObject root = FileUtil.getConfigRoot();
@@ -223,20 +263,48 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
                 }
                 dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
             }
-            // createData throws if the file already exists, so only
-            // create it if necessary
-            FileObject file = dir.getFileObject(dataFileName());
-            if (file == null) {
-                file = dir.createData(dataFileName());
-            }
-            try (OutputStream os = file.getOutputStream()) {
-                data.store(os, "Auxiliary configuration of " + prj.getProjectDirectory().getPath());
-            }
-            return true;
+            return storeInto(dir, dataFileName(), sharedData,
+                    "Auxiliary configuration of " + prj.getProjectDirectory().getPath());
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot save auxiliary data of " + prj, ex);
             return false;
         }
+    }
+
+    /**
+     * Saves the private data to the user configuration.
+     *
+     * @return whether the data has been written
+     */
+    private boolean savePrivate() {
+        FileObject root = FileUtil.getConfigRoot();
+        if (root == null) {
+            LOG.log(Level.WARNING, "No user configuration available, cannot save private auxiliary data of {0}", prj);
+            return false;
+        }
+        try {
+            FileObject dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
+            return storeInto(dir, privateDataFileName(), privateData,
+                    "Auxiliary configuration (private) of " + prj.getProjectDirectory().getPath());
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Cannot save private auxiliary data of " + prj, ex);
+            return false;
+        }
+    }
+
+    /**
+     * Writes the given data to the named file in the directory,
+     * creating it if necessary.
+     */
+    private boolean storeInto(FileObject dir, String fileName, Properties data, String header) throws IOException {
+        FileObject file = dir.getFileObject(fileName);
+        if (file == null) {
+            file = dir.createData(fileName);
+        }
+        try (OutputStream os = file.getOutputStream()) {
+            data.store(os, header);
+        }
+        return true;
     }
 
 }

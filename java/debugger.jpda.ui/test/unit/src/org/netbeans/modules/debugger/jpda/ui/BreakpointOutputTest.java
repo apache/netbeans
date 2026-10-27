@@ -24,8 +24,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import junit.framework.Test;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.Session;
@@ -35,6 +33,7 @@ import org.netbeans.api.debugger.jpda.JPDASupport;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.debugger.jpda.ui.views.BreakpointOutputWriter;
 import org.openide.util.Utilities;
 
 /** Testing {@link BreakpointOutput#printExpressions}
@@ -83,7 +82,7 @@ public class BreakpointOutputTest extends NbTestCase {
         assertOnBreakpoint((event) -> {
             writer.append("on ").append(event.getThread().getName()).append("\n");
             try {
-                printExpressions(out, event, format, (msg, action) -> {
+                printExpressions(out, event, format, (msg, action, newLine) -> {
                     if (action != null) {
                         writer.append("<a ");
                     }
@@ -91,8 +90,9 @@ public class BreakpointOutputTest extends NbTestCase {
                     if (action != null) {
                         writer.append(">");
                     }
-                }, (msg) -> {
-                    writer.append(msg).append("\n");
+                    if (newLine) {
+                        writer.append("\n");
+                    }
                 });
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace(writer);
@@ -108,6 +108,49 @@ public class BreakpointOutputTest extends NbTestCase {
         """, collected.toString());
     }
 
+    public void testLocalVariablesOutput() throws Throwable {
+        final Session session = support.getDebugger().getSession();
+
+        //
+        // now the real test and collect the printed messages
+        //
+
+        var collected = new StringWriter();
+        var writer = new PrintWriter(collected);
+        BreakpointOutput out = new BreakpointOutput(session);
+        assertOnBreakpoint((event) -> {
+            writer.append("on ").append(event.getThread().getName()).append("\n");
+            try {
+                printLocals(out, event, (msg, action, newLine) -> {
+                    if (action != null) {
+                        writer.append("<a ");
+                    }
+                    writer.append(msg);
+                    if (action != null) {
+                        writer.append(">");
+                    }
+                    if (newLine) {
+                        writer.append("\n");
+                    }
+                });
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace(writer);
+            }
+        });
+
+        //
+        // verify result
+        //
+        assertMatches("""
+        on main
+          args = <a #[0-9]+\\(length=0\\)>
+          i = 42
+          when = <a "Now">
+          arr = <a #[0-9]+\\(length=1\\)>
+          obj = <a class test.SampleMain>
+        """, collected.toString());
+    }
+
     public void testArithmeticException() throws Exception {
         //
         // now the real test and collect the printed messages
@@ -120,7 +163,7 @@ public class BreakpointOutputTest extends NbTestCase {
         assertOnBreakpoint((event) -> {
             writer.append("on ").append(event.getThread().getName()).append("\n");
             try {
-                printExpressions(out, event, format, (msg, action) -> {
+                printExpressions(out, event, format, (msg, action, newLine) -> {
                     if (action != null) {
                         writer.append("<a ");
                     }
@@ -128,8 +171,9 @@ public class BreakpointOutputTest extends NbTestCase {
                     if (action != null) {
                         writer.append(">");
                     }
-                }, (msg) -> {
-                    writer.append(msg).append("\n");
+                    if (newLine) {
+                        writer.append("\n");
+                    }
                 });
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace(writer);
@@ -192,15 +236,32 @@ public class BreakpointOutputTest extends NbTestCase {
         BreakpointOutput out,
         JPDABreakpointEvent event,
         String message,
-        BiConsumer<String, Runnable> print,
-        Consumer<String> println
+        BreakpointOutputWriter writer
     ) throws ReflectiveOperationException {
         Method m = out.getClass().getDeclaredMethod(
                 "printExpressions",
-                JPDABreakpointEvent.class, String.class, BiConsumer.class, Consumer.class
+                JPDABreakpointEvent.class, String.class, BreakpointOutputWriter.class
         );
         m.setAccessible(true);
-        m.invoke(out, event, message, print, println);
+        m.invoke(out, event, message, writer);
+    }
+
+    /**
+     * Calls {@link BreakpointOutput#printLocals}.
+     * Have to use reflection even the class and its tests are in the
+     * same package. They are loaded by different classloaders.
+     */
+    private void printLocals(
+        BreakpointOutput out,
+        JPDABreakpointEvent event,
+        BreakpointOutputWriter writer
+    ) throws ReflectiveOperationException {
+        Method m = out.getClass().getDeclaredMethod(
+                "printLocals",
+                JPDABreakpointEvent.class, BreakpointOutputWriter.class
+        );
+        m.setAccessible(true);
+        m.invoke(out, event, writer);
     }
 
     private void assertMatches(String expected, String actual) {

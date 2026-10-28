@@ -35,87 +35,91 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.openide.ErrorManager;
 
-
 /**
  *
  * @author Jan Lahoda
  */
 public class WordCompletion implements CompletionProvider {
-    
-    /** Creates a new instance of WordCompletion */
+
+    /**
+     * Creates a new instance of WordCompletion
+     */
     public WordCompletion() {
     }
 
+    @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType == COMPLETION_QUERY_TYPE) {
             return new AsyncCompletionTask(new Query(), component);
         }
-        
+
         return null;
     }
-    
+
+    @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
         return 0;
     }
-    
+
     private static class Query extends AsyncCompletionQuery {
-        
+
+        @Override
         protected void query(CompletionResultSet resultSet, Document document, final int caretOffset) {
             Dictionary dictionary = ComponentPeer.getDictionary(document);
-            final TokenList  l = ComponentPeer.ACCESSOR.lookupTokenList(document);
-            
+            final TokenList l = ComponentPeer.ACCESSOR.lookupTokenList(document);
+
             if (dictionary != null && l != null && document instanceof BaseDocument) {
                 final BaseDocument bdoc = (BaseDocument) document;
                 final String[] text = new String[2];
-                
-                document.render(new Runnable() {
-                    public void run() {
-                        try {
-                            int lineStart = LineDocumentUtils.getLineStartOffset(bdoc, caretOffset);
-                            
-                            l.setStartOffset(lineStart);
-                            
-                            while (l.nextWord()) {
-                                int start = l.getCurrentWordStartOffset();
-                                int end   = l.getCurrentWordStartOffset() + l.getCurrentWordText().length();
-                                
-                                if (start < caretOffset && end >= caretOffset) {
-                                    text[0] = l.getCurrentWordText().subSequence(0, caretOffset - start).toString();
-                                    text[1] = l.getCurrentWordText().toString();
-                                    return ;
-                                }
+
+                document.render(() -> {
+                    try {
+                        int lineStart = LineDocumentUtils.getLineStartOffset(bdoc, caretOffset);
+
+                        l.setStartOffset(lineStart);
+
+                        while (l.nextWord()) {
+                            int start = l.getCurrentWordStartOffset();
+                            int end = l.getCurrentWordStartOffset() + l.getCurrentWordText().length();
+
+                            if (start < caretOffset && end >= caretOffset) {
+                                text[0] = l.getCurrentWordText().subSequence(0, caretOffset - start).toString();
+                                text[1] = l.getCurrentWordText().toString();
+                                return;
                             }
-                        } catch (BadLocationException e) {
-                            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
                         }
+                    } catch (BadLocationException e) {
+                        ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
                     }
                 });
-                
+
                 if (text[0] != null) {
                     int i = 0;
                     for (String proposal : dictionary.findValidWordsForPrefix(text[0])) {
-                        resultSet.addItem (new WordCompletionItem (
-                            caretOffset - text[0].length (),
-                            proposal
+                        resultSet.addItem(new WordCompletionItem(
+                                caretOffset - text[0].length(),
+                                proposal
                         ));
-                        if (i == 8) break;
+                        if (i == 8) {
+                            break;
+                        }
                         i++;
                     }
-                    if (dictionary.validateWord (text [1]) != ValidityType.VALID) {
-                        resultSet.addItem (new AddToDictionaryCompletionItem (
-                            text [1],
-                            true
+                    if (dictionary.validateWord(text[1]) != ValidityType.VALID) {
+                        resultSet.addItem(new AddToDictionaryCompletionItem(
+                                text[1],
+                                true
                         ));
-                        resultSet.addItem (new AddToDictionaryCompletionItem (
-                            text [1],
-                            false
+                        resultSet.addItem(new AddToDictionaryCompletionItem(
+                                text[1],
+                                false
                         ));
                     }
                 }
             }
-            
+
             resultSet.finish();
         }
     }
-    
+
 }

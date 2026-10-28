@@ -30,30 +30,30 @@ import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
  *
  * @author Jan Lahoda
  */
-public class SpellcheckerHighlightLayerFactory implements HighlightsLayerFactory {
-    
+public final class SpellcheckerHighlightLayerFactory implements HighlightsLayerFactory {
+
     public SpellcheckerHighlightLayerFactory() {
     }
-    
+
     public HighlightsLayer[] createLayers(Context ctx) {
         OffsetsBag bag = getBag(ctx.getComponent());
-        return new HighlightsLayer[] {
-            HighlightsLayer.create(SpellcheckerHighlightLayerFactory.class.getName(), ZOrder.CARET_RACK.forPosition(30), true, bag),
-        };
+        return new HighlightsLayer[]{
+            HighlightsLayer.create(SpellcheckerHighlightLayerFactory.class.getName(), ZOrder.CARET_RACK.forPosition(30), true, bag),};
     }
-    
+
     public static synchronized OffsetsBag getBag(JTextComponent component) {
         Document doc = component.getDocument();
         OffsetsBag bag = null;
         if (doc != null) {
             bag = (OffsetsBag) doc.getProperty(SpellcheckerHighlightLayerFactory.class);
             if (bag == null) {
-                doc.putProperty(SpellcheckerHighlightLayerFactory.class, bag = new OffsetsBag(doc));
+                bag = new OffsetsBag(doc);
+                doc.putProperty(SpellcheckerHighlightLayerFactory.class, bag);
             }
         }
-        Spellchecker.register (component);
-        
+        Spellchecker.register(component);
+
         return bag;
     }
-    
+
 }

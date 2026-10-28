@@ -22,9 +22,7 @@ package org.openide.filesystems;
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -34,6 +32,10 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -465,12 +467,9 @@ public class JarFileSystem extends AbstractFileSystem {
         return new ByteArrayInputStream(is.readAllBytes());
     }
 
-    private InputStream getTemporaryInputStream(JarFile jf, JarEntry je, boolean forceRecreate)
-    throws IOException {
-        String filePath = jf.getName();
-        String entryPath = je.getName();
+    private InputStream getTemporaryInputStream(JarFile jf, JarEntry je) throws IOException {
         StringBuffer jarCacheFolder = new StringBuffer("jarfscache"); //NOI18N
-        jarCacheFolder.append(System.getProperty("user.name")).append("/"); //NOI18N        
+        jarCacheFolder.append(System.getProperty("user.name")).append("/"); //NOI18N
 
         File jarfscache = new File(System.getProperty("java.io.tmpdir"), jarCacheFolder.toString()); //NOI18N
 
@@ -478,37 +477,22 @@ public class JarFileSystem extends AbstractFileSystem {
             jarfscache.mkdirs();
         }
 
-        File f = new File(jarfscache, temporaryName(filePath, entryPath));
-
-        boolean createContent = !f.exists();
-
-        if (createContent) {
-            f.createNewFile();
-        } else {
-            forceRecreate |= (Math.abs((System.currentTimeMillis() - f.lastModified())) > 10000);
-        }
-
-        if (createContent || forceRecreate) {
+        // Every call copies the entry to a new file of its own. A file shared between calls (or between
+        // JarFileSystems, or between JVMs) would be truncated and rewritten by one caller while another
+        // is still reading it. DELETE_ON_CLOSE removes the file once the stream is closed (on Unix, as
+        // soon as it is opened), so a stream that is never closed leaves no file behind either.
+        Path f = Files.createTempFile(jarfscache.toPath(), "jarfs", null); //NOI18N
+        try {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = new FileOutputStream(f)) {
-                is.transferTo(os);
+            try (InputStream is = getInputStream4336753(jf, je)) {
+                Files.copy(is, f, StandardCopyOption.REPLACE_EXISTING);
             }
+            return Files.newInputStream(f, StandardOpenOption.DELETE_ON_CLOSE);
+        } catch (IOException | RuntimeException e) {
+            Files.deleteIfExists(f);
+            throw e;
         }
-
-        f.deleteOnExit();
-
-        return new FileInputStream(f);
-    }
-
-    private static String temporaryName(String filePath, String entryPath) {
-        String fileHash = String.valueOf(filePath.hashCode());
-        String entryHash = String.valueOf(entryPath.hashCode());
-
-        StringBuffer sb = new StringBuffer();
-        sb.append("f").append(fileHash).append("e").append(entryHash);
-
-        return sb.toString().replace('-', 'x'); //NOI18N
     }
 
     protected InputStream inputStream(String name) throws java.io.FileNotFoundException {
@@ -525,7 +509,7 @@ public class JarFileSystem extends AbstractFileSystem {
                         if (je.getSize() < MEM_STREAM_SIZE) {
                             is = getMemInputStream(j, je);
                         } else {
-                            is = getTemporaryInputStream(j, je, (strongCache != null));
+                            is = getTemporaryInputStream(j, je);
                         }
                     }
                 }

@@ -456,6 +456,11 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
     }
 
     @Override
+    public Variable asValue() {
+        return clone();
+    }
+
+    @Override
     public Object createMirrorObject() {
         Value v = getJDIValue();
         if (v == null) {

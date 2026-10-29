@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.spi.project.ui.support;
+package org.netbeans.spi.project;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
@@ -46,7 +46,7 @@ import org.openide.filesystems.FileObject;
  * <li>if the directory already is a project (of any type), the existing
  *     canonical project instance must be returned — never a new one.</li>
  * </ul>
- * @since 1.125
+ * @since 1.107
  */
 public interface DirectoryProjectProvider {
 

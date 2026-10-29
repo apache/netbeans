@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project.ui.actions;
+package org.netbeans.modules.project.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -29,7 +29,6 @@ import javax.swing.Action;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.generic.project.ui.wizard.GpWizardIterator;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -42,7 +41,8 @@ import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
-import static org.netbeans.modules.generic.project.ui.actions.Bundle.*;
+
+import static org.netbeans.modules.project.ui.actions.Bundle.OpenAsProjectAction_LBL_action;
 
 /**
  * Context action for folder nodes: turns a folder which is not a project
@@ -57,17 +57,17 @@ import static org.netbeans.modules.generic.project.ui.actions.Bundle.*;
  *
  * @author mbien
  */
-@Messages("GpOpenAsProjectAction.LBL_action=Open as Generic Project")
-@ActionID(category = "Project", id = "org.netbeans.modules.generic.project.ui.actions.GpOpenAsProjectAction")
-@ActionRegistration(displayName = "#GpOpenAsProjectAction.LBL_action", lazy = false)
+@Messages("OpenAsProjectAction.LBL_action=Open as Generic Project")
+@ActionID(category = "Project", id = "org.netbeans.modules.project.ui.actions.OpenAsProjectAction")
+@ActionRegistration(displayName = "#OpenAsProjectAction.LBL_action", lazy = false)
 @ActionReference(path = "Loaders/folder/any/Actions", position = 110)
-public final class GpOpenAsProjectAction extends AbstractAction implements ContextAwareAction {
+public final class OpenAsProjectAction extends AbstractAction implements ContextAwareAction {
 
-    private static final Logger LOG = Logger.getLogger(GpOpenAsProjectAction.class.getName());
-    private static final RequestProcessor RP = new RequestProcessor(GpOpenAsProjectAction.class);
+    private static final Logger LOG = Logger.getLogger(OpenAsProjectAction.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor(OpenAsProjectAction.class);
 
-    public GpOpenAsProjectAction() {
-        super(GpOpenAsProjectAction_LBL_action());
+    public OpenAsProjectAction() {
+        super(OpenAsProjectAction_LBL_action());
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class GpOpenAsProjectAction extends AbstractAction implements Conte
         private final Lookup context;
 
         public ContextAction(Lookup context) {
-            super(GpOpenAsProjectAction_LBL_action());
+            super(OpenAsProjectAction_LBL_action());
             this.context = context;
             checkEnabled(context);
         }
@@ -132,11 +132,10 @@ public final class GpOpenAsProjectAction extends AbstractAction implements Conte
          */
         private static void adopt(FileObject fo) throws IOException {
             File dir = FileUtil.normalizeFile(FileUtil.toFile(fo));
-            GpWizardIterator.createProject(dir, true);
             // The folder may be cached as a non-project from the
             // isProject() check done to enable this action.
             ProjectManager.getDefault().clearNonProjectCache();
-            Project p = ProjectManager.getDefault().findProject(fo);
+            Project p = ProjectManager.getDefault().findOrCreateDirProject(fo);
             if (p == null) {
                 throw new IOException("Project not found in " + dir); // NOI18N
             }

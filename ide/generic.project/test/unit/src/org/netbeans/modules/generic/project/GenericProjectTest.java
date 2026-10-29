@@ -45,7 +45,7 @@ import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
-import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
+import org.netbeans.spi.project.DirectoryProjectProvider;
 import org.netbeans.spi.queries.SharabilityQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

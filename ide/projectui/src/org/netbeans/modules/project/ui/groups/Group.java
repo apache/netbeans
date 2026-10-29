@@ -58,7 +58,6 @@ import org.netbeans.modules.project.ui.OpenProjectListSettings;
 import org.netbeans.modules.project.ui.ProjectTab;
 import org.netbeans.modules.project.ui.ProjectUtilities;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
-import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
 import org.openide.cookies.CloseCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -141,10 +140,7 @@ public abstract class Group {
                 if (dir != null && dir.isFolder()) {
                     p = ProjectManager.getDefault().findProject(dir);
                     if (p == null) {
-                        DirectoryProjectProvider prov = Lookup.getDefault().lookup(DirectoryProjectProvider.class);
-                        if (prov != null) {
-                            p = prov.createProject(dir);
-                        }
+                        p = ProjectManager.getDefault().findOrCreateDirProject(dir);
                     }
                 }
             }

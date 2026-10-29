@@ -21,7 +21,7 @@ package org.netbeans.modules.generic.project;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.DirectoryProjectProvider;
+import org.netbeans.spi.project.DirectoryProjectProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 

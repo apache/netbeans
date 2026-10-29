@@ -41,6 +41,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
+import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
 
 public final class McpHttpServer {
 

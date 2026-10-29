@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
 
 public final class McpServerManager {
 

@@ -69,7 +69,7 @@ import org.openide.filesystems.FileObject;
  * @author sdedic
  */
 @MimeRegistrations({
-    @MimeRegistration(mimeType = "text/x-java", service = TaskFactory.class),
+    @MimeRegistration(mimeType = "text/x-java", service = TaskFactory.class, position = 840),
     @MimeRegistration(mimeType = "text/x-java", service = FoldManagerFactory.class, position = 1400),
 })
 public class ResourceStringFoldProvider extends ParsingFoldSupport{

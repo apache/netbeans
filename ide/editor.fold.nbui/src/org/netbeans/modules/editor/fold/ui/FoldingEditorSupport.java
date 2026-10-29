@@ -327,7 +327,7 @@ public class FoldingEditorSupport implements FoldHierarchyListener {
         return (cnt[0] == null || cnt[0].trim().isEmpty());
     }
 
-    @MimeRegistration(mimeType = "", service = FoldHierarchyMonitor.class)
+    @MimeRegistration(mimeType = "", service = FoldHierarchyMonitor.class, position = 670)
     public static class F implements FoldHierarchyMonitor {
         @Override
         public void foldsAttached(FoldHierarchy h) {

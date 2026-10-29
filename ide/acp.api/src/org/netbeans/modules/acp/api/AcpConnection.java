@@ -417,6 +417,8 @@ public final class AcpConnection {
             AcpSchema.PromptRequest request = AcpSchema.PromptRequest.text(sessionId, text);
             AcpSchema.PromptResponse response = client.prompt(request);
             String stopReason = response.stopReason() != null ? response.stopReason().value() : "end_turn"; // NOI18N
+            LOG.log(Level.FINE, "PromptComplete: session={0}, stopReason={1}",
+                    new Object[]{sessionId, stopReason});
             notifyListeners(l -> l.onPromptComplete(sessionId, stopReason));
         } catch (Exception ex) {
             throw new IOException("Failed to send prompt", ex); // NOI18N
@@ -514,15 +516,21 @@ public final class AcpConnection {
                 String data = img.data();
                 String mimeType = img.mimeType();
                 if (data != null && !data.isEmpty()) {
+                    LOG.log(Level.FINE, "AgentImage: session={0}, mimeType={1}, dataLen={2}",
+                            new Object[]{sessionId, mimeType, data.length()});
                     notifyListeners(l -> l.onAgentImage(sessionId, data,
                             mimeType != null ? mimeType : "image/png")); // NOI18N
                 }
             } else {
                 String text = extractText(content);
+                LOG.log(Level.FINE, "AgentMessage: session={0}, text={1}",
+                        new Object[]{sessionId, text});
                 notifyListeners(l -> l.onAgentMessage(sessionId, text));
             }
         } else if (update instanceof AgentThoughtChunk chunk) {
             String text = extractText(chunk.content());
+            LOG.log(Level.FINE, "AgentThought: session={0}, text={1}",
+                    new Object[]{sessionId, text});
             notifyListeners(l -> l.onAgentThought(sessionId, text));
         } else if (update instanceof AcpSchema.ToolCall tc) {
             LOG.log(Level.FINE, "ToolCall: id={0}, name={1}, title={2}, kind={3}, status={4}, "

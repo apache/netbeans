@@ -43,8 +43,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor.TransportType;
-import org.netbeans.modules.acp.mcp.McpToolProvider;
-import org.netbeans.modules.acp.mcp.McpToolRegistry;
+import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
+import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({

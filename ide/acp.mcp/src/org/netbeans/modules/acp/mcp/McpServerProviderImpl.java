@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.acp.api.AcpMcpServerProvider;
+import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
+import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = AcpMcpServerProvider.class)

@@ -72,10 +72,10 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="useDefaults" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              <Component id="content" pref="25" max="32767" attributes="0"/>
+              <Component id="content" max="32767" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -128,6 +128,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="contentPreview" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="foldedSummary" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="showTooltip" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -141,6 +142,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="foldedSummary" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="showTooltip" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -157,6 +160,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="org/netbeans/modules/editor/fold/ui/Bundle.properties" key="FoldOptionsPanel.foldedSummary.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="showTooltip">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="org/netbeans/modules/editor/fold/ui/Bundle.properties" key="FoldOptionsPanel.showTooltip.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>

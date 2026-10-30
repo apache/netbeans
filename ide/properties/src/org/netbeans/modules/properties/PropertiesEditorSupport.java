@@ -59,8 +59,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -74,7 +72,6 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.queries.FileEncodingQuery;
-import org.netbeans.modules.properties.PropertiesEncoding.PropCharset;
 import org.netbeans.modules.properties.PropertiesEncoding.PropCharsetEncoder;
 import org.openide.ErrorManager;
 import org.openide.awt.UndoRedo;
@@ -109,56 +106,62 @@ import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.windows.CloneableOpenSupport;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
+
 import static java.util.logging.Level.FINER;
-import javax.swing.*;
+
 import org.openide.filesystems.StatusDecorator;
 
-/** 
+import static java.util.logging.Level.FINE;
+
+/**
  * Support for viewing .properties files (EditCookie) by opening them in a text editor.
  *
- * @author Petr Jiricka, Peter Zavadsky 
+ * @author Petr Jiricka, Peter Zavadsky
  * @see org.openide.text.CloneableEditorSupport
  */
-public class PropertiesEditorSupport extends CloneableEditorSupport 
+public class PropertiesEditorSupport extends CloneableEditorSupport
 implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serializable, SaveAsCapable {
-    
+
     /** error manager for CloneableEditorSupport logging and error reporting */
     static final Logger LOG = Logger.getLogger("org.netbeans.modules.properties.PropertiesEditorSupport"); // NOI18N
-    
+
     /** */
     private FileStatusListener fsStatusListener;
-    
+
     /** Visible view of underlying file entry */
     transient PropertiesFileEntry myEntry;
-    
+
     /** Generated serial version UID. */
     static final long serialVersionUID =1787354011149868490L;
-    
+
     private Charset charset;
-    
-    /** Constructor. */
+
+    /**
+     * Constructor.
+     *
+     * @param entry
+     */
     public PropertiesEditorSupport(PropertiesFileEntry entry) {
         super(new Environment(entry), new ProxyLookup(Lookups.singleton(entry.getDataObject()), entry.getDataObject().getLookup()));
         this.myEntry = entry;
     }
-    
+
     @Override
     protected Pane createPane() {
         return (Pane) MultiViews.createCloneableMultiView(PropertiesDataLoader.PROPERTIES_MIME_TYPE, getDataObject());
     }
-    
+
     /** Getter for the environment that was provided in the constructor.
     * @return the environment
     */
     final CloneableEditorSupport.Env desEnv() {
         return (CloneableEditorSupport.Env) env;
     }
-    
-    /** 
+
+    /**
      * Overrides superclass method.
      * Should test whether all data is saved, and if not, prompt the user
      * to save. Called by my topcomponent when it wants to close its last topcomponent, but the table editor may still be open
@@ -177,7 +180,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             return super.canClose();
         }
     }
-    
+
     /** Getter of the data object that this support is associated with.
     * @return data object passed in constructor
     */
@@ -189,34 +192,32 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         CloneableEditorSupport.Env myEnv = desEnv();
         return myEnv instanceof Environment && !((Environment) myEnv).getFileImpl().canWrite();
     }
-    
+
     /**
      *
      */
-    final class FsStatusListener implements FileStatusListener, Runnable {
-        
-	/**
-	 */
+    private final class FsStatusListener implements FileStatusListener, Runnable {
+
+        @Override
 	public void annotationChanged(FileStatusEvent ev) {
             if (ev.isNameChange() && ev.hasChanged(myEntry.getFile())) {
                 Mutex.EVENT.writeAccess(this);
             }
 	}
-        
-	/**
-	 */
+
+        @Override
 	public void run() {
 	    updateEditorDisplayNames();
 	}
     }
-    
+
     /**
      */
     private void attachStatusListener() {
         if (fsStatusListener != null) {
             return;                 //already attached
         }
-        
+
         FileSystem fs;
         try {
             fs = myEntry.getFile().getFileSystem();
@@ -224,21 +225,21 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);
             return;
         }
-        
+
         fsStatusListener = new FsStatusListener();
         fs.addFileStatusListener(
                 FileUtil.weakFileStatusListener(fsStatusListener, fs));
     }
-    
+
     /**
      */
     private void updateEditorDisplayNames() {
         assert EventQueue.isDispatchThread();
-        
+
         final String title = messageName();
         final String htmlTitle = messageHtmlName();
         final String toolTip = messageToolTip();
-        Enumeration en = allEditors.getComponents();
+        Enumeration<CloneableTopComponent> en = allEditors.getComponents();
         while (en.hasMoreElements()) {
             TopComponent tc = (TopComponent) en.nextElement();
             tc.setDisplayName(title);
@@ -246,7 +247,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             tc.setToolTipText(toolTip);
         }
     }
-    
+
     /**
      */
     @Override
@@ -255,7 +256,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     }
 
     /**
-     * Overrides superclass method. 
+     * Overrides superclass method.
      * Let's the super method create the document and also annotates it
      * with Title and StreamDescription properities.
      * @param kit kit to user to create the document
@@ -264,31 +265,31 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     @Override
     protected StyledDocument createStyledDocument(EditorKit kit) {
         StyledDocument document = super.createStyledDocument(kit);
-        
+
         // Set additional proerties to document.
         // Set document name property. Used in CloneableEditorSupport.
         document.putProperty(Document.TitleProperty, myEntry.getFile().toString());
-        
+
         // Set dataobject to stream desc property.
         document.putProperty(Document.StreamDescriptionProperty, myEntry.getDataObject());
-        
+
         // hook the document to listen for any changes to update changes by
         // reparsing the document
         document.addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { changed();}
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { changed();}            
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { changed();}
+            @Override public void insertUpdate(javax.swing.event.DocumentEvent e) { changed();}
+            @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { changed();}
+            @Override public void removeUpdate(javax.swing.event.DocumentEvent e) { changed();}
             private void changed() {
-                myEntry.getHandler().autoParse();                
+                myEntry.getHandler().autoParse();
             }
         });
-        
+
         return document;
     }
 
     /**
      * Reads the file from the stream, filter the guarded section
-     * comments, and mark the sections in the editor. Overrides superclass method. 
+     * comments, and mark the sections in the editor. Overrides superclass method.
      * @param document the document to read into
      * @param inputStream the open stream to read from
      * @param editorKit the associated editor kit
@@ -299,16 +300,12 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     @Override
     protected void loadFromStreamToKit(StyledDocument document, InputStream inputStream, EditorKit editorKit) throws IOException, BadLocationException {
         final Charset c = getCharset();
-        final Reader reader = new BufferedReader(new InputStreamReader(inputStream, c));
-
-        try {
+        try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, c))) {
             editorKit.read(reader, document, 0);
-        } finally {
-            reader.close();
         }
     }
 
-    /** 
+    /**
      * Adds new lines according actual value of <code>newLineType</code> variable.
      * Overrides superclass method.
      * @param document the document to write from
@@ -336,7 +333,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             writer.close();
         }
     }
-    
+
     private Charset getCharset() {
         if (charset == null) {
             charset = FileEncodingQuery.getEncoding(myEntry.getDataObject().getPrimaryFile());
@@ -348,8 +345,8 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         charset = null;
     }
 
-    /** 
-     * Adds a save cookie if the document has been marked modified. Overrides superclass method. 
+    /**
+     * Adds a save cookie if the document has been marked modified. Overrides superclass method.
      * @return <code>true</code> if the environment accepted being marked as modified
      *    or <code>false</code> if it refused it and the document should still be unmodified
      */
@@ -367,17 +364,13 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
 
         ((Environment)env).addSaveCookie();
 
-        return true; 
+        return true;
     }
-    
+
     @Override
     protected Task reloadDocument(){
         Task tsk = super.reloadDocument();
-        tsk.addTaskListener(new TaskListener(){
-            public void taskFinished(Task task){
-                myEntry.getHandler().autoParse();
-            }
-        });
+        tsk.addTaskListener(task -> myEntry.getHandler().autoParse());
         return tsk;
     }
 
@@ -385,10 +378,10 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     @Override
     protected void notifyUnmodified () {
         super.notifyUnmodified();
-        
+
         ((Environment)env).removeSaveCookie();
     }
-    
+
     /**
      */
     @Override
@@ -396,7 +389,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
 	super.open();
 	attachStatusListener();
     }
-    
+
     /** Overrides superclass method. Adds checking for opened Table panel. */
     @Override
     protected void notifyClosed() {
@@ -413,11 +406,12 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
     }
 
-    /** 
-     * Overrides superclass abstract method. 
+    /**
+     * Overrides superclass abstract method.
      * Message to display when an object is being opened.
      * @return the message or null if nothing should be displayed
      */
+    @Override
     protected String messageOpening() {
         return NbBundle.getMessage(
             PropertiesEditorSupport.class,
@@ -425,12 +419,13 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             getFileLabel()
         );
     }
-    
+
     /**
-     * Overrides superclass abstract method. 
+     * Overrides superclass abstract method.
      * Message to display when an object has been opened.
      * @return the message or null if nothing should be displayed
      */
+    @Override
     protected String messageOpened() {
         return NbBundle.getMessage(
             PropertiesEditorSupport.class,
@@ -438,20 +433,21 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             getFileLabel()
        );
     }
-    
+
     private String getFileLabel() {
         PropertiesDataObject propDO = (PropertiesDataObject) myEntry.getDataObject();
         return propDO.getPrimaryFile().getNameExt();
     }
-    
-    /** 
-     * Overrides superclass abstract method. 
+
+    /**
+     * Overrides superclass abstract method.
      * Constructs message that should be used to name the editor component.
      * @return name of the editor
      */
+    @Override
     protected String messageName () {
         if (!myEntry.getDataObject().isValid()) {
-            return "";                                                  //NOI18N       
+            return "";                                                  //NOI18N
         }
         return DataEditorSupport.annotateName(getFileLabel(), false, isModified(), !myEntry.getFile().canWrite());
     }
@@ -464,7 +460,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
 
         String rawName = getFileLabel();
-        
+
         String annotatedName = null;
         final FileObject entry = myEntry.getFile();
         try {
@@ -486,16 +482,17 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         } catch (FileStateInvalidException ex) {
             //do nothing and fall through
         }
-        
+
         String name = (annotatedName != null) ? annotatedName : /*XXX escape HTML content*/rawName;
         return DataEditorSupport.annotateName(name, true, isModified(), !myEntry.getFile().canWrite());
     }
-    
-    /** 
+
+    /**
      * Overrides superclass abstract method.
      * Is modified and is being closed.
      * @return text to show to the user
      */
+    @Override
     protected String messageSave () {
         return NbBundle.getMessage (
             PropertiesEditorSupport.class,
@@ -503,42 +500,43 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             getFileLabel()
         );
     }
-    
-    /** 
+
+    /**
      * Overrides superclass abstract method.
      * Text to use as tooltip for component.
      * @return text to show to the user
      */
+    @Override
     protected String messageToolTip () {
         // copied from DataEditorSupport, more or less
         FileObject fo = myEntry.getFile();
         return DataEditorSupport.toolTip(fo, isModified(), !myEntry.getFile().canWrite());
     }
-    
-    /** Overrides superclass method. Gets <code>UndoRedo</code> manager which maps 
+
+    /** Overrides superclass method. Gets <code>UndoRedo</code> manager which maps
      * <code>UndoalbleEdit</code>'s to <code>StampFlag</code>'s. */
     @Override
     protected UndoRedo.Manager createUndoRedoManager () {
         return new UndoRedoStampFlagManager();
     }
-    
-    /** 
-     * Helper method. Hack on superclass <code>getUndoRedo()</code> method, to widen its protected modifier. 
-     * Needs to be accessed from outside this class (in <code>PropertiesOpen</code>). 
-     * @see PropertiesOpen 
+
+    /**
+     * Helper method. Hack on superclass <code>getUndoRedo()</code> method, to widen its protected modifier.
+     * Needs to be accessed from outside this class (in <code>PropertiesOpen</code>).
+     * @see PropertiesOpen
      */
     UndoRedo.Manager getUndoRedoManager() {
         return super.getUndoRedo();
     }
-    
-    /** 
+
+    /**
      * Helper method. Used only by <code>PropertiesOpen</code> support when closing last Table component.
-     * Note: It's quite ugly by-pass of <code>notifyClosed()</code> method. Should be revised. 
+     * Note: It's quite ugly by-pass of <code>notifyClosed()</code> method. Should be revised.
      */
     void forceNotifyClosed() {
         super.notifyClosed();
     }
-    
+
     /** Helper method. Saves this entry. */
     private void saveThisEntry() throws IOException {
         FileSystem.AtomicAction aa = new SaveImpl(this);
@@ -555,7 +553,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     final void superSaveDoc() throws IOException {
         super.saveDocument();
     }
-    
+
     /**
      * Save the document under a new file name and/or extension.
      * @param folder New folder to save the DataObject to.
@@ -563,6 +561,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
      * @throws java.io.IOException If the operation failed
      * @since 6.3
      */
+    @Override
     public void saveAs( FileObject folder, String fileName ) throws IOException {
         //ask the user for a new file name to save to
         String newExtension = FileUtil.getExtension( fileName );
@@ -601,7 +600,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             }
         }
     }
-    
+
     private String getFileNameNoExtension(String fileName) {
         int index = fileName.lastIndexOf("."); // NOI18N
 
@@ -612,21 +611,22 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
     }
 
-    
-    /** 
+
+    /**
      * Save the document to a new file.
-     * @param output 
+     * @param output
      * @exception IOException on I/O error
      * @since 6.3
      */
     private void saveDocumentAs( final OutputStream output ) throws IOException {
 
         final StyledDocument myDoc = getDocument();
-        
+
         // save the document as a reader
         class SaveAsWriter implements Runnable {
             private IOException ex;
 
+            @Override
             public void run() {
                 try {
                     OutputStream os = null;
@@ -663,7 +663,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         saveAsWriter.after();
     }
 
-    /** Helper method. 
+    /** Helper method.
      * @return whether there is an table view opened */
     public synchronized boolean hasOpenedTableComponent() {
         PropertiesDataObject dataObject = (PropertiesDataObject) myEntry.getDataObject();
@@ -672,47 +672,22 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
         return dataObject.getOpenSupport().hasOpenedTableComponent();
     }
-    
+
     /**
      * Helper method.
      * @return whether there is an open editor component. */
     public synchronized boolean hasOpenedEditorComponent() {
-        Enumeration en = allEditors.getComponents ();
+        Enumeration<CloneableTopComponent> en = allEditors.getComponents();
         return en.hasMoreElements ();
     }
-
-    /** Class which exist only due comaptibility with version 3.0. */    
-    private static final class Env extends Environment {
-        /** Generated Serialized Version UID. */
-        static final long serialVersionUID = -9218186467757330339L;
-
-        /** Used for deserialization. */
-        private PropertiesFileEntry entry;
-
-        /** */
-        public Env(PropertiesFileEntry entry) {
-            super(entry);
-        }
-
-        /** Adds passing entry field to superclass. */
-        private void readObject(java.io.ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
-                in.defaultReadObject();
-                
-                if (this.entry != null) {
-                    super.entry = this.entry;
-                }
-        }
-        }
-
 
     /** Nested class. Implementation of <code>ClonableEditorSupport.Env</code> interface. */
     private static class Environment implements CloneableEditorSupport.Env,
     PropertyChangeListener, SaveCookie {
-        
+
         /** generated Serialized Version UID */
         static final long serialVersionUID = 354528097109874355L;
-            
+
         /** Entry on which is support build. */
         private PropertiesFileEntry entry;
 
@@ -723,15 +698,15 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         * This file object can be changed by a call to refresh file.
         */
         private transient FileObject fileObject;
-            
+
         /** Spport for firing of property changes. */
         private transient PropertyChangeSupport propSupp;
-        
+
         /** Support for firing of vetoable changes. */
         private transient VetoableChangeSupport vetoSupp;
 
         private transient EnvironmentListener envListener;
-            
+
         /** Constructor.
          * @param obj this support should be associated with
          */
@@ -756,23 +731,23 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             return entry.getDataObject();
         }
         /** Implements <code>CloneableEditorSupport.Env</code> inetrface. Adds property listener. */
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {
             LOG.finer("Environment.addPropertyChangeListener(...)");    //NOI18N
             prop().addPropertyChangeListener (l);
         }
 
-        
+
         /** Accepts property changes from entry and fires them to own listeners. */
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (LOG.isLoggable(FINER)) {
-                LOG.finer("Environment.propertyChange("                 //NOI18N
-                          + evt.getPropertyName()
-                          + ", " + evt.getOldValue()                    //NOI18N
-                          + ", " + evt.getNewValue()                    //NOI18N
-                          + ')');
-            }
+            LOG.finer(() -> "Environment.propertyChange(" //NOI18N
+                    + evt.getPropertyName()
+                    + ", " + evt.getOldValue() //NOI18N
+                    + ", " + evt.getNewValue() //NOI18N
+                    + ')');
             // We will handle the object invalidation here.
-            if(DataObject.PROP_VALID.equals(evt.getPropertyName ())) { 
+            if(DataObject.PROP_VALID.equals(evt.getPropertyName ())) {
                 // do not check it if old value is not true
                 if (Boolean.FALSE.equals(evt.getOldValue())) {
                     return;
@@ -781,7 +756,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 // loosing validity
                 PropertiesEditorSupport support = (PropertiesEditorSupport)findCloneableOpenSupport();
                 if(support != null) {
-                    
+
                     // mark the object as not being modified, so nobody
                     // will ask for save
                     unmarkModified();
@@ -796,20 +771,23 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 );
             }
         }
-        
+
         /** Implements <code>CloneableEditorSupport.Env</code> inetrface. Removes property listener. */
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {
             LOG.finer("Environment.removePropertyChangeListener(...)"); //NOI18N
             prop().removePropertyChangeListener (l);
         }
-            
+
         /** Implements <code>CloneableEditorSupport.Env</code> inetrface. Adds veto listener. */
+        @Override
         public void addVetoableChangeListener(VetoableChangeListener l) {
             LOG.finer("Environment.addVetoableChangeListener(...)");    //NOI18N
             veto().addVetoableChangeListener (l);
         }
-            
+
         /** Implements <code>CloneableEditorSupport.Env</code> inetrface. Removes veto listener. */
+        @Override
         public void removeVetoableChangeListener(VetoableChangeListener l) {
             LOG.finer("Environment.removeVetoableChangeListener(...)"); //NOI18N
             veto().removeVetoableChangeListener (l);
@@ -821,6 +799,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
          * state and the CloneableOpenSupport cannot be found for associated
          * entry object
          */
+        @Override
         public CloneableOpenSupport findCloneableOpenSupport() {
             return (PropertiesEditorSupport)entry.getCookieSet().getCookie(EditCookie.class);
         }
@@ -832,15 +811,17 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
          * referenced to does not exist anymore.
          * @return true or false depending on its state
          */
+        @Override
         public boolean isValid() {
             return entry.getDataObject().isValid();
         }
-            
+
         /**
          * Implements <code>CloneableEditorSupport.Env</code> interface.
          * Test whether the object is modified or not.
          * @return true if the object is modified
          */
+        @Override
         public boolean isModified() {
             return entry.isModified();
         }
@@ -853,26 +834,28 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
          *   (for example when the file is readonly), when such exception
          *   is the support should discard all previous changes
          */
+        @Override
         public void markModified() throws java.io.IOException {
             LOG.finer("Environment.markModified()");                    //NOI18N
             if (fileLock == null || !fileLock.isValid()) {
                 fileLock = entry.takeLock();
             }
-            
+
             entry.setModified(true);
         }
-            
+
         /**
          * Implements <code>CloneableEditorSupport.Env</code> interface.
          * Reverse method that can be called to make the environment
          * unmodified.
          */
+        @Override
         public void unmarkModified() {
             LOG.finer("Environment.unmarkModified()");                  //NOI18N
             if (fileLock != null && fileLock.isValid()) {
                 fileLock.releaseLock();
             }
-            
+
             entry.setModified(false);
         }
         /**
@@ -895,13 +878,15 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
          * Mime type of the document.
          * @return the mime type to use for the document
          */
+        @Override
         public String getMimeType() {
             return getFileImpl().getMIMEType();
         }
-            
+
         /**
          * Implements <code>CloneableEditorSupport.Env</code> interface.
          * The time when the data has been modified. */
+        @Override
         public Date getTime() {
             // #32777 - refresh file object and return always the actual time
             getFileImpl().refresh();
@@ -928,7 +913,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
 //                lockAgain = true;
 // =====
                 if(fileLock.isValid()) {
-                    LOG.fine("changeFile releaseLock: " + fileLock + " for " + fileObject); // NOI18N
+                    LOG.log(FINE, "changeFile releaseLock: {0} for {1}", new Object[]{fileLock, fileObject}); // NOI18N
                     fileLock.releaseLock ();
                     lockAgain = true;
                 } else {
@@ -943,7 +928,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             boolean wasNull = fileObject == null;
 
             fileObject = newFile;
-            LOG.fine("changeFile: " + newFile + " for " + fileObject); // NOI18N
+            LOG.log(FINE, "changeFile: {0} for {1}", new Object[]{newFile, fileObject}); // NOI18N
             if (envListener != null)
                 fileObject.removeFileChangeListener(envListener);
             envListener = new EnvironmentListener(this);
@@ -952,7 +937,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             if (lockAgain) { // refresh lock
                 try {
                     fileLock = entry.takeLock ();
-                    LOG.fine("changeFile takeLock: " + fileLock + " for " + fileObject); // NOI18N
+                    LOG.log(FINE, "changeFile takeLock: {0} for {1}", new Object[]{fileLock, fileObject}); // NOI18N
                 } catch (IOException e) {
                     Logger.getLogger(PropertiesEditorSupport.class.getName()).log(Level.WARNING, null, e);
                 }
@@ -961,28 +946,30 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 firePropertyChange("expectedTime", null, getTime()); // NOI18N
             }
         }
-            
+
         /**
          * Implements <code>CloneableEditorSupport.Env</code> interface.
          * Obtains the input stream.
          * @exception IOException if an I/O error occures
          */
+        @Override
         public InputStream inputStream() throws IOException {
             LOG.finer("Environment.inputStream()");                     //NOI18N
             return getFileImpl().getInputStream();
         }
-            
+
         /**
          * Implements <code>CloneableEditorSupport.Env</code> interface.
          * Obtains the output stream.
          * @exception IOException if an I/O error occures
          */
+        @Override
         public OutputStream outputStream() throws IOException {
             LOG.finer("Environment.outputStream()");                    //NOI18N
             if (fileLock == null || !fileLock.isValid()) {
                 fileLock = entry.takeLock ();
             }
-            LOG.fine("outputStream after takeLock: " + fileLock + " for " + fileObject); // NOI18N
+            LOG.fine(() -> "outputStream after takeLock: " + fileLock + " for " + fileObject); // NOI18N
             try {
                 return getFileImpl ().getOutputStream (fileLock);
             } catch (IOException fse) {
@@ -991,17 +978,18 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 if (fileLock == null || !fileLock.isValid()) {
                     fileLock = entry.takeLock ();
                 }
-                LOG.fine("ugly workaround for #40552: " + fileLock + " for " + fileObject); // NOI18N
+                LOG.fine(() -> "ugly workaround for #40552: " + fileLock + " for " + fileObject); // NOI18N
                 return getFileImpl ().getOutputStream (fileLock);
             }
 //            return entry.getFile().getOutputStream(fileLock);
         }
 
         /**
-         * Implements <code>SaveCookie</code> interface. 
+         * Implements <code>SaveCookie</code> interface.
          * Invoke the save operation.
          * @throws IOException if the object could not be saved
          */
+        @Override
         public void save() throws IOException {
             LOG.finer("Environment.save()");                            //NOI18N
             // Do saving job. Note it gets editor support, not open support.
@@ -1016,7 +1004,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         private void firePropertyChange (String name, Object oldValue, Object newValue) {
             prop().firePropertyChange (name, oldValue, newValue);
         }
-            
+
         /** Fires vetoable change.
          * @param name the name of property that changed
          * @param oldValue old value
@@ -1025,7 +1013,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         private void fireVetoableChange (String name, Object oldValue, Object newValue) throws PropertyVetoException {
                 veto ().fireVetoableChange (name, oldValue, newValue);
         }
-            
+
         /** Lazy getter for property change support. */
         private PropertyChangeSupport prop() {
             synchronized (this) {
@@ -1033,10 +1021,10 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                     propSupp = new PropertyChangeSupport (this);
                 }
             }
-            
+
             return propSupp;
         }
-            
+
         /** Lazy getter for vetoable support. */
         private VetoableChangeSupport veto() {
             synchronized (this) {
@@ -1046,7 +1034,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             }
             return vetoSupp;
         }
-            
+
         /** Helper method. Adds save cookie to the entry. */
         private void addSaveCookie() {
             LOG.finer("Environment.addSaveCookie(...)");                //NOI18N
@@ -1061,26 +1049,24 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 dataObject.getCookieSet0().add(this);
             }
         }
-            
+
         /** Helper method. Removes save cookie from the entry. */
         private void removeSaveCookie() {
             LOG.finer("Environment.removeSaveCookie(...)");             //NOI18N
             // remove Save cookie from the entry
             SaveCookie sc = entry.getCookie(SaveCookie.class);
-            
+
             if (sc != null && sc.equals(this)) {
                 entry.getCookieSet().remove(this);
             }
             final SaveCookie cookie = this;
-            PropertiesRequestProcessor.getInstance().post(new Runnable() {
-                public void run() {
-                    PropertiesDataObject dataObject = (PropertiesDataObject) getDataObject();
-                    dataObject.updateModificationStatus();
-                    dataObject.getCookieSet0().remove(cookie);
-                }
+            PropertiesRequestProcessor.getInstance().post(() -> {
+                PropertiesDataObject dataObject = (PropertiesDataObject) getDataObject();
+                dataObject.updateModificationStatus();
+                dataObject.getCookieSet0().remove(cookie);
             });
         }
-            
+
         /** Called from the <code>EnvironmnetListener</code>
          * @param expected is the change expected
          * @param time of the change
@@ -1101,7 +1087,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             //#151787: Sync timestamp when svn client changes timestamp externally during rename.
             firePropertyChange("expectedTime", null, getTime()); // NOI18N
         }
-        
+
         /** Called from the <code>EnvironmentListener</code>.
          * The components are going to be closed anyway and in case of
          * modified document its asked before if to save the change. */
@@ -1112,25 +1098,29 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             } catch(PropertyVetoException pve) {
                 // Ignore it and close anyway. File doesn't exist anymore.
             }
-            
+
             firePropertyChange(PROP_VALID, Boolean.TRUE, Boolean.FALSE);
+        }
+
+        PropertiesFileEntry getEntry() {
+            return entry;
         }
     } // End of nested class Environment.
 
 
-    
+
     /** Weak listener on file object that notifies the <code>Environment</code> object
      * that a file has been modified. */
     private static final class EnvironmentListener extends FileChangeAdapter {
-        
+
         /** Reference of <code>Environment</code> */
         private Reference<Environment> reference;
-        
+
         /** @param environment <code>Environment<code> to use
          */
         public EnvironmentListener(Environment environment) {
             LOG.finer("new EnvironmentListener(<Environment>)");        //NOI18N
-            reference = new WeakReference<Environment>(environment);
+            reference = new WeakReference<>(environment);
         }
 
         @Override
@@ -1142,7 +1132,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             }
 //            super.fileDeleted(fe);
         }
-        
+
         /** Fired when a file is changed.
          * @param fe the event describing context where action has taken place
          */
@@ -1150,10 +1140,10 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         public void fileChanged(FileEvent evt) {
             if (LOG.isLoggable(FINER)) {
                 LOG.finer("EnviromentListener.fileChanged(...)");       //NOI18N
-                LOG.finer(" - original file: "                          //NOI18N
-                          + FileUtil.getFileDisplayName(evt.getFile()));
-                LOG.finer(" - current file: "                           //NOI18N
-                          + FileUtil.getFileDisplayName((FileObject) evt.getSource()));
+                LOG.log(Level.FINER, " - original file: ",              //NOI18N
+                          FileUtil.getFileDisplayName(evt.getFile()));
+                LOG.log(Level.FINER, " - current file: ",               //NOI18N
+                          FileUtil.getFileDisplayName((FileObject) evt.getSource()));
             }
             //see #160338
             if (evt.firedFrom(SaveImpl.DEFAULT)) {
@@ -1172,17 +1162,17 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
 
                 // #16403. See DataEditorSupport.EnvListener.
                 if(evt.getFile().isVirtual()) {
-                    environment.entry.getFile().removeFileChangeListener(this);
+                    environment.getEntry().getFile().removeFileChangeListener(this);
                     // File doesn't exist on disk -> simulate env is invalid,
                     // even the fileObject could be valid, see VCS FS.
                     environment.fileRemoved();
-                    environment.entry.getFile().addFileChangeListener(this);
+                    environment.getEntry().getFile().addFileChangeListener(this);
                 } else {
                     environment.fileChanged(evt.isExpected(), evt.getTime());
                 }
             }
         }
-        
+
         @Override
         public void fileRenamed(FileRenameEvent fe) {
             Environment myEnv = this.reference.get();
@@ -1192,32 +1182,36 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             }
         }
     } // End of nested class EnvironmentListener.
-    
+
     /** Inner class for opening editor view at a given key. */
     public class PropertiesEditAt implements EditCookie {
 
         /** Key at which should be pane opened. (Cursor will be at the position of that key). */
         private String key;
-        
-        
+
+
         /** Constructor. */
         PropertiesEditAt(String key) {
             this.key   = key;
         }
-        
-        
-        /** Setter for <code>key</code>. */
+
+
+        /**
+         * Setter for <code>key</code>.
+         * @param key
+         */
         public void setKey(String key) {
             this.key = key;
         }
-        
+
         /** Implementation of <code>EditCookie</code> interface. */
+        @Override
         public void edit() {
             CloneableTopComponent ctc = PropertiesEditorSupport.super.openCloneableTopComponent();
             ctc.requestActive();
-            
+
             PropertiesEditor editor = ctc.getLookup().lookup(PropertiesEditor.class);
-            
+
             Element.ItemElem item = myEntry.getHandler().getStructure().getItem(key);
             if (item != null) {
                 int offset = item.getKeyElem().getBounds().getBegin().getOffset();
@@ -1228,7 +1222,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
     } // End of inner class PropertiesEditAt.
 
-    
+
     /** Cloneable top component to hold the editor kit. */
     @Messages("CTL_SourceTabCaption=&Source")
     @MultiViewElement.Registration(
@@ -1238,29 +1232,33 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         preferredID="properties.source",
         mimeType=PropertiesDataLoader.PROPERTIES_MIME_TYPE,
         position=1
-    )        
+    )
     public static class PropertiesEditor extends CloneableEditor implements MultiViewElement {
-        
+
         /** Holds the file being edited. */
+        @SuppressWarnings("ProtectedField") // API
         protected transient PropertiesFileEntry entry;
-        
+
         /** Listener for entry's save cookie changes. */
         private transient PropertyChangeListener saveCookieLNode;
-        
+
         /** Generated serial version UID. */
         static final long serialVersionUID =-2702087884943509637L;
         private MultiViewElementCallback callback;
         private transient JToolBar bar;
-        
+
         private transient PropertiesEditorLookup peLookup;
         private transient Lookup originalLookup;
-        
+
         /** Constructor for deserialization */
         public PropertiesEditor() {
             super();
         }
-        
-        /** Creates new editor */
+
+        /**
+         * Creates new editor
+         * @param lookup
+         */
         public PropertiesEditor(Lookup lookup) {
             super(lookup.lookup(PropertiesEditorSupport.class));
             PropertiesEditorSupport support = lookup.lookup(PropertiesEditorSupport.class);
@@ -1270,27 +1268,24 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         /** Initializes object, used in construction and deserialization. */
         private void initialize(PropertiesFileEntry entry) {
             this.entry = entry;
-            
+
             Node n = entry.getNodeDelegate ();
             setActivatedNodes (new Node[] { n });
-            
+
             updateName();
-            
+
             // entry to the set of listeners
-            saveCookieLNode = new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (Node.PROP_COOKIE.equals(evt.getPropertyName()) ||
-                        DataObject.PROP_NAME.equals(evt.getPropertyName())) 
-                    {
-                        updateName();
-                    }
+            saveCookieLNode = (PropertyChangeEvent evt) -> {
+                if (Node.PROP_COOKIE.equals(evt.getPropertyName())
+                        || DataObject.PROP_NAME.equals(evt.getPropertyName())) {
+                    updateName();
                 }
             };
             this.entry.addPropertyChangeListener(WeakListeners.propertyChange(saveCookieLNode, this.entry));
         }
 
         /**
-         * Overrides superclass method. 
+         * Overrides superclass method.
          * When closing last view, also close the document.
          * @return <code>true</code> if close succeeded
          */
@@ -1302,19 +1297,19 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         /** Overrides superclass method. Gets <code>Icon</code>. */
         @Override
         public Image getIcon () {
-            PropertiesDataObject propDO = (PropertiesDataObject) getDataObject();
+            PropertiesDataObject propDO = getDataObject();
             return ImageUtilities.loadImage(
                     propDO.isMultiLocale()
                     ? "org/netbeans/modules/properties/propertiesLocale.gif"    // NOI18N
                     : "org/netbeans/modules/properties/propertiesObject.png");  // NOI18N
         }
-        
+
         /** Overrides superclass method. Gets help context. */
         @Override
         public HelpCtx getHelpCtx() {
             return new HelpCtx(Util.HELP_ID_EDITLOCALE);
         }
-        
+
         /** Getter for pane. */
         private JEditorPane getPane() {
             return pane;
@@ -1332,7 +1327,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             }
             return peLookup;
         }
-        
+
         @Override
         public JComponent getVisualRepresentation() {
             return this;
@@ -1347,7 +1342,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         public void componentClosed() {
             super.componentClosed();
         }
-        
+
         @Override
         public JComponent getToolbarRepresentation() {
             JToolBar toolBar = bar;
@@ -1355,8 +1350,8 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 JEditorPane lPane = getEditorPane();
                 if (lPane != null) {
                     Document doc = lPane.getDocument();
-                    if (doc instanceof NbDocument.CustomToolbar) {
-                        toolBar = ((NbDocument.CustomToolbar)doc).createToolbar(lPane);
+                    if (doc instanceof NbDocument.CustomToolbar customToolbar) {
+                        toolBar = customToolbar.createToolbar(lPane);
                     }
                 }
                 if (toolBar == null) {
@@ -1375,12 +1370,13 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         }
 
         @Messages({
+            "# {0} - filename",
             "MSG_SaveModified=File {0} is modified. Save?"
         })
         @Override
         public CloseOperationState canCloseElement() {
             final CloneableEditorSupport sup = getLookup().lookup(CloneableEditorSupport.class);
-            Enumeration en = getReference().getComponents();
+            Enumeration<CloneableTopComponent> en = getReference().getComponents();
             if (en.hasMoreElements()) {
                 en.nextElement();
                 if (en.hasMoreElements()) {
@@ -1388,7 +1384,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                     return CloseOperationState.STATE_OK;
                 }
             }
-            
+
             PropertiesDataObject dataObject = getDataObject();
             if (dataObject.isModified()) {
                 AbstractAction save = new AbstractAction() {
@@ -1403,7 +1399,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 };
                 save.putValue(Action.LONG_DESCRIPTION, Bundle.MSG_SaveModified(FileUtil.getFileDisplayName(dataObject.getPrimaryFile())));
                 return MultiViewFactory.createUnsafeCloseState("editor", save, null);
-            } 
+            }
             return CloseOperationState.STATE_OK;
         }
 
@@ -1451,20 +1447,15 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
         @Override
         public void updateName() {
             super.updateName();
-            Mutex.EVENT.writeAccess(
-                new Runnable() {
-                @Override
-                    public void run() {
-                        if (callback != null) {
-                            TopComponent tc = callback.getTopComponent();
-                            tc.setHtmlDisplayName(getHtmlDisplayName());
-                            tc.setDisplayName(getDisplayName());
-                            tc.setName(getName());
-                            tc.setToolTipText(getToolTipText());
-                        }
-                    }
+            Mutex.EVENT.writeAccess(() -> {
+                if (callback != null) {
+                    TopComponent tc = callback.getTopComponent();
+                    tc.setHtmlDisplayName(getHtmlDisplayName());
+                    tc.setDisplayName(getDisplayName());
+                    tc.setName(getName());
+                    tc.setToolTipText(getToolTipText());
                 }
-            );
+            });
         }
 
         @Override
@@ -1475,23 +1466,22 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 super.open();
             }
         }
-        
+
         private PropertiesDataObject getDataObject() {
             return (PropertiesDataObject) ((PropertiesEditorSupport) cloneableEditorSupport()).getDataObject();
         }
-        
+
     } // End of nested class PropertiesEditor.
-    
+
 
     /** Inner class. UndoRedo manager which saves a StampFlag
      * for each UndoAbleEdit.
      */
     class UndoRedoStampFlagManager extends UndoRedo.Manager {
-        
+
         /** Hash map of weak reference keys (UndoableEdit's) to their StampFlag's. */
-        WeakHashMap<UndoableEdit,StampFlag> stampFlags
-                = new WeakHashMap<UndoableEdit,StampFlag>(5);
-        
+        WeakHashMap<UndoableEdit,StampFlag> stampFlags = new WeakHashMap<>(5);
+
         /** Overrides superclass method. Adds StampFlag to UndoableEdit. */
         @Override
         public synchronized boolean addEdit(UndoableEdit anEdit) {
@@ -1500,16 +1490,16 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 PropertiesEditorSupport.this.myEntry.atomicUndoRedoFlag ));
             return super.addEdit(anEdit);
         }
-        
+
         /** Overrides superclass method. Adds StampFlag to UndoableEdit. */
         @Override
         public boolean replaceEdit(UndoableEdit anEdit) {
-            stampFlags.put(anEdit, new StampFlag(System.currentTimeMillis(), 
+            stampFlags.put(anEdit, new StampFlag(System.currentTimeMillis(),
 //                ((PropertiesDataObject)PropertiesEditorSupport.this.myEntry.getDataObject()).getOpenSupport().atomicUndoRedoFlag ));
                 PropertiesEditorSupport.this.myEntry.atomicUndoRedoFlag ));
             return super.replaceEdit(anEdit);
         }
-        
+
         /** Overrides superclass method. Updates time stamp for the edit. */
         @Override
         public synchronized void undo() throws CannotUndoException {
@@ -1520,7 +1510,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 stampFlags.put(anEdit, new StampFlag(System.currentTimeMillis(), atomicFlag));
             }
         }
-        
+
         /** Overrides superclass method. Updates time stamp for that edit. */
         @Override
         public synchronized void redo() throws CannotRedoException {
@@ -1531,8 +1521,8 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 stampFlags.put(anEdit, new StampFlag(System.currentTimeMillis(), atomicFlag));
             }
         }
-        
-        /** Method which gets time stamp of next Undoable edit to be undone. 
+
+        /** Method which gets time stamp of next Undoable edit to be undone.
          * @ return time stamp in milliseconds or 0 (if don't exit edit to be undone). */
         public long getTimeStampOfEditToBeUndone() {
             UndoableEdit nextUndo = editToBeUndone();
@@ -1542,7 +1532,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 return stampFlags.get(nextUndo).getTimeStamp();
             }
         }
-        
+
         /** Method which gets time stamp of next Undoable edit to be redone.
          * @ return time stamp in milliseconds or 0 (if don't exit edit to be redone). */
         public long getTimeStampOfEditToBeRedone() {
@@ -1553,8 +1543,8 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 return stampFlags.get(nextRedo).getTimeStamp();
             }
         }
-        
-        /** Method which gets atomic flag of next Undoable edit to be undone. 
+
+        /** Method which gets atomic flag of next Undoable edit to be undone.
          * @ return atomic flag in milliseconds or 0 (if don't exit edit to be undone). */
         public Object getAtomicFlagOfEditToBeUndone() {
             UndoableEdit nextUndo = editToBeUndone();
@@ -1564,7 +1554,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 return (stampFlags.get(nextUndo)).getAtomicFlag();
             }
         }
-        
+
         /** Method which gets atomic flag of next Undoable edit to be redone.
          * @ return time stamp in milliseconds or 0 (if don't exit edit to be redone). */
         public Object getAtomicFlagOfEditToBeRedone() {
@@ -1575,40 +1565,40 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
                 return (stampFlags.get(nextRedo)).getAtomicFlag();
             }
         }
-        
+
     } // End of inner class UndoRedoTimeStampManager.
 
-    /** Simple nested class for storing time stamp and atomic flag used 
+    /** Simple nested class for storing time stamp and atomic flag used
      * in <code>UndoRedoStampFlagManager</code>.
      */
-    static class StampFlag {
-        
-        /** Time stamp when was an UndoableEdit (to which is this class mapped via 
+    private static class StampFlag {
+
+        /** Time stamp when was an UndoableEdit (to which is this class mapped via
          * UndoRedoStampFlagManager,) was created, replaced, undone, or redone. */
         private long timeStamp;
-        
+
         /** Atomic flag. If this object is not null it means that an UndoableEdit ( to which
-         * is this class mapped via UndoRedoStampFlagManager,) was created as part of one 
+         * is this class mapped via UndoRedoStampFlagManager,) was created as part of one
          * action which could consist from more UndoableEdits in differrent editor supports.
          * These Undoable edits are marked with this (i.e. same) object. */
-        private Object atomicFlag;
-        
+        private final Object atomicFlag;
+
         /** Consructor. */
         public StampFlag(long timeStamp, Object atomicFlag) {
             this.timeStamp = timeStamp;
-            this.atomicFlag = atomicFlag;            
+            this.atomicFlag = atomicFlag;
         }
-        
+
         /** Getter for time stamp. */
         public long getTimeStamp() {
             return timeStamp;
         }
-        
+
         /** Setter for time stamp. */
         public void setTimeStamp(long timeStamp) {
             this.timeStamp = timeStamp;
         }
-        
+
         /** Getter for atomic flag.
          @ return Returns null if is not linked with more Undoable edits.*/
         public Object getAtomicFlag() {
@@ -1624,6 +1614,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
             this.des = des;
         }
 
+        @Override
         public void run() throws IOException {
             if (des.desEnv().isModified() && des.isEnvReadOnly()) {
                 IOException e = new IOException("File is read-only: " + ((Environment) des.env).getFileImpl()); // NOI18N
@@ -1645,7 +1636,7 @@ implements EditCookie, EditorCookie.Observable, PrintCookie, CloseCookie, Serial
     }
 
     private static final class PropertiesEditorLookup extends ProxyLookup {
-        private Lookup initialLookup;
+        private final Lookup initialLookup;
         public PropertiesEditorLookup(Lookup lookup) {
             super(lookup);
             this.initialLookup = lookup;

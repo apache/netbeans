@@ -22,6 +22,7 @@ package org.netbeans.modules.editor.lib2.view;
  * Enumeration for line wrap type.
  *
  * @author mmetelka
+ * @author Alejandro L. Belhafi
  */
 public enum LineWrapType {
     
@@ -46,6 +47,10 @@ public enum LineWrapType {
             }
         }
         return null;
+    }
+    
+    public String getSettingValue() {
+        return this.settingValue;
     }
 
 }

@@ -189,14 +189,14 @@ public final class FixProjectSourceLevel extends javax.swing.JPanel {
             removeAllElements();
             final JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(
                     null,
-                    new Specification(type, null));
+                    new Specification(type));
             for (JavaPlatform jp : platforms) {
-                if (minVersion.compareTo(jp.getSpecification().getVersion())<=0) {
+                if (minVersion.compareTo(jp.getSpecification().getVersion()) <= 0) {
                     addElement(jp);
                 }
             }
+            }
         }
-    }
 
     private static class PlatformRenderer extends DefaultListCellRenderer {
 

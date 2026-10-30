@@ -296,9 +296,7 @@ final class FixPlatform extends javax.swing.JPanel {
 
         private void init () {
             final List<JavaPlatform> newPlatfs = new ArrayList<>();
-            Arrays.stream(this.pm.getPlatforms(null, new Specification(
-                        this.platformType,
-                        null)))
+            Arrays.stream(this.pm.getPlatforms(null, new Specification(this.platformType)))
                     .filter((jp) -> !jp.getInstallFolders().isEmpty())
                     .forEach(newPlatfs::add);
             final Optional<JavaPlatform> resolved = newPlatfs.stream()
@@ -405,7 +403,7 @@ final class FixPlatform extends javax.swing.JPanel {
 
         @Override
         public Specification getSpecification() {
-            return new Specification(null, null);
+            return new Specification(null);
         }
 
         @Override

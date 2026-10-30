@@ -48,7 +48,7 @@ public class RemoteRuntimePlatformProvider implements J2SERuntimePlatformProvide
         final Collection<JavaPlatform> result = new ArrayList<>();
         for (JavaPlatform jp : JavaPlatformManager.getDefault().getPlatforms(
             null,
-            new Specification(RemotePlatform.SPEC_NAME, null))) {
+            new Specification(RemotePlatform.SPEC_NAME))) {
             if ((jp instanceof RemotePlatform) &&
                 isSupported((RemotePlatform)jp, targetLevel, profile)) {
                 result.add(jp);

@@ -61,7 +61,7 @@ public class JavaRunUtils {
             JavaPlatform p = pm.getDefaultPlatform();
             return Pair.of(p.getProperties().get("platform.ant.name"), p);
         } else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
+            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se")); //NOI18N
             for (JavaPlatform installedPlatform : installedPlatforms) {
                 String antName = installedPlatform.getProperties().get("platform.ant.name"); //NOI18N
                 if (antName != null && antName.equals(activePlatformId)) {

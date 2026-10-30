@@ -52,6 +52,7 @@ import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.Parameters;
@@ -342,7 +343,7 @@ final class Utilities {
         Parameters.notNull("platformId", platformId);   //NOI18N
         final JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(
                 null,
-                new Specification(RemotePlatform.SPEC_NAME, null));
+                new Specification(RemotePlatform.SPEC_NAME));
         for (JavaPlatform platform : platforms) {
             final String antPlatformName = platform.getProperties().get(RemotePlatform.PLAT_PROP_ANT_NAME);
             if (platformId.equals(antPlatformName) && (platform instanceof RemotePlatform)) {

@@ -98,7 +98,7 @@ public class Hk2PluginProperties {
     public JavaPlatform getJavaPlatform() {
         String currentJvm = ip.getProperty(PROP_JAVA_PLATFORM);
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
-        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
+        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE")); // NOI18N
 
         for (int i = 0; i < installedPlatforms.length; i++) {
             String platformName = installedPlatforms[i].getProperties().get(PLAT_PROP_ANT_NAME);

@@ -125,7 +125,7 @@ public final class ChooseOtherPlatformPanel extends javax.swing.JPanel {
             removeAllElements();
             final JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(
                     null,
-                    new Specification(type, null));
+                    new Specification(type));
             for (JavaPlatform jp : platforms) {
                 if (JavaFXPlatformUtils.isJavaFXEnabled(jp)) {
                     addElement(jp);

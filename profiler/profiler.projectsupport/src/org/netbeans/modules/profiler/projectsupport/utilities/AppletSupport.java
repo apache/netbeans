@@ -120,7 +120,7 @@ public class AppletSupport {
             if (activePlatform == null) {
                 platform = pm.getDefaultPlatform();
             } else {
-                JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
+                JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se")); //NOI18N
 
                 for (int i = 0; i < installedPlatforms.length; i++) {
                     String antName = installedPlatforms[i].getProperties().get("platform.ant.name"); //NOI18N

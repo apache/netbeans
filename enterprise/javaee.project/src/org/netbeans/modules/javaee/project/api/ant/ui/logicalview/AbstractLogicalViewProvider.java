@@ -448,7 +448,7 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
             return pm.getDefaultPlatform();
         }
         else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se",null));   //NOI18N
+            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se"));   //NOI18N
             for (JavaPlatform p : installedPlatforms) {
                 String antName = p.getProperties().get("platform.ant.name"); // NOI18N
                 if (antName != null && antName.equals(activePlatformId)) {

@@ -34,8 +34,8 @@ import org.netbeans.modules.profiler.spi.JavaPlatformProvider;
 @org.openide.util.lookup.ServiceProvider(service = org.netbeans.modules.profiler.spi.JavaPlatformManagerProvider.class)
 public class JavaPlatformManagerImpl extends JavaPlatformManagerProvider {
 
-    public static final Specification J2SE = new Specification("j2se", null);
-    public static final Specification REMOTE_J2SE = new Specification("j2se-remote", null);
+    public static final Specification J2SE = new Specification("j2se");
+    public static final Specification REMOTE_J2SE = new Specification("j2se-remote");
     
     @Override
     public List<JavaPlatformProvider> getPlatforms() {

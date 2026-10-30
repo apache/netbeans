@@ -42,7 +42,6 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
@@ -153,7 +152,6 @@ public class PlatformSourceForBinaryQuery implements SourceForBinaryQueryImpleme
 
     private static final class Result implements SourceForBinaryQueryImplementation2.Result, PropertyChangeListener {
         private static final String J2SE = "j2se";  //NOI18N
-        private static final SpecificationVersion JAVA_9 = new SpecificationVersion("9");   //NOI18N
 
         private final JavaPlatformManager jpm;
         private final URL artifact;
@@ -265,7 +263,8 @@ public class PlatformSourceForBinaryQuery implements SourceForBinaryQueryImpleme
         //Todo: SPI will be required when more platforms than J2SE will be modular
         private static boolean isModular(@NonNull final JavaPlatform platform) {
             final Specification spec = platform.getSpecification();
-            return J2SE.equals(spec.getName()) && JAVA_9.compareTo(spec.getVersion()) <= 0;
+            final Runtime.Version version = spec.getJdkVersion();
+            return J2SE.equals(spec.getName()) && version != null && version.feature() >= 9;
         }
 
         @CheckForNull

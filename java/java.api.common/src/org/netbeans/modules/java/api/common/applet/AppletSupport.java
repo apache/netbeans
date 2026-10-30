@@ -36,7 +36,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 
 import org.openide.*;
-import org.openide.modules.SpecificationVersion;
 import org.openide.filesystems.*;
 import org.openide.util.*;
 
@@ -53,7 +52,7 @@ import org.netbeans.modules.java.api.common.util.CommonProjectUtils;
 public class AppletSupport {
 
     // JDK issue #6193279: Appletviewer does not accept encoded URLs
-    private static final SpecificationVersion JDK_15 = new SpecificationVersion("1.5"); // NOI18N
+    private static final Runtime.Version JDK_15 = Runtime.Version.parse("1.5"); // NOI18N
 
     /** constant for html extension */
     private static final String HTML_EXT = "html"; // NOI18N
@@ -211,8 +210,9 @@ public class AppletSupport {
         assert htmlFile != null : "htmlFile cannot be null";    //NOI18N
         // JDK issue #6193279: Appletviewer does not accept encoded URLs
         JavaPlatform platform = CommonProjectUtils.getActivePlatform(activePlatform);
-        boolean workAround6193279 = platform != null    //In case of nonexisting platform don't use the workaround
-                && platform.getSpecification().getVersion().compareTo(JDK_15)>=0; //JDK1.5 and higher
+        final Runtime.Version platformVersion = platform != null ? platform.getSpecification().getJdkVersion() : null;
+        boolean workAround6193279 = platformVersion != null    //In case of nonexisting platform don't use the workaround
+                && platformVersion.compareTo(JDK_15) >= 0; //JDK1.5 and higher
         URL url = null;
         if (workAround6193279) {
             File f = FileUtil.toFile(htmlFile);

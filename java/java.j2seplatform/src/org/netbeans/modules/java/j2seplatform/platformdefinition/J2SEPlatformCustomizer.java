@@ -224,6 +224,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
             c.weighty = 1.0;
             ((GridBagLayout)this.getLayout()).setConstraints(spane,c);
             this.add (spane);
+            Runtime.Version jdkVersion = platform.getSpecification().getJdkVersion();
             if (type == SOURCES || type == JAVADOC) {
                 this.addButton = new JButton ();
                 String text;
@@ -327,7 +328,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
                 c.insets = new Insets (5,6,6,6);
                 ((GridBagLayout)this.getLayout()).setConstraints(moveDownButton,c);
                 this.add (moveDownButton);
-            } else if (platform.getSpecification().getVersion().compareTo(Util.JDK9) >= 0) {
+            } else if (jdkVersion != null && jdkVersion.feature() >= 9) {
                 RP.execute(new Runnable() {
                     @Override
                     public void run() {

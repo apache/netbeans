@@ -22,7 +22,6 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.NbPreferences;
 
 /**
@@ -30,7 +29,7 @@ import org.openide.util.NbPreferences;
  * @author sdedic
  */
 public final class ShellOptions {
-    public static final SpecificationVersion MIN_SPEC_VERSION = new SpecificationVersion("1.6"); // NOI18N
+    public static final Runtime.Version MIN_SPEC_VERSION = Runtime.Version.parse("1.6"); // NOI18N
     
     private static final String PREF_PLATFORM = "launchPlatformId"; // NOI18N
     private static final String PREF_OPEN_CONSOLE = "openConsoleOnLaunch"; // NOI18N
@@ -105,7 +104,8 @@ public final class ShellOptions {
     
     public JavaPlatform getDefaultPlatform() {
         JavaPlatform check = JavaPlatform.getDefault();
-        if (check.getSpecification().getVersion().compareTo(MIN_SPEC_VERSION) >= 0) {
+        Runtime.Version v = check.getSpecification().getJdkVersion();
+        if (v != null && v.compareTo(MIN_SPEC_VERSION) >= 0) {
             return check;
         }
         JavaPlatform[] candidates = JavaPlatformManager.getDefault().getPlatforms(null, 
@@ -118,6 +118,7 @@ public final class ShellOptions {
     }
     
     public boolean accepts(JavaPlatform p) {
-        return p.getSpecification().getVersion().compareTo(MIN_SPEC_VERSION) >= 0;
+        Runtime.Version v = p.getSpecification().getJdkVersion();
+        return v != null && v.compareTo(MIN_SPEC_VERSION) >= 0;
     }
 }

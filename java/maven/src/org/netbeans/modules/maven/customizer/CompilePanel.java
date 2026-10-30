@@ -999,8 +999,13 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                     .filter(JavaPlatform::isValid)
                     .peek((jp) -> LOG.log(Level.FINE, "Adding JavaPlaform: {0}", jp.getDisplayName()))  //NOI18N
                     .map((jp) -> Union2.<JavaPlatform, String>createFirst(jp))
-                    .sorted((jp1, jp2) -> displayName(jp2).compareTo(displayName(jp1)))
-                    .collect(Collectors.toCollection(ArrayList::new));
+                    .sorted((jp1, jp2) -> {
+                        if (jp1.hasFirst() && jp2.hasFirst()) {
+                            return jp2.first().getSpecification().compareTo(jp1.first().getSpecification());
+                        }
+                        return displayName(jp2).compareTo(displayName(jp1));
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new)); // mutable
             String val = null;
             final Properties props = handle.getPOMModel().getProject().getProperties();
             if (props != null) {

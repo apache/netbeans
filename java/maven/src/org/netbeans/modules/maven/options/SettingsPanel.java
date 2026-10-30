@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -1176,7 +1177,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                         if (defJdkName.isEmpty()) {
                             defJdkName = def.getDisplayName();
                         }
-                        for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                        List<JavaPlatform> platforms = Arrays.asList(JavaPlatformManager.getDefault().getInstalledPlatforms());
+                        platforms.sort(Comparator.comparing(JavaPlatform::getSpecification).reversed());
+                        for (JavaPlatform p : platforms) {
                             jdkHomeDataModel.addElement(p.getDisplayName());
                             String antName = p.getProperties().get("platform.ant.name"); // NOI18N
                             if (defJdkName.equals(p.getDisplayName()) || defJdkName.equals(antName)) {

@@ -35,7 +35,7 @@ public class ForEachFileTask extends Task {
         subTarget = t;
     }
 
-    private List filesets = new LinkedList(); // List<FileSet>
+    private List<FileSet> filesets = new LinkedList<>();
     public void addFileset(FileSet fs) {
         filesets.add(fs); 
     }
@@ -56,9 +56,9 @@ public class ForEachFileTask extends Task {
     public void execute() throws BuildException {
         if (subTarget == null) throw new BuildException("No subtarget set.");
         if (filesets.isEmpty()) throw new BuildException("No files to process - fileset is empty");
-        Iterator it = filesets.iterator();
+        Iterator<FileSet> it = filesets.iterator();
         while (it.hasNext()) {
-            FileSet fs = (FileSet)it.next();
+            FileSet fs = it.next();
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             File basedir = ds.getBasedir();
             String[] files = ds.getIncludedFiles();

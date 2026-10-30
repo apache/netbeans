@@ -191,7 +191,7 @@ public final class FindBar extends JPanel {
         adjustButton(closeButton);
 
         InputMap inputMap = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.SHIFT_MASK), getName(prevAction));
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.SHIFT_DOWN_MASK), getName(prevAction));
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), getName(nextAction));
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), getName(closeAction));
 

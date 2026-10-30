@@ -54,11 +54,11 @@ import org.openide.windows.IOSelect.AdditionalOperation;
 import org.openide.windows.OutputWriter;
 
 /**
- * This is a wrapper over an <tt>Executionservice</tt> that handles running
+ * This is a wrapper over an {@link ExecutionService} that handles running
  * NativeProcesses in a terminal output window.
  *
  * It also can be used for running in an output windows - in this case it just
- * delegates execution to the <tt>ExecutionService</tt>
+ * delegates execution to the {@link ExecutionService}
  *
  * @see ExecutionService
  * @see NativeExecutionDescriptor
@@ -126,49 +126,32 @@ public final class NativeExecutionService {
         processBuilder.setUsePty(true);
 
         if (IOEmulation.isSupported(descriptor.inputOutput)) {
-            // TODO: this is a temporary solution.
-            //
-            // Currently only ansi emulation is supported (NB7.4).
-            // xterm/dtterm cannot be considered as fully supported yet..
-            // So will set TERM environment to 'ansi'
-            String termType = processBuilder.getEnvironment().get("TERM"); //NOI18N
-            if (termType != null && termType.startsWith("xterm")) { //NOI18N
-                // $TERM is one of xterm-color, xterm-16color, xterm-88color, or xterm-256color.
-                // Allows user to use his favorite one.
-                processBuilder.getEnvironment().put("TERM", termType); // NOI18N
-            } else {
-                processBuilder.getEnvironment().put("TERM", "xterm" /*IOEmulation.getEmulation(descriptor.inputOutput)*/); // NOI18N
-            }
+            processBuilder.getEnvironment().put("TERM", IOEmulation.getEmulation(descriptor.inputOutput)); // NOI18N
+            // This is a hack - this should also come from the IOEmulation
+            processBuilder.getEnvironment().put("COLORTERM", "truecolor"); // NOI18N
         } else {
             processBuilder.getEnvironment().put("TERM", "dumb"); // NOI18N
         }
 
         processBuilder.setCharset(descriptor.charset);
 
-        Callable<Integer> callable = new Callable<Integer>() {
+        Callable<Integer> callable = () -> {
+            ProgressHandle progressHandle = null;
 
-            @Override
-            public Integer call() throws Exception {
-                ProgressHandle progressHandle = null;
+            try {
+                if (descriptor.showProgress) {
+                    Cancellable c = null;
+                    if (descriptor.controllable) {
+                        c = () -> {
+                            FutureTask<Integer> task = runTaskRef.get();
+                            if (task != null) {
+                                return task.cancel(true);
+                            }
+                            return false;
+                        };
+                    }
 
-                try {
-                    if (descriptor.showProgress) {
-                        Cancellable c = null;
-                        if (descriptor.controllable) {
-                            c = new Cancellable() {
-
-                                @Override
-                                public boolean cancel() {
-                                    FutureTask<Integer> task = runTaskRef.get();
-                                    if (task != null) {
-                                        return task.cancel(true);
-                                    }
-                                    return false;
-                                }
-                            };
-                        }
-
-                        progressHandle = ProgressHandle.createHandle(displayName, c);//, new AbstractAction() {
+                    progressHandle = ProgressHandle.createHandle(displayName, c);//, new AbstractAction() {
 
 //                            @Override
 //                            public void actionPerformed(ActionEvent e) {
@@ -177,83 +160,76 @@ public final class NativeExecutionService {
 //                                }
 //                            }
 //                        });
-                        progressHandle.start();
-                    }
+                    progressHandle.start();
+                }
 
-                    final NativeProcess process = processBuilder.call();
+                final NativeProcess process = processBuilder.call();
 
-                    /**
-                     * As IO could be re-used we need to 'unlock' it because it
-                     * could be 'locked' by previous run... (It is always set to
-                     * read-only mode on run finish)
-                     */
-                    IOTerm.setReadOnly(descriptor.inputOutput, !descriptor.inputVisible);
-                    //IOTerm.term(descriptor.inputOutput).setReadOnly(!descriptor.inputVisible);
+                /**
+                 * As IO could be re-used we need to 'unlock' it because it
+                 * could be 'locked' by previous run... (It is always set to
+                 * read-only mode on run finish)
+                 */
+                IOTerm.setReadOnly(descriptor.inputOutput, !descriptor.inputVisible);
+                //IOTerm.term(descriptor.inputOutput).setReadOnly(!descriptor.inputVisible);
 
-                    PtySupport.connect(descriptor.inputOutput, process, new PreExecution());
+                PtySupport.connect(descriptor.inputOutput, process, new PreExecution());
 
-                    /**
-                     * We call invokeAndWait here to be sure that connect is
-                     * done. This is because connection is asynchronous
-                     * operation that occurs in EDT. return from connect()
-                     * guarantees that event was posted to EDT. So our event is
-                     * queued after that one. So as soon as our is processed we
-                     * are sure that connection is done.
-                     */
-                    /**
-                     * comment above is true only in case of NetBeans implementation
-                     * As only in NB implementation the task of connecting to the IOTerm 
-                     * is invoked asynchronous in EDT.
-                     * In other case it can be done differently,
-                     * that's why we will use IOTerm itself to provide service for 
-                     * running pre-execution task
-                     */
-                  //  SwingUtilities.invokeAndWait(new PreExecution());
+                /**
+                 * We call invokeAndWait here to be sure that connect is
+                 * done. This is because connection is asynchronous
+                 * operation that occurs in EDT. return from connect()
+                 * guarantees that event was posted to EDT. So our event is
+                 * queued after that one. So as soon as our is processed we
+                 * are sure that connection is done.
+                 */
+                /**
+                 * comment above is true only in case of NetBeans implementation
+                 * As only in NB implementation the task of connecting to the IOTerm
+                 * is invoked asynchronous in EDT.
+                 * In other case it can be done differently,
+                 * that's why we will use IOTerm itself to provide service for
+                 * running pre-execution task
+                 */
+                //  SwingUtilities.invokeAndWait(new PreExecution());
 
-                    if (process.getState() == State.ERROR) {
-                        out(true, ProcessUtils.readProcessErrorLine(process), "\r"); // NOI18N
-                        return 1;
-                    }
+                if (process.getState() == State.ERROR) {
+                    out(true, ProcessUtils.readProcessErrorLine(process), "\r"); // NOI18N
+                    return 1;
+                }
 
-                    return process.waitFor();
+                return process.waitFor();
+            } finally {
+                if (progressHandle != null) {
+                    progressHandle.finish();
+                }
+
+                final CountDownLatch latch = new CountDownLatch(1);
+                IOTerm.disconnect(descriptor.inputOutput, latch::countDown);
+                try {
+                    // The problem here is that continuation passed to the
+                    // disconnect() method could be ignored (if, for some
+                    // reasons terminal is already disconnected.
+                    // In this case we may deadlock on wait.
+                    // It is not possible to detect if continuation was not
+                    // called because of some error or because terminal is
+                    // still waiting for IO drain..
+                    // To avoid deadlocks assume that 5 seconds is enough
+                    // for drain... and assume that if runnable was not
+                    // called in 5 seconds then it makes no sense to wait
+                    // any more.
+                    // The worst situation that this approach could lead to
+                    // is that postExecution is called before all IO was
+                    // drained....
+                    latch.await(5, TimeUnit.SECONDS);
                 } finally {
-                    if (progressHandle != null) {
-                        progressHandle.finish();
-                    }
-
-                    final CountDownLatch latch = new CountDownLatch(1);
-                    IOTerm.disconnect(descriptor.inputOutput, new Runnable() {
-
-                        @Override
-                        public void run() {
-                            latch.countDown();
-                        }
-                    });
                     try {
-                        // The problem here is that continuation passed to the
-                        // disconnect() method could be ignored (if, for some
-                        // reasons terminal is already disconnected.
-                        // In this case we may deadlock on wait.
-                        // It is not possible to detect if continuation was not
-                        // called because of some error or because terminal is
-                        // still waiting for IO drain..
-                        // To avoid deadlocks assume that 5 seconds is enough
-                        // for drain... and assume that if runnable was not
-                        // called in 5 seconds then it makes no sense to wait
-                        // any more.
-                        // The worst situation that this approach could lead to
-                        // is that postExecution is called before all IO was
-                        // drained....
-                        latch.await(5, TimeUnit.SECONDS);
-                    } finally {
-                        try {
-                            if (descriptor.postExecution != null) {
-                                descriptor.postExecution.run();
-                            }
-                        } finally {
-                            IOTerm.setReadOnly(descriptor.inputOutput, true);
-                            //IOTerm.term(descriptor.inputOutput).setReadOnly(true);
+                        if (descriptor.postExecution != null) {
+                            descriptor.postExecution.run();
                         }
+                    } finally {
+                        IOTerm.setReadOnly(descriptor.inputOutput, true);
+                        //IOTerm.term(descriptor.inputOutput).setReadOnly(true);
                     }
                 }
             }
@@ -329,22 +305,18 @@ public final class NativeExecutionService {
     }
 
     private void out(final boolean toError, final CharSequence... cs) {
-        final Action<Void> action = new Action<Void>() {
-            
-            @Override
-            public Void run() {
-                if (descriptor.inputOutput != null) {
-                    OutputWriter w = toError
-                            ? descriptor.inputOutput.getErr()
-                            : descriptor.inputOutput.getOut();
-                    if (w != null) {
-                        for (CharSequence c : cs) {
-                            w.append(c);
-                        }
+        final Action<Void> action = () -> {
+            if (descriptor.inputOutput != null) {
+                OutputWriter w = toError
+                        ? descriptor.inputOutput.getErr()
+                        : descriptor.inputOutput.getOut();
+                if (w != null) {
+                    for (CharSequence c : cs) {
+                        w.append(c);
                     }
                 }
-                return null;
             }
+            return null;
         };
         if (isUnitTestMode()) {
             action.run();
@@ -354,26 +326,22 @@ public final class NativeExecutionService {
     }
 
     private void closeIO() {
-        Mutex.EVENT.writeAccess(new Action<Void>() {
-
-            @Override
-            public Void run() {
-                final OutputWriter out = (descriptor.inputOutput == null) ? null : descriptor.inputOutput.getOut();
-                final OutputWriter err = (descriptor.inputOutput == null) ? null : descriptor.inputOutput.getErr();
-                if (err != null) {
-                    try {
-                        err.close();
-                    } catch (Throwable th) {
-                    }
+        Mutex.EVENT.writeAccess((Action<Void>) () -> {
+            final OutputWriter out = (descriptor.inputOutput == null) ? null : descriptor.inputOutput.getOut();
+            final OutputWriter err = (descriptor.inputOutput == null) ? null : descriptor.inputOutput.getErr();
+            if (err != null) {
+                try {
+                    err.close();
+                } catch (Throwable th) {
                 }
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (Throwable th) {
-                    }
-                }
-                return null;
             }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Throwable th) {
+                }
+            }
+            return null;
         });
     }
 

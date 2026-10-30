@@ -81,7 +81,6 @@ import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -135,7 +134,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
      */
     private final Throwable trace;
     
-    private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
+    private static final Runtime.Version VER18 = Runtime.Version.parse("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
@@ -401,7 +400,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         if (clonedConfig.getProject() != null) {
             ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
             JavaPlatform platform = javaprov.getJavaPlatform();
-            return (platform.getSpecification().getVersion().compareTo(VER18) >= 0);
+            final Runtime.Version version = platform.getSpecification().getJdkVersion();
+            return version != null && version.compareTo(VER18) >= 0;
         } else {
             return true;
         }

@@ -28,7 +28,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -53,7 +52,6 @@ public final class Utils {
     private static final String JDK_JRE_PATH = "jre/"; //NOI18N
     private static final String[] JFXRT_JAR_JRE_PATHS = {"lib/", "lib/ext/"}; //NOI18N
     private static final String[] JFXRT_OPTIONAL_JARS = {"javaws.jar", "deploy.jar", "plugin.jar"}; // NOI18N
-    private static final SpecificationVersion JDK9 = new SpecificationVersion("9");   //NOI18N
     private static final String MODULE_PROTOCOL = "nbjrt";   //NOI18N
     private static final String MODULE_JFX_BASE = "javafx.base";    //NOI18N
     private static final String URL_SEPARATOR = "/";    //NOI18N
@@ -105,7 +103,8 @@ public final class Utils {
      */
     @NonNull
     public static String getJavaFxRuntimeSubDir(@NonNull final JavaPlatform platform) {
-        return JDK9.compareTo(platform.getSpecification().getVersion())  <= 0 && isModular(platform) ?
+        Runtime.Version version = platform.getSpecification().getJdkVersion();
+        return version != null && version.feature() >= 9 && isModular(platform) ?
                 "":             //NOI18N
                 JDK_JRE_PATH;
     }
@@ -135,7 +134,8 @@ public final class Utils {
      * @return returns true if the JavaFx is available as a platform module
      */
     public static boolean hasJavaFxModule(@NonNull final JavaPlatform javaPlatform) {
-        if (JDK9.compareTo(javaPlatform.getSpecification().getVersion()) > 0) {
+        Runtime.Version version = javaPlatform.getSpecification().getJdkVersion();
+        if (version == null || version.feature() < 9) {
             return false;
         }
         for (ClassPath.Entry e : javaPlatform.getBootstrapLibraries().entries()) {

@@ -265,7 +265,7 @@ public final class PlatformUiSupport {
         if (updatePreferredPlatform && !isProjectLocalPlatform(platform)) {
             PreferredProjectPlatform.setPreferredPlatform(platform);
         }
-        SpecificationVersion jdk13 = new SpecificationVersion("1.3"); //NOI18N
+        Runtime.Version jdk13 = Runtime.Version.parse("1.3"); //NOI18N
         String platformAntName = platform.getProperties().get("platform.ant.name"); //NOI18N
         assert platformAntName != null;
         props.put(javaPlatformKey, platformAntName);
@@ -313,11 +313,12 @@ public final class PlatformUiSupport {
                     throw new AssertionError("Broken project.xml file");
             }
             String explicitSourceAttrValue = explicitPlatform.getAttribute("explicit-source-supported"); //NOI18N
-            if (jdk13.compareTo(platform.getSpecification().getVersion()) >= 0
+            Runtime.Version platformJdkVersion = platform.getSpecification().getJdkVersion();
+            if (platformJdkVersion != null && jdk13.compareTo(platformJdkVersion) >= 0
                     && !"false".equals(explicitSourceAttrValue)) { //NOI18N
                 explicitPlatform.setAttribute("explicit-source-supported", "false"); //NOI18N
                 changed = true;
-            } else if (jdk13.compareTo(platform.getSpecification().getVersion()) < 0
+            } else if (platformJdkVersion != null && jdk13.compareTo(platformJdkVersion) < 0
                     && !"true".equals(explicitSourceAttrValue)) { //NOI18N
                 explicitPlatform.setAttribute("explicit-source-supported", "true"); //NOI18N
                 changed = true;
@@ -343,7 +344,7 @@ public final class PlatformUiSupport {
         // JDK 7              1.7        1.7  - coin
         // JDK 8              1.8        1.8  - lambdas
         // JDK 9              1.9        1.9  - jigsaw
-        if (jdk13.compareTo(sourceLevel) >= 0) {
+        if (new SpecificationVersion("1.3").compareTo(sourceLevel) >= 0) {
             javacTarget = "1.1"; //NOI18N
         }
 

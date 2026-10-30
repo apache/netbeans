@@ -36,7 +36,6 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.modules.java.j2seplatform.platformdefinition.Util;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -89,6 +88,7 @@ public class J2SELibraryClassPathProvider implements ClassPathProvider {
                 FileObject root = getOwnerRoot(file,resources);
                 if (root != null) {
                     final JavaPlatform defPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
+                    final Runtime.Version defPlatformVersion = defPlatform.getSpecification().getJdkVersion();
                     setLastUsedLibrary(root, lib);
                     if (ClassPath.SOURCE.equals(type)) {
                         return new ClassPath[] {ClassPathSupport.createClassPath(resources.toArray(new URL[0]))};
@@ -98,7 +98,7 @@ public class J2SELibraryClassPathProvider implements ClassPathProvider {
                     } else if (ClassPath.BOOT.equals(type)) {
                         return new ClassPath[] {defPlatform.getBootstrapLibraries()};
                     } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type) &&
-                            Util.JDK9.compareTo(defPlatform.getSpecification().getVersion()) <= 0) {
+                            defPlatformVersion != null && defPlatformVersion.feature() >= 9) {
                         return new ClassPath[] {defPlatform.getBootstrapLibraries()};
                     } else {
                         return new ClassPath[] {null};

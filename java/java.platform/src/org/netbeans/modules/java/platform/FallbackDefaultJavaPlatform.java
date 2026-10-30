@@ -135,7 +135,7 @@ public final class FallbackDefaultJavaPlatform extends JavaPlatform {
 
     @Override
     public Specification getSpecification() {
-        return new Specification(/*J2SEPlatformImpl.PLATFORM_J2SE*/"j2se", Dependency.JAVA_SPEC); // NOI18N
+        return new Specification(/*J2SEPlatformImpl.PLATFORM_J2SE*/"j2se", Runtime.version()); // NOI18N
     }
 
     @Override

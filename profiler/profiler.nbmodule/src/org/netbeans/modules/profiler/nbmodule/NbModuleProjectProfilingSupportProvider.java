@@ -113,7 +113,7 @@ public final class NbModuleProjectProfilingSupportProvider extends JavaProjectPr
             ProfilerLogger.debug("File " + projectDir.getPath()); //NOI18N
         }
 
-        org.netbeans.api.java.platform.JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification("j2se", null)); // NOI18N
+        org.netbeans.api.java.platform.JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification("j2se")); // NOI18N
 
         for (int i = 0; i < platforms.length; i++) {
             org.netbeans.api.java.platform.JavaPlatform platform = platforms[i];

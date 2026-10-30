@@ -707,7 +707,7 @@ public class J2EEProfilerSPI implements org.netbeans.modules.j2ee.deployment.pro
 
     private JavaPlatform convert(org.netbeans.modules.profiler.api.JavaPlatform agentJavaPlatform) {
         String platformName = agentJavaPlatform.getPlatformId();
-        JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification("j2se", null)); // NOI18N
+        JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification("j2se")); // NOI18N
 
         for (int i = 0; i < platforms.length; i++) {
             JavaPlatform platform = platforms[i];

@@ -388,7 +388,7 @@ public class CustomizerDataSupport {
         Set<String> tomcatPlatforms = tomcatPlatformImpl.getSupportedJavaPlatformVersions();
         
         // jvm platforms registered in NetBeans
-        JavaPlatform[] j2sePlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
+        JavaPlatform[] j2sePlatforms = jpm.getPlatforms(null, new Specification("J2SE")); // NOI18N
         
         Set<JavaPlatformAdapter> platformAdapters = new TreeSet<>();
         

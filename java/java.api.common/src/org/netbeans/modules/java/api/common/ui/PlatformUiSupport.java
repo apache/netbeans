@@ -762,7 +762,7 @@ public final class PlatformUiSupport {
         private synchronized PlatformKey[] getPlatformNames() {
             if (platformNamesCache == null) {
                 final List<JavaPlatform> platforms = new ArrayList<>();
-                Collections.addAll(platforms, pm.getPlatforms(null, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE, null)));
+                Collections.addAll(platforms, pm.getPlatforms(null, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE)));
                 JavaPlatform projectPlatform = null;
                 final EditableProperties globalProps = PropertyUtils.getGlobalProperties();
                 if (project != null) {
@@ -1258,7 +1258,7 @@ public final class PlatformUiSupport {
 
     private static JavaPlatform findPlatform(String displayName) {
         JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(
-                displayName, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE, null));
+                displayName, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE));
         if (platforms.length == 0) {
             return null;
         }

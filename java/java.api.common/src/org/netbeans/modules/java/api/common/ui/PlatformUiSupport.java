@@ -527,7 +527,7 @@ public final class PlatformUiSupport {
      * This class represents a JavaPlatform in the {@link ListModel}
      * created by the {@link PlatformUiSupport#createPlatformComboBoxModel(String)} method.
      */
-    private static final class PlatformKey implements Comparable {
+    private static final class PlatformKey implements Comparable<PlatformKey> {
 
         private String name;
         private boolean equalsDefaultPlatformName;
@@ -574,14 +574,17 @@ public final class PlatformUiSupport {
             this.name = name;
         }
 
-        public int compareTo(Object o) {
-            return this.getDisplayName().compareTo(((PlatformKey) o).getDisplayName());
+        @Override
+        public int compareTo(PlatformKey other) {
+            if (this.platform != null && other.platform != null) {
+                return other.platform.getSpecification().compareTo(this.platform.getSpecification());
+            }
+            return other.getDisplayName().compareTo(this.getDisplayName());
         }
 
         @Override
         public boolean equals(Object other) {
-            if (other instanceof PlatformKey) {
-                PlatformKey otherKey = (PlatformKey) other;
+            if (other instanceof PlatformKey otherKey) {
                 boolean equals;
                 if (this.platform == null) {
                     equals = otherKey.platform == null;

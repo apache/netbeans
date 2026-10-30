@@ -85,6 +85,30 @@ public class ReturnEncapsulationTest extends NbTestCase {
                 .run(ReturnEncapsulation.class)
                 .assertWarnings();
     }
+    
+    public void testReturnArrayFieldWithZeroLength() throws Exception {
+        HintTest
+                .create()
+                .input("""
+                       package test;
+                       public class Test {
+                           private final int[] test1 = {};
+                           private final int[] test2 = new int[0];
+                           private final int[] test3 = new int[] {};
+                                                                                            
+                           public int[] getArray1() {
+                               return test1;
+                           }
+                           public int[] getArray2() {
+                               return test2;
+                           }
+                           public int[] getArray3() {
+                               return test3;
+                           }                                                                  
+                       }""")
+                .run(ReturnEncapsulation.class)
+                .assertNotContainsWarnings("Return of Array Field");
+    }    
 
     public void testReturnArrayField() throws Exception {
         HintTest

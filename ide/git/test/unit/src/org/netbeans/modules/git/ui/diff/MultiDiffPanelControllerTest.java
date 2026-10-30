@@ -43,7 +43,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
 /** Real-controller ordering regressions, with gates rather than sleeps/polling. */
-public class DiffLifecycleTest extends AbstractGitTestCase {
+public class MultiDiffPanelControllerTest extends AbstractGitTestCase {
     private MultiDiffPanelController controller;
     private RequestProcessor rp;
     private PublicationQueue publicationQueue;
@@ -52,7 +52,7 @@ public class DiffLifecycleTest extends AbstractGitTestCase {
     private final CountDownLatch releaseWorker = new CountDownLatch(1);
     private final CountDownLatch releaseReplacement = new CountDownLatch(1);
 
-    public DiffLifecycleTest(String name) { super(name); }
+    public MultiDiffPanelControllerTest(String name) { super(name); }
 
     @Override protected void setUp() throws Exception {
         super.setUp();

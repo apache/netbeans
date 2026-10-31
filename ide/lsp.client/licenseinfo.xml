@@ -53,4 +53,9 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>test/unit/src/org/netbeans/modules/lsp/client/bindings/configuration/c.tmLanguage.json</file>
+        <license ref="MIT-cpp-textmate-grammars" />
+        <comment type="COMMENT_UNSUPPORTED">Source: https://github.com/jeff-hykin/cpp-textmate-grammar</comment>
+    </fileset>
 </licenseinfo>

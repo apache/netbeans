@@ -103,12 +103,29 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.jackson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>3</release-version>
                         <specification-version>1.90</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.editor.bracesmatching</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>1.72</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -446,6 +463,10 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.lexer.nbbridge</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.masterfs</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -474,6 +495,7 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.netbeans.modules.lsp.client.api</package>
                 <package>org.netbeans.modules.lsp.client.debugger.api</package>
                 <package>org.netbeans.modules.lsp.client.debugger.spi</package>
                 <package>org.netbeans.modules.lsp.client.spi</package>

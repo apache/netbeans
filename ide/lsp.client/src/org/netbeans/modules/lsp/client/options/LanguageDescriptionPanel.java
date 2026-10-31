@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Locale;
 import java.util.Set;
@@ -62,6 +63,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
             this.id = desc.id;
             this.extensions.setText(desc.extensions);
             this.syntax.setText(desc.syntaxGrammar);
+            this.languageConfiguration.setText(desc.languageConfiguration);
             this.server.setText(desc.languageServer);
             this.name.setText(desc.name);
             this.icon.setText(desc.icon);
@@ -75,6 +77,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
                 id,
                 this.extensions.getText(),
                 this.syntax.getText(),
+                this.languageConfiguration.getText(),
                 this.server.getText(),
                 this.name.getText(),
                 this.icon.getText(),
@@ -112,6 +115,9 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         languageIdLabel = new JLabel();
         languageId = new JTextField();
         filler1 = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
+        jLabel1 = new JLabel();
+        languageConfiguration = new JTextField();
+        browseLanguageConfiguration = new JButton();
 
         setLayout(new GridBagLayout());
 
@@ -119,7 +125,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(nameLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.nameLabel.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(nameLabel, gridBagConstraints);
@@ -156,7 +162,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         name.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.name.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
@@ -226,7 +232,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(optionalParams, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.optionalParams.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(optionalParams, gridBagConstraints);
@@ -235,7 +241,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(iconLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.iconLabel.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(iconLabel, gridBagConstraints);
@@ -244,7 +250,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         icon.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.icon.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
@@ -255,7 +261,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         browseIcon.addActionListener(this::browseIconActionPerformed);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(browseIcon, gridBagConstraints);
@@ -263,7 +269,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(debugger, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.debugger.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(debugger, gridBagConstraints);
@@ -271,7 +277,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(languageIdLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.languageIdLabel.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         add(languageIdLabel, gridBagConstraints);
@@ -280,7 +286,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         languageId.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.languageId.text")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
@@ -291,6 +297,33 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 8;
         gridBagConstraints.weighty = 1.0;
         add(filler1, gridBagConstraints);
+
+        Mnemonics.setLocalizedText(jLabel1, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel1.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(jLabel1, gridBagConstraints);
+
+        languageConfiguration.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.languageConfiguration.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(languageConfiguration, gridBagConstraints);
+
+        Mnemonics.setLocalizedText(browseLanguageConfiguration, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseLanguageConfiguration.text")); // NOI18N
+        browseLanguageConfiguration.addActionListener(this::browseLanguageConfigurationActionPerformed);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(browseLanguageConfiguration, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     @Messages("DESC_JSONFilter=Grammars (.json, .xml, .tmLanguage)")
@@ -350,12 +383,24 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_browseServerActionPerformed
 
+    private void browseLanguageConfigurationActionPerformed(ActionEvent evt) {//GEN-FIRST:event_browseLanguageConfigurationActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(true);
+        chooser.setSelectedFile(new File(languageConfiguration.getText()));
+        if (chooser.showDialog(null, Bundle.BTN_Select()) == JFileChooser.APPROVE_OPTION) {
+            languageConfiguration.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_browseLanguageConfigurationActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton browseLanguageConfiguration;
     private JCheckBox debugger;
     private JTextField extensions;
     private Box.Filler filler1;
     private JTextField icon;
+    private JLabel jLabel1;
+    private JTextField languageConfiguration;
     private JTextField languageId;
     private JLabel languageIdLabel;
     private JTextField name;

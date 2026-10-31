@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,11 +34,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.EditorKit;
+import javax.swing.text.TextAction;
 import org.netbeans.modules.lsp.client.debugger.api.RegisterDAPBreakpoints;
 import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
+import org.netbeans.modules.lsp.client.api.LanguageFeatures;
+import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFactoryImpl;
+import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
+import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl;
+import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
+import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
+import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -165,6 +175,37 @@ public class LanguageStorage {
                     multiViewRegistration.setAttribute("position", 100);
                     multiViewRegistration.setAttribute("method", "createEditor");
 
+                    FileObject editorKit = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/EditorKit.instance");
+                    Method createGenericEditorKit = LanguageFeatures.class.getDeclaredMethod("editorKit", FileObject.class);
+                    editorKit.setAttribute("methodvalue:instanceCreate", createGenericEditorKit);
+                    editorKit.setAttribute("instanceOf", EditorKit.class.getName());
+                    editorKit.setAttribute("mimeType", description.mimeType);
+
+                    FileObject bracesMatcher = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/BracesMatchers/languageConfigurationMatcher.instance");
+                    Method createBracesMatcherImpl = LanguageFeatures.class.getDeclaredMethod("braceMatcher");
+                    bracesMatcher.setAttribute("methodvalue:instanceCreate", createBracesMatcherImpl);
+                    bracesMatcher.setAttribute("instanceOf", BracesMatcherFactory.class.getName());
+
+                    FileObject typingCompletion = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/typingCompletionImpl.instance");
+                    Method createTypingCompletionFactory = LanguageFeatures.class.getDeclaredMethod("typingCompletion");
+                    typingCompletion.setAttribute("methodvalue:instanceCreate", createTypingCompletionFactory);
+                    typingCompletion.setAttribute("instanceOf", TypedTextInterceptor.Factory.class.getName());
+
+                    FileObject toggleCommentAction = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/Actions/toggleComment.instance");
+                    Method createToggleCommentActionImpl = LanguageFeatures.class.getDeclaredMethod("toggleCommentAction");
+                    toggleCommentAction.setAttribute("methodvalue:instanceCreate", createToggleCommentActionImpl);
+                    toggleCommentAction.setAttribute("instanceOf", TextAction.class.getName());
+
+                    FileObject languageConfiguration = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/languageConfiguration.instance");
+                    Method createLanguageConfiguration = LanguageFeatures.class.getDeclaredMethod("languageConfiguration", FileObject.class);
+                    languageConfiguration.setAttribute("methodvalue:instanceCreate", createLanguageConfiguration);
+                    languageConfiguration.setAttribute("instanceOf", org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.class.getName());
+                    FileObject languageConfigurationSource = FileUtil.toFileObject(Path.of(description.languageConfiguration));
+                    try (InputStream in = languageConfigurationSource.getInputStream();
+                         OutputStream out = languageConfiguration.getOutputStream()) {
+                        in.transferTo(out);
+                    }
+
                     FileObject icon = FileUtil.getConfigFile("Loaders/" + description.mimeType + "/Factories/icon.png");
                     if (icon != null) {
                         icon.delete();
@@ -280,6 +321,7 @@ public class LanguageStorage {
         public String id;
         public String extensions;
         public String syntaxGrammar;
+        public String languageConfiguration;
         public String languageServer;
         public String name;
         public String icon;
@@ -291,6 +333,7 @@ public class LanguageStorage {
             this.id = null;
             this.extensions = null;
             this.syntaxGrammar = null;
+            this.languageConfiguration = null;
             this.languageServer = null;
             this.name = null;
             this.icon = null;
@@ -299,10 +342,11 @@ public class LanguageStorage {
             this.languageId = null;
         }
 
-        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger, String languageId) {
+        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageConfiguration, String languageServer, String name, String icon, boolean debugger, String languageId) {
             this.id = id;
             this.extensions = extensions;
             this.syntaxGrammar = syntaxGrammar;
+            this.languageConfiguration = languageConfiguration;
             this.languageServer = languageServer;
             this.name = name;
             this.icon = icon;

@@ -1221,6 +1221,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
         }
         Boolean suspendedToFire = null;
         accessLock.writeLock().lock();
+        boolean wasInitiallySuspended = initiallySuspended;
         initiallySuspended = false;
         try {
             if (loggerS.isLoggable(Level.FINE)) {
@@ -1252,7 +1253,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
             //System.err.println("notifySuspended("+getName()+") suspendCount = "+suspendCount+", var suspended = "+suspended);
             suspendedNoFire = false;
             debugger.setCurrentSuspendedNoFireThread(null);
-            if ((!suspended || suspendedNoFire && doFire) && (!verifyStatusAndName || isThreadSuspended())) {
+            if ((!suspended || wasInitiallySuspended || suspendedNoFire && doFire) && (!verifyStatusAndName || isThreadSuspended())) {
                 //System.err.println("  setting suspended = true");
                 suspended = true;
                 suspendedToFire = Boolean.TRUE;

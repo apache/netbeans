@@ -59,6 +59,7 @@ import org.netbeans.modules.java.editor.imports.JavaFixAllImports;
 import org.netbeans.modules.java.editor.overridden.GoToSuperTypeAction;
 import org.netbeans.modules.java.editor.rename.InstantRenameAction;
 import org.netbeans.modules.java.editor.semantic.GoToMarkOccurrencesAction;
+import org.netbeans.modules.java.editor.semantic.ReferenceCountHintsTask;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
@@ -278,6 +279,7 @@ public class JavaKit extends NbEditorKit {
     public void install(JEditorPane c) {
         super.install(c);
         ClipboardHandler.install(c);
+        ReferenceCountHintsTask.install(c);
     }
 
     @EditorActionRegistration(name = generateGoToPopupAction, mimeType = JAVA_MIME_TYPE)

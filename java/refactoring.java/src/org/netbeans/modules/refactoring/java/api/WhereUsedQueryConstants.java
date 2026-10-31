@@ -44,5 +44,10 @@ public enum WhereUsedQueryConstants {
      * Search from base class
      * @since 1.45
      */
-    SEARCH_OVERLOADED;
+    SEARCH_OVERLOADED,
+    /**
+     * Restrict method where-used results to direct references only.
+     * @since 1.95
+     */
+    FIND_DIRECT_REFERENCES;
 }

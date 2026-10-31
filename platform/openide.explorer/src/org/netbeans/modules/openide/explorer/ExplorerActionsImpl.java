@@ -542,6 +542,14 @@ public final class ExplorerActionsImpl {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            // Make sure the paste types are up to date before pasting. This
+            // may briefly wait for a pending update, but only on the
+            // user-initiated paste path, not on every selection change.
+            ActionStateUpdater asu = actionStateUpdater;
+            if (asu != null) {
+                asu.update();
+            }
+
             PasteType[] arr;
             synchronized (this) {
                 arr = this.pasteTypes;
@@ -557,34 +565,15 @@ public final class ExplorerActionsImpl {
             Utilities.disabledActionBeep();
         }
 
+        /*
+        * Returns the current paste types without waiting for a pending
+        * update, so that it is safe to call on the AWT thread from
+        * listeners reacting to action state changes. Use
+        * {@link #actionPerformed} when up-to-date types are required.
+        */
         @Override
         public Object getValue(String s) {
             if ("delegates".equals(s)) { // NOI18N
-                String prev = "";
-                if (LOG.isLoggable(Level.FINE)) {
-                    synchronized (this) {
-                        prev = Arrays.toString(pasteTypes);
-                    }
-                }
-                ActionStateUpdater asu = actionStateUpdater;
-                if (asu != null) {
-                    asu.update();
-                }
-                if (LOG.isLoggable(Level.FINE)) {
-                    String now;
-                    synchronized (this) {
-                        now = Arrays.toString(pasteTypes);
-                    }
-                    if (now == null) {
-                        now = "";
-                    }
-                    if (prev.equals(now)) {
-                        LOG.log(Level.FINER, "getDelegates {0}", now);
-                    } else {
-                        LOG.log(Level.FINE, "Delegates updated. Before: {0}", prev);
-                        LOG.log(Level.FINE, "Delegates updated. After : {0}", now);
-                    }
-                }
                 synchronized (this) {
                     return pasteTypes;
                 }
@@ -869,7 +858,9 @@ public final class ExplorerActionsImpl {
             cutActionPerformer.toEnabled(false);
             deleteActionPerformerConfirm.toEnabled(false);
             deleteActionPerformerNoConfirm.toEnabled(false);
-            pasteActionPerformer.toEnabled(false);
+            // paste types are unknown until the update runs, so drop the
+            // stale ones as well; setPasteTypes(null) also force-disables
+            pasteActionPerformer.setPasteTypes(null);
             EventQueue.invokeLater(this);
             timer.schedule(0);
         }

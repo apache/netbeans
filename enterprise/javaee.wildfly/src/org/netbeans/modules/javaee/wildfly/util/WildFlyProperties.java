@@ -47,6 +47,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.InstalledFileLocator;
+
 import org.openide.util.NbCollections;
 
 /**
@@ -176,7 +177,7 @@ public class WildFlyProperties {
     public JavaPlatform getJavaPlatform() {
         String currentJvm = ip.getProperty(PROP_JAVA_PLATFORM);
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
-        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
+        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE")); // NOI18N
         for (int i = 0; i < installedPlatforms.length; i++) {
             String platformName = (String) installedPlatforms[i].getProperties().get(PLAT_PROP_ANT_NAME);
             if (platformName != null && platformName.equals(currentJvm)) {

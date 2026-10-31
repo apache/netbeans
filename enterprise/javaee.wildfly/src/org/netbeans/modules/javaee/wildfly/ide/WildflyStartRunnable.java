@@ -52,7 +52,6 @@ import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -88,7 +87,7 @@ class WildflyStartRunnable implements Runnable {
     private static final String NEW_IF_CONDITION_STRING
             = "\"xx\" == \"x\"";                      // NOI18N
 
-    private static final SpecificationVersion JDK_18 = new SpecificationVersion("1.8");
+    private static final Runtime.Version JDK_18 = Runtime.Version.parse("1.8");
 
     private final WildflyDeploymentManager dm;
     private final String instanceName;
@@ -141,7 +140,8 @@ class WildflyStartRunnable implements Runnable {
                 javaOptsBuilder.append(" -Dlogging.configuration=").append(loggingProperties.toURL());
             }
         }
-        if (platform.getSpecification().getVersion().compareTo(JDK_18) < 0) {
+        Runtime.Version platformVersion = platform.getSpecification().getJdkVersion();
+        if (platformVersion != null && platformVersion.compareTo(JDK_18) < 0) {
             javaOptsBuilder.append(" -XX:MaxPermSize=256m");
         }
         if ("64".equals(platform.getSystemProperties().get("sun.arch.data.model"))) {

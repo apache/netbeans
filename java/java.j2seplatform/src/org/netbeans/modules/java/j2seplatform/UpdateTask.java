@@ -30,6 +30,7 @@ import org.netbeans.modules.java.j2seplatform.platformdefinition.J2SEPlatformImp
 import org.netbeans.modules.java.j2seplatform.platformdefinition.PlatformConvertor;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
+
 import org.openide.util.Exceptions;
 
 /**
@@ -78,7 +79,7 @@ public final class UpdateTask implements Runnable {
 
     private static boolean updateBuildProperties (EditableProperties ep) {
         boolean changed = false;
-        JavaPlatform[] installedPlatforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification ("j2se",null));   //NOI18N
+        JavaPlatform[] installedPlatforms = JavaPlatformManager.getDefault().getPlatforms(null, new Specification("j2se"));   //NOI18N
         for (int i=0; i<installedPlatforms.length; i++) {
             //Handle only platforms created by this module
             if (!installedPlatforms[i].equals (JavaPlatformManager.getDefault().getDefaultPlatform()) && installedPlatforms[i] instanceof J2SEPlatformImpl) {

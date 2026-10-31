@@ -174,7 +174,7 @@ public class J2SEProjectProfilingSupportProvider extends JavaProjectProfilingSup
     private static String getRemotePlatformHost(JavaPlatform platform) {
         for (org.netbeans.api.java.platform.JavaPlatform jp : JavaPlatformManager.getDefault().getPlatforms(
                 null,
-                new Specification("j2se-remote", null))) {  //NOI18N
+                new Specification("j2se-remote"))) {  //NOI18N
             if (platform.getPlatformId().equals(jp.getProperties().get("platform.ant.name"))) { //NOI18N
                 return jp.getProperties().get("platform.host"); //NOI18N
             }

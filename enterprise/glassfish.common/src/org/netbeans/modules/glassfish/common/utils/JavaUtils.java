@@ -71,9 +71,7 @@ public class JavaUtils {
      * @return Installed Java SE platforms.
      */
     public static JavaPlatform[] getInstalledJavaSEPlatforms() {
-        return JavaPlatformManager.getDefault()
-                .getPlatforms(null, new Specification(
-                JAVA_SE_SPECIFICATION_NAME, null));
+        return JavaPlatformManager.getDefault().getPlatforms(null, new Specification(JAVA_SE_SPECIFICATION_NAME));
     }
 
     /**

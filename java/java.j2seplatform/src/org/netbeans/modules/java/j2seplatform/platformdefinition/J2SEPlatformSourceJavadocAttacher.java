@@ -129,7 +129,7 @@ public class J2SEPlatformSourceJavadocAttacher implements SourceJavadocAttacherI
     }
 
     private J2SEPlatformImpl findOwner(final URL root) {
-        for (JavaPlatform p : JavaPlatformManager.getDefault().getPlatforms(null, new Specification(J2SEPlatformImpl.PLATFORM_J2SE, null))) {
+        for (JavaPlatform p : JavaPlatformManager.getDefault().getPlatforms(null, new Specification(J2SEPlatformImpl.PLATFORM_J2SE))) {
             if (!(p instanceof J2SEPlatformImpl)) {
                 //Cannot handle unknown platform
                 continue;

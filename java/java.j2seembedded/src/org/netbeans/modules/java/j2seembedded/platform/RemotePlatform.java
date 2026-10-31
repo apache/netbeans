@@ -39,7 +39,7 @@ import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
-import org.openide.modules.SpecificationVersion;
+
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -79,7 +79,7 @@ public final class RemotePlatform extends JavaPlatform {
         this.props = new HashMap<>(properties);
         this.spec = new Specification(
             SPEC_NAME,
-            createSpecificationVersion(sysProperties.get("java.specification.version")),   // NOI18N
+            createJdkVersion(sysProperties.get("java.specification.version")),   // NOI18N
             NbBundle.getMessage(RemotePlatform.class, "TXT_RemotePlatform"),
             null);
         setSystemProperties(sysProperties);
@@ -307,12 +307,12 @@ public final class RemotePlatform extends JavaPlatform {
 
     //Utility methods
     @NonNull
-    private static SpecificationVersion createSpecificationVersion(
+    private static Runtime.Version createJdkVersion(
         @NullAllowed String version) {
         if (version != null) {
             try {
-                return new SpecificationVersion(version);
-            } catch (NumberFormatException nfe) {
+                return Runtime.Version.parse(version);
+            } catch (IllegalArgumentException e) {
                 LOG.log(
                     Level.WARNING,
                     "Invalid specification version: {0}",   // NOI18N
@@ -321,14 +321,14 @@ public final class RemotePlatform extends JavaPlatform {
             do {
                 version = version.substring(0, version.length() - 1);
                 try {
-                    return new SpecificationVersion(version);
-                } catch (NumberFormatException nfe) {
+                    return Runtime.Version.parse(version);
+                } catch (IllegalArgumentException e) {
                     // ignore
                 }
             } while (version.length() > 0);
         }
         //Nothing return lower bound JDK 1.1
-        return new SpecificationVersion("1.1"); // NOI18N
+        return Runtime.Version.parse("1.1"); // NOI18N
     }
 
 }

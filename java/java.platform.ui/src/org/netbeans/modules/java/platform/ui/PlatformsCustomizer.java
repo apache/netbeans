@@ -726,7 +726,12 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
         
         @Override
         public int compare(Node n1, Node n2) {
-            return n1.getDisplayName().compareTo(n2.getDisplayName());
+            JavaPlatform p1 = n1.getLookup().lookup(JavaPlatform.class);
+            JavaPlatform p2 = n2.getLookup().lookup(JavaPlatform.class);
+            if (p1 != null && p2 != null) {
+                return p2.getSpecification().compareTo(p1.getSpecification());
+            }
+            return n2.getDisplayName().compareTo(n1.getDisplayName());
         }
     }
 

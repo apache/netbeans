@@ -146,7 +146,7 @@ public class CustomizerDataSupport {
         jvmModel.removeAllElements();
 
         // feed the combo with sorted platform list
-        JavaPlatform[] j2sePlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
+        JavaPlatform[] j2sePlatforms = jpm.getPlatforms(null, new Specification("J2SE")); // NOI18N
         JavaPlatformAdapter[] platformAdapters = new JavaPlatformAdapter[j2sePlatforms.length];
         for (int i = 0; i < platformAdapters.length; i++) {
             platformAdapters[i] = new JavaPlatformAdapter(j2sePlatforms[i]);

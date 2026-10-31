@@ -35,13 +35,9 @@ import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
-import org.openide.modules.SpecificationVersion;
-
 
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.java.classpath.ClassPathProvider.class, position=150)
 public class PlatformClassPathProvider implements ClassPathProvider {
-    private static final SpecificationVersion JAVA_9 = new SpecificationVersion("9");   //NOI18N
-
     private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES =
             new HashSet<String>(Arrays.asList(new String[]{
                 ClassPath.SOURCE,
@@ -78,7 +74,8 @@ public class PlatformClassPathProvider implements ClassPathProvider {
             ClassPath libraryPath = jp.getStandardLibraries();
             ClassPath sourcePath = jp.getSourceFolders();
             FileObject root = null;
-            boolean jdk9 = JAVA_9.compareTo(jp.getSpecification().getVersion()) <= 0;
+            Runtime.Version platformVersion = jp.getSpecification().getJdkVersion();
+            boolean jdk9 = platformVersion != null && platformVersion.feature() >= 9;
             if (ClassPath.SOURCE.equals(type) && sourcePath != null &&
                 (root = sourcePath.findOwnerRoot(fo))!=null) {
                 this.setLastUsedPlatform (root,jp);

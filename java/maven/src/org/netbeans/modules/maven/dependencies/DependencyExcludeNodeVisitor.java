@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
-import org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNodeVisitor;
 
 /**
  *

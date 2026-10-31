@@ -78,7 +78,7 @@ public class JarFileSystem extends AbstractFileSystem {
                                                    .intValue(); // NOI18N
 
     /** maxsize for passing ByteArrayInputStream*/
-    private static final long MEM_STREAM_SIZE = 100000;
+    private static final long MEM_STREAM_SIZE = 200_000;
 
     /** Maximal time for which closing of jar is postponed. */
     private static final int CLOSE_DELAY_MAX = 5000;
@@ -468,20 +468,18 @@ public class JarFileSystem extends AbstractFileSystem {
     }
 
     private InputStream getTemporaryInputStream(JarFile jf, JarEntry je) throws IOException {
-        StringBuffer jarCacheFolder = new StringBuffer("jarfscache"); //NOI18N
-        jarCacheFolder.append(System.getProperty("user.name")).append("/"); //NOI18N
 
-        File jarfscache = new File(System.getProperty("java.io.tmpdir"), jarCacheFolder.toString()); //NOI18N
+        // this used to be a time based jar-entry cache, but today it's only remaining
+        // purpose is to detach a jar entry from the lifecycle of the JarFile
 
-        if (!jarfscache.exists()) {
-            jarfscache.mkdirs();
-        }
+        Path jarfscache = Path.of(System.getProperty("java.io.tmpdir"), "nb-jarfscache"); //NOI18N
+        Files.createDirectories(jarfscache);
 
         // Every call copies the entry to a new file of its own. A file shared between calls (or between
         // JarFileSystems, or between JVMs) would be truncated and rewritten by one caller while another
         // is still reading it. DELETE_ON_CLOSE removes the file once the stream is closed (on Unix, as
         // soon as it is opened), so a stream that is never closed leaves no file behind either.
-        Path f = Files.createTempFile(jarfscache.toPath(), "jarfs", null); //NOI18N
+        Path f = Files.createTempFile(jarfscache, "jarfs", null); //NOI18N
         try {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);

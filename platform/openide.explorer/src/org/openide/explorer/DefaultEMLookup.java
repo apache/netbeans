@@ -22,6 +22,7 @@ import org.openide.nodes.*;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -34,14 +35,38 @@ import java.util.*;
 /**
  * Contents of the lookup for a ExplorerManager, is copied
  * from org.openide.windows.DefaultTopComponentLookup and shares
- * its test. If updating, please update both.
+ * its test. Updates of this lookup are coalesced and run on a
+ * background thread, so when updating, check both classes, but
+ * do not copy changes between them blindly.
  * @author Jaroslav Tulach
  */
 final class DefaultEMLookup extends ProxyLookup implements LookupListener, PropertyChangeListener {
     private static final Object PRESENT = new Object();
 
+    /** Delay in milliseconds between a selection change and the update
+     *  of this lookup. A pending update is cancelled and rescheduled on
+     *  every change, so rapid changes of the selection coalesce into a
+     *  single update; a positive delay additionally debounces bursts.
+     */
+    // Delay was derived as good default after holding down the arrow key and measuring event intervals.
+    // scenario: expanded jar with large amount of class files + several open projects with expanded src folders.
+    private static final int UPDATE_DELAY = 30;
+
     /** component to work with */
     private ExplorerManager tc;
+
+    /** 
+     *  Task that updates this lookup to the current selection on a background thread.
+     */
+    private final RequestProcessor.Task updateTask = ExplorerManager.getSelectionProcessor().create(
+        () -> updateLookups(tc.getSelectedNodes())
+    );
+
+    /** Monitor for {@link #updateTask}. Deliberately not <code>this</code>:
+     *  that monitor is used by ProxyLookup itself, so scheduling must not
+     *  be coupled to it.
+     */
+    private final Object updateTaskLock = new Object();
 
     /** lookup listener that is attached to all subnodes */
     private LookupListener listener;
@@ -110,8 +135,9 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
     }
 
     /** Change in one of the lookups we delegate to */
+    @Override
     public void resultChanged(LookupEvent ev) {
-        updateLookups(tc.getSelectedNodes());
+        scheduleUpdate();
     }
 
     /** Finds out whether a query for a class can be influenced
@@ -136,9 +162,22 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
         }
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (ExplorerManager.PROP_SELECTED_NODES == evt.getPropertyName()) {
-            updateLookups((Node[]) evt.getNewValue());
+        if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+            scheduleUpdate();
+        }
+    }
+
+    /** 
+     * Schedules an update of this lookup to the currently selected nodes
+     * on a background thread. Pending updates are postponed. The update reads
+     * the selection when it runs, so a superseded update can never leave a stale
+     * state behind.
+     */
+    private void scheduleUpdate() {
+        synchronized (updateTaskLock) {
+            updateTask.schedule(UPDATE_DELAY);
         }
     }
 

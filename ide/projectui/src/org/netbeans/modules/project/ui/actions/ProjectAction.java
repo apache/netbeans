@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.project.ui.actions;
 
-import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -182,9 +181,7 @@ public class ProjectAction extends LookupSensitiveAction implements ContextAware
     }
     
     @Override
-    protected void refresh(final Lookup context, final boolean immediate) {
-        Runnable r = new Runnable() {
-            @Override public void run() {
+    protected void refresh(Lookup context) {
         Project[] projects = ActionsUtil.getProjectsFromLookup( context, command );
         final boolean enable;
         if ( command != null ) {
@@ -194,7 +191,7 @@ public class ProjectAction extends LookupSensitiveAction implements ContextAware
         } else {
             enable = false;
         }
-        
+
         final String presenterName = ActionsUtil.formatProjectSensitiveName( namePattern, projects );
         final String popupName;
         if (popupPattern != null) {
@@ -210,13 +207,6 @@ public class ProjectAction extends LookupSensitiveAction implements ContextAware
         putValue(SHORT_DESCRIPTION, Actions.cutAmpersand(presenterName));
             }
         });
-            }
-        };
-        if (immediate) {
-            r.run();
-        } else {
-            RP.post(r);
-        }
     }
     
     protected final String getCommand() {

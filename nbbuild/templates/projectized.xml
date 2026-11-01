@@ -928,7 +928,7 @@
             <arg value="-DnetbeansNbmDirectory=${maven.tmp.nbms}"/>
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
-            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:1.5:populate"/>
+            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:14.5:populate"/>
         </exec>
     </target>
     

@@ -23,7 +23,7 @@ import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFacto
 import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl.FactoryImpl;
 import org.netbeans.modules.lsp.client.options.GenericEditorKit;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -83,10 +83,12 @@ public class LanguageFeatures {
      * <folder name="Editors">
      *     <folder name="text">
      *         <folder name="x-c++">
-     *             <file name="languageConfiguration.instance"
-     *                   url="nbresloc:/org/netbeans/modules/.../resources/language-configuration.json">
-     *                 <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.languageConfiguration" name="instanceCreate"/>
-     *             </file>
+     *             <folder name="LanguageConfiguration">
+     *                 <file name="languageConfiguration.instance"
+     *                       url="nbresloc:/org/netbeans/modules/.../resources/language-configuration.json">
+     *                     <attr methodvalue="org.netbeans.modules.lsp.client.api.LanguageFeatures.languageConfiguration" name="instanceCreate"/>
+     *                 </file>
+     *             </folder>
      *         </folder>
      *     </folder>
      * </folder>

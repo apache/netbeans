@@ -24,7 +24,6 @@ import javax.swing.text.JTextComponent;
 import org.junit.Test;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.editor.NbEditorDocument;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;

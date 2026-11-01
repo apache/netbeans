@@ -44,7 +44,7 @@ import org.netbeans.modules.lsp.client.api.LanguageFeatures;
 import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFactoryImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
@@ -199,7 +199,7 @@ public class LanguageStorage {
                     FileObject languageConfiguration = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/languageConfiguration.instance");
                     Method createLanguageConfiguration = LanguageFeatures.class.getDeclaredMethod("languageConfiguration", FileObject.class);
                     languageConfiguration.setAttribute("methodvalue:instanceCreate", createLanguageConfiguration);
-                    languageConfiguration.setAttribute("instanceOf", org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.class.getName());
+                    languageConfiguration.setAttribute("instanceOf", org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration.class.getName());
                     FileObject languageConfigurationSource = FileUtil.toFileObject(Path.of(description.languageConfiguration));
                     try (InputStream in = languageConfigurationSource.getInputStream();
                          OutputStream out = languageConfiguration.getOutputStream()) {

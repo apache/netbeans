@@ -109,7 +109,7 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
                  .stringvalue("instanceOf", EditorKit.class.getName())
                  .stringvalue("mimeType", mimeType)
                  .write();
-            layer.file("Editors/" + mimeType + "/languageConfiguration.instance")
+            layer.file("Editors/" + mimeType + "/LanguageConfiguration/languageConfiguration.instance")
                  .url("nbresloc:/" + languageConfiguration)
                  .methodvalue("instanceCreate", "org.netbeans.modules.lsp.client.api.LanguageFeatures", "languageConfiguration")
                  .write();

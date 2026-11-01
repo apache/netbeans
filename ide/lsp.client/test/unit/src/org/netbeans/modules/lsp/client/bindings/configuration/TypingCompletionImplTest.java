@@ -25,7 +25,6 @@ import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
 import org.junit.Test;
 import org.netbeans.modules.editor.NbEditorDocument;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
 import org.netbeans.modules.editor.lib2.typinghooks.TypingHooksSpiAccessor;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor.MutableContext;

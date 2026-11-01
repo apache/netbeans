@@ -34,10 +34,9 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.AutoClosingPair;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.CharacterPair;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration.SyntaxTokenType;
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration.AutoClosingPair;
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration.CharacterPair;
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration.SyntaxTokenType;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 
 public class TypingCompletionImpl implements TypedTextInterceptor {

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.spi.friend;
 
+import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

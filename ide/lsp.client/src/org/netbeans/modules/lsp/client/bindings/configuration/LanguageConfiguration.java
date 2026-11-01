@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.lsp.client.spi.friend;
+package org.netbeans.modules.lsp.client.bindings.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
@@ -27,12 +27,14 @@ import java.util.Map;
 import org.eclipse.tm4e.core.internal.parser.PropertySettable.ArrayList;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.spi.editor.mimelookup.MimeLocation;
 import org.openide.util.Exceptions;
 
 //based on the VS Code API's "LanguageConfiguration" (MIT)
 //TODO: the language-configuration.json is more broad, should be enhanced to support language-configuration.json:
 /**Represents language configuration, potentially coming from language-configuration.json.
  */
+@MimeLocation(subfolderName="LanguageConfiguration")
 public final class LanguageConfiguration {
     public final @NullAllowed CommentRule comments;
     public final @NullAllowed CharacterPair[] brackets;
@@ -203,6 +205,7 @@ public final class LanguageConfiguration {
     private static final JsonMapper MAPPER = JsonMapper.builder()
                 .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
                 .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
+                .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
                 .build();
     public static LanguageConfiguration from(String source) {
         //TODO resilience against "incorrect" config:

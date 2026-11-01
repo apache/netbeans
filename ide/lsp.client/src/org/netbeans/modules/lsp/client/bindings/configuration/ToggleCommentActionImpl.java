@@ -37,7 +37,6 @@ import static org.netbeans.editor.ext.ExtKit.toggleCommentAction;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.lsp.client.spi.friend.LanguageConfiguration;
 import org.openide.util.NbBundle;
 
 public class ToggleCommentActionImpl extends BaseAction {

@@ -37,7 +37,8 @@ import org.openide.filesystems.FileObject;
  * @since 1.38
  */
 //javadoc partially by qwen3.8
-public class LanguageFeatures {
+public final class LanguageFeatures {
+    private LanguageFeatures() {}
 
     /**
      * Creates a {@code GenericEditorKit} for the given MIME type.

@@ -577,6 +577,15 @@ final class VanillaCompileWorker extends CompileWorker {
             }
             
             @Override
+            public Void visitPackage(PackageTree node, Void p) {
+                JCPackageDecl decl = (JCPackageDecl) node;
+                if (decl.packge != null) {
+                    clearAnnotations(decl.packge.getMetadata());
+                }
+                return super.visitPackage(node, p);
+            }
+
+            @Override
             public Void visitVariable(VariableTree node, Void p) {
                 JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
                 scan(node.getModifiers(), null);

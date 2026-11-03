@@ -452,7 +452,7 @@ metabuild.hash=${metabuild.hash}</echo>
       zip zipFile:'mavenrepo.zip',dir:'mavenrepository',archive:'true'
       -->
       <property name="mavenArgs" value=""/>
-      <exec executable="mvn">
+      <exec executable="mvn" failonerror="true">
           <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
           <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>

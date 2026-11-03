@@ -1176,30 +1176,9 @@ class FilesystemInterceptor extends VCSInterceptor {
             if (gitFolder.isFile()) {
                 ts = gitFolder.lastModified();
                 if (mapping == null || mapping.ts < ts) {
-                    BufferedReader br = null;
-                    try {
-                        br = new BufferedReader(new FileReader(gitFolder));
-                        for (String line = br.readLine(); line != null; line = br.readLine()) {
-                            line = line.trim();
-                            if (line.startsWith("gitdir:")) { //NOI18N
-                                line = line.substring(7).trim();
-                                File tmp = new File(line);
-                                if (!tmp.isAbsolute()) {
-                                    tmp = new File(gitFolder, line).getCanonicalFile();
-                                }
-                                metadataFolder = tmp;
-                                break;
-                            }
-                        }
-                    } catch (IOException ex) {
-                        //
-                    } finally {
-                        if (br != null) {
-                            try {
-                                br.close();
-                            } catch (IOException ex) {
-                            }
-                        }
+                    File dirOrNull = GitUtils.findMetafolder(gitFolder);
+                    if (dirOrNull != null) {
+                        metadataFolder = dirOrNull;
                     }
                 }
             }

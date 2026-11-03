@@ -24,7 +24,9 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -53,6 +55,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.queries.SharabilityQuery;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
@@ -1110,6 +1113,38 @@ public final class GitUtils {
             };
         }
         return VCSContext.forNodes(nodes);
+    }
+
+    /** Reads concent of {@code gitFile} to find location of associated
+     * meta folder directory. When using {@code submodule}s, such a directory
+     * is specified as
+     * <pre>
+     * gitdir: "relative-path-to-actual-git-directory"
+     * </pre>
+     * Git keeps the submodule's actual repository data safely housed inside
+     * the parent project's root {@code .git/modules/} directory
+     *
+     * @param gitFile the file to parse and read
+     * @return {@code null} if no result was found or location of the meta folder
+     */
+    @CheckForNull
+    public static File findMetafolder(File gitFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(gitFile))) {
+            for (String lineSpaces = br.readLine(); lineSpaces != null; lineSpaces = br.readLine()) {
+                String line = lineSpaces.trim();
+                if (line.startsWith("gitdir:")) { // NOI18N
+                    String path = line.substring(7).trim();
+                    File tmp = new File(path);
+                    if (!tmp.isAbsolute()) {
+                        tmp = new File(gitFile.getParentFile(), path).getCanonicalFile();
+                    }
+                    return tmp;
+                }
+            }
+        } catch (IOException ex) {
+            // ignore
+        }
+        return null;
     }
 
     public static interface SearchCallback<T> {

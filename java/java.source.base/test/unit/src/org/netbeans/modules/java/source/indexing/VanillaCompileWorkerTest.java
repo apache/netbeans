@@ -520,6 +520,38 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                      clazz.getAnnotations().stream().map(ann -> ann.toString()).collect(Collectors.joining(", ")));
     }
 
+    public void testErroneousPackageAnnotations() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/package-info.java", "@Unknown @Deprecated package test;"),
+                                                         compileTuple("literal/package-info.java", "@Deprecated @test.ClassAnn(Unknown.class) package literal;"),
+                                                         compileTuple("nested/package-info.java", "@test.NestedAnn(@Unknown) @Deprecated package nested;"),
+                                                         compileTuple("test/ClassAnn.java", "package test; public @interface ClassAnn { Class<?> value(); }"),
+                                                         compileTuple("test/NestedAnn.java", "package test; public @interface NestedAnn { Deprecated value(); }"),
+                                                         compileTuple("test/Additional.java", "package test; public class Additional { }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Map<String, File> createdFiles = new HashMap<>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.put(getWorkDir().toURI().relativize(created.toURI()).getPath(), created);
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/16/classes/test/package-info.sig",
+                                                       "cache/s1/java/16/classes/literal/package-info.sig",
+                                                       "cache/s1/java/16/classes/nested/package-info.sig",
+                                                       "cache/s1/java/16/classes/test/ClassAnn.sig",
+                                                       "cache/s1/java/16/classes/test/NestedAnn.sig",
+                                                       "cache/s1/java/16/classes/test/Additional.sig")),
+                     createdFiles.keySet());
+        for (String pkg : Arrays.asList("test", "literal", "nested")) {
+            assertAnnotations("@java.lang.Deprecated runtimeVisible=true",
+                              createdFiles.get("cache/s1/java/16/classes/" + pkg + "/package-info.sig"));
+            assertTrue(ErrorsCache.isInError(getRoot().getFileObject(pkg + "/package-info.java"), false));
+        }
+    }
+
     public void testPackageInfo() throws Exception {
         ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/package-info.java", "@Deprecated package test;")),
                                            Arrays.asList());

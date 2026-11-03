@@ -319,8 +319,7 @@ metabuild.hash=${metabuild.hash}</echo>
 
   <!-- build NBMs for selected modules -->
   <target name="build-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
-      <mkdir dir="nbms" />
-      <property name="base.nbm.target.dir" location="nbms" />
+      <mkdir dir="${base.nbm.target.dir}"/>
       <property name="nbms.fail.on.error" value="true"/>
       <subant-junit target="nbm" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
@@ -331,8 +330,7 @@ metabuild.hash=${metabuild.hash}</echo>
   </target>
 
   <target name="build-nonsigned-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
-      <mkdir dir="nbms" />
-      <property name="base.nbm.target.dir" location="nbms" />
+      <mkdir dir="${base.nbm.target.dir}"/>
       <property name="nbms.fail.on.error" value="true"/>
       <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
@@ -414,6 +412,57 @@ metabuild.hash=${metabuild.hash}</echo>
       <subant-junit target="sources-zip" failonerror="true">
           <buildpath path="${modules.sorted}"/>
       </subant-junit>
+  </target>
+
+  <target name="maven-install" depends="init" description="Finishes installation of artifacts into Maven repository">
+      <echo message="Run only after: ant build-source-zips build-nbms build-javadoc!"/>
+
+      <!--
+      Inspired by following two invocations:
+
+      # https://github.com/apache/netbeans-jenkins-lib/blob/120b7fe817075c802dbc7f8cb59d5d218249e310/vars/asfMainNetBeansBuild.groovy#L200
+      mvn org.apache.maven.plugins:maven-dependency-plugin:3.5.0:get
+        -Dartifact=org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}
+        -DremoteRepositories=apache.snapshots.https::::https://repository.apache.org/snapshots
+
+      mvn org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate
+        -X ${commonparam}
+        -DnetbeansNbmDirectory=${netbeansbase}/nbms
+        -DnetbeansInstallDirectory=${netbeansbase}/netbeans
+        -DnetbeansSourcesDirectory=${netbeansbase}/build/source-zips
+        -DnetbeansJavadocDirectory=${netbeansbase}/build/javadoc
+        -DparentGAV=org.apache.netbeans:netbeans-parent:5
+        -DforcedVersion=${mavenVersion}
+        -DskipInstall=true
+        -DdeployId=apache.snapshots.https
+        -DdeployUrl=https://repository.apache.org/content/repositories/snapshots
+
+      # https://github.com/apache/netbeans-jenkins-lib/blob/120b7fe817075c802dbc7f8cb59d5d218249e310/vars/asfMainNetBeansBuild.groovy#L437
+      mvn org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate
+        ${commonparam}
+        -DnetbeansNbmDirectory=${netbeansbase}/nbms
+        -DnetbeansInstallDirectory=${netbeansbase}/netbeans
+        -DnetbeansSourcesDirectory=${netbeansbase}/build/source-zips
+        -DnetbeansJavadocDirectory=${netbeansbase}/build/javadoc
+        -DparentGAV=org.apache.netbeans:netbeans-parent:5
+        -DforcedVersion=${mavenVersion}
+        -DskipInstall=true
+        -DdeployUrl=file://${env.WORKSPACE}/mavenrepository
+
+      zip zipFile:'mavenrepo.zip',dir:'mavenrepository',archive:'true'
+      -->
+      <property name="commonparam" value=""/>
+      <exec executable="mvn">
+          <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate"/>
+          <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
+          <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>
+          <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}"/>
+          <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}"/>
+          <arg value="-DparentGAV=org.apache.netbeans:netbeans-parent:5"/>
+          <arg value="-DforcedVersion=${mavenVersion}"/>
+          <arg line="${commonparam}"/>
+      </exec>
+      <echo message="Installed -DmavenVersion=${mavenVersion} into Maven repository"/>
   </target>
   
       

@@ -55,9 +55,11 @@
   Version of [NetBeans Repository Plugin](https://bits.netbeans.org/mavenutilities/nbm-maven-plugin/nb-repository-plugin/index.html)
   to use when handling `ant maven-install` invocation.
   -->
-  <property name="repopluginversion" value="14.5"/>
+  <property name="nbm.plugin.version" value="14.5"/>
   <!-- default version to use when installing into Maven repository -->
-  <property name="mavenVersion" value="dev-SNAPSHOT"/>
+  <property name="nbm.install.version" value="dev-SNAPSHOT"/>
+  <!-- default NBM pom parent version -->
+  <property name="nbm.install.parent.version" value="5"/>
 
   <macrodef name="resolve">
     <attribute name="name"/>

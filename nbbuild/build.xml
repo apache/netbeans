@@ -453,17 +453,17 @@ metabuild.hash=${metabuild.hash}</echo>
       -->
       <property name="mavenArgs" value=""/>
       <exec executable="mvn" failonerror="true">
-          <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate"/>
+          <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
           <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>
           <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}"/>
           <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}"/>
-          <arg value="-DparentGAV=org.apache.netbeans:netbeans-parent:5"/>
-          <arg value="-DforcedVersion=${mavenVersion}"/>
+          <arg value="-DparentGAV=org.apache.netbeans:netbeans-parent:${nbm.install.parent.version}"/>
+          <arg value="-DforcedVersion=${nbm.install.version}"/>
           <arg line="${mavenArgs}"/>
           <env key="JAVA_HOME" value="${java.home}"/>
       </exec>
-      <echo message="Installed -DmavenVersion=${mavenVersion} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
+      <echo message="Installed -Dnbm.install.version=${nbm.install.version} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
   </target>
   
       

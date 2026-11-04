@@ -27,7 +27,6 @@ import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,7 +71,13 @@ import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.InvalidClassFormatException;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.spi.java.loaders.RenameHandler;
-import org.openide.filesystems.*;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.FileUIUtils;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
 import org.openide.modules.SpecificationVersion;
@@ -307,43 +312,34 @@ public final class JavaNode extends DataNode implements ChangeListener {
      * Displays one kind of classpath for this Java source.
      * Tries to use the normal format (directory or JAR names), falling back to URLs if necessary.
      */
-    private final class ClasspathProperty extends PropertySupport.ReadOnly<String> {
+    private final class ClasspathProperty extends PropertySupport.ReadOnly<String[]> {
         
         private final String id;
         
         public ClasspathProperty(String id, String displayName, String shortDescription) {
-            super(id, /*XXX NbClassPath would be preferable, but needs org.openide.execution*/String.class, displayName, shortDescription);
+            super(id, String[].class, displayName, shortDescription);
             this.id = id;
-            // XXX the following does not always work... why?
-            setValue("oneline", false); // NOI18N
         }
         
         @Override
-        public String getValue() {
+        public String[] getValue() {
             ClassPath cp = ClassPath.getClassPath(getDataObject().getPrimaryFile(), id);
-            if (cp != null) {
-                StringBuilder sb = new StringBuilder();
-                for (ClassPath.Entry entry : cp.entries()) {
-                    URL u = entry.getURL();
-                    String item = u.toExternalForm(); // fallback
-                    if (u.getProtocol().equals("file")) { // NOI18N
-                        item = Utilities.toFile(URI.create(item)).getAbsolutePath();
-                    } else if (u.getProtocol().equals("jar") && item.endsWith("!/")) { // NOI18N
-                        URL embedded = FileUtil.getArchiveFile(u);
-                        assert embedded != null : u;
-                        if (embedded.getProtocol().equals("file")) { // NOI18N
-                            item = Utilities.toFile(URI.create(embedded.toExternalForm())).getAbsolutePath();
-                        }
-                    }
-                    if (sb.length() > 0) {
-                        sb.append(File.pathSeparatorChar);
-                    }
-                    sb.append(item);
+            return cp == null ? null : cp.entries().stream().map(this::toPath).toArray(String[]::new);
+        }
+
+        private String toPath(ClassPath.Entry entry) {
+            URL u = entry.getURL();
+            String item = u.toExternalForm(); // fallback
+            if (u.getProtocol().equals("file")) { // NOI18N
+                item = Utilities.toFile(URI.create(item)).getAbsolutePath();
+            } else if (u.getProtocol().equals("jar") && item.endsWith("!/")) { // NOI18N
+                URL embedded = FileUtil.getArchiveFile(u);
+                assert embedded != null : u;
+                if (embedded.getProtocol().equals("file")) { // NOI18N
+                    item = Utilities.toFile(URI.create(embedded.toExternalForm())).getAbsolutePath();
                 }
-                return sb.toString();
-            } else {
-                return getMessage(JavaNode.class, "LBL_JavaNode_classpath_unknown");
             }
+            return item;
         }
     }
 

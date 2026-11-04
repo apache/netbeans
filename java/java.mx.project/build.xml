@@ -31,7 +31,7 @@
             <arg value="clone"/>
             <arg value="--depth=1"/>
             <arg value="--branch"/>
-            <arg value="vm-22.3.0"/>
+            <arg value="vm-23.0.0"/>
             <arg value="--single-branch"/>
             <arg value="https://github.com/oracle/graal"/>
         </exec>
@@ -41,7 +41,7 @@
             <arg value="clone"/>
             <arg value="--depth=1"/>
             <arg value="--branch"/>
-            <arg value="6.7.0"/>
+            <arg value="6.17.0"/>
             <arg value="--single-branch"/>
             <arg value="https://github.com/graalvm/mx"/>
         </exec>
@@ -49,6 +49,8 @@
 
     <target name="test-preinit" depends="-checkout-graalvm">
         <exec dir="${graal.dir}/truffle" executable="${mx.dir}/mx" failonerror="true">
+            <arg value="--java-home"/>
+            <arg value="${nbjdk.home}"/>
             <arg value="build"/>
         </exec>
     </target>

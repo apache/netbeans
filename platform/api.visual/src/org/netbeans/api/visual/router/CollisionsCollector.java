@@ -33,7 +33,7 @@ public interface CollisionsCollector {
     /**
      * Gathers collision collections and fills up the lists of vertical and horizontal collisions.
      * This method is similar to <code>ConnectionWidgetCollisionCollector.collectCollisions</code>
-     * but does not take any paramter of a collector context.
+     * but does not take any parameter of a collector context.
      * @param verticalCollisions the list of vertical collisions
      * @param horizontalCollisions the list of horizontal collisions
      */

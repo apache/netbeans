@@ -20,6 +20,8 @@
 package org.netbeans.lib.terminalemulator;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractInterp implements Interp {
 
@@ -30,22 +32,17 @@ public abstract class AbstractInterp implements Interp {
     protected static class State {
 
 	// some generic actors
-	Actor act_error = new Actor() {
-	    @Override
-	    public String action(AbstractInterp ai, char c) {
-		return "generic error";	// NOI18N
-	    } 
-	};
+	private static Actor ACT_ERROR = (AbstractInterp ai, char c) -> "generic error"; // NOI18N
 
 	public String name() {
 	    return name;
-	} 
+	}
 	private final String name;
 
 
-	class Action {
+        static class Action {
 	    public State new_state = null;
-	    public Actor actor = act_error;
+	    public Actor actor = ACT_ERROR;
 	};
 
 	private final Action action[] = new Action[128];
@@ -65,7 +62,7 @@ public abstract class AbstractInterp implements Interp {
 	public void setRegular(State new_state, Actor actor) {
 	    action_regular.actor = actor;
 	    action_regular.new_state = new_state;
-	} 
+	}
 
 	public void setAction(char c, State new_state, Actor actor) {
 	    if ((int) c > 127)
@@ -78,12 +75,12 @@ public abstract class AbstractInterp implements Interp {
 	    if ((int) c > 127)
 		return action_regular;
 	    return action[c];
-	} 
+	}
     };
 
     // Why make these be public and not protected?
     // Someone might inherit from us in a package other than org.netbeans
-    // and while the inherited Interp will see these if they are protected, 
+    // and while the inherited Interp will see these if they are protected,
     // the corresponding InterpType won't.
 
     /*
@@ -98,10 +95,10 @@ public abstract class AbstractInterp implements Interp {
 
     protected AbstractInterp(Ops ops) {
 	this.ops = ops;
-    } 
+    }
 
     public void reset() {
-    } 
+    }
 
     protected final void sendChars(KeyEvent e, String s) {
         e.consume();
@@ -117,9 +114,7 @@ public abstract class AbstractInterp implements Interp {
     private final String number[] = new String[MAX_NUMBERS];
 
     protected void resetNumber() {
-	for (int x = 0; x < MAX_NUMBERS; x++) {
-	    number[x] = "";
-	}
+	Arrays.setAll(number, i -> "");
 	numberx = 0;
     }
     protected void remember_digit(char c) {
@@ -146,4 +141,20 @@ public abstract class AbstractInterp implements Interp {
     protected int nNumbers() {
 	return numberx;
     }
-} 
+    protected List<Integer> numbers() {
+        int lastIndexToConsider = numberx;
+        if (!number[numberx].isEmpty()) {
+            lastIndexToConsider++;
+        }
+        return Arrays
+                .stream(number, 0, numberx + 1)
+                .map(s -> {
+                    try {
+                        return Integer.valueOf(s);
+                    } catch (NumberFormatException x) {
+                        return 0;
+                    }
+                })
+                .toList();
+    }
+}

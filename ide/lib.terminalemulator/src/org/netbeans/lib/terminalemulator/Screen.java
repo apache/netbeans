@@ -56,6 +56,7 @@ class Screen extends JComponent implements Accessible {
         if (DEBUG) {
             // Just turning our double buffering isn't enough, need to
             // turn it off everywhere.
+            @SuppressWarnings("LeakingThisInConstructor")
             RepaintManager repaintManager = RepaintManager.currentManager(this);
             repaintManager.setDoubleBufferingEnabled(false);
 
@@ -127,10 +128,10 @@ class Screen extends JComponent implements Accessible {
         if (original_fwd_keys == null) {
             original_fwd_keys = new java.util.HashSet<>();
             original_fwd_keys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,
-                    InputEvent.CTRL_MASK));
+                    InputEvent.CTRL_DOWN_MASK));
             original_bwd_keys = new java.util.HashSet<>();
             original_bwd_keys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB,
-                    InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+                    InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         }
 
         if (grabTab) {
@@ -187,7 +188,7 @@ class Screen extends JComponent implements Accessible {
         return accessible_context;
     }
 
-    protected class AccessibleScreenText implements AccessibleText {
+    private class AccessibleScreenText implements AccessibleText {
 
         AccessibleScreenText() {
         }
@@ -198,7 +199,7 @@ class Screen extends JComponent implements Accessible {
         }
 
         // cache for getCharacterAttribute
-        private int last_attr;
+        private Attr last_attr;
         private MutableAttributeSet last_as;
 
         @Override
@@ -208,10 +209,10 @@ class Screen extends JComponent implements Accessible {
                 return null;
             }
             BCoord b = c.toBCoord(term.firsta());
-            int attr;
+            Attr attr;
             try {
                 Line l = term.buf().lineAt(b.row);
-                int[] attrs = l.attrArray();
+                Attr[] attrs = l.attrArray();
                 attr = attrs[b.col];
             } catch (Exception x) {
                 return null;
@@ -223,14 +224,14 @@ class Screen extends JComponent implements Accessible {
 
             MutableAttributeSet as = new SimpleAttributeSet();
 
-            if (Attr.UNDERSCORE.isSet(attr)) {
+            if (attr.isUnderscore()) {
                 as.addAttribute(StyleConstants.Underline, Boolean.TRUE);
             }
-            if (Attr.BRIGHT.isSet(attr)) {
+            if (attr.isBright()) {
                 as.addAttribute(StyleConstants.Bold, Boolean.TRUE);
             }
 
-            boolean reverse = Attr.REVERSE.isSet(attr);
+            boolean reverse = attr.isReverse();
 
             Color color;
             color = term.foregroundColor(reverse, attr);
@@ -290,16 +291,19 @@ class Screen extends JComponent implements Accessible {
             Line l = term.buf().lineAt(b.row);
 
             switch (part) {
-                case CHARACTER:
+                case CHARACTER -> {
                     // return new String(l.charArray(), b.col, 1);
                     return String.valueOf(l.charAt(b.col));
-                case WORD:
+                }
+                case WORD -> {
                     BExtent bword = term.buf().find_word(term.getWordDelineator(), b);
                     Extent word = bword.toExtent(term.firsta());
                     return term.textWithin(word.begin, word.end);
-                case SENTENCE:
+                }
+                case SENTENCE -> {
                     // return new String(l.charArray());
                     return l.toString();
+                }
             }
             return null;
         }
@@ -344,7 +348,7 @@ class Screen extends JComponent implements Accessible {
         }
     }
 
-    protected class AccessibleScreen extends AccessibleJComponent {
+    private class AccessibleScreen extends AccessibleJComponent {
 
         @Override
         public String getAccessibleDescription() {

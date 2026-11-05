@@ -89,9 +89,9 @@ public class RegionManager {
 
         ActiveRegion endedRegion = region;
 
-	if (region.nested) {
+	if (region.isNested()) {
 	    region = parent;
-	    parent = region.parent;
+	    parent = region.parent();
 	} else {
 	    region = null;
 	}

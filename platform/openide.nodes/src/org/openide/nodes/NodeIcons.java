@@ -19,17 +19,14 @@
 package org.openide.nodes;
 
 import java.awt.Image;
-import java.awt.datatransfer.Transferable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.MissingResourceException;
 import org.openide.util.ImageUtilities;
 import org.openide.util.datatransfer.NewType;
 import org.openide.util.datatransfer.PasteType;
 
-final class NodeSupport {
+final class NodeIcons {
 
-    private NodeSupport() {}
+    private NodeIcons() {}
 
     /** messages to create a resource identification for each type of
     * icon from the base name for the icon.

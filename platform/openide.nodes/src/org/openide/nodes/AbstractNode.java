@@ -71,7 +71,7 @@ public class AbstractNode extends Node {
     private Action preferredAction;
 
     /** Resource base for icons (without suffix denoting right icon)  */
-    private String iconBase = NodeSupport.DEFAULT_ICON_BASE;
+    private String iconBase = NodeIcons.DEFAULT_ICON_BASE;
 
     /** Resource extension for icons  */
     private String iconExtension = ".png"; // NOI18N
@@ -181,7 +181,7 @@ public class AbstractNode extends Node {
     */
     @Deprecated
     public void setIconBase(String base) {
-        setIconBaseWithExtension(base, NodeSupport.LEGACY_DEFAULT_ICON_EXTENSION);
+        setIconBaseWithExtension(base, NodeIcons.LEGACY_DEFAULT_ICON_EXTENSION);
     }
 
     /** Change the icon.
@@ -242,7 +242,7 @@ public class AbstractNode extends Node {
     * @return icon to use to represent the bean
     */
     public Image getIcon(int type) {
-        return findIcon(type, NodeSupport.ICON_BASE);
+        return findIcon(type, NodeIcons.ICON_BASE);
     }
 
     /** Finds an icon for this node when opened. This icon should represent the node
@@ -252,7 +252,7 @@ public class AbstractNode extends Node {
     * @return icon to use to represent the bean when opened
     */
     public Image getOpenedIcon(int type) {
-        return findIcon(type, NodeSupport.OPENED_ICON_BASE);
+        return findIcon(type, NodeIcons.OPENED_ICON_BASE);
     }
 
     public HelpCtx getHelpCtx() {
@@ -260,7 +260,7 @@ public class AbstractNode extends Node {
     }
 
     private Image findIcon(int type, int ib) {
-        return NodeSupport.findIcon(iconBase, type, ib, iconExtension);
+        return NodeIcons.findIcon(iconBase, type, ib, iconExtension);
     }
 
     /** Can this node be renamed?
@@ -433,7 +433,7 @@ public class AbstractNode extends Node {
         List<PasteType> s = new LinkedList<PasteType>();
         createPasteTypes(t, s);
 
-        return s.toArray(NodeSupport.NO_PASTE_TYPES);
+        return s.toArray(NodeIcons.NO_PASTE_TYPES);
     }
 
     /** Default implementation that tries to delegate the implementation
@@ -458,7 +458,7 @@ public class AbstractNode extends Node {
     * @return new types
     */
     public NewType[] getNewTypes() {
-        return NodeSupport.NO_NEW_TYPES;
+        return NodeIcons.NO_NEW_TYPES;
     }
 
     /** Checks whether subclass overrides a method

@@ -51,55 +51,7 @@ import org.openide.util.Exceptions;
 *
 * @author Jaroslav Tulach */
 public class AbstractNode extends Node {
-    /** messages to create a resource identification for each type of
-    * icon from the base name for the icon.
-    */
-    private static final String[] icons = {
-        
-        // color 16x16
-        "", // NOI18N
 
-        // color 32x32
-        "32", // NOI18N
-
-        // mono 16x16
-        "", // NOI18N
-
-        // mono 32x32
-        "32", // NOI18N
-
-        // opened color 16x16
-        "Open", // NOI18N
-
-        // opened color 32x32
-        "Open32", // NOI18N
-
-        // opened mono 16x16
-        "Open", // NOI18N
-
-        // opened mono 32x32
-        "Open32" // NOI18N
-    };
-
-    /** To index normal icon from previous array use
-    *  + ICON_BASE.
-    */
-    private static final int ICON_BASE = -1;
-
-    /** for indexing opened icons */
-    private static final int OPENED_ICON_BASE = 3;
-
-    /** empty array of paste types */
-    private static final PasteType[] NO_PASTE_TYPES = {  };
-
-    /** empty array of new types */
-    private static final NewType[] NO_NEW_TYPES = {  };
-
-    /** default icon base for all nodes */
-    private static final String DEFAULT_ICON_BASE = "org/openide/nodes/defaultNode"; // NOI18N
-    private static final String DEFAULT_ICON_EXTENSION = ".gif"; // NOI18N
-    private static final String DEFAULT_ICON = DEFAULT_ICON_BASE + ".png"; // NOI18N
-    
     // maps class either to Boolean or to this
     private static final WeakHashMap<Class, Object> overridesGetDefaultAction = new WeakHashMap<Class, Object>(32);
 
@@ -119,7 +71,7 @@ public class AbstractNode extends Node {
     private Action preferredAction;
 
     /** Resource base for icons (without suffix denoting right icon)  */
-    private String iconBase = DEFAULT_ICON_BASE;
+    private String iconBase = NodeSupport.DEFAULT_ICON_BASE;
 
     /** Resource extension for icons  */
     private String iconExtension = ".png"; // NOI18N
@@ -229,7 +181,7 @@ public class AbstractNode extends Node {
     */
     @Deprecated
     public void setIconBase(String base) {
-        setIconBaseWithExtension(base, DEFAULT_ICON_EXTENSION);
+        setIconBaseWithExtension(base, NodeSupport.LEGACY_DEFAULT_ICON_EXTENSION);
     }
 
     /** Change the icon.
@@ -290,7 +242,7 @@ public class AbstractNode extends Node {
     * @return icon to use to represent the bean
     */
     public Image getIcon(int type) {
-        return findIcon(type, ICON_BASE);
+        return findIcon(type, NodeSupport.ICON_BASE);
     }
 
     /** Finds an icon for this node when opened. This icon should represent the node
@@ -300,51 +252,15 @@ public class AbstractNode extends Node {
     * @return icon to use to represent the bean when opened
     */
     public Image getOpenedIcon(int type) {
-        return findIcon(type, OPENED_ICON_BASE);
+        return findIcon(type, NodeSupport.OPENED_ICON_BASE);
     }
 
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    /** Tries to find the right icon for the iconbase.
-    * @param type type of icon (from BeanInfo constants)
-    * @param ib base where to scan in the array
-    */
     private Image findIcon(int type, int ib) {
-        String res = iconBase + icons[type + ib] + iconExtension;
-        Image im = ImageUtilities.loadImage(res, true);
-
-        if (im != null) {
-            return im;
-        }
-
-        // try the first icon
-        res = iconBase + icons[java.beans.BeanInfo.ICON_COLOR_16x16 + ib] + iconExtension;
-
-        im = ImageUtilities.loadImage(res, true);
-
-        if (im != null) {
-            return im;
-        }
-
-        if (ib == OPENED_ICON_BASE) {
-            // try closed icon also
-            return findIcon(type, ICON_BASE);
-        }
-
-        // if still not found return default icon
-        return getDefaultIcon();
-    }
-
-    Image getDefaultIcon() {
-        Image i = ImageUtilities.loadImage(DEFAULT_ICON, true);
-
-        if (i == null) {
-            throw new MissingResourceException("No default icon", "", DEFAULT_ICON); // NOI18N
-        }
-
-        return i;
+        return NodeSupport.findIcon(iconBase, type, ib, iconExtension);
     }
 
     /** Can this node be renamed?
@@ -517,7 +433,7 @@ public class AbstractNode extends Node {
         List<PasteType> s = new LinkedList<PasteType>();
         createPasteTypes(t, s);
 
-        return s.toArray(NO_PASTE_TYPES);
+        return s.toArray(NodeSupport.NO_PASTE_TYPES);
     }
 
     /** Default implementation that tries to delegate the implementation
@@ -542,7 +458,7 @@ public class AbstractNode extends Node {
     * @return new types
     */
     public NewType[] getNewTypes() {
-        return NO_NEW_TYPES;
+        return NodeSupport.NO_NEW_TYPES;
     }
 
     /** Checks whether subclass overrides a method

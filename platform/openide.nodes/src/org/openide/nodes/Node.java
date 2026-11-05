@@ -19,6 +19,7 @@
 
 package org.openide.nodes;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.beans.FeatureDescriptor;
@@ -33,8 +34,10 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,12 +89,19 @@ import org.openide.util.datatransfer.PasteType;
 *
 * @author Jaroslav Tulach,
 */
-public abstract class Node extends FeatureDescriptor implements Lookup.Provider, HelpCtx.Provider, EmptyNodeProvider {
+public abstract class Node extends FeatureDescriptor implements Lookup.Provider, HelpCtx.Provider {
 
     static {
         //hook for testing:
-        Logger.getLogger("org.openide.nodes.Node-init").log(Level.FINEST, "Initializing org.openide.nodes.Node"); //NOI18N
+        boolean doLog = false;
+        assert doLog = true;
+        if (doLog) {
+            Logger.getLogger("org.openide.nodes.Node-init").log(Level.FINEST, "Initializing org.openide.nodes.Node"); //NOI18N
+        }
     }
+
+    /** An empty leaf node. */
+    public static final Node EMPTY = new EmptyNode();
 
     /* here is list of property names that can be changed in the Node object.
     * These properties can be notified to the <CODE>NodeListener</CODE>.
@@ -1854,5 +1864,144 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
             return super.get();
         }
     }
+
+    private static final class EmptyNode extends Node {
+        private static final PropertySet[] NO_PROPERTY_SETS = new PropertySet[0];
+
+        private EmptyNode() {
+            super(Children.LEAF, null);
+
+            // Setting the name to non-null value for the node
+            // to return "reasonable" name and displayName
+            // not using this.setName since that throws
+            super.setName(""); // NOI18N
+        }
+
+        @Override
+        public Node cloneNode() {
+            return new FilterNode(this);
+        }
+
+        @Override
+        public void setName(String s) {
+            throw new UnsupportedOperationException("Setting name on Node.EMPTY is not allowed.");
+        }
+
+        @Override
+        public void setDisplayName(String s) {
+            throw new UnsupportedOperationException("Setting name on Node.EMPTY is not allowed.");
+        }
+
+        @Override
+        public void setShortDescription(String s) {
+            throw new UnsupportedOperationException("Setting name on Node.EMPTY is not allowed.");
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            return findIcon(type, NodeSupport.ICON_BASE);
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return findIcon(type, NodeSupport.OPENED_ICON_BASE);
+        }
+
+        private Image findIcon(int type, int ib) {
+            return NodeSupport.findIcon(NodeSupport.DEFAULT_ICON_BASE, type, ib, NodeSupport.DEFAULT_ICON_EXTENSION);
+        }
+
+        @Override
+        public HelpCtx getHelpCtx() {
+            return HelpCtx.DEFAULT_HELP;
+        }
+
+        @Override
+        public boolean canRename() {
+            return false;
+        }
+
+        @Override
+        public boolean canDestroy() {
+            return false;
+        }
+
+        @Override
+        public PropertySet[] getPropertySets() {
+            return NO_PROPERTY_SETS;
+        }
+
+        @Override
+        public Transferable clipboardCopy() throws IOException {
+            return NodeTransfer.transferable(this, NodeTransfer.CLIPBOARD_COPY);
+        }
+
+        @Override
+        public Transferable clipboardCut() throws IOException {
+            return NodeTransfer.transferable(this, NodeTransfer.CLIPBOARD_CUT);
+        }
+
+        @Override
+        public Transferable drag() throws IOException {
+            return clipboardCopy();
+        }
+
+        @Override
+        public boolean canCopy() {
+            return true;
+        }
+
+        @Override
+        public boolean canCut() {
+            return false;
+        }
+
+        private void createPasteTypes(Transferable t, List<PasteType> s) {
+            NodeTransfer.Paste p = NodeTransfer.findPaste(t);
+
+            if (p != null) {
+                // adds all its types into the set
+                s.addAll(Arrays.asList(p.types(this)));
+            }
+        }
+
+        @Override
+        public PasteType[] getPasteTypes(Transferable t) {
+            List<PasteType> s = new LinkedList<>();
+            createPasteTypes(t, s);
+
+            return s.toArray(NodeSupport.NO_PASTE_TYPES);
+        }
+
+        @Override
+        public PasteType getDropType(Transferable t, int action, int index) {
+            List<PasteType> s = new LinkedList<>();
+            createPasteTypes(t, s);
+
+            return s.isEmpty() ? null : s.get(0);
+        }
+
+        @Override
+        public NewType[] getNewTypes() {
+            return NodeSupport.NO_NEW_TYPES;
+        }
+
+        @Override
+        public boolean hasCustomizer() {
+            return false;
+        }
+
+        @Override
+        public java.awt.Component getCustomizer() {
+            return null;
+        }
+
+        @Override
+        public Handle getHandle() {
+            return DefaultHandle.createHandle(this);
+        }
+
+    }
+
 }
 

@@ -19,7 +19,6 @@
 package org.netbeans.modules.nativeexecution.util;
 
 import java.io.IOException;
-import java.security.acl.NotOwnerException;
 import java.util.Arrays;
 import junit.framework.Test;
 import org.junit.AfterClass;
@@ -38,6 +37,7 @@ import org.openide.util.Exceptions;
  *
  * @author ak119685
  */
+@SuppressWarnings("removal")
 public class SolarisPrivilegesSupportTest extends NativeExecutionBaseTestCase {
 
     public SolarisPrivilegesSupportTest(String name) {
@@ -85,13 +85,11 @@ public class SolarisPrivilegesSupportTest extends NativeExecutionBaseTestCase {
                 sps.requestPrivileges(Arrays.asList("dtrace_kernel"), true); // NOI18N
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
-            } catch (NotOwnerException ex) {
+            } catch (SolarisPrivilegesSupport.NotOwnerException ex) {
                 System.out.println(ex);
             }
             System.out.println(sps.getExecutionPrivileges());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (CancellationException ex) {
+        } catch (IOException | CancellationException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

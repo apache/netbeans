@@ -284,6 +284,9 @@ jobs:
         if: ${{ matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f platform/masterfs test
 
+      - name: platform/o.n.jdk.fallback
+        run: ant $OPTS -f platform/o.n.jdk.fallback test
+
       - name: Commit Validation tests
         run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 

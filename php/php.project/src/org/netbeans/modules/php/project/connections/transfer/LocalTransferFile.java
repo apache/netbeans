@@ -41,16 +41,29 @@ public final class LocalTransferFile extends TransferFile {
 
     LocalTransferFile(RemoteClientImplementation remoteClient, File file, TransferFile parent, boolean forceDirectory) {
         super(remoteClient, parent);
-        this.file = file;
-        this.forceDirectory = forceDirectory;
-
+        // The constructor is invoked with normalized files. On windows this
+        // means files passed through `getCanonicalFile`. This in turn implies
+        // the symlinks are resolved and if the resource is symlinked into the
+        // project this might lead to paths outside the project.
+        // One such example is composer (uses junctions and not symlinks).
+        // If this happens, the file needs to be resolved back into the local
+        // tree.
+        File relativizedFile = file;
         if (file == null) {
             throw new NullPointerException("Local file cannot be null");
         }
         String baseLocalDirectory = remoteClient.getBaseLocalDirectory();
         if (!file.getAbsolutePath().startsWith(baseLocalDirectory)) {
-            throw new IllegalArgumentException("File '" + file.getAbsolutePath() + "' must be underneath base directory '" + baseLocalDirectory + "'");
+            if (!remoteClient.isAncestorOfLocal(file)) {
+                throw new IllegalArgumentException("File '" + file.getAbsolutePath() + "' must be underneath base directory '" + baseLocalDirectory + "'");
+            }
+            String relativePath = remoteClient.getLocalRelativePath(file.getAbsolutePath());
+            relativizedFile = new File(new File(remoteClient.getBaseLocalDirectory()), relativePath);
         }
+
+        this.file = relativizedFile;
+        this.forceDirectory = forceDirectory;
+
         if (forceDirectory && file.isFile()) {
             throw new IllegalArgumentException("File '" + file.getAbsolutePath() + "' can't be forced as a directory since it is a file");
         }

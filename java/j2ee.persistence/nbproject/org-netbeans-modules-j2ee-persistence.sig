@@ -1510,7 +1510,7 @@ cons protected init()
 cons protected init(java.lang.String)
 meth public java.lang.String getDisplayName()
 meth public java.util.Map getDefaultVendorSpecificProperties()
-meth public java.util.Map getUnresolvedVendorSpecificProperties()
+meth public java.util.Map<String, String> getUnresolvedVendorSpecificProperties()
 supr org.netbeans.modules.j2ee.persistence.provider.Provider
 
 CLSS public org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException
@@ -1531,7 +1531,7 @@ meth protected boolean isJakartaNamespace()
 meth protected java.lang.String getVersion()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract java.util.Map getDefaultVendorSpecificProperties()
-meth public abstract java.util.Map getUnresolvedVendorSpecificProperties()
+meth public abstract java.util.Map<String, String> getUnresolvedVendorSpecificProperties()
 meth public boolean equals(java.lang.Object)
 meth public boolean isOnClassPath(org.netbeans.api.java.classpath.ClassPath)
 meth public final boolean supportsTableGeneration()

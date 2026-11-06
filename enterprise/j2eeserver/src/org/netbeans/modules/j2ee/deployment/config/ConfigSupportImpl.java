@@ -95,8 +95,8 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
     private static final String GENERIC_EXTENSION = ".dpf"; // NOI18N
     
     private String configurationPrimaryFileName = null;
-    private Map relativePaths = null;
-    private Map allRelativePaths = null;
+    private Map<String, String> relativePaths = null;
+    private Map<String, String> allRelativePaths = null;
     
     private final J2eeModuleProvider provider;
     private final J2eeModule j2eeModule;
@@ -944,11 +944,11 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         return provider;
     }
     
-    private Map getRelativePaths() {
+    private Map<String, String> getRelativePaths() {
         if (relativePaths != null) 
             return relativePaths;
         
-        relativePaths = new HashMap();
+        relativePaths = new HashMap<>();
         if (hasCustomSupport()) {
             String [] paths = server.getDeploymentPlanFiles(getModuleType());
             configurationPrimaryFileName = paths[0].substring(paths[0].lastIndexOf("/")+1);
@@ -959,11 +959,11 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         return relativePaths;
     }
     
-    private void collectData(Server server, Map map) {
+    private void collectData(Server server, Map<String, String> map) {
         if (!hasCustomSupport(server, getModuleType()))
             return;
         
-        String [] paths = server.getDeploymentPlanFiles(getModuleType());
+        String[] paths = server.getDeploymentPlanFiles(getModuleType());
         paths = (paths == null) ? new String[0] : paths;
         for (int i=0; i<paths.length; i++) {
             String name = paths[i].substring(paths[i].lastIndexOf("/")+1);
@@ -971,11 +971,11 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         }        
     }
     
-    private Map getAllRelativePaths() {
+    private Map<String, String> getAllRelativePaths() {
         if (allRelativePaths != null)
             return allRelativePaths;
         
-        allRelativePaths = new HashMap();
+        allRelativePaths = new HashMap<>();
         Collection servers = ServerRegistry.getInstance().getServers();
         for (Iterator i=servers.iterator(); i.hasNext();) {
             Server server = (Server) i.next();

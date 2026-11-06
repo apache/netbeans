@@ -372,6 +372,13 @@ public class PersistenceCfgProperties {
         //OpenJPA JPA 2.2 (initially just copy of 2.1)
         possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER2_2, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER2_1));
+        //OpenJPA JPA 3.0 (initially just copy of 2.1)
+        possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER3_0, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER3_0).putAll(possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER2_1));
+
+        //OpenJPA JPA 3.1 (initially just copy of 2.1)
+        possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER3_1, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER2_1));
         
         //DataNucleus JPA 1.0
         possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER1_0, new HashMap<String, String[]>());
@@ -673,7 +680,7 @@ public class PersistenceCfgProperties {
         ret.add(ProviderUtil.ECLIPSELINK_PROVIDER3_1);
         ret.add(ProviderUtil.HIBERNATE_PROVIDER2_2);
         ret.add(ProviderUtil.DATANUCLEUS_PROVIDER2_2);
-        ret.add(ProviderUtil.OPENJPA_PROVIDER2_2);
+        ret.add(ProviderUtil.OPENJPA_PROVIDER3_1);
         return ret;
     }
     

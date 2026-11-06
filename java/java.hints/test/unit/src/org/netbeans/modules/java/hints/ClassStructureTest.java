@@ -49,6 +49,55 @@ public class ClassStructureTest extends NbTestCase {
     }
 
     @Test
+    public void testFinalRecord() throws Exception {
+        HintTest.create()
+                .sourceLevel(17)
+                .input(
+                    """
+                    package test;
+                    public final record Test() {
+                    }
+                    """
+                )
+                .run(ClassStructure.class)
+                .findWarning("1:20-1:24:verifier:The record Test is declared final")
+                .applyFix("Remove final modifier from the Test type declaration")
+                .assertCompilable()
+                .assertOutput(
+                    """
+                    package test;
+                    public record Test() {
+                    }
+                    """
+                );
+    }
+/*
+    @Test
+    public void testFinalValueClass() throws Exception {
+        HintTest.create()
+                .sourceLevel(28)
+                .options("--enable-preview")
+                .input(
+                    """
+                    package test;
+                    public final value class Test {
+                    }
+                    """
+                )
+                .run(ClassStructure.class)
+                .findWarning("1:20-1:24:verifier:The value based class Test is declared final")
+                .applyFix("Remove final modifier from the Test type declaration")
+                .assertCompilable()
+                .assertOutput(
+                    """
+                    package test;
+                    public value class Test {
+                    }
+                    """
+                );
+    }
+*/
+    @Test
     public void testFinalClassSuppressed() throws Exception {
         HintTest
                 .create()

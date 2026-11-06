@@ -19,12 +19,25 @@
     under the License.
 
 -->
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 <apichanges>
     <apidefs>
         <apidef name="masterfs">MasterFileSystem API</apidef>
     </apidefs>
     <changes>
+        <change id="disable.hard.locks">
+            <api name="masterfs"/>
+            <summary>Adding ability to disable hard-locks as files</summary>
+            <version major="2" minor="91"/>
+            <date day="26" month="10" year="2026"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" source="compatible" deletion="no"/>
+            <description>
+                Adding an ability to disable hard-locks using files on the file system.
+                See <a href="@TOP@/architecture-summary.html#lookup-disable.LCK.files">the API usecase.</a>
+            </description>
+            <class package="org.netbeans.modules.masterfs.fileobjects" name="HardLockRegistry"/>
+        </change>
         <change id="image.for.files">
             <api name="masterfs"/>
             <summary>Split image handling into UI module</summary>

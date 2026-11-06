@@ -19,9 +19,10 @@
 package org.netbeans.modules.debugger.jpda.ui.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Comparator;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
@@ -80,6 +81,18 @@ public final class AddLogpointAction extends AbstractAction {
         lb.setSuspend(JPDABreakpoint.SUSPEND_NONE);
         lb.setPrintText(Bundle.MSG_LogpointAt("{className}", "{methodName}", "{lineNumber}", "{locals}"));
 
+        addOrReplaceBreakpoint(lb);
+    }
+
+    private static void addOrReplaceBreakpoint(LineBreakpoint lb) {
+        Comparator<Comparable<Object>> comp = Comparator.naturalOrder();
+        for (Breakpoint existing : DebuggerManager.getDebuggerManager().getBreakpoints()) {
+            if (lb instanceof Comparable c1 && existing instanceof Comparable c2) {
+                if (comp.compare(c1, c2) == 0) {
+                    DebuggerManager.getDebuggerManager().removeBreakpoint(existing);
+                }
+            }
+        }
         DebuggerManager.getDebuggerManager().addBreakpoint(lb);
     }
 }

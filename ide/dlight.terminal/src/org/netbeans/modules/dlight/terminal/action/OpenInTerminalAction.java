@@ -18,9 +18,13 @@
  */
 package org.netbeans.modules.dlight.terminal.action;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.dlight.api.terminal.TerminalSupport;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
@@ -69,6 +73,19 @@ public class OpenInTerminalAction extends NodeAction {
             FileObject fo = lookup.lookup(FileObject.class);
 
             final String path = (fo.isFolder()) ? fo.getPath() : fo.getParent().getPath();
+            
+            // temporary for testing purposes
+            try {
+                Project pr = ProjectManager.getDefault().findProject(fo);
+                ProjectUtils.getPreferences(pr, OpenInTerminalAction.class, false)
+                        .put("privatemsg", "time:"+System.currentTimeMillis());
+                ProjectUtils.getPreferences(pr, OpenInTerminalAction.class, true)
+                        .put("publicmsg", "time:"+System.currentTimeMillis());
+            } catch (IOException | IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            // end
+            
             ExecutionEnvironment env = null;
             try {
                 FileSystem fileSystem = fo.getFileSystem();

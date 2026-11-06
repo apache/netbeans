@@ -50,27 +50,28 @@ import org.openide.util.test.MockLookup;
  * @author Jesse Glick
  */
 public class ProjectManagerTest extends NbTestCase {
-    
+
     static {
         // For easier testing.
         TimedWeakReference.TIMEOUT = 1000;
     }
-    
+
     public ProjectManagerTest(String name) {
         super(name);
     }
-    
+
     private FileObject scratch;
     private FileObject goodproject;
     private FileObject goodproject2;
     private FileObject badproject;
     private FileObject mysteryproject;
+    private FileObject justADir;
     private ProjectManager pm;
 
     protected @Override Level logLevel() {
         return Level.FINE;
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -82,11 +83,12 @@ public class ProjectManagerTest extends NbTestCase {
         badproject = scratch.createFolder("bad");
         badproject.createFolder("testproject").createData("broken");
         mysteryproject = scratch.createFolder("mystery");
+        justADir = scratch.createFolder("justADir");
         MockLookup.setInstances(TestUtil.testProjectFactory());
         pm = ProjectManager.getDefault();
         NbProjectManagerAccessor.reset();
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         scratch = null;
@@ -96,7 +98,7 @@ public class ProjectManagerTest extends NbTestCase {
         pm = null;
         super.tearDown();
     }
-    
+
     public void testFindProject() throws Exception {
         Project p = null;
         CharSequence log = Log.enable("TIMER", Level.FINE);
@@ -126,7 +128,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("Repeated find calls should give same result", p, pm.findProject(goodproject));
         assertEquals("ProjectFactory was called only once on goodproject", 1, TestUtil.projectLoadCount(goodproject));
     }
-    
+
     public void testFindProjectGC() throws Exception {
         Project p = null;
         try {
@@ -157,7 +159,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("Correct project directory set again", goodproject, p.getProjectDirectory());
         assertEquals("ProjectFactory was called only once on new goodproject folder object", 1, TestUtil.projectLoadCount(goodproject));
     }
-    
+
     public void testFindProjectDoesNotCacheLoadErrors() throws Exception {
         Project p = null;
         try {
@@ -197,32 +199,32 @@ public class ProjectManagerTest extends NbTestCase {
             // Expected.
         }
     }
-    
+
     public void testIsProject() throws Exception {
         assertTrue("Should have recognized goodproject", pm.isProject(goodproject));
-        
+
         assertTrue("Should have recognized badproject", pm.isProject(badproject));
-        
+
         assertFalse("Should not have been able to load mysteryproject", pm.isProject(mysteryproject));
     }
-    
+
     public void testIsProject2() throws Exception {
         ProjectManager.Result r = pm.isProject2(goodproject);
         assertNotNull("Should have recognized goodproject", r);
         assertEquals(goodproject.getName(), r.getDisplayName());
         assertEquals(TestUtil.TEST_PROJECT_ICON, r.getIcon());
         assertEquals(TestUtil.TEST_PROJECT_TYPE, r.getProjectType());
-        
+
         ProjectManager.Result r2 = pm.isProject2(badproject);
         assertNotNull("Should have recognized badproject", r2);
         assertNull("Should not have a project name for badproject", r2.getDisplayName());
         assertEquals(TestUtil.TEST_PROJECT_ICON, r2.getIcon());
         assertNull("Should not have a project type for badproject", r2.getProjectType());
-        
+
         ProjectManager.Result r3 = pm.isProject2(mysteryproject);
         assertNull("Should not have been able to load mysteryproject", r3);
     }
-    
+
     public void testModify() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -239,7 +241,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertTrue("p1 is modified", pm.isModified(p1));
         assertTrue("and p2 is modified too", pm.isModified(p2));
     }
-    
+
     public void testSave() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -275,7 +277,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("p1 still only saved twice", 2, TestUtil.projectSaveCount(p1));
         assertEquals("p2 still only saved twice", 2, TestUtil.projectSaveCount(p2));
     }
-    
+
     public void testSaveError() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -328,7 +330,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("p1 was now saved twice", 2, TestUtil.projectSaveCount(p1));
         assertEquals("p2 was saved exactly once (by one or the other saveAllProjects)", 1, TestUtil.projectSaveCount(p2));
     }
-    
+
     public void testClearNonProjectCache() throws Exception {
         FileObject p1 = scratch.createFolder("p1");
         p1.createFolder("testproject");
@@ -359,55 +361,55 @@ public class ProjectManagerTest extends NbTestCase {
     public void testNotifyDeleted() throws Exception {
         FileObject p1 = scratch.createFolder("p1");
         FileObject p1TestProject = p1.createFolder("testproject");
-        
+
         Project project1 = pm.findProject(p1);
-        
+
         assertNotNull("project1 is recognized", project1);
         p1TestProject.delete();
         TestUtil.notifyDeleted(project1);
-        
+
         assertFalse("project1 is not valid", pm.isValid(project1));
         assertNull("project1 is deleted", pm.findProject(p1));
 
         FileObject p2 = scratch.createFolder("p2");
         FileObject p2TestProject = p2.createFolder("testproject");
-        
+
         Project project2 = pm.findProject(p2);
-        
+
         assertNotNull("project2 is recognized", project2);
         TestUtil.notifyDeleted(project2);
-        
+
         assertFalse("project2 is not valid", pm.isValid(project2));
-        
+
         Project project2b = pm.findProject(p2);
-        
+
         assertTrue("project2 is newly recognized", project2b != project2);
         assertNotNull("project2 is newly recognized", project2b);
 
         FileObject p3 = scratch.createFolder("p3");
         FileObject p3TestProject = p3.createFolder("testproject");
-        
+
         Project project3 = pm.findProject(p3);
-        
+
         assertNotNull("project3 is recognized", project3);
         TestUtil.modify(project3);
         assertTrue("project3 is modified", pm.isModified(project3));
         TestUtil.notifyDeleted(project3);
-        
+
         assertFalse("project3 is not valid", pm.isValid(project3));
-        
+
         assertFalse(pm.isModified(project3)); // please do not throw an exception here
-        
+
         FileObject p4 = scratch.createFolder("p4");
         FileObject p4TestProject = p4.createFolder("testproject");
 
         Project project4 = pm.findProject(p4);
-        
+
         assertNotNull("project4 is recognized", project4);
         TestUtil.notifyDeleted(project4);
-        
+
         assertFalse("project4 is not valid", pm.isValid(project3));
-        
+
         TestUtil.notifyDeleted(project4); // please do not throw an exception here
     }
 
@@ -445,7 +447,7 @@ public class ProjectManagerTest extends NbTestCase {
         TestUtil.notifyDeleted(project1);
         assertEquals(project2, pm.findProject(p2));
     }
-    
+
     /**
      * Helper method allowing to reset PM from other module's tests.
      * @param pm PM to reset

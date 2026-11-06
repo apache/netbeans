@@ -105,7 +105,7 @@ public class ElementTest extends TestCase {
         checkTranslation("\u0005", "\\u0005");
         checkTranslation("\u0006", "\\u0006");
         checkTranslation("\u0007", "\\u0007");
-        checkTranslation("\b",     "\\b");
+        checkTranslation("\b",     "\\u0008");
         checkTranslation("\t",     "\\t");
         checkTranslation("\n",     "\\n");
         checkTranslation("\u000b", "\\u000b");

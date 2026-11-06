@@ -69,7 +69,7 @@ import org.openide.util.RequestProcessor;
  * Implementation of LSP call hierarchy for the java Mime type.
  * @author sdedic
  */
-@MimeRegistration(mimeType = "text/x-java", service = CallHierarchyProvider.class)
+@MimeRegistration(mimeType = "text/x-java", service = CallHierarchyProvider.class, position = 1230)
 public class LspCallHierarchyProvider implements CallHierarchyProvider {
     private static final Logger LOG = Logger.getLogger(LspCallHierarchyProvider.class.getName());
     

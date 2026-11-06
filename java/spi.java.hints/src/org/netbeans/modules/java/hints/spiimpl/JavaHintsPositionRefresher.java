@@ -49,7 +49,7 @@ import org.openide.util.NbBundle;
  * Refreshes all Java Hints on current line upon Alt-Enter or mouseclick
  * @author Max Sauer
  */
-@MimeRegistration(mimeType="text/x-java", service=PositionRefresher.class)
+@MimeRegistration(mimeType = "text/x-java", service = PositionRefresher.class, position = 1000)
 public class JavaHintsPositionRefresher implements PositionRefresher {
 
     private static final Logger LOG = Logger.getLogger(JavaHintsPositionRefresher.class.getName());

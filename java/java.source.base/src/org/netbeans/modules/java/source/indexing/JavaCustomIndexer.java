@@ -1269,7 +1269,7 @@ public class JavaCustomIndexer extends CustomIndexer {
             return getIndexerName().hashCode();
         }
 
-        @MimeRegistration(mimeType="text/x-java", service=CustomIndexerFactory.class)
+        @MimeRegistration(mimeType = "text/x-java", service = CustomIndexerFactory.class, position = 1070)
         public static Factory register() {
             return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
         }

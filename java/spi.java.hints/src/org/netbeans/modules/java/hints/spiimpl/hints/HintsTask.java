@@ -183,7 +183,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=PositionRefresherHelper.class)
+    @MimeRegistration(mimeType = "text/x-java", service = PositionRefresherHelper.class, position = 1010)
     public static final class HintPositionRefresherHelper extends PositionRefresherHelper<DocumentVersion> {
 
         public HintPositionRefresherHelper() {
@@ -213,7 +213,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=PositionRefresherHelper.class)
+    @MimeRegistration(mimeType = "text/x-java", service = PositionRefresherHelper.class, position = 1020)
     public static final class SuggestionsPositionRefresherHelper extends PositionRefresherHelper<SuggestionsDocumentVersion> {
 
         public SuggestionsPositionRefresherHelper() {

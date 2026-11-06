@@ -126,7 +126,7 @@ public abstract class HintsSettings {
             NbPreferences.root().node(PREFERENCES_LOCATION).node(DEFAULT_PROFILE), true, null
     );
     
-    @MimeRegistration(mimeType="text/x-java", service=GlobalHintPreferencesProvider.class)
+    @MimeRegistration(mimeType = "text/x-java", service = GlobalHintPreferencesProvider.class, position = 1030)
     public static class GlobalSettingsProvider implements GlobalHintPreferencesProvider {
 
         @Override

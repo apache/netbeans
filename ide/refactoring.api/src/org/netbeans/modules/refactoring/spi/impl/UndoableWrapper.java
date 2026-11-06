@@ -43,7 +43,7 @@ import org.openide.util.Exceptions;
  *
  * @author Jan Becicka
  */
-@MimeRegistration(mimeType="", service=UndoableEditWrapper.class)
+@MimeRegistration(mimeType = "", service = UndoableEditWrapper.class, position = 1270)
 public class UndoableWrapper implements UndoableEditWrapper {
 
     private AtomicBoolean active = new AtomicBoolean();

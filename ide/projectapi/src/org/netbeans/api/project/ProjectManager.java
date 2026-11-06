@@ -29,9 +29,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.projectapi.SPIAccessor;
 import org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation;
-import org.netbeans.spi.project.FileOwnerQueryImplementation;
-import org.netbeans.spi.project.ProjectFactory;
-import org.netbeans.spi.project.ProjectManagerImplementation;
+import org.netbeans.spi.project.*;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
@@ -141,8 +139,35 @@ public final class ProjectManager {
         }
         return impl.findProject(projectDirectory);
     }
-        
-    
+
+    /**
+     * Finds the project for the given directory or, if there is none,
+     * asks the registered {@link DirectoryProjectProvider}s to create one.
+     * This first calls {@link #findProject} and returns its result when the
+     * directory already is a project; otherwise the first
+     * {@link DirectoryProjectProvider} able to promote the directory wins.
+     * @param projectDirectory the project top directory
+     * @return the project found or created, or null if the directory is not
+     *         a project and no provider could create one
+     * @throws IOException if a project could not be determined
+     * @throws IllegalArgumentException if the supplied file object is null or not a folder
+     * @since 1.107
+     */
+    @CheckForNull
+    public Project findOrCreateDirProject(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException {
+        Project existing = findProject(projectDirectory);
+        if (existing != null) {
+            return existing;
+        }
+        for (DirectoryProjectProvider provider : Lookup.getDefault().lookupAll(DirectoryProjectProvider.class)) {
+            Project project = provider.createProject(projectDirectory);
+            if (project != null) {
+                return project;
+            }
+        }
+        return null;
+    }
+
     /**
      * Check whether a given directory is likely to contain a project without
      * actually loading it.

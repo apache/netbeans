@@ -57,14 +57,11 @@ import static org.netbeans.modules.maven.hints.pom.Bundle.*;
  * @author mbien
  */
 @NbBundle.Messages({
-    "TIT_UseReleaseVersionHint=Convert matching source/target javac options to the release option.",
-    "DESC_UseReleaseVersionHint=Matching source/target options can be replaced with a single release option (JEP 247). This enforces API compatibility with the chosen Java release.",
-    "FIX_UseReleaseVersionHint=Convert to release option for strict compatibility checks."})
+    "TIT_UseReleaseVersionHint=Convert matching source/target (or testSource/testTarget) javac options to the release (or testRelease) option.",
+    "DESC_UseReleaseVersionHint=Matching source/target (or testSource/testTarget) options can be replaced with a single release (or testRelease= option (JEP 247). This enforces API compatibility with the chosen Java release.",
+    "# {0} - option name (e.g. release or testRelease)",
+    "FIX_UseReleaseVersionHint=Convert to {0} option for strict compatibility checks."})
 public class UseReleaseOptionHint implements POMErrorFixProvider {
-
-    private static final String TARGET_TAG = "target";
-    private static final String SOURCE_TAG = "source";
-    private static final String RELEASE_TAG = "release";
 
     // min compiler plugin version for release option support
     private static final ComparableVersion COMPILER_PLUGIN_VERSION = new ComparableVersion("3.6.0");
@@ -138,11 +135,17 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     }
 
     private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent) {
-
         if (parent == null) {
             return List.of();
         }
+        List<ErrorDescription> hints = new ArrayList<>();
+        for (TagGroup tagGroup : TagGroup.values()) {
+            hints.addAll(createHintsForParent(prefix, parent, tagGroup));
+        }
+        return hints;
+    }
 
+    private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent, TagGroup tagGroup) {
         int source;
         int target;
 
@@ -150,13 +153,13 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         String release = null;
 
         try {
-            String sourceText = parent.getChildElementText(POMQName.createQName(prefix+SOURCE_TAG, true));
+            String sourceText = parent.getChildElementText(POMQName.createQName(prefix+tagGroup.sourceTag, true));
             if (PomModelUtils.isPropertyExpression(sourceText)) {
                 release = sourceText;
                 sourceText = PomModelUtils.getProperty(parent.getModel(), sourceText);
             }
 
-            String targetText = parent.getChildElementText(POMQName.createQName(prefix+TARGET_TAG, true));
+            String targetText = parent.getChildElementText(POMQName.createQName(prefix+tagGroup.targetTag, true));
             if (PomModelUtils.isPropertyExpression(targetText)) {
                 release = targetText;
                 targetText = PomModelUtils.getProperty(parent.getModel(), targetText);
@@ -176,8 +179,8 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             List<ErrorDescription> hints = new ArrayList<>();
             for (POMComponent prop : parent.getChildren()) {
                 String name = prop.getPeer().getNodeName();
-                if (name.equals(prefix+SOURCE_TAG) || name.equals(prefix+TARGET_TAG)) {
-                    hints.add(createHintForComponent(prefix, prop, parent.getModel(), release));
+                if (name.equals(prefix+tagGroup.sourceTag) || name.equals(prefix+tagGroup.targetTag)) {
+                    hints.add(createHintForComponent(prefix, prop, parent.getModel(), release, tagGroup));
                 }
             }
             return hints;
@@ -185,10 +188,10 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         return List.of();
     }
 
-    private ErrorDescription createHintForComponent(String prefix, POMComponent component, POMModel model, String release) {
+    private ErrorDescription createHintForComponent(String prefix, POMComponent component, POMModel model, String release, TagGroup tagGroup) {
         Line line = NbEditorUtilities.getLine(model.getBaseDocument(), component.findPosition(), false);
-        List<Fix> fix = List.of(new ConvertToReleaseOptionFix(prefix, release, component));
-        return ErrorDescriptionFactory.createErrorDescription(Severity.HINT, FIX_UseReleaseVersionHint(), fix, model.getBaseDocument(), line.getLineNumber()+1);
+        List<Fix> fix = List.of(new ConvertToReleaseOptionFix(prefix, release, component, tagGroup));
+        return ErrorDescriptionFactory.createErrorDescription(Severity.HINT, FIX_UseReleaseVersionHint(tagGroup.releaseTag), fix, model.getBaseDocument(), line.getLineNumber()+1);
     }
 
     /**
@@ -207,11 +210,13 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         private final String prefix;
         private final String release;
         private final POMComponent component;
+        private final TagGroup tagGroup;
 
-        private ConvertToReleaseOptionFix(String prefix, String release, POMComponent component) {
+        private ConvertToReleaseOptionFix(String prefix, String release, POMComponent component, TagGroup tagGroup) {
             this.prefix = prefix;
             this.component = component;
             this.release = release;
+            this.tagGroup = tagGroup;
         }
 
         @Override
@@ -222,11 +227,11 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
                 POMComponent parent = component.getParent();
                 for (POMComponent child : parent.getChildren()) {
                     String name = child.getPeer().getNodeName();
-                    if (name.equals(prefix+SOURCE_TAG) || name.equals(prefix+TARGET_TAG) || name.equals(prefix+RELEASE_TAG)) {
+                    if (name.equals(prefix+tagGroup.sourceTag) || name.equals(prefix+tagGroup.targetTag) || name.equals(prefix+tagGroup.releaseTag)) {
                         parent.removeExtensibilityElement((POMExtensibilityElement) child);
                     }
                 }
-                POMExtensibilityElement element = model.getFactory().createPOMExtensibilityElement(QName.valueOf(prefix+RELEASE_TAG));
+                POMExtensibilityElement element = model.getFactory().createPOMExtensibilityElement(QName.valueOf(prefix+tagGroup.releaseTag));
                 element.setElementText(release);
                 parent.addExtensibilityElement(element);
             });
@@ -235,7 +240,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
 
         @Override
         public String getText() {
-            return FIX_UseReleaseVersionHint();
+            return FIX_UseReleaseVersionHint(tagGroup.releaseTag);
         }
 
     }
@@ -256,6 +261,21 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     @Override
     public JComponent getCustomizer(Preferences preferences) {
         return null;
+    }
+
+    private enum TagGroup {
+        STANDARD("source", "target", "release"),
+        TEST("testSource", "testTarget", "testRelease");
+
+        private final String sourceTag;
+        private final String targetTag;
+        private final String releaseTag;
+
+        private TagGroup(String sourceTag, String targetTag, String releaseTag) {
+            this.sourceTag = sourceTag;
+            this.targetTag = targetTag;
+            this.releaseTag = releaseTag;
+        }
     }
 
 }

@@ -64,14 +64,7 @@ public final class ComplexValueSettingsFactory {
     
     private static final Acceptor xmlIdentifierAcceptor = new Acceptor() {
         public boolean accept(char ch) {
-            switch (ch) {
-                case ' ': case '\t': case '\n': case '\r':          //NOI18N WS
-                case '>': case '<': case '&': case '\'': case '"': case '/': //NOI18N
-                case '\\': //NOI18N markup
-                    return false;
-            }
-
-            return true;
+            return Character.isJavaIdentifierPart(ch);
         }
     };
 

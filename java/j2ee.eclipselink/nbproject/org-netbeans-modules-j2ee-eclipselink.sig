@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65
+#Version 1.66
 
 CLSS public java.beans.PropertyChangeEvent
 cons public init(java.lang.Object,java.lang.String,java.lang.Object,java.lang.Object)

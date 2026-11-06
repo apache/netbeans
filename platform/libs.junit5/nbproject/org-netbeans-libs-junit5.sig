@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.30
+#Version 1.31
 
 CLSS public abstract interface java.io.Serializable
 
@@ -426,7 +426,7 @@ supr java.lang.Object
 
 CLSS public abstract interface static org.junit.jupiter.api.Assertions$TimeoutFailureFactory<%0 extends java.lang.Throwable>
  outer org.junit.jupiter.api.Assertions
-meth public abstract {org.junit.jupiter.api.Assertions$TimeoutFailureFactory%0} createTimeoutFailure(java.time.Duration,java.util.function.Supplier<java.lang.String>,java.lang.Throwable)
+meth public abstract {org.junit.jupiter.api.Assertions$TimeoutFailureFactory%0} createTimeoutFailure(java.time.Duration,java.util.function.Supplier<java.lang.String>,java.lang.Throwable,java.lang.Thread)
 
 CLSS public final org.junit.jupiter.api.AssertionsKt
 meth public !varargs final static void assertAll(java.lang.String,kotlin.jvm.functions.Function0<kotlin.Unit>[])
@@ -444,13 +444,20 @@ meth public final static <%0 extends java.lang.Object> {%%0} assertTimeoutPreemp
 meth public final static java.lang.Void fail(java.lang.String,java.lang.Throwable)
 meth public final static java.lang.Void fail(java.lang.Throwable)
 meth public final static java.lang.Void fail(kotlin.jvm.functions.Function0<java.lang.String>)
+meth public final static java.lang.Void fail_nonNullableLambda(kotlin.jvm.functions.Function0<java.lang.String>)
 meth public final static void assertAll(java.lang.String,java.util.Collection<? extends kotlin.jvm.functions.Function0<kotlin.Unit>>)
 meth public final static void assertAll(java.lang.String,java.util.stream.Stream<kotlin.jvm.functions.Function0<kotlin.Unit>>)
 meth public final static void assertAll(java.util.Collection<? extends kotlin.jvm.functions.Function0<kotlin.Unit>>)
 meth public final static void assertAll(java.util.stream.Stream<kotlin.jvm.functions.Function0<kotlin.Unit>>)
+meth public final static void assertNotNull(java.lang.Object)
+meth public final static void assertNotNull(java.lang.Object,java.lang.String)
+meth public final static void assertNotNull(java.lang.Object,kotlin.jvm.functions.Function0<java.lang.String>)
+meth public final static void assertNull(java.lang.Object)
+meth public final static void assertNull(java.lang.Object,java.lang.String)
+meth public final static void assertNull(java.lang.Object,kotlin.jvm.functions.Function0<java.lang.String>)
 supr java.lang.Object
 
-CLSS public final static org.junit.jupiter.api.AssertionsKt$assertDoesNotThrow$1
+CLSS public final static org.junit.jupiter.api.AssertionsKt$assertDoesNotThrow$3
 
 CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$1
 cons public init(java.lang.Throwable)
@@ -460,14 +467,14 @@ supr java.lang.Object
 
 CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$2
 
-CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$3
+CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$4
 cons public init(java.lang.Throwable)
 intf org.junit.jupiter.api.function.Executable
 meth public final void execute()
 supr java.lang.Object
 
 CLSS public final static org.junit.jupiter.api.AssertionsKt$evaluateAndWrap$1<%0 extends java.lang.Object>
-cons public init(java.lang.Object)
+cons public init({?R})
 intf org.junit.jupiter.api.function.ThrowingSupplier
 meth public final {?R} get()
 supr java.lang.Object
@@ -475,10 +482,10 @@ supr java.lang.Object
 CLSS public final static org.junit.jupiter.api.AssertionsKt$evaluateAndWrap$2<%0 extends java.lang.Object>
 cons public init(java.lang.Throwable)
 intf org.junit.jupiter.api.function.ThrowingSupplier
-meth public final java.lang.Void get()
+meth public final {?R} get()
 supr java.lang.Object
 
-CLSS public final org.junit.jupiter.api.AssertionsKt$sam$i$java_util_function_Supplier$0
+CLSS public final static org.junit.jupiter.api.AssertionsKt$sam$i$java_util_function_Supplier$0
 cons public init(kotlin.jvm.functions.Function0)
 intf java.util.function.Supplier
 supr java.lang.Object
@@ -503,6 +510,13 @@ meth public static void assumeTrue(java.util.function.BooleanSupplier,java.util.
 meth public static void assumingThat(boolean,org.junit.jupiter.api.function.Executable)
 meth public static void assumingThat(java.util.function.BooleanSupplier,org.junit.jupiter.api.function.Executable)
 supr java.lang.Object
+
+CLSS public abstract interface !annotation org.junit.jupiter.api.AutoClose
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.BeforeAll
  anno 0 java.lang.annotation.Documented()
@@ -567,6 +581,13 @@ CLSS public abstract interface org.junit.jupiter.api.ClassOrdererContext
 meth public abstract java.util.List<? extends org.junit.jupiter.api.ClassDescriptor> getClassDescriptors()
 meth public abstract java.util.Optional<java.lang.String> getConfigurationParameter(java.lang.String)
 
+CLSS public abstract interface !annotation org.junit.jupiter.api.ClassTemplate
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract interface !annotation org.junit.jupiter.api.Disabled
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -596,34 +617,46 @@ innr public static ReplaceUnderscores
 innr public static Simple
 innr public static Standard
 meth public abstract java.lang.String generateDisplayNameForClass(java.lang.Class<?>)
-meth public abstract java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
-meth public abstract java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?>)
+meth public java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String generateDisplayNameForMethod(java.util.List<java.lang.Class<?>>,java.lang.Class<?>,java.lang.reflect.Method)
+meth public java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String generateDisplayNameForNestedClass(java.util.List<java.lang.Class<?>>,java.lang.Class<?>)
 meth public static java.lang.String parameterTypesAsString(java.lang.reflect.Method)
 meth public static org.junit.jupiter.api.DisplayNameGenerator getDisplayNameGenerator(java.lang.Class<?>)
 
 CLSS public static org.junit.jupiter.api.DisplayNameGenerator$IndicativeSentences
  outer org.junit.jupiter.api.DisplayNameGenerator
 cons public init()
+innr public abstract interface static !annotation SentenceFragment
 intf org.junit.jupiter.api.DisplayNameGenerator
 meth public java.lang.String generateDisplayNameForClass(java.lang.Class<?>)
-meth public java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
-meth public java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?>)
+meth public java.lang.String generateDisplayNameForMethod(java.util.List<java.lang.Class<?>>,java.lang.Class<?>,java.lang.reflect.Method)
+meth public java.lang.String generateDisplayNameForNestedClass(java.util.List<java.lang.Class<?>>,java.lang.Class<?>)
 supr java.lang.Object
-hfds INSTANCE
+hfds INSTANCE,notIndicativeSentences
+
+CLSS public abstract interface static !annotation org.junit.jupiter.api.DisplayNameGenerator$IndicativeSentences$SentenceFragment
+ outer org.junit.jupiter.api.DisplayNameGenerator$IndicativeSentences
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
 
 CLSS public static org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores
  outer org.junit.jupiter.api.DisplayNameGenerator
 cons public init()
 meth public java.lang.String generateDisplayNameForClass(java.lang.Class<?>)
-meth public java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
-meth public java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?>)
+meth public java.lang.String generateDisplayNameForMethod(java.util.List<java.lang.Class<?>>,java.lang.Class<?>,java.lang.reflect.Method)
+meth public java.lang.String generateDisplayNameForNestedClass(java.util.List<java.lang.Class<?>>,java.lang.Class<?>)
 supr org.junit.jupiter.api.DisplayNameGenerator$Simple
 hfds INSTANCE
 
 CLSS public static org.junit.jupiter.api.DisplayNameGenerator$Simple
  outer org.junit.jupiter.api.DisplayNameGenerator
 cons public init()
-meth public java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
+meth public java.lang.String generateDisplayNameForMethod(java.util.List<java.lang.Class<?>>,java.lang.Class<?>,java.lang.reflect.Method)
 supr org.junit.jupiter.api.DisplayNameGenerator$Standard
 hfds INSTANCE
 
@@ -632,8 +665,8 @@ CLSS public static org.junit.jupiter.api.DisplayNameGenerator$Standard
 cons public init()
 intf org.junit.jupiter.api.DisplayNameGenerator
 meth public java.lang.String generateDisplayNameForClass(java.lang.Class<?>)
-meth public java.lang.String generateDisplayNameForMethod(java.lang.Class<?>,java.lang.reflect.Method)
-meth public java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?>)
+meth public java.lang.String generateDisplayNameForMethod(java.util.List<java.lang.Class<?>>,java.lang.Class<?>,java.lang.reflect.Method)
+meth public java.lang.String generateDisplayNameForNestedClass(java.util.List<java.lang.Class<?>>,java.lang.Class<?>)
 supr java.lang.Object
 hfds INSTANCE
 
@@ -658,6 +691,8 @@ meth public static <%0 extends java.lang.Object> java.util.stream.Stream<org.jun
 meth public static <%0 extends java.lang.Object> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.Iterator<{%%0}>,java.util.function.Function<? super {%%0},java.lang.String>,org.junit.jupiter.api.function.ThrowingConsumer<? super {%%0}>)
 meth public static <%0 extends java.lang.Object> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.stream.Stream<? extends org.junit.jupiter.api.Named<{%%0}>>,org.junit.jupiter.api.function.ThrowingConsumer<? super {%%0}>)
 meth public static <%0 extends java.lang.Object> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.stream.Stream<{%%0}>,java.util.function.Function<? super {%%0},java.lang.String>,org.junit.jupiter.api.function.ThrowingConsumer<? super {%%0}>)
+meth public static <%0 extends org.junit.jupiter.api.Named<{%%1}>, %1 extends org.junit.jupiter.api.function.Executable> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.Iterator<? extends {%%0}>)
+meth public static <%0 extends org.junit.jupiter.api.Named<{%%1}>, %1 extends org.junit.jupiter.api.function.Executable> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.stream.Stream<? extends {%%0}>)
 meth public static org.junit.jupiter.api.DynamicTest dynamicTest(java.lang.String,java.net.URI,org.junit.jupiter.api.function.Executable)
 meth public static org.junit.jupiter.api.DynamicTest dynamicTest(java.lang.String,org.junit.jupiter.api.function.Executable)
 supr org.junit.jupiter.api.DynamicNode
@@ -674,6 +709,24 @@ fld public final static java.lang.String DEFAULT_SEPARATOR = ", "
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<? extends org.junit.jupiter.api.DisplayNameGenerator> generator()
 meth public abstract !hasdefault java.lang.String separator()
+
+CLSS public org.junit.jupiter.api.MediaType
+cons protected init(java.lang.String)
+cons protected init(java.lang.String,java.lang.String,java.nio.charset.Charset)
+fld public final static org.junit.jupiter.api.MediaType APPLICATION_JSON
+fld public final static org.junit.jupiter.api.MediaType APPLICATION_OCTET_STREAM
+fld public final static org.junit.jupiter.api.MediaType IMAGE_JPEG
+fld public final static org.junit.jupiter.api.MediaType IMAGE_PNG
+fld public final static org.junit.jupiter.api.MediaType TEXT_PLAIN
+fld public final static org.junit.jupiter.api.MediaType TEXT_PLAIN_UTF_8
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
+meth public final java.lang.String toString()
+meth public static org.junit.jupiter.api.MediaType create(java.lang.String,java.lang.String)
+meth public static org.junit.jupiter.api.MediaType create(java.lang.String,java.lang.String,java.nio.charset.Charset)
+meth public static org.junit.jupiter.api.MediaType parse(java.lang.String)
+supr java.lang.Object
+hfds PATTERN,value
 
 CLSS public abstract interface org.junit.jupiter.api.MethodDescriptor
 meth public abstract <%0 extends java.lang.annotation.Annotation> java.util.List<{%%0}> findRepeatableAnnotations(java.lang.Class<{%%0}>)
@@ -740,6 +793,13 @@ meth public abstract java.lang.String getName()
 meth public abstract {org.junit.jupiter.api.Named%0} getPayload()
 meth public static <%0 extends java.lang.Object> org.junit.jupiter.api.Named<{%%0}> named(java.lang.String,{%%0})
 meth public static <%0 extends java.lang.Object> org.junit.jupiter.api.Named<{%%0}> of(java.lang.String,{%%0})
+
+CLSS public abstract interface org.junit.jupiter.api.NamedExecutable
+ anno 0 java.lang.FunctionalInterface()
+intf org.junit.jupiter.api.Named<org.junit.jupiter.api.function.Executable>
+intf org.junit.jupiter.api.function.Executable
+meth public java.lang.String getName()
+meth public org.junit.jupiter.api.function.Executable getPayload()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.Nested
  anno 0 java.lang.annotation.Documented()
@@ -848,8 +908,16 @@ meth public abstract java.lang.Class<? extends org.junit.jupiter.api.MethodOrder
 CLSS public abstract interface org.junit.jupiter.api.TestReporter
  anno 0 java.lang.FunctionalInterface()
 meth public abstract void publishEntry(java.util.Map<java.lang.String,java.lang.String>)
+meth public void publishDirectory(java.lang.String,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
+meth public void publishDirectory(java.nio.file.Path)
 meth public void publishEntry(java.lang.String)
 meth public void publishEntry(java.lang.String,java.lang.String)
+meth public void publishFile(java.lang.String,org.junit.jupiter.api.MediaType,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
+meth public void publishFile(java.lang.String,org.junit.jupiter.api.extension.MediaType,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
+ anno 0 java.lang.Deprecated()
+meth public void publishFile(java.nio.file.Path,org.junit.jupiter.api.MediaType)
+meth public void publishFile(java.nio.file.Path,org.junit.jupiter.api.extension.MediaType)
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.TestTemplate
  anno 0 java.lang.annotation.Documented()
@@ -895,6 +963,8 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int maxVersion()
+meth public abstract !hasdefault int minVersion()
 meth public abstract !hasdefault java.lang.String disabledReason()
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE min()
@@ -957,8 +1027,9 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledOnJreCondition])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int[] versions()
 meth public abstract !hasdefault java.lang.String disabledReason()
-meth public abstract org.junit.jupiter.api.condition.JRE[] value()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE[] value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledOnOs
  anno 0 java.lang.annotation.Documented()
@@ -976,6 +1047,8 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int maxVersion()
+meth public abstract !hasdefault int minVersion()
 meth public abstract !hasdefault java.lang.String disabledReason()
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE min()
@@ -1038,8 +1111,9 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledOnJreCondition])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int[] versions()
 meth public abstract !hasdefault java.lang.String disabledReason()
-meth public abstract org.junit.jupiter.api.condition.JRE[] value()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE[] value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledOnOs
  anno 0 java.lang.annotation.Documented()
@@ -1065,15 +1139,25 @@ fld public final static org.junit.jupiter.api.condition.JRE JAVA_19
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_20
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_21
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_22
+fld public final static org.junit.jupiter.api.condition.JRE JAVA_23
+fld public final static org.junit.jupiter.api.condition.JRE JAVA_24
+fld public final static org.junit.jupiter.api.condition.JRE JAVA_25
+fld public final static org.junit.jupiter.api.condition.JRE JAVA_26
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_8
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_9
 fld public final static org.junit.jupiter.api.condition.JRE OTHER
+fld public final static org.junit.jupiter.api.condition.JRE UNDEFINED
 meth public boolean isCurrentVersion()
+meth public int version()
+meth public static boolean isCurrentVersion(int)
+meth public static int currentVersionNumber()
+meth public static org.junit.jupiter.api.condition.JRE currentJre()
 meth public static org.junit.jupiter.api.condition.JRE currentVersion()
+ anno 0 java.lang.Deprecated()
 meth public static org.junit.jupiter.api.condition.JRE valueOf(java.lang.String)
 meth public static org.junit.jupiter.api.condition.JRE[] values()
 supr java.lang.Enum<org.junit.jupiter.api.condition.JRE>
-hfds CURRENT_VERSION,logger
+hfds CURRENT_JRE,CURRENT_VERSION,MINIMUM_VERSION,UNDEFINED_VERSION,logger,version
 
 CLSS public final !enum org.junit.jupiter.api.condition.OS
 fld public final static org.junit.jupiter.api.condition.OS AIX
@@ -1096,6 +1180,11 @@ CLSS public abstract interface org.junit.jupiter.api.extension.AfterAllCallback
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void afterAll(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
+CLSS public abstract interface org.junit.jupiter.api.extension.AfterClassTemplateInvocationCallback
+ anno 0 java.lang.FunctionalInterface()
+intf org.junit.jupiter.api.extension.Extension
+meth public abstract void afterClassTemplateInvocation(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+
 CLSS public abstract interface org.junit.jupiter.api.extension.AfterEachCallback
  anno 0 java.lang.FunctionalInterface()
 intf org.junit.jupiter.api.extension.Extension
@@ -1117,6 +1206,11 @@ CLSS public abstract interface org.junit.jupiter.api.extension.BeforeAllCallback
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void beforeAll(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
+CLSS public abstract interface org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback
+ anno 0 java.lang.FunctionalInterface()
+intf org.junit.jupiter.api.extension.Extension
+meth public abstract void beforeClassTemplateInvocation(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+
 CLSS public abstract interface org.junit.jupiter.api.extension.BeforeEachCallback
  anno 0 java.lang.FunctionalInterface()
 intf org.junit.jupiter.api.extension.Extension
@@ -1126,6 +1220,24 @@ CLSS public abstract interface org.junit.jupiter.api.extension.BeforeTestExecuti
  anno 0 java.lang.FunctionalInterface()
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void beforeTestExecution(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+
+CLSS public abstract interface org.junit.jupiter.api.extension.ClassTemplateInvocationContext
+meth public java.lang.String getDisplayName(int)
+meth public java.util.List<org.junit.jupiter.api.extension.Extension> getAdditionalExtensions()
+meth public void prepareInvocation(org.junit.jupiter.api.extension.ExtensionContext)
+
+CLSS public abstract interface org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider
+intf org.junit.jupiter.api.extension.Extension
+meth public abstract boolean supportsClassTemplate(org.junit.jupiter.api.extension.ExtensionContext)
+meth public abstract java.util.stream.Stream<? extends org.junit.jupiter.api.extension.ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)
+meth public boolean mayReturnZeroClassTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)
+
+CLSS public abstract interface !annotation org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> classTemplateAnnotation()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> lifecycleMethodAnnotation()
 
 CLSS public org.junit.jupiter.api.extension.ConditionEvaluationResult
 meth public boolean isDisabled()
@@ -1167,10 +1279,12 @@ hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ExtensionContext
 innr public abstract interface static Store
+innr public final static !enum StoreScope
 innr public static Namespace
 meth public abstract <%0 extends java.lang.Object> java.util.Optional<{%%0}> getConfigurationParameter(java.lang.String,java.util.function.Function<java.lang.String,{%%0}>)
 meth public abstract java.lang.String getDisplayName()
 meth public abstract java.lang.String getUniqueId()
+meth public abstract java.util.List<java.lang.Class<?>> getEnclosingTestClasses()
 meth public abstract java.util.Optional<java.lang.Class<?>> getTestClass()
 meth public abstract java.util.Optional<java.lang.Object> getTestInstance()
 meth public abstract java.util.Optional<java.lang.String> getConfigurationParameter(java.lang.String)
@@ -1184,12 +1298,17 @@ meth public abstract java.util.Set<java.lang.String> getTags()
 meth public abstract org.junit.jupiter.api.extension.ExecutableInvoker getExecutableInvoker()
 meth public abstract org.junit.jupiter.api.extension.ExtensionContext getRoot()
 meth public abstract org.junit.jupiter.api.extension.ExtensionContext$Store getStore(org.junit.jupiter.api.extension.ExtensionContext$Namespace)
+meth public abstract org.junit.jupiter.api.extension.ExtensionContext$Store getStore(org.junit.jupiter.api.extension.ExtensionContext$StoreScope,org.junit.jupiter.api.extension.ExtensionContext$Namespace)
 meth public abstract org.junit.jupiter.api.parallel.ExecutionMode getExecutionMode()
+meth public abstract void publishDirectory(java.lang.String,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
+meth public abstract void publishFile(java.lang.String,org.junit.jupiter.api.MediaType,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
 meth public abstract void publishReportEntry(java.util.Map<java.lang.String,java.lang.String>)
 meth public java.lang.Class<?> getRequiredTestClass()
 meth public java.lang.Object getRequiredTestInstance()
 meth public java.lang.reflect.Method getRequiredTestMethod()
 meth public org.junit.jupiter.api.extension.TestInstances getRequiredTestInstances()
+meth public void publishFile(java.lang.String,org.junit.jupiter.api.extension.MediaType,org.junit.jupiter.api.function.ThrowingConsumer<java.nio.file.Path>)
+ anno 0 java.lang.Deprecated()
 meth public void publishReportEntry(java.lang.String)
 meth public void publishReportEntry(java.lang.String,java.lang.String)
 
@@ -1200,6 +1319,7 @@ meth public !varargs org.junit.jupiter.api.extension.ExtensionContext$Namespace 
 meth public !varargs static org.junit.jupiter.api.extension.ExtensionContext$Namespace create(java.lang.Object[])
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
+meth public java.util.List<java.lang.Object> getParts()
 supr java.lang.Object
 hfds parts
 
@@ -1218,7 +1338,17 @@ meth public abstract void put(java.lang.Object,java.lang.Object)
 
 CLSS public abstract interface static org.junit.jupiter.api.extension.ExtensionContext$Store$CloseableResource
  outer org.junit.jupiter.api.extension.ExtensionContext$Store
+ anno 0 java.lang.Deprecated()
 meth public abstract void close() throws java.lang.Throwable
+
+CLSS public final static !enum org.junit.jupiter.api.extension.ExtensionContext$StoreScope
+ outer org.junit.jupiter.api.extension.ExtensionContext
+fld public final static org.junit.jupiter.api.extension.ExtensionContext$StoreScope EXECUTION_REQUEST
+fld public final static org.junit.jupiter.api.extension.ExtensionContext$StoreScope EXTENSION_CONTEXT
+fld public final static org.junit.jupiter.api.extension.ExtensionContext$StoreScope LAUNCHER_SESSION
+meth public static org.junit.jupiter.api.extension.ExtensionContext$StoreScope valueOf(java.lang.String)
+meth public static org.junit.jupiter.api.extension.ExtensionContext$StoreScope[] values()
+supr java.lang.Enum<org.junit.jupiter.api.extension.ExtensionContext$StoreScope>
 
 CLSS public org.junit.jupiter.api.extension.ExtensionContextException
 hfds serialVersionUID
@@ -1227,13 +1357,13 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Exten
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD, PARAMETER])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.extension.ExtendWith[] value()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.InvocationInterceptor
 innr public abstract interface static Invocation
-intf org.junit.jupiter.api.extension.Extension
+intf org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 meth public <%0 extends java.lang.Object> {%%0} interceptTestClassConstructor(org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<{%%0}>,org.junit.jupiter.api.extension.ReflectiveInvocationContext<java.lang.reflect.Constructor<{%%0}>>,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Throwable
 meth public <%0 extends java.lang.Object> {%%0} interceptTestFactoryMethod(org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<{%%0}>,org.junit.jupiter.api.extension.ReflectiveInvocationContext<java.lang.reflect.Method>,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Throwable
 meth public void interceptAfterAllMethod(org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<java.lang.Void>,org.junit.jupiter.api.extension.ReflectiveInvocationContext<java.lang.reflect.Method>,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Throwable
@@ -1258,6 +1388,21 @@ meth public void handleAfterEachMethodExecutionException(org.junit.jupiter.api.e
 meth public void handleBeforeAllMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
 meth public void handleBeforeEachMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
 
+CLSS public org.junit.jupiter.api.extension.MediaType
+ anno 0 java.lang.Deprecated()
+fld public final static org.junit.jupiter.api.extension.MediaType APPLICATION_JSON
+fld public final static org.junit.jupiter.api.extension.MediaType APPLICATION_JSON_UTF_8
+ anno 0 java.lang.Deprecated()
+fld public final static org.junit.jupiter.api.extension.MediaType APPLICATION_OCTET_STREAM
+fld public final static org.junit.jupiter.api.extension.MediaType IMAGE_JPEG
+fld public final static org.junit.jupiter.api.extension.MediaType IMAGE_PNG
+fld public final static org.junit.jupiter.api.extension.MediaType TEXT_PLAIN
+fld public final static org.junit.jupiter.api.extension.MediaType TEXT_PLAIN_UTF_8
+meth public static org.junit.jupiter.api.extension.MediaType create(java.lang.String,java.lang.String)
+meth public static org.junit.jupiter.api.extension.MediaType create(java.lang.String,java.lang.String,java.nio.charset.Charset)
+meth public static org.junit.jupiter.api.extension.MediaType parse(java.lang.String)
+supr org.junit.jupiter.api.MediaType
+
 CLSS public abstract interface org.junit.jupiter.api.extension.ParameterContext
 intf org.junit.jupiter.api.extension.AnnotatedElementContext
 meth public <%0 extends java.lang.annotation.Annotation> java.util.List<{%%0}> findRepeatableAnnotations(java.lang.Class<{%%0}>)
@@ -1273,9 +1418,17 @@ CLSS public org.junit.jupiter.api.extension.ParameterResolutionException
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ParameterResolver
-intf org.junit.jupiter.api.extension.Extension
+intf org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 meth public abstract boolean supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.ParameterResolutionException
 meth public abstract java.lang.Object resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.ParameterResolutionException
+
+CLSS public abstract interface org.junit.jupiter.api.extension.PreInterruptCallback
+fld public final static java.lang.String THREAD_DUMP_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.timeout.threaddump.enabled"
+intf org.junit.jupiter.api.extension.Extension
+meth public abstract void beforeThreadInterrupt(org.junit.jupiter.api.extension.PreInterruptContext,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+
+CLSS public abstract interface org.junit.jupiter.api.extension.PreInterruptContext
+meth public abstract java.lang.Thread getThreadToInterrupt()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ReflectiveInvocationContext<%0 extends java.lang.reflect.Executable>
 meth public abstract java.lang.Class<?> getTargetClass()
@@ -1289,6 +1442,9 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Regis
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
 intf java.lang.annotation.Annotation
 
+CLSS public org.junit.jupiter.api.extension.TemplateInvocationValidationException
+hfds serialVersionUID
+
 CLSS public abstract interface org.junit.jupiter.api.extension.TestExecutionExceptionHandler
  anno 0 java.lang.FunctionalInterface()
 intf org.junit.jupiter.api.extension.Extension
@@ -1296,7 +1452,7 @@ meth public abstract void handleTestExecutionException(org.junit.jupiter.api.ext
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstanceFactory
  anno 0 java.lang.FunctionalInterface()
-intf org.junit.jupiter.api.extension.Extension
+intf org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 meth public abstract java.lang.Object createTestInstance(org.junit.jupiter.api.extension.TestInstanceFactoryContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.TestInstantiationException
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstanceFactoryContext
@@ -1305,12 +1461,12 @@ meth public abstract java.util.Optional<java.lang.Object> getOuterInstance()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePostProcessor
  anno 0 java.lang.FunctionalInterface()
-intf org.junit.jupiter.api.extension.Extension
+intf org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 meth public abstract void postProcessTestInstance(java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePreConstructCallback
  anno 0 java.lang.FunctionalInterface()
-intf org.junit.jupiter.api.extension.Extension
+intf org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 meth public abstract void preConstructTestInstance(org.junit.jupiter.api.extension.TestInstanceFactoryContext,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePreDestroyCallback
@@ -1325,17 +1481,34 @@ meth public abstract java.lang.Object getInnermostInstance()
 meth public abstract java.util.List<java.lang.Object> getAllInstances()
 meth public abstract java.util.List<java.lang.Object> getEnclosingInstances()
 
+CLSS public abstract interface org.junit.jupiter.api.extension.TestInstantiationAwareExtension
+innr public final static !enum ExtensionContextScope
+intf org.junit.jupiter.api.extension.Extension
+meth public org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope getTestInstantiationExtensionContextScope(org.junit.jupiter.api.extension.ExtensionContext)
+
+CLSS public final static !enum org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope
+ outer org.junit.jupiter.api.extension.TestInstantiationAwareExtension
+fld public final static java.lang.String DEFAULT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testinstantiation.extensioncontextscope.default"
+fld public final static org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope DEFAULT
+ anno 0 java.lang.Deprecated()
+fld public final static org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope TEST_METHOD
+meth public static org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope valueOf(java.lang.String)
+meth public static org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope[] values()
+supr java.lang.Enum<org.junit.jupiter.api.extension.TestInstantiationAwareExtension$ExtensionContextScope>
+
 CLSS public org.junit.jupiter.api.extension.TestInstantiationException
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestTemplateInvocationContext
 meth public java.lang.String getDisplayName(int)
 meth public java.util.List<org.junit.jupiter.api.extension.Extension> getAdditionalExtensions()
+meth public void prepareInvocation(org.junit.jupiter.api.extension.ExtensionContext)
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract boolean supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)
 meth public abstract java.util.stream.Stream<org.junit.jupiter.api.extension.TestTemplateInvocationContext> provideTestTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)
+meth public boolean mayReturnZeroTestTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestWatcher
 intf org.junit.jupiter.api.extension.Extension
@@ -1357,6 +1530,7 @@ CLSS public abstract interface org.junit.jupiter.api.function.ThrowingSupplier<%
 meth public abstract {org.junit.jupiter.api.function.ThrowingSupplier%0} get() throws java.lang.Throwable
 
 CLSS public final org.junit.jupiter.engine.Constants
+fld public final static java.lang.String CLOSING_STORED_AUTO_CLOSEABLE_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.store.close.autocloseable.enabled"
 fld public final static java.lang.String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*"
 fld public final static java.lang.String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate"
 fld public final static java.lang.String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.afterall.method.default"
@@ -1369,6 +1543,7 @@ fld public final static java.lang.String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPER
 fld public final static java.lang.String DEFAULT_PARALLEL_EXECUTION_MODE = "junit.jupiter.execution.parallel.mode.default"
 fld public final static java.lang.String DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME = "junit.jupiter.tempdir.factory.default"
 fld public final static java.lang.String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testable.method.default"
+fld public final static java.lang.String DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testinstantiation.extensioncontextscope.default"
 fld public final static java.lang.String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = "junit.jupiter.testclass.order.default"
 fld public final static java.lang.String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testfactory.method.default"
 fld public final static java.lang.String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default"
@@ -1378,6 +1553,9 @@ fld public final static java.lang.String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PR
 fld public final static java.lang.String DEFAULT_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.default"
 fld public final static java.lang.String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.thread.mode.default"
 fld public final static java.lang.String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled"
+fld public final static java.lang.String EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.exclude"
+fld public final static java.lang.String EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.include"
+fld public final static java.lang.String EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.timeout.threaddump.enabled"
 fld public final static java.lang.String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.custom.class"
 fld public final static java.lang.String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.dynamic.factor"
 fld public final static java.lang.String PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.fixed.max-pool-size"
@@ -1394,16 +1572,32 @@ hfds PARALLEL_CONFIG_PREFIX
 CLSS public final org.junit.jupiter.engine.JupiterTestEngine
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor
-hfds afterAllMethods,beforeAllMethods,defaultChildExecutionMode,executableInvoker,testClass,testInstanceFactory
+hfds executableInvoker,lifecycleMethods,testInstanceFactory
+hcls LifecycleMethods
+
+CLSS protected static org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor$ClassInfo
+ outer org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor
+supr java.lang.Object
+hfds defaultChildExecutionMode,discoveryIssues,exclusiveResourceCollector,lifecycle,tags,testClass
+
+CLSS public org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor
+hfds index,invocationContext,parent
+
+CLSS public org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor
+hfds childrenPrototypes,childrenPrototypesByIndex,delegate,dynamicDescendantFilter
+hcls ClassTemplateExecutor
 
 CLSS public org.junit.jupiter.engine.descriptor.ClassTestDescriptor
 
 CLSS public org.junit.jupiter.engine.descriptor.DynamicDescendantFilter
 cons public init()
 intf java.util.function.BiPredicate<org.junit.platform.engine.UniqueId,java.lang.Integer>
+meth protected org.junit.jupiter.engine.descriptor.DynamicDescendantFilter configure(java.util.function.UnaryOperator<org.junit.platform.engine.UniqueId>,org.junit.jupiter.engine.descriptor.DynamicDescendantFilter)
 meth public boolean test(org.junit.platform.engine.UniqueId,java.lang.Integer)
+meth public org.junit.jupiter.engine.descriptor.DynamicDescendantFilter copy(java.util.function.UnaryOperator<org.junit.platform.engine.UniqueId>)
 meth public org.junit.jupiter.engine.descriptor.DynamicDescendantFilter withoutIndexFiltering()
 meth public void allowAll()
+meth public void allowIndex(int)
 meth public void allowIndex(java.util.Set<java.lang.Integer>)
 meth public void allowUniqueIdPrefix(org.junit.platform.engine.UniqueId)
 supr java.lang.Object
@@ -1417,13 +1611,18 @@ CLSS public org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor
 hfds configuration
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.JupiterTestDescriptor
-hfds conditionEvaluator,configuration,logger
+hfds conditionEvaluator,configuration
 hcls ExceptionHandlerInvoker
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor
-hfds logger,tags,testClass,testMethod
+hfds logger,methodInfo
+hcls MethodInfo
 
 CLSS public org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
+
+CLSS public abstract interface org.junit.jupiter.engine.descriptor.TestClassAware
+meth public abstract java.lang.Class<?> getTestClass()
+meth public abstract java.util.List<java.lang.Class<?>> getEnclosingTestClasses()
 
 CLSS public org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
 hfds dynamicDescendantFilter,executableInvoker,interceptorCall
@@ -1433,13 +1632,17 @@ supr java.lang.Object
 
 CLSS public org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
 hfds defaultInterceptorCall,executableInvoker,interceptorCall
-hcls CallbackInvoker
 
 CLSS public org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor
 hfds index,interceptorCall,invocationContext
 
 CLSS public org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor
 hfds dynamicDescendantFilter
+hcls TestTemplateExecutor
+
+CLSS public abstract interface org.junit.jupiter.engine.descriptor.Validatable
+meth public abstract void validate(org.junit.platform.engine.support.discovery.DiscoveryIssueReporter)
+meth public static void reportAndClear(java.util.List<org.junit.platform.engine.DiscoveryIssue>,org.junit.platform.engine.support.discovery.DiscoveryIssueReporter)
 
 CLSS public org.junit.jupiter.engine.discovery.DiscoverySelectorResolver
 cons public init()
@@ -1465,7 +1668,6 @@ hfds ENABLED,logger
 
 CLSS public org.junit.jupiter.engine.execution.DefaultExecutableInvoker
 cons public init(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)
-cons public init(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)
 intf org.junit.jupiter.api.extension.ExecutableInvoker
 meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.reflect.Constructor<{%%0}>,java.lang.Object)
 meth public java.lang.Object invoke(java.lang.reflect.Method,java.lang.Object)
@@ -1483,10 +1685,23 @@ meth public static org.junit.jupiter.engine.execution.DefaultTestInstances of(or
 supr java.lang.Object
 hfds instances
 
+CLSS public abstract interface org.junit.jupiter.engine.execution.ExtensionContextSupplier
+ anno 0 java.lang.FunctionalInterface()
+innr public static ScopeBasedExtensionContextSupplier
+meth public abstract org.junit.jupiter.api.extension.ExtensionContext get(org.junit.jupiter.api.extension.TestInstantiationAwareExtension)
+meth public static org.junit.jupiter.engine.execution.ExtensionContextSupplier create(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.config.JupiterConfiguration)
+
+CLSS public static org.junit.jupiter.engine.execution.ExtensionContextSupplier$ScopeBasedExtensionContextSupplier
+ outer org.junit.jupiter.engine.execution.ExtensionContextSupplier
+intf org.junit.jupiter.engine.execution.ExtensionContextSupplier
+meth public org.junit.jupiter.api.extension.ExtensionContext get(org.junit.jupiter.api.extension.TestInstantiationAwareExtension)
+supr java.lang.Object
+hfds currentExtensionContext,legacyExtensionContext
+
 CLSS public org.junit.jupiter.engine.execution.InterceptingExecutableInvoker
 cons public init()
 innr public abstract interface static ReflectiveInterceptorCall
-meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.reflect.Constructor<{%%0}>,java.util.Optional<java.lang.Object>,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall<java.lang.reflect.Constructor<{%%0}>,{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.reflect.Constructor<{%%0}>,java.util.Optional<java.lang.Object>,org.junit.jupiter.engine.execution.ExtensionContextSupplier,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall<java.lang.reflect.Constructor<{%%0}>,{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.reflect.Method,java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall<java.lang.reflect.Method,{%%0}>)
 supr java.lang.Object
 hfds interceptorChain
@@ -1521,7 +1736,7 @@ CLSS public abstract interface static org.junit.jupiter.engine.execution.Invocat
 meth public abstract void apply(org.junit.jupiter.api.extension.InvocationInterceptor,org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<java.lang.Void>) throws java.lang.Throwable
 
 CLSS public org.junit.jupiter.engine.execution.JupiterEngineExecutionContext
-hfds beforeAllCallbacksExecuted,beforeAllMethodsExecuted,logger,state
+hfds beforeAllCallbacksExecuted,beforeAllMethodsExecuted,state
 hcls State
 
 CLSS public static org.junit.jupiter.engine.execution.JupiterEngineExecutionContext$Builder
@@ -1534,8 +1749,17 @@ meth public org.junit.jupiter.engine.execution.JupiterEngineExecutionContext$Bui
 supr java.lang.Object
 hfds newState,originalState
 
+CLSS public org.junit.jupiter.engine.execution.LauncherStoreFacade
+cons public init(org.junit.platform.engine.support.store.NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace>)
+meth public org.junit.jupiter.api.extension.ExtensionContext$Store getRequestLevelStore(org.junit.jupiter.api.extension.ExtensionContext$Namespace)
+meth public org.junit.jupiter.api.extension.ExtensionContext$Store getSessionLevelStore(org.junit.jupiter.api.extension.ExtensionContext$Namespace)
+meth public org.junit.jupiter.engine.execution.NamespaceAwareStore getStoreAdapter(org.junit.platform.engine.support.store.NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace>,org.junit.jupiter.api.extension.ExtensionContext$Namespace)
+meth public org.junit.platform.engine.support.store.NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> getRequestLevelStore()
+supr java.lang.Object
+hfds requestLevelStore,sessionLevelStore
+
 CLSS public org.junit.jupiter.engine.execution.NamespaceAwareStore
-cons public init(org.junit.platform.engine.support.store.NamespacedHierarchicalStore<org.junit.jupiter.api.extension.ExtensionContext$Namespace>,org.junit.jupiter.api.extension.ExtensionContext$Namespace)
+cons public init(org.junit.platform.engine.support.store.NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace>,org.junit.platform.engine.support.store.Namespace)
 intf org.junit.jupiter.api.extension.ExtensionContext$Store
 meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> java.lang.Object getOrComputeIfAbsent({%%0},java.util.function.Function<{%%0},{%%1}>)
 meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%1} getOrComputeIfAbsent({%%0},java.util.function.Function<{%%0},{%%1}>,java.lang.Class<{%%1}>)
@@ -1550,19 +1774,26 @@ hfds namespace,valuesStore
 CLSS public org.junit.jupiter.engine.execution.ParameterResolutionUtils
 cons public init()
 meth public static java.lang.Object[] resolveParameters(java.lang.reflect.Executable,java.util.Optional<java.lang.Object>,java.util.Optional<java.lang.Object>,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)
+meth public static java.lang.Object[] resolveParameters(java.lang.reflect.Executable,java.util.Optional<java.lang.Object>,java.util.Optional<java.lang.Object>,org.junit.jupiter.engine.execution.ExtensionContextSupplier,org.junit.jupiter.engine.extension.ExtensionRegistry)
 meth public static java.lang.Object[] resolveParameters(java.lang.reflect.Method,java.util.Optional<java.lang.Object>,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)
 supr java.lang.Object
 hfds logger
 
 CLSS public abstract interface org.junit.jupiter.engine.execution.TestInstancesProvider
  anno 0 java.lang.FunctionalInterface()
-meth public abstract org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.platform.engine.support.hierarchical.ThrowableCollector)
-meth public org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry,org.junit.platform.engine.support.hierarchical.ThrowableCollector)
+meth public abstract org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)
+meth public org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)
+
+CLSS public abstract interface org.junit.jupiter.engine.extension.ExtensionContextInternal
+intf org.junit.jupiter.api.extension.ExtensionContext
+meth public abstract <%0 extends org.junit.jupiter.api.extension.Extension> java.util.List<{%%0}> getExtensions(java.lang.Class<{%%0}>)
 
 CLSS public abstract interface org.junit.jupiter.engine.extension.ExtensionRegistrar
+meth public abstract void initializeExtensions(java.lang.Class<?>,java.lang.Object)
 meth public abstract void registerExtension(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>)
 meth public abstract void registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)
 meth public abstract void registerSyntheticExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)
+meth public abstract void registerUninitializedExtension(java.lang.Class<?>,java.lang.reflect.Field,java.util.function.Function<java.lang.Object,? extends org.junit.jupiter.api.extension.Extension>)
 
 CLSS public abstract interface org.junit.jupiter.engine.extension.ExtensionRegistry
 meth public <%0 extends org.junit.jupiter.api.extension.Extension> java.util.List<{%%0}> getExtensions(java.lang.Class<{%%0}>)
@@ -1574,11 +1805,74 @@ intf org.junit.jupiter.engine.extension.ExtensionRegistry
 meth public <%0 extends org.junit.jupiter.api.extension.Extension> java.util.stream.Stream<{%%0}> stream(java.lang.Class<{%%0}>)
 meth public static org.junit.jupiter.engine.extension.MutableExtensionRegistry createRegistryFrom(org.junit.jupiter.engine.extension.MutableExtensionRegistry,java.util.stream.Stream<java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>>)
 meth public static org.junit.jupiter.engine.extension.MutableExtensionRegistry createRegistryWithDefaultExtensions(org.junit.jupiter.engine.config.JupiterConfiguration)
+meth public void initializeExtensions(java.lang.Class<?>,java.lang.Object)
 meth public void registerExtension(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>)
 meth public void registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)
 meth public void registerSyntheticExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)
+meth public void registerUninitializedExtension(java.lang.Class<?>,java.lang.reflect.Field,java.util.function.Function<java.lang.Object,? extends org.junit.jupiter.api.extension.Extension>)
 supr java.lang.Object
-hfds DEFAULT_STATELESS_EXTENSIONS,logger,parent,registeredExtensionTypes,registeredExtensions
+hfds DEFAULT_STATELESS_EXTENSIONS,lateInitExtensions,logger,registeredExtensionTypes,registeredExtensions
+hcls Entry,LateInitEntry,LateInitExtensions
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.AfterParameterizedClassInvocation
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean injectArguments()
+
+CLSS public final !enum org.junit.jupiter.params.ArgumentCountValidationMode
+fld public final static org.junit.jupiter.params.ArgumentCountValidationMode DEFAULT
+fld public final static org.junit.jupiter.params.ArgumentCountValidationMode NONE
+fld public final static org.junit.jupiter.params.ArgumentCountValidationMode STRICT
+meth public static org.junit.jupiter.params.ArgumentCountValidationMode valueOf(java.lang.String)
+meth public static org.junit.jupiter.params.ArgumentCountValidationMode[] values()
+supr java.lang.Enum<org.junit.jupiter.params.ArgumentCountValidationMode>
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.BeforeParameterizedClassInvocation
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean injectArguments()
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.Parameter
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, FIELD])
+fld public final static int UNSET_INDEX = -1
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int value()
+
+CLSS public abstract interface org.junit.jupiter.params.ParameterInfo
+fld public final static java.lang.Object KEY
+fld public final static org.junit.jupiter.api.extension.ExtensionContext$Namespace NAMESPACE
+meth public abstract org.junit.jupiter.params.aggregator.ArgumentsAccessor getArguments()
+meth public abstract org.junit.jupiter.params.support.ParameterDeclarations getDeclarations()
+meth public static org.junit.jupiter.params.ParameterInfo get(org.junit.jupiter.api.extension.ExtensionContext)
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.ParameterizedClass
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE])
+ anno 0 org.junit.jupiter.api.ClassTemplate()
+ anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.params.ParameterizedClassExtension])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean allowZeroInvocations()
+meth public abstract !hasdefault boolean autoCloseArguments()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault org.junit.jupiter.params.ArgumentCountValidationMode argumentCountValidation()
+
+CLSS public org.junit.jupiter.params.ParameterizedInvocationConstants
+fld public final static java.lang.String ARGUMENTS_PLACEHOLDER = "{arguments}"
+fld public final static java.lang.String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}"
+fld public final static java.lang.String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}"
+fld public final static java.lang.String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}"
+fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {argumentSetNameOrArgumentsWithNames}"
+fld public final static java.lang.String DISPLAY_NAME_PLACEHOLDER = "{displayName}"
+fld public final static java.lang.String INDEX_PLACEHOLDER = "{index}"
+supr java.lang.Object
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.ParameterizedTest
  anno 0 java.lang.annotation.Documented()
@@ -1587,13 +1881,24 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.Parameterize
  anno 0 org.junit.jupiter.api.TestTemplate()
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.params.ParameterizedTestExtension])
 fld public final static java.lang.String ARGUMENTS_PLACEHOLDER = "{arguments}"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}"
-fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {argumentsWithNames}"
+ anno 0 java.lang.Deprecated()
+fld public final static java.lang.String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}"
+ anno 0 java.lang.Deprecated()
+fld public final static java.lang.String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}"
+ anno 0 java.lang.Deprecated()
+fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {argumentSetNameOrArgumentsWithNames}"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String DISPLAY_NAME_PLACEHOLDER = "{displayName}"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String INDEX_PLACEHOLDER = "{index}"
+ anno 0 java.lang.Deprecated()
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean allowZeroInvocations()
 meth public abstract !hasdefault boolean autoCloseArguments()
 meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault org.junit.jupiter.params.ArgumentCountValidationMode argumentCountValidation()
 
 CLSS public abstract org.junit.jupiter.params.converter.AnnotationBasedArgumentConverter<%0 extends java.lang.annotation.Annotation>
 cons public init()
@@ -1601,6 +1906,7 @@ intf org.junit.jupiter.params.converter.ArgumentConverter
 intf org.junit.jupiter.params.support.AnnotationConsumer<{org.junit.jupiter.params.converter.AnnotationBasedArgumentConverter%0}>
 meth protected abstract java.lang.Object convert(java.lang.Object,java.lang.Class<?>,{org.junit.jupiter.params.converter.AnnotationBasedArgumentConverter%0}) throws org.junit.jupiter.params.converter.ArgumentConversionException
 meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
+meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.params.support.FieldContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 meth public final void accept({org.junit.jupiter.params.converter.AnnotationBasedArgumentConverter%0})
 supr java.lang.Object
 hfds annotation
@@ -1610,28 +1916,33 @@ hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.params.converter.ArgumentConverter
 meth public abstract java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
+meth public java.lang.Object convert(java.lang.Object,org.junit.jupiter.params.support.FieldContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.converter.ConvertWith
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER, FIELD])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.params.converter.ArgumentConverter> value()
 
 CLSS public org.junit.jupiter.params.converter.DefaultArgumentConverter
-fld public final static org.junit.jupiter.params.converter.DefaultArgumentConverter INSTANCE
+cons public init(org.junit.jupiter.api.extension.ExtensionContext)
+fld public final static java.lang.String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format"
 intf org.junit.jupiter.params.converter.ArgumentConverter
-meth public final java.lang.Object convert(java.lang.Object,java.lang.Class<?>,org.junit.jupiter.api.extension.ParameterContext)
+meth public final java.lang.Object convert(java.lang.Object,java.lang.Class<?>,java.lang.ClassLoader)
 meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext)
+meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.params.support.FieldContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 supr java.lang.Object
-hfds stringToObjectConverters
+hfds TRANSFORMER,context
+hcls LocaleConversionFormat
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.converter.JavaTimeConversionPattern
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER, FIELD])
  anno 0 org.junit.jupiter.params.converter.ConvertWith(java.lang.Class<? extends org.junit.jupiter.params.converter.ArgumentConverter> value=class org.junit.jupiter.params.converter.JavaTimeArgumentConverter)
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean nullable()
 meth public abstract java.lang.String value()
 
 CLSS public abstract org.junit.jupiter.params.converter.SimpleArgumentConverter
@@ -1639,6 +1950,7 @@ cons public init()
 intf org.junit.jupiter.params.converter.ArgumentConverter
 meth protected abstract java.lang.Object convert(java.lang.Object,java.lang.Class<?>) throws org.junit.jupiter.params.converter.ArgumentConversionException
 meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
+meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.params.support.FieldContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 supr java.lang.Object
 
 CLSS public abstract org.junit.jupiter.params.converter.TypedArgumentConverter<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -1646,6 +1958,7 @@ cons protected init(java.lang.Class<{org.junit.jupiter.params.converter.TypedArg
 intf org.junit.jupiter.params.converter.ArgumentConverter
 meth protected abstract {org.junit.jupiter.params.converter.TypedArgumentConverter%1} convert({org.junit.jupiter.params.converter.TypedArgumentConverter%0}) throws org.junit.jupiter.params.converter.ArgumentConversionException
 meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
+meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.params.support.FieldContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 supr java.lang.Object
 hfds sourceType,targetType
 
@@ -1653,39 +1966,58 @@ CLSS public abstract org.junit.jupiter.params.provider.AnnotationBasedArgumentsP
 cons public init()
 intf org.junit.jupiter.params.provider.ArgumentsProvider
 intf org.junit.jupiter.params.support.AnnotationConsumer<{org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider%0}>
-meth protected abstract java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext,{org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider%0})
-meth public final java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext)
+meth protected java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext,{org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider%0})
+ anno 0 java.lang.Deprecated()
+meth protected java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.params.support.ParameterDeclarations,org.junit.jupiter.api.extension.ExtensionContext,{org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider%0})
 meth public final void accept({org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider%0})
+meth public java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.params.support.ParameterDeclarations,org.junit.jupiter.api.extension.ExtensionContext)
 supr java.lang.Object
-hfds annotation
+hfds annotations
 
 CLSS public abstract interface org.junit.jupiter.params.provider.Arguments
+innr public final static ArgumentSet
 meth public !varargs static org.junit.jupiter.params.provider.Arguments arguments(java.lang.Object[])
 meth public !varargs static org.junit.jupiter.params.provider.Arguments of(java.lang.Object[])
+meth public !varargs static org.junit.jupiter.params.provider.Arguments$ArgumentSet argumentSet(java.lang.String,java.lang.Object[])
 meth public abstract java.lang.Object[] get()
 
+CLSS public final static org.junit.jupiter.params.provider.Arguments$ArgumentSet
+ outer org.junit.jupiter.params.provider.Arguments
+intf org.junit.jupiter.params.provider.Arguments
+meth public java.lang.Object[] get()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds arguments,name
+
 CLSS public abstract interface org.junit.jupiter.params.provider.ArgumentsProvider
-meth public abstract java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+meth public java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+ anno 0 java.lang.Deprecated()
+meth public java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.params.support.ParameterDeclarations,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.ArgumentsSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.ArgumentsSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.ArgumentsSources
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.params.provider.ArgumentsSource[] value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.CsvFileSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.CsvFileSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.CsvFileArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean ignoreLeadingAndTrailingWhitespace()
@@ -1702,13 +2034,23 @@ meth public abstract !hasdefault java.lang.String[] files()
 meth public abstract !hasdefault java.lang.String[] nullValues()
 meth public abstract !hasdefault java.lang.String[] resources()
 
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.CsvFileSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.CsvFileSource[] value()
+
 CLSS public org.junit.jupiter.params.provider.CsvParsingException
 hfds serialVersionUID
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.CsvSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.CsvSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.CsvArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean ignoreLeadingAndTrailingWhitespace()
@@ -1722,21 +2064,34 @@ meth public abstract !hasdefault java.lang.String textBlock()
 meth public abstract !hasdefault java.lang.String[] nullValues()
 meth public abstract !hasdefault java.lang.String[] value()
 
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.CsvSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.CsvSource[] value()
+
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.EmptySource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.EmptyArgumentsProvider)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.EnumSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.EnumSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.EnumArgumentsProvider)
 innr public final static !enum Mode
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<? extends java.lang.Enum<?>> value()
+meth public abstract !hasdefault java.lang.String from()
+meth public abstract !hasdefault java.lang.String to()
 meth public abstract !hasdefault java.lang.String[] names()
 meth public abstract !hasdefault org.junit.jupiter.params.provider.EnumSource$Mode mode()
 
@@ -1753,18 +2108,55 @@ supr java.lang.Enum<org.junit.jupiter.params.provider.EnumSource$Mode>
 hfds selector,validator
 hcls Validator
 
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.EnumSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.EnumSource[] value()
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.FieldSource
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.FieldSources)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+ anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.FieldArgumentsProvider)
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String[] value()
+
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.FieldSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.FieldSource[] value()
+
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.MethodSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.MethodSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.MethodArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String[] value()
 
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.MethodSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.MethodSource[] value()
+
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.NullAndEmptySource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.EmptySource()
  anno 0 org.junit.jupiter.params.provider.NullSource()
 intf java.lang.annotation.Annotation
@@ -1776,15 +2168,18 @@ supr java.lang.Enum<org.junit.jupiter.params.provider.NullEnum>
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.NullSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.NullArgumentsProvider)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.ValueSource
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.ValueSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.ValueArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean[] booleans()
@@ -1798,6 +2193,14 @@ meth public abstract !hasdefault java.lang.String[] strings()
 meth public abstract !hasdefault long[] longs()
 meth public abstract !hasdefault short[] shorts()
 
+CLSS public abstract interface !annotation org.junit.jupiter.params.provider.ValueSources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.params.provider.ValueSource[] value()
+
 CLSS public abstract interface org.junit.jupiter.params.support.AnnotationConsumer<%0 extends java.lang.annotation.Annotation>
  anno 0 java.lang.FunctionalInterface()
 intf java.util.function.Consumer<{org.junit.jupiter.params.support.AnnotationConsumer%0}>
@@ -1807,4 +2210,32 @@ meth public static <%0 extends java.lang.Object> {%%0} initialize(java.lang.refl
 supr java.lang.Object
 hfds annotationConsumingMethodSignatures
 hcls AnnotationConsumingMethodSignature
+
+CLSS public abstract interface org.junit.jupiter.params.support.FieldContext
+intf org.junit.jupiter.api.extension.AnnotatedElementContext
+meth public abstract int getParameterIndex()
+meth public abstract java.lang.reflect.Field getField()
+
+CLSS public abstract interface org.junit.jupiter.params.support.ParameterDeclaration
+meth public abstract int getParameterIndex()
+meth public abstract java.lang.Class<?> getParameterType()
+meth public abstract java.lang.reflect.AnnotatedElement getAnnotatedElement()
+meth public abstract java.util.Optional<java.lang.String> getParameterName()
+
+CLSS public abstract interface org.junit.jupiter.params.support.ParameterDeclarations
+meth public abstract java.lang.String getSourceElementDescription()
+meth public abstract java.lang.reflect.AnnotatedElement getSourceElement()
+meth public abstract java.util.List<org.junit.jupiter.params.support.ParameterDeclaration> getAll()
+meth public abstract java.util.Optional<org.junit.jupiter.params.support.ParameterDeclaration> get(int)
+meth public abstract java.util.Optional<org.junit.jupiter.params.support.ParameterDeclaration> getFirst()
+
+CLSS public abstract interface org.junit.jupiter.params.support.ParameterInfo
+ anno 0 java.lang.Deprecated()
+fld public final static java.lang.Object KEY
+ anno 0 java.lang.Deprecated()
+fld public final static org.junit.jupiter.api.extension.ExtensionContext$Namespace NAMESPACE
+ anno 0 java.lang.Deprecated()
+intf org.junit.jupiter.params.ParameterInfo
+meth public static org.junit.jupiter.params.support.ParameterInfo get(org.junit.jupiter.api.extension.ExtensionContext)
+ anno 0 java.lang.Deprecated()
 

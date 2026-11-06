@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.39.0
+#Version 0.40.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -2076,6 +2076,7 @@ meth protected boolean hasOrigin()
 meth protected org.apache.commons.io.build.AbstractOrigin<?,?> checkOrigin()
 meth protected org.apache.commons.io.build.AbstractOrigin<?,?> getOrigin()
 meth protected static org.apache.commons.io.build.AbstractOrigin$ByteArrayOrigin newByteArrayOrigin(byte[])
+meth protected static org.apache.commons.io.build.AbstractOrigin$ChannelOrigin newChannelOrigin(java.nio.channels.Channel)
 meth protected static org.apache.commons.io.build.AbstractOrigin$CharSequenceOrigin newCharSequenceOrigin(java.lang.CharSequence)
 meth protected static org.apache.commons.io.build.AbstractOrigin$FileOrigin newFileOrigin(java.io.File)
 meth protected static org.apache.commons.io.build.AbstractOrigin$FileOrigin newFileOrigin(java.lang.String)
@@ -2090,6 +2091,7 @@ meth protected static org.apache.commons.io.build.AbstractOrigin$URIOrigin newUR
 meth protected static org.apache.commons.io.build.AbstractOrigin$WriterOrigin newWriterOrigin(java.io.Writer)
 meth protected {org.apache.commons.io.build.AbstractOriginSupplier%1} setOrigin(org.apache.commons.io.build.AbstractOrigin<?,?>)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setByteArray(byte[])
+meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setChannel(java.nio.channels.Channel)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setCharSequence(java.lang.CharSequence)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setFile(java.io.File)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setFile(java.lang.String)
@@ -2110,6 +2112,8 @@ cons public init()
 meth protected {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSizeDefault(int)
 meth protected {org.apache.commons.io.build.AbstractStreamBuilder%1} setCharsetDefault(java.nio.charset.Charset)
 meth public !varargs {org.apache.commons.io.build.AbstractStreamBuilder%1} setOpenOptions(java.nio.file.OpenOption[])
+meth public <%0 extends java.nio.channels.Channel> {%%0} getChannel(java.lang.Class<{%%0}>) throws java.io.IOException
+meth public byte[] getByteArray() throws java.io.IOException
 meth public int getBufferSize()
 meth public int getBufferSizeDefault()
 meth public java.io.File getFile()
@@ -2190,9 +2194,10 @@ meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
 meth public java.io.InputStream unwrap()
 meth public long skip(long) throws java.io.IOException
+meth public org.apache.commons.io.input.ProxyInputStream setReference(java.io.InputStream)
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.io.FilterInputStream
-hfds afterRead,closed,exceptionHandler
+hfds afterRead,closed
 

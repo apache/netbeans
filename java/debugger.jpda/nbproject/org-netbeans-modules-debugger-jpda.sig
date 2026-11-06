@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.143.0
+#Version 1.144.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -626,6 +626,7 @@ meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object,boolean) throws java.io.InvalidObjectException
+meth public org.netbeans.api.debugger.jpda.Variable evaluate(java.lang.String,org.netbeans.api.debugger.jpda.CallStackFrame) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 meth public static org.netbeans.api.debugger.DebuggerEngine[] startListeningAndGetEngines(com.sun.jdi.connect.ListeningConnector,java.util.Map<java.lang.String,? extends com.sun.jdi.connect.Connector$Argument>,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
 meth public static org.netbeans.api.debugger.jpda.JPDADebugger attach(java.lang.String,int,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
 meth public static org.netbeans.api.debugger.jpda.JPDADebugger attach(java.lang.String,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
@@ -807,6 +808,8 @@ CLSS public final org.netbeans.modules.debugger.jpda.DebuggerConsoleIO
 innr public final static Line
 meth public org.netbeans.api.io.InputOutput getIO()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public void printWithAction(java.lang.String,java.lang.Runnable,boolean)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public void println(java.lang.String,org.netbeans.modules.debugger.jpda.DebuggerConsoleIO$Line)
 meth public void println(java.lang.String,org.netbeans.modules.debugger.jpda.DebuggerConsoleIO$Line,boolean)
 supr java.lang.Object

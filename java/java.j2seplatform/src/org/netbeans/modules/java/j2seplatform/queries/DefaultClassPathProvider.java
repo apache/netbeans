@@ -198,7 +198,8 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
                 }
             } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
                 final JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
-                if (defaultPlatform != null && Util.JDK9.compareTo(defaultPlatform.getSpecification().getVersion()) <= 0) {
+                final Runtime.Version platformVersion = defaultPlatform != null ? defaultPlatform.getSpecification().getJdkVersion() : null;
+                if (platformVersion != null && platformVersion.feature() >= 9) {
                     return defaultPlatform.getBootstrapLibraries();
                 }
             }
@@ -299,7 +300,8 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
             Collections.addAll(platforms, JavaPlatformManager.getDefault().getInstalledPlatforms());
             for (JavaPlatform jp : platforms) {
                 final Specification spec = jp.getSpecification();
-                if ("j2se".equals(spec.getName()) && Util.JDK9.compareTo(spec.getVersion()) <= 0) { //NOI18N
+                final Runtime.Version version = spec.getJdkVersion();
+                if ("j2se".equals(spec.getName()) && version != null && version.feature() >= 9) { //NOI18N
                     java9 = jp;
                     break;
                 }

@@ -37,6 +37,7 @@ import org.netbeans.modules.j2ee.clientproject.ui.customizer.MainClassChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -174,7 +175,7 @@ public class Utils {
             return pm.getDefaultPlatform();
         }
         else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se",null));   //NOI18N
+            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se"));   //NOI18N
             for (int i=0; i<installedPlatforms.length; i++) {
                 String antName = installedPlatforms[i].getProperties().get("platform.ant.name");        //NOI18N
                 if (antName != null && antName.equals(activePlatformId)) {

@@ -36,7 +36,6 @@ import org.netbeans.spi.java.project.support.ProjectPlatform;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.Parameters;
@@ -163,11 +162,10 @@ class J2SEProjectPlatformImpl implements J2SEProjectPlatform, PropertyChangeList
             final Element platformNode = insertBefore.getOwnerDocument().createElementNS(
                     J2SEProject.PROJECT_CONFIGURATION_NAMESPACE,
                     "explicit-platform"); //NOI18N
+            Runtime.Version version = platform.getSpecification().getJdkVersion();
             platformNode.setAttribute(
                     "explicit-source-supported",    //NOI18N
-                    platform.getSpecification().getVersion().compareTo(new SpecificationVersion("1.3"))>0?   //NOI18N
-                        "true":                                                                              //NOI18N
-                        "false");                                                                            //NOI18N
+                    (version != null && version.compareTo(Runtime.Version.parse("1.3")) > 0) ? "true" : "false"); //NOI18N
             root.insertBefore(platformNode, insertBefore);
             if ("explicit-platform".equals(insertBefore.getNodeName())) { //NOI18N
                 root.removeChild(insertBefore);

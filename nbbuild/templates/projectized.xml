@@ -896,7 +896,6 @@
     <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
     <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
-        <property name="mavenVersion" value="dev-SNAPSHOT"/>
         <delete dir="${maven.tmp}"/>
         <property name="maven.tmp.nbms" location="${maven.tmp}/nbms"/>
         <antcall target="nbm" inheritall="false">
@@ -919,6 +918,7 @@
         <condition property=".cmd" value=".cmd" else="">
           <os family="windows"/>
         </condition>
+        <property name="mavenArgs" value=""/>
         <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
             <arg value="-DforcedVersion=${mavenVersion}"/>
             <arg value="-DdefineCluster=false"/>
@@ -928,8 +928,9 @@
             <arg value="-DnetbeansNbmDirectory=${maven.tmp.nbms}"/>
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
-            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:14.5:populate"/>
+            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate"/>
         </exec>
-    </target>
+        <echo message="Installed -DmavenVersion=${mavenVersion} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
+  </target>
     
 </project>

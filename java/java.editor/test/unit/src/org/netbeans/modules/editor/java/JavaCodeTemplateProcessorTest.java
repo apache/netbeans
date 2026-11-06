@@ -34,6 +34,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.lib.editor.codetemplates.CodeTemplateInsertHandler;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
+import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter;
 import org.netbeans.lib.editor.codetemplates.storage.CodeTemplateSettingsImpl.OnExpandAction;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -201,6 +202,60 @@ public class JavaCodeTemplateProcessorTest extends NbTestCase {
                              "        }\n" +
                              "    }\n" +
                              "}");
+    }
+
+    public void testSoutTemplateIsAcceptedInUnbracedForLoopBody() throws Exception {
+        assertSoutTemplateAccepted("public class Test {\n"
+                + "    private void test() {\n"
+                + "        for (int i = 0; i < 3; i++)\n"
+                + "            sout\n"
+                + "    }\n"
+                + "}", true);
+    }
+
+    public void testSoutTemplateIsAcceptedInUnbracedEnhancedForLoopBody() throws Exception {
+        assertSoutTemplateAccepted("public class Test {\n"
+                + "    private void test(String[] values) {\n"
+                + "        for (String value : values)\n"
+                + "            sout\n"
+                + "    }\n"
+                + "}", true);
+    }
+
+    public void testSoutTemplateIsRejectedInIncompleteForLoopHeader() throws Exception {
+        assertSoutTemplateAccepted("public class Test {\n"
+                + "    private void test() {\n"
+                + "        for (int i = 0; sout\n"
+                + "    }\n"
+                + "}", false);
+    }
+
+    private void assertSoutTemplateAccepted(String text, boolean expected) throws Exception {
+        clearWorkDir();
+        testFile = FileUtil.toFileObject(getWorkDir()).createData("Test.java");
+        EditorKit kit = new JavaKit();
+        JEditorPane pane = new JEditorPane();
+        SwingUtilities.invokeAndWait(() -> {
+            pane.setEditorKit(kit);
+        });
+        Document doc = pane.getDocument();
+        doc.putProperty(Document.StreamDescriptionProperty, testFile);
+        doc.putProperty(Language.class, JavaTokenId.language());
+        doc.putProperty("mimeType", "text/x-java");
+        pane.setText(text);
+        try (OutputStream out = testFile.getOutputStream();
+             Writer w = new OutputStreamWriter(out)) {
+            w.append(text);
+        }
+        CodeTemplate sout = CodeTemplateManager.get(doc).getCodeTemplates().stream()
+                .filter(template -> "sout".equals(template.getAbbreviation()))
+                .findFirst()
+                .orElseThrow();
+        int abbreviationOffset = text.indexOf("sout");
+        CodeTemplateFilter filter = new JavaCodeTemplateFilter.Factory()
+                .createFilter(doc, abbreviationOffset, -1);
+
+        assertEquals(expected, filter.accept(sout));
     }
 
     public void testInfiteLoop() throws Exception {

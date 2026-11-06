@@ -86,9 +86,12 @@ import org.openide.util.datatransfer.PasteType;
 *
 * @author Jaroslav Tulach,
 */
-public abstract class Node extends FeatureDescriptor implements Lookup.Provider, HelpCtx.Provider {
-    /** An empty leaf node. */
-    public static final Node EMPTY = new AbstractNode(Children.LEAF);
+public abstract class Node extends FeatureDescriptor implements Lookup.Provider, HelpCtx.Provider, EmptyNodeProvider {
+
+    static {
+        //hook for testing:
+        Logger.getLogger("org.openide.nodes.Node-init").log(Level.FINEST, "Initializing org.openide.nodes.Node"); //NOI18N
+    }
 
     /* here is list of property names that can be changed in the Node object.
     * These properties can be notified to the <CODE>NodeListener</CODE>.

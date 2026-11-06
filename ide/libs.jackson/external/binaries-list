@@ -1,0 +1,24 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+15C67F9498D6934CFF9510FC70C5A12E52290457 com.fasterxml.jackson.core:jackson-annotations:2.22
+8695AAB38355C65B60E242EC62EDF13C52916D88 com.fasterxml.jackson.core:jackson-core:2.22.3
+D0D4B2CDB0A1440AC02178FC2FF01DFB05CD06A8 com.fasterxml.jackson.core:jackson-databind:2.22.3
+520097FE76CDE11C7448C622E8CB6E07714C8C7C com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.3
+57434BA014A75D95CF326121A0A6EF003B219E55 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.22.3
+8D54F48CFE4865BDFA245B8A90FB15B56C8A4A3C com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.3
+5AFD74643ED931D52FA4A634007AEBB61B3C3C05 com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.22.3

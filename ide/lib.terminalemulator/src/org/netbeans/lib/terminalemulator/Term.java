@@ -29,6 +29,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.lang.System.Logger.Level;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -3380,6 +3382,8 @@ public class Term extends JComponent implements Accessible {
      */
     private class OpsImpl implements Ops {
 
+        private static final System.Logger LOG = System.getLogger(OpsImpl.class.getName());
+
 	@Override
         @SuppressWarnings("CallToThreadYield")
         public void op_pause() {
@@ -4427,6 +4431,27 @@ public class Term extends JComponent implements Accessible {
             }
         }
 
+        @Override
+        public void op_set_clipboard(String clipboardTarget, String contentBase64) {
+            if( clipboardTarget.contains("c")  // System clipboard
+                    || clipboardTarget.contains("p")) { // Primary selection
+                try {
+                    byte[] data = Base64.getDecoder().decode(contentBase64);
+                    String text = new String(data, StandardCharsets.UTF_8);
+                    if(clipboardTarget.contains("c")) {
+                        StringSelection stringSelection = new StringSelection(text);
+                        systemClipboard.setContents(stringSelection, stringSelection);
+                    }
+                    if(clipboardTarget.contains("p")) {
+                        StringSelection stringSelection = new StringSelection(text);
+                        systemSelection.setContents(stringSelection, stringSelection);
+                    }
+                } catch (IllegalArgumentException ex) {
+                    LOG.log(Level.INFO, "Failed to decode clipboard content");
+                    LOG.log(Level.TRACE, () -> "Base64 Content: " + contentBase64);
+                }
+            }
+        }
     }
 
     /**

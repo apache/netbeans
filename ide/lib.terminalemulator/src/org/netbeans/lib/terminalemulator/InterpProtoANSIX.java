@@ -178,6 +178,23 @@ class InterpProtoANSIX extends InterpProtoANSI {
                         } else {
                             ai.ops.op_hyperlink(p2, p3);
                         }
+                        break;
+                    }
+
+                    case 52: { // OSC52 - Copy to clipboard
+                        int semix2 = p2.indexOf(';');
+                        if (semix2 == -1) {
+                            return null;
+                        }
+                        String p3 = p2.substring(semix2 + 1);
+                        p2 = p2.substring(0, semix2);
+
+                        if ("?".equals(p3)) {
+                             // Read request - currently unsupported
+                        } else {
+                            ai.ops.op_set_clipboard(p2, p3);
+                        }
+                        break;
                     }
                 }
 		return null;

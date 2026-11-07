@@ -60,7 +60,7 @@ public class BreakpointOutputTest extends NbTestCase {
         DebuggerManager.getDebuggerManager().addBreakpoint(breakPoint);
 
         final URI cpUrl = test.SampleMain.class.getProtectionDomain().getCodeSource().getLocation().toURI();
-        System.setProperty ("test.dir.src", findSourcePath());
+        System.setProperty ("test.dir.src", test.SampleMain.findSourcePath());
         support = JPDASupport.attach(new String[0], "test.SampleMain", new String[0], new File[] {
             Utilities.toFile(cpUrl)
         });
@@ -214,17 +214,6 @@ public class BreakpointOutputTest extends NbTestCase {
         breakPoint.removeJPDABreakpointListener(countingListener);
 
         assertEquals("Breakpoint has been reached and listener is cleared", 1, cnt[0]);
-    }
-
-    private String findSourcePath() throws IOException {
-        File curDir = getWorkDir();
-        for (;;) {
-            var testSrc = new File(new File(new File(curDir, "test"), "unit"), "src");
-            if (testSrc.isDirectory()) {
-                return testSrc.getPath();
-            }
-            curDir = curDir.getParentFile();
-        }
     }
 
     /**

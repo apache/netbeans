@@ -37,6 +37,7 @@ import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.lib.profiler.heap.ObjectFieldValue;
+import org.netbeans.lib.profiler.heap.Type;
 import org.openide.util.Exceptions;
 
 /**
@@ -161,7 +162,20 @@ public class InstanceImpl implements Instance {
         if (matchingFieldValue instanceof ObjectFieldValue) {
             return ((ObjectFieldValue) matchingFieldValue).getInstance();
         } else {
-            return ((FieldValue) matchingFieldValue).getValue();
+            FieldValue fv = (FieldValue) matchingFieldValue;
+            String v = fv.getValue();
+            Type typ = fv.getField().getType();
+            return switch (typ.getName()) {
+                case "byte" -> Byte.valueOf(v);
+                case "short" -> Short.valueOf(v);
+                case "int" -> Integer.valueOf(v);
+                case "long" -> Long.valueOf(v);
+                case "float" -> Float.valueOf(v);
+                case "double" -> Double.valueOf(v);
+                case "char" -> v.charAt(0);
+                case "boolean" -> Boolean.valueOf(v);
+                default -> v;
+            };
         }
 
    }

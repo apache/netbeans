@@ -42,9 +42,13 @@ public final class DetailsSupport {
         Collection<ProviderClassPair> pairs = getCompatibleProviders(instance.getJavaClass());
         for (ProviderClassPair pair : pairs) {
             String classKey = pair.classKey;
-            if (pair.subclasses) classKey += "+";                               // NOI18N
+            if (pair.subclasses) {
+                classKey += "+";
+            }                               // NOI18N
             String string = pair.provider.getDetailsString(classKey, instance, heap);
-            if (string != null) return string;
+            if (string != null) {
+                return string;
+            }
         }
         return null;
     }
@@ -53,9 +57,13 @@ public final class DetailsSupport {
         Collection<ProviderClassPair> pairs = getCompatibleProviders(instance.getJavaClass());
         for (ProviderClassPair pair : pairs) {
             String classKey = pair.classKey;
-            if (pair.subclasses) classKey += "+";                               // NOI18N
+            if (pair.subclasses) {
+                classKey += "+";
+            }                               // NOI18N
             DetailsProvider.View view = pair.provider.getDetailsView(classKey, instance, heap);
-            if (view != null) return view;
+            if (view != null) {
+                return view;
+            }
         }
         return null;
     }

@@ -155,6 +155,10 @@ public abstract class LookupSensitiveActionBase extends NbTestCase implements Pr
         assertNotNull("Project2 found", p2);
         OpenProjects.getDefault().open(new Project[] { p }, false);
         ic.add(p);
+        // The refresh is debounced and not run yet; querying the action forces it,
+        // as the presenter re-sync (Actions.updateState -> action.isEnabled()) does
+        // when the menu is actually shown.
+        instance.isEnabled();
         assertTrue("enabled", item.isEnabled());
         assertEquals("One change", 1, change);
 
@@ -224,6 +228,9 @@ public abstract class LookupSensitiveActionBase extends NbTestCase implements Pr
         q.i = instance;
         
         ic.remove(p);
+        // Force the debounced refresh, as the presenter re-sync would when the menu is shown,
+        // so the action actually gets disabled before being re-enabled below.
+        instance.isEnabled();
         
         instance.removePropertyChangeListener(this);
         

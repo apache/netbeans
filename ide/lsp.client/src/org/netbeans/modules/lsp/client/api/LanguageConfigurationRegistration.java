@@ -27,6 +27,8 @@ import java.lang.annotation.Target;
  * Will also register language features defined in {@link LanguageFeatures}
  * as appropriate.
  *
+ * <p>Also consider using <a href="@TOP@../org-netbeans-modules-textmate-lexer/org/netbeans/modules/textmate/lexer/api/GrammarRegistration.html">GrammarRegistration</a>
+ *
  * @since 1.38
  */
 @Repeatable(LanguageConfigurationRegistrations.class)

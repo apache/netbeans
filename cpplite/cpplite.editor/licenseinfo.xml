@@ -29,6 +29,11 @@
         <comment type="COMMENT_UNSUPPORTED">Source: https://github.com/jeff-hykin/cpp-textmate-grammar</comment>
     </fileset>
     <fileset>
+        <file>src/org/netbeans/modules/cpplite/editor/file/resources/language-configuration.json</file>
+        <license ref="MIT-vscode" />
+        <comment type="COMMENT_UNSUPPORTED">Source: https://github.com/microsoft/vscode/blob/main/extensions/cpp/language-configuration.json</comment>
+    </fileset>
+    <fileset>
         <file>src/org/netbeans/modules/cpplite/editor/file/resources/CCSrcIcon.gif</file>
         <file>src/org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif</file>
         <file>src/org/netbeans/modules/cpplite/editor/file/resources/CSrcIcon.gif</file>

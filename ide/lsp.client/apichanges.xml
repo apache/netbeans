@@ -19,12 +19,27 @@
     under the License.
 
 -->
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 <apichanges>
 <apidefs>
     <apidef name="lsp_client">LSP Client API</apidef>
 </apidefs>
 <changes>
+    <change id="LanguageConfigurationJSON">
+        <api name="lsp_client" />
+        <summary>Adding LanguageIdProvider</summary>
+        <version major="0" minor="1.38" />
+        <date day="2" month="11" year="2026" />
+        <author login="jlahoda" />
+        <compatibility addition="yes" binary="compatible" source="compatible" />
+        <description>
+            <p>
+                Basic support for language-configuration.json added.
+            </p>
+        </description>
+        <class name="LanguageFeatures" package="org.netbeans.modules.lsp.client.api"/>
+        <class name="LanguageConfiguration" package="org.netbeans.modules.lsp.client.spi"/>
+    </change>
     <change id="LanguageIdProvider">
         <api name="lsp_client" />
         <summary>Adding LanguageIdProvider</summary>

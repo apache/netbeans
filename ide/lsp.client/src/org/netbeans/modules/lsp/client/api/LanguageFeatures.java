@@ -19,11 +19,15 @@
 package org.netbeans.modules.lsp.client.api;
 
 import java.io.IOException;
+import javax.swing.text.EditorKit;
+import javax.swing.text.TextAction;
 import org.netbeans.modules.lsp.client.bindings.configuration.BracesMatcherFactoryImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.ToggleCommentActionImpl;
 import org.netbeans.modules.lsp.client.bindings.configuration.TypingCompletionImpl.FactoryImpl;
 import org.netbeans.modules.lsp.client.options.GenericEditorKit;
 import org.netbeans.modules.lsp.client.bindings.configuration.LanguageConfiguration;
+import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
+import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -64,7 +68,7 @@ public final class LanguageFeatures {
      * @param file the registration file, typically provided by the layer infrastructure.
      * @return a {@link GenericEditorKit} configured for the specified MIME type.
      */
-    public static Object editorKit(FileObject file) {
+    public static EditorKit editorKit(FileObject file) {
         String mimeType = "text/plain";
         if (file.getAttribute("mimeType") instanceof String mt) {
             mimeType = mt;
@@ -123,9 +127,9 @@ public final class LanguageFeatures {
      * </folder>
      * }
      *
-     * @return a {@link BracesMatcherFactoryImpl} instance.
+     * @return a {@link BracesMatcherFactory} instance based on a language configuration.
      */
-    public static Object braceMatcher() {
+    public static BracesMatcherFactory braceMatcher() {
         return new BracesMatcherFactoryImpl();
     }
 
@@ -148,9 +152,9 @@ public final class LanguageFeatures {
      * </folder>
      * }
      *
-     * @return a {@link FactoryImpl} instance.
+     * @return a {@link TypedTextInterceptor.Factory} instance based on a language configuration.
      */
-    public static Object typingCompletion() {
+    public static TypedTextInterceptor.Factory typingCompletion() {
         return new FactoryImpl();
     }
 
@@ -179,9 +183,9 @@ public final class LanguageFeatures {
      * </folder>
      * }
      *
-     * @return a {@link ToggleCommentActionImpl} instance.
+     * @return a {@link TextAction} instance implementing the toggle comment action based on a language configuration.
      */
-    public static Object toggleCommentAction() {
+    public static TextAction toggleCommentAction() {
         return new ToggleCommentActionImpl();
     }
 }

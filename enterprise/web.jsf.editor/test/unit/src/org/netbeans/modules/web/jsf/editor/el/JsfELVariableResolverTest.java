@@ -85,7 +85,9 @@ public class JsfELVariableResolverTest extends TestBaseForTestProject {
         assertEquals("#{ProductMB.all}", var.expression);
         assertNull(var.clazz);
 
-        // TODO getVariables should be empty after the end of the table
+        List<ELVariableResolver.VariableInfo> variablesAfterTable = variableResolver.getVariables(snapshot, 2200, resolverContext);
+        assertNotNull(variablesAfterTable);
+        assertTrue(variablesAfterTable.isEmpty());
     }
     
     public void testGetRawObjectProperties() throws Exception {

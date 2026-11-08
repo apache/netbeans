@@ -352,7 +352,7 @@ CLSS public abstract interface com.sun.source.tree.CaseTree
 innr public final static !enum CaseKind
 intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract com.sun.source.tree.ExpressionTree getGuard()
 meth public abstract java.util.List<? extends com.sun.source.tree.CaseLabelTree> getLabels()
 meth public abstract java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions()
@@ -927,9 +927,9 @@ intf com.sun.source.util.SourcePositions
 meth public abstract long getEndPosition(com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
 meth public abstract long getStartPosition(com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
 meth public long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
- anno 0 java.lang.Deprecated(null forRemoval=true, null since="27")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="27")
 meth public long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
- anno 0 java.lang.Deprecated(null forRemoval=true, null since="27")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="27")
 
 CLSS public abstract interface com.sun.source.util.DocTreeFactory
 meth public abstract com.sun.source.doctree.AttributeTree newAttributeTree(javax.lang.model.element.Name,com.sun.source.doctree.AttributeTree$ValueKind,java.util.List<? extends com.sun.source.doctree.DocTree>)
@@ -1231,9 +1231,9 @@ CLSS public abstract interface com.sun.source.util.SourcePositions
 meth public abstract long getEndPosition(com.sun.source.tree.Tree)
 meth public abstract long getStartPosition(com.sun.source.tree.Tree)
 meth public long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
- anno 0 java.lang.Deprecated(null forRemoval=true, null since="27")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="27")
 meth public long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
- anno 0 java.lang.Deprecated(null forRemoval=true, null since="27")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="27")
 
 CLSS public final com.sun.source.util.TaskEvent
 cons public init(com.sun.source.util.TaskEvent$Kind)
@@ -1413,24 +1413,30 @@ meth public abstract char charAt(int)
 meth public abstract int length()
 meth public abstract java.lang.CharSequence subSequence(int,int)
 meth public abstract java.lang.String toString()
+meth public boolean isEmpty()
 meth public java.util.stream.IntStream chars()
 meth public java.util.stream.IntStream codePoints()
+meth public static int compare(java.lang.CharSequence,java.lang.CharSequence)
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -1458,6 +1464,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -1523,6 +1530,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -2113,7 +2123,7 @@ supr javax.lang.model.util.AbstractAnnotationValueVisitor9<{javax.lang.model.uti
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 intf javax.lang.model.element.AnnotationValueVisitor<{javax.lang.model.util.AbstractAnnotationValueVisitor6%0},{javax.lang.model.util.AbstractAnnotationValueVisitor6%1}>
 meth public final {javax.lang.model.util.AbstractAnnotationValueVisitor6%0} visit(javax.lang.model.element.AnnotationValue)
 meth public final {javax.lang.model.util.AbstractAnnotationValueVisitor6%0} visit(javax.lang.model.element.AnnotationValue,{javax.lang.model.util.AbstractAnnotationValueVisitor6%1})
@@ -2123,7 +2133,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 supr javax.lang.model.util.AbstractAnnotationValueVisitor6<{javax.lang.model.util.AbstractAnnotationValueVisitor7%0},{javax.lang.model.util.AbstractAnnotationValueVisitor7%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2150,7 +2160,7 @@ supr javax.lang.model.util.AbstractElementVisitor9<{javax.lang.model.util.Abstra
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 intf javax.lang.model.element.ElementVisitor<{javax.lang.model.util.AbstractElementVisitor6%0},{javax.lang.model.util.AbstractElementVisitor6%1}>
 meth public final {javax.lang.model.util.AbstractElementVisitor6%0} visit(javax.lang.model.element.Element)
 meth public final {javax.lang.model.util.AbstractElementVisitor6%0} visit(javax.lang.model.element.Element,{javax.lang.model.util.AbstractElementVisitor6%1})
@@ -2162,7 +2172,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.AbstractElementVisitor7%0},{javax.lang.model.util.AbstractElementVisitor7%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2189,7 +2199,7 @@ supr javax.lang.model.util.AbstractTypeVisitor9<{javax.lang.model.util.AbstractT
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 intf javax.lang.model.type.TypeVisitor<{javax.lang.model.util.AbstractTypeVisitor6%0},{javax.lang.model.util.AbstractTypeVisitor6%1}>
 meth public final {javax.lang.model.util.AbstractTypeVisitor6%0} visit(javax.lang.model.type.TypeMirror)
 meth public final {javax.lang.model.util.AbstractTypeVisitor6%0} visit(javax.lang.model.type.TypeMirror,{javax.lang.model.util.AbstractTypeVisitor6%1})
@@ -2201,7 +2211,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public abstract {javax.lang.model.util.AbstractTypeVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.AbstractTypeVisitor7%1})
 supr javax.lang.model.util.AbstractTypeVisitor6<{javax.lang.model.util.AbstractTypeVisitor7%0},{javax.lang.model.util.AbstractTypeVisitor7%1}>
 
@@ -2256,9 +2266,9 @@ supr javax.lang.model.util.ElementKindVisitor9<{javax.lang.model.util.ElementKin
 CLSS public javax.lang.model.util.ElementKindVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.ElementKindVisitor6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitExecutable(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitExecutableAsConstructor(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitExecutableAsInstanceInit(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.ElementKindVisitor6%1})
@@ -2285,9 +2295,9 @@ supr javax.lang.model.util.SimpleElementVisitor6<{javax.lang.model.util.ElementK
 CLSS public javax.lang.model.util.ElementKindVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.ElementKindVisitor7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public {javax.lang.model.util.ElementKindVisitor7%0} visitVariableAsResourceVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor7%1})
 supr javax.lang.model.util.ElementKindVisitor6<{javax.lang.model.util.ElementKindVisitor7%0},{javax.lang.model.util.ElementKindVisitor7%1}>
 
@@ -2322,9 +2332,9 @@ supr javax.lang.model.util.ElementScanner9<{javax.lang.model.util.ElementScanner
 CLSS public javax.lang.model.util.ElementScanner6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.ElementScanner6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 fld protected final {javax.lang.model.util.ElementScanner6%0} DEFAULT_VALUE
 meth public final {javax.lang.model.util.ElementScanner6%0} scan(java.lang.Iterable<? extends javax.lang.model.element.Element>,{javax.lang.model.util.ElementScanner6%1})
 meth public final {javax.lang.model.util.ElementScanner6%0} scan(javax.lang.model.element.Element)
@@ -2340,9 +2350,9 @@ supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.Elemen
 CLSS public javax.lang.model.util.ElementScanner7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.ElementScanner7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public {javax.lang.model.util.ElementScanner7%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementScanner7%1})
 supr javax.lang.model.util.ElementScanner6<{javax.lang.model.util.ElementScanner7%0},{javax.lang.model.util.ElementScanner7%1}>
 
@@ -2430,9 +2440,9 @@ supr javax.lang.model.util.SimpleAnnotationValueVisitor9<{javax.lang.model.util.
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 fld protected final {javax.lang.model.util.SimpleAnnotationValueVisitor6%0} DEFAULT_VALUE
 meth protected {javax.lang.model.util.SimpleAnnotationValueVisitor6%0} defaultAction(java.lang.Object,{javax.lang.model.util.SimpleAnnotationValueVisitor6%1})
 meth public {javax.lang.model.util.SimpleAnnotationValueVisitor6%0} visitAnnotation(javax.lang.model.element.AnnotationMirror,{javax.lang.model.util.SimpleAnnotationValueVisitor6%1})
@@ -2453,9 +2463,9 @@ supr javax.lang.model.util.AbstractAnnotationValueVisitor6<{javax.lang.model.uti
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 supr javax.lang.model.util.SimpleAnnotationValueVisitor6<{javax.lang.model.util.SimpleAnnotationValueVisitor7%0},{javax.lang.model.util.SimpleAnnotationValueVisitor7%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2486,9 +2496,9 @@ supr javax.lang.model.util.SimpleElementVisitor9<{javax.lang.model.util.SimpleEl
 CLSS public javax.lang.model.util.SimpleElementVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.SimpleElementVisitor6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 fld protected final {javax.lang.model.util.SimpleElementVisitor6%0} DEFAULT_VALUE
 meth protected {javax.lang.model.util.SimpleElementVisitor6%0} defaultAction(javax.lang.model.element.Element,{javax.lang.model.util.SimpleElementVisitor6%1})
 meth public {javax.lang.model.util.SimpleElementVisitor6%0} visitExecutable(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.SimpleElementVisitor6%1})
@@ -2501,9 +2511,9 @@ supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.Simple
 CLSS public javax.lang.model.util.SimpleElementVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.SimpleElementVisitor7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public {javax.lang.model.util.SimpleElementVisitor7%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.SimpleElementVisitor7%1})
 supr javax.lang.model.util.SimpleElementVisitor6<{javax.lang.model.util.SimpleElementVisitor7%0},{javax.lang.model.util.SimpleElementVisitor7%1}>
 
@@ -2535,9 +2545,9 @@ supr javax.lang.model.util.SimpleTypeVisitor9<{javax.lang.model.util.SimpleTypeV
 CLSS public javax.lang.model.util.SimpleTypeVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.SimpleTypeVisitor6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 fld protected final {javax.lang.model.util.SimpleTypeVisitor6%0} DEFAULT_VALUE
 meth protected {javax.lang.model.util.SimpleTypeVisitor6%0} defaultAction(javax.lang.model.type.TypeMirror,{javax.lang.model.util.SimpleTypeVisitor6%1})
 meth public {javax.lang.model.util.SimpleTypeVisitor6%0} visitArray(javax.lang.model.type.ArrayType,{javax.lang.model.util.SimpleTypeVisitor6%1})
@@ -2554,9 +2564,9 @@ supr javax.lang.model.util.AbstractTypeVisitor6<{javax.lang.model.util.SimpleTyp
 CLSS public javax.lang.model.util.SimpleTypeVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.SimpleTypeVisitor7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public {javax.lang.model.util.SimpleTypeVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.SimpleTypeVisitor7%1})
 supr javax.lang.model.util.SimpleTypeVisitor6<{javax.lang.model.util.SimpleTypeVisitor7%0},{javax.lang.model.util.SimpleTypeVisitor7%1}>
 
@@ -2588,9 +2598,9 @@ supr javax.lang.model.util.TypeKindVisitor9<{javax.lang.model.util.TypeKindVisit
 CLSS public javax.lang.model.util.TypeKindVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 cons protected init({javax.lang.model.util.TypeKindVisitor6%0})
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public {javax.lang.model.util.TypeKindVisitor6%0} visitNoType(javax.lang.model.type.NoType,{javax.lang.model.util.TypeKindVisitor6%1})
 meth public {javax.lang.model.util.TypeKindVisitor6%0} visitNoTypeAsModule(javax.lang.model.type.NoType,{javax.lang.model.util.TypeKindVisitor6%1})
 meth public {javax.lang.model.util.TypeKindVisitor6%0} visitNoTypeAsNone(javax.lang.model.type.NoType,{javax.lang.model.util.TypeKindVisitor6%1})
@@ -2610,9 +2620,9 @@ supr javax.lang.model.util.SimpleTypeVisitor6<{javax.lang.model.util.TypeKindVis
 CLSS public javax.lang.model.util.TypeKindVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 cons protected init({javax.lang.model.util.TypeKindVisitor7%0})
- anno 0 java.lang.Deprecated(null since="12")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="12")
 meth public {javax.lang.model.util.TypeKindVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.TypeKindVisitor7%1})
 supr javax.lang.model.util.TypeKindVisitor6<{javax.lang.model.util.TypeKindVisitor7%0},{javax.lang.model.util.TypeKindVisitor7%1}>
 
@@ -2887,7 +2897,7 @@ meth public abstract java.lang.Iterable<? extends javax.tools.JavaFileObject> ge
 meth public abstract void setLocation(javax.tools.JavaFileManager$Location,java.lang.Iterable<? extends java.io.File>) throws java.io.IOException
 meth public java.lang.Iterable<? extends java.nio.file.Path> getLocationAsPaths(javax.tools.JavaFileManager$Location)
 meth public java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjectsFromPaths(java.lang.Iterable<? extends java.nio.file.Path>)
- anno 0 java.lang.Deprecated(null since="13")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="13")
 meth public java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjectsFromPaths(java.util.Collection<? extends java.nio.file.Path>)
 meth public java.nio.file.Path asPath(javax.tools.FileObject)
 meth public void setLocationForModule(javax.tools.JavaFileManager$Location,java.lang.String,java.util.Collection<? extends java.nio.file.Path>) throws java.io.IOException
@@ -2930,7 +2940,7 @@ meth public java.lang.String name()
 
 CLSS public javax.tools.ToolProvider
 meth public static java.lang.ClassLoader getSystemToolClassLoader()
- anno 0 java.lang.Deprecated(null since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public static javax.tools.DocumentationTool getSystemDocumentationTool()
 meth public static javax.tools.JavaCompiler getSystemJavaCompiler()
 supr java.lang.Object

@@ -1756,7 +1756,7 @@ public class Term extends JComponent implements Accessible {
 
         add(BorderLayout.CENTER, screen);
         screen.setBackground(null);	// inherit from this
-        screen.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+        updateCursor();
 
         adjust_lines(st.rows);
         st.cursor.row = 0;
@@ -2003,6 +2003,12 @@ public class Term extends JComponent implements Accessible {
 
 	    @Override
             public void mouseDragged(MouseEvent e) {
+                if (reportMouseMotionWhilePressed && (! e.isShiftDown())) {
+                    sel.done();
+                    sendMouseEvent(e, false, true);
+                    e.consume();
+                    return;
+                }
                 /* DEBUG
                 System.out.println("mouseDragged"); // NOI18N
                  */
@@ -2041,6 +2047,13 @@ public class Term extends JComponent implements Accessible {
 
 	    @Override
             public void mouseMoved(MouseEvent e) {
+                if (reportMouseClick) {
+                    e.consume();
+                    if (reportMouseMotionAll) {
+                        sendMouseEvent(e, true, true);
+                    }
+                    return;
+                }
                 /* DEBUG
                 Point p = (Point) e.getPoint().clone();
                 BCoord bc = toBufCoords(toViewCoord(p));
@@ -2057,7 +2070,15 @@ public class Term extends JComponent implements Accessible {
             }
         });
 
-        addMouseWheelHandler(screen, vscroll_bar);
+        screen.addMouseWheelListener(e -> {
+            if (reportMouseClick && (! e.isShiftDown())) {
+                sendMouseEvent(e, false, false);
+                e.consume();
+                return;
+            }
+            int totalScrollAmount = e.getUnitsToScroll() * vscroll_bar.getUnitIncrement();
+            vscroll_bar.setValue(vscroll_bar.getValue() + totalScrollAmount);
+        });
 
         screen.addMouseListener(new MouseListener() {
 
@@ -2085,6 +2106,11 @@ public class Term extends JComponent implements Accessible {
                         requestFocus();
                     }
                 }
+
+                if (reportMouseClick && (! e.isShiftDown())) {
+                    e.consume();
+                    return;
+                }
             }
 
 	    @Override
@@ -2093,9 +2119,15 @@ public class Term extends JComponent implements Accessible {
                 System.out.println("mousePressed "+e.getModifiers()); // NOI18N
                  */
 
+                if (reportMouseClick && (! e.isShiftDown())) {
+                    sendMouseEvent(e, false, false);
+                    e.consume();
+                    return;
+                }
+
                 if (SwingUtilities.isLeftMouseButton(e)) {
 
-                    if (e.isShiftDown()) {
+                    if ((! reportMouseClick) && e.isShiftDown()) {
                         // JLF/dtterm selection extension
                         // Actually it's _addition_ so SHOULD enhance Sel
                         // to do that instead.
@@ -2133,6 +2165,12 @@ public class Term extends JComponent implements Accessible {
 
 	    @Override
             public void mouseReleased(MouseEvent e) {
+                if (reportMouseClick && (! e.isShiftDown())) {
+                    sendMouseEvent(e, true, false);
+                    e.consume();
+                    return;
+                }
+
                 /* DEBUG
                 System.out.println("mouseReleased"); // NOI18N
                  */
@@ -2204,6 +2242,83 @@ public class Term extends JComponent implements Accessible {
                 repaint(false);
             }
         });
+    }
+
+    private static final char[] MOUSE_REPORT_PREFIX_CLASSIC = new char[]{ESC, '[', 'M'};
+    private static final char[] MOUSE_REPORT_PREFIX_SGR = new char[]{ESC, '[', '<'};
+    private void sendMouseEvent(MouseEvent event, boolean isRelease, boolean isMotion) {
+        // SGR and normal enconding match in their base encoding:
+        //
+        // Values:
+        // 0 - left button
+        // 1 - middle button
+        // 2 - right button
+        // 64 - Scroll wheel up
+        // 65 - Scroll wheel down
+        //
+        // Modifiers are encoded as bit overlays:
+        // 3. Bit / value 4 => shift down
+        // 4. Bit / value 8 => alt/meta down
+        // 5. Bit / value 16 => control down
+        int buttonBase = 0;
+        if(event instanceof MouseWheelEvent mwe) {
+            if(mwe.getWheelRotation() < 0) {
+                buttonBase = 64; // Up
+            } else {
+                buttonBase = 65; // Down
+            }
+        } else if (SwingUtilities.isLeftMouseButton(event)) {
+            buttonBase = 0;
+        } else if (SwingUtilities.isMiddleMouseButton(event)) {
+            buttonBase = 1;
+        } else if (SwingUtilities.isRightMouseButton(event)) {
+            buttonBase = 2;
+        }
+        if (! reportFormatMouseSGR && isRelease) {
+            // Only normal reporting encodes release as value 3 (SGR indicates
+            // release by flag, see below)
+            buttonBase = 3;
+        }
+        if (event.isShiftDown()) {
+            buttonBase |= 4;
+        }
+        if (event.isAltDown() || event.isMetaDown()) {
+            buttonBase |= 8;
+        }
+        if (event.isControlDown()) {
+            buttonBase |= 16;
+        }
+        if (isMotion) {
+            buttonBase |= 32;
+        }
+        BCoord roleCol0 = toViewCoord(event.getPoint());
+        if(reportFormatMouseSGR) {
+            // SGR encoding
+            // CSI < Cb ; Cx ; Cy M    (button press or motion)
+            // CSI < Cb ; Cx ; Cy m    (button release)
+            char[] buttonString = Integer.toString(buttonBase).toCharArray();
+            char[] columnString = Integer.toString(roleCol0.col + 1).toCharArray();
+            char[] rowString = Integer.toString(roleCol0.row + 1).toCharArray();
+            char[] data = Arrays.copyOf(MOUSE_REPORT_PREFIX_SGR, MOUSE_REPORT_PREFIX_SGR.length
+                + buttonString.length + columnString.length + rowString.length + 3);
+            System.arraycopy(buttonString, 0, data, MOUSE_REPORT_PREFIX_SGR.length, buttonString.length);
+            data[MOUSE_REPORT_PREFIX_SGR.length + buttonString.length] = ';';
+            System.arraycopy(columnString, 0, data, MOUSE_REPORT_PREFIX_SGR.length + buttonString.length + 1, columnString.length);
+            data[MOUSE_REPORT_PREFIX_SGR.length + buttonString.length + 1 + columnString.length] = ';';
+            System.arraycopy(rowString, 0, data, MOUSE_REPORT_PREFIX_SGR.length + buttonString.length + columnString.length + 2, rowString.length);
+            data[MOUSE_REPORT_PREFIX_SGR.length + buttonString.length + columnString.length + rowString.length + 2] = isRelease ? 'm' : 'M';
+            sendChars(data, 0, data.length);
+        } else {
+            // Normal encoding (Prefix + 3 bytes for button and coordinates, each
+            // incremented by 32)
+            //
+            // CSI M Cb Cx Cy
+            char[] data = Arrays.copyOf(MOUSE_REPORT_PREFIX_CLASSIC, MOUSE_REPORT_PREFIX_CLASSIC.length + 3);
+            data[MOUSE_REPORT_PREFIX_CLASSIC.length + 0] = ((char) (buttonBase + 32));
+            data[MOUSE_REPORT_PREFIX_CLASSIC.length + 1] = ((char) (roleCol0.col + 1 + 32));
+            data[MOUSE_REPORT_PREFIX_CLASSIC.length + 2] = ((char) (roleCol0.row + 1 + 32));
+            sendChars(data, 0, data.length);
+        }
     }
 
     static void indent(boolean indented) {
@@ -4305,6 +4420,11 @@ public class Term extends JComponent implements Accessible {
 
             interp.softReset();
 
+            setReportFormatMouseSGR(false);
+            setReportMouseClick(false);
+            setReportMouseMotionAll(false);
+            setReportMouseMotionWhilePressed(false);
+
             repaint(false);
         }
 
@@ -4467,6 +4587,18 @@ public class Term extends JComponent implements Accessible {
         @Override
         public void op_bracketed_paste(boolean enabled) {
             setBracketedPasteMode(enabled);
+        }
+
+        @Override
+        public void op_mouse_report_sgr(boolean enabled) {
+            setReportFormatMouseSGR(enabled);
+        }
+
+        @Override
+        public void op_mouse_tracking(boolean clickEvents, boolean motionWhilePressed, boolean motionAll) {
+            setReportMouseClick(clickEvents);
+            setReportMouseMotionWhilePressed(motionWhilePressed);
+            setReportMouseMotionAll(motionAll);
         }
     }
 
@@ -5950,6 +6082,97 @@ public class Term extends JComponent implements Accessible {
 
     private boolean bracketedPasteMode = false;
 
+    /**
+     * Report mouse pressed events
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isReportMouseClick() {
+        return reportMouseClick;
+    }
+
+    /**
+     * Report mouse pressed events
+     *
+     * @param reportMouseClick
+     */
+    public void setReportMouseClick(boolean reportMouseClick) {
+        this.reportMouseClick = reportMouseClick;
+        updateCursor();
+        clearSelection();
+    }
+
+    /**
+     * Report mouse motion events while pressed
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isReportMouseMotionWhilePressed() {
+        return reportMouseMotionWhilePressed;
+    }
+
+    /**
+     * Report mouse motion events while pressed
+     *
+     * @param reportMouseMotionWhilePressed
+     */
+    public void setReportMouseMotionWhilePressed(boolean reportMouseMotionWhilePressed) {
+        this.reportMouseMotionWhilePressed = reportMouseMotionWhilePressed;
+        updateCursor();
+        clearSelection();
+    }
+
+    /**
+     * Report all mouse motion events (independent of mouse pressed state)
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isReportMouseMotionAll() {
+        return reportMouseMotionAll;
+    }
+
+    /**
+     * Report mouse motion events while pressed
+     *
+     * @param reportMouseMotionFull
+     */
+    public void setReportMouseMotionAll(boolean reportMouseMotionFull) {
+        this.reportMouseMotionAll = reportMouseMotionFull;
+        updateCursor();
+        clearSelection();
+    }
+
+    /**
+     * Use SGR Format for coordinate reporting
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isReportFormatMouseSGR() {
+        return reportFormatMouseSGR;
+    }
+
+    /**
+     * Use SGR Format for coordinate reporting
+     *
+     * @param reportFormatMouseSGR
+     */
+    public void setReportFormatMouseSGR(boolean reportFormatMouseSGR) {
+        this.reportFormatMouseSGR = reportFormatMouseSGR;
+    }
+
+    private boolean reportMouseClick;
+    private boolean reportMouseMotionWhilePressed;
+    private boolean reportMouseMotionAll;
+    private boolean reportFormatMouseSGR;
+
+    private void updateCursor() {
+        if (reportMouseClick || reportMouseMotionWhilePressed) {
+            screen.setCursor(Cursor.getDefaultCursor());
+        } else {
+            screen.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+        }
+    }
+
     /*
      * Term is really a container. Screen is where things get drawn and
      * where focus is set to, so all real accessibility work is done there.
@@ -6090,27 +6313,6 @@ public class Term extends JComponent implements Accessible {
         Thread.dumpStack();
         }
          */
-    }
-
-    /* attaches MouseWheelHandler to scroll the component
-     */
-    private static void addMouseWheelHandler(JComponent comp, JScrollBar bar) {
-        comp.addMouseWheelListener(new MouseWheelHandler(bar)); // XXX who removes this lsnr?
-    }
-
-    private static class MouseWheelHandler implements MouseWheelListener {
-
-        private final JScrollBar scrollbar;
-
-        public MouseWheelHandler(JScrollBar scrollbar) {
-            this.scrollbar = scrollbar;
-        }
-
-	@Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            int totalScrollAmount = e.getUnitsToScroll() * scrollbar.getUnitIncrement();
-            scrollbar.setValue(scrollbar.getValue() + totalScrollAmount);
-        }
     }
 
     /*

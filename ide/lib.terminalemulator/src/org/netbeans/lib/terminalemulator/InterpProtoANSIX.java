@@ -221,6 +221,18 @@ class InterpProtoANSIX extends InterpProtoANSI {
                     case 25:
                         ai.ops.op_cursor_visible(true);
                         break;
+                    case 1000:
+                        ai.ops.op_mouse_tracking(true, false, false);
+                        break;
+                    case 1002:
+                        ai.ops.op_mouse_tracking(true, true, false);
+                        break;
+                    case 1003:
+                        ai.ops.op_mouse_tracking(true, true, true);
+                        break;
+                    case 1006:
+                        ai.ops.op_mouse_report_sgr(true);
+                        break;
                     case 2004:
                         ai.ops.op_bracketed_paste(true);
                         break;
@@ -243,6 +255,14 @@ class InterpProtoANSIX extends InterpProtoANSI {
                         break;
                     case 25:
                         ai.ops.op_cursor_visible(false);
+                        break;
+                    case 1000:
+                    case 1002:
+                    case 1003:
+                        ai.ops.op_mouse_tracking(false, false, false);
+                        break;
+                    case 1006:
+                        ai.ops.op_mouse_report_sgr(false);
                         break;
                     case 2004:
                         ai.ops.op_bracketed_paste(false);

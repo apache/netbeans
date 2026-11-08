@@ -407,28 +407,29 @@ public final class Terminal extends JComponent {
 	setupKeymap(awareActions);
 
         mouseAdapter = new MouseAdapter() {
-            @Override
-	    // On UNIX popup on press
-	    // On Windows popup on release.
-	    // See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064
-            public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    Point p = SwingUtilities.convertPoint((Component) e.getSource(),
-                                                          e.getPoint(),
-                                                          term.getScreen());
+            // On UNIX popup on press
+            // On Windows popup on release.
+            // See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064
+            private void conditionallyShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && !e.isConsumed()) {
+                    Point p = SwingUtilities.convertPoint(
+                            (Component) e.getSource(),
+                            e.getPoint(),
+                            term.getScreen()
+                    );
                     postPopupMenu(p);
                 }
             }
-	    @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    Point p = SwingUtilities.convertPoint((Component) e.getSource(),
-                                                          e.getPoint(),
-                                                          term.getScreen());
-                    postPopupMenu(p);
-                }
-         }
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                conditionallyShowPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                conditionallyShowPopup(e);
+            }
 
 	};
         term.getScreen().addMouseListener(mouseAdapter);

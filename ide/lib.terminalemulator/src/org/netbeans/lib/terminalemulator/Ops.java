@@ -123,6 +123,7 @@ interface Ops {
     public void op_ind(int n);          // Index (~= \LF) (scrolls)
     public void op_cud(int n);          // Cursor Down (doesn't scroll)
 
-    default public void op_set_clipboard(String clipboardTarget, String contentBase64) {
-    }
+    default public void op_set_clipboard(String clipboardTarget, String contentBase64) {}
+
+    default public void op_bracketed_paste(boolean enabled) {}
 }

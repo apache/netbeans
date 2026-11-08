@@ -221,6 +221,9 @@ class InterpProtoANSIX extends InterpProtoANSI {
                     case 25:
                         ai.ops.op_cursor_visible(true);
                         break;
+                    case 2004:
+                        ai.ops.op_bracketed_paste(true);
+                        break;
                     default:
                         return "act_DEC_private: unrecognized code " + n;	// NOI18N
                 }
@@ -240,6 +243,9 @@ class InterpProtoANSIX extends InterpProtoANSI {
                         break;
                     case 25:
                         ai.ops.op_cursor_visible(false);
+                        break;
+                    case 2004:
+                        ai.ops.op_bracketed_paste(false);
                         break;
                     default:
                         return "act_DEC_private: unrecognized code " + n;	// NOI18N

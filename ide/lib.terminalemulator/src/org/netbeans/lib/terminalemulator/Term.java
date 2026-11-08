@@ -230,6 +230,8 @@ public class Term extends JComponent implements Accessible {
         public static final String IDE_OPEN = "ideopen"; //NOI18N
     }
 
+    private static final char ESC = (char) 27;
+
     private State st = new State();
     @SuppressWarnings("this-escape")
     private Sel sel = new Sel(this, st);
@@ -2325,6 +2327,8 @@ public class Term extends JComponent implements Accessible {
         pasteFromClipboard();
     }
 
+    private static final char[] PASTE_START = new char[]{ESC, '[', '2', '0', '0', '~'};
+    private static final char[] PASTE_END = new char[]{ESC, '[', '2', '0', '1', '~'};
     private void pasteHelp(Clipboard cb) {
         if (read_only) {
             return;
@@ -2351,6 +2355,13 @@ public class Term extends JComponent implements Accessible {
             System.out.println("System selection contains '" + string + "'"); // NOI18N
              */
             char ca[] = string.toCharArray();
+            if (bracketedPasteMode) {
+                char[] ca2 = new char[ca.length + PASTE_START.length + PASTE_END.length];
+                System.arraycopy(PASTE_START, 0, ca2, 0, PASTE_START.length);
+                System.arraycopy(ca, 0, ca2, PASTE_START.length, ca.length);
+                System.arraycopy(PASTE_END, 0, ca2, PASTE_START.length + ca.length, PASTE_END.length);
+                ca = ca2;
+            }
             sendChars(ca, 0, ca.length);
         } catch (UnsupportedFlavorException | IOException e) {
             //
@@ -4452,6 +4463,11 @@ public class Term extends JComponent implements Accessible {
                 }
             }
         }
+
+        @Override
+        public void op_bracketed_paste(boolean enabled) {
+            setBracketedPasteMode(enabled);
+        }
     }
 
     /**
@@ -4534,7 +4550,6 @@ public class Term extends JComponent implements Accessible {
     private void on_char(char c) {
         sendChar(c);
     }
-    private static final char ESC = (char) 27;
 
     private void sendChars(char c[], int offset, int count) {
         dte_end.sendChars(c, offset, count);
@@ -5916,6 +5931,24 @@ public class Term extends JComponent implements Accessible {
         return accessible_context;
     }
     private AccessibleContext accessible_context;
+
+    /**
+     * Wrap pasted text with start/end delimiters (bracketed paste mode)
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isBracketedPasteMode() {
+        return bracketedPasteMode;
+    }
+
+    /**
+     * Set wrapped pasted text with start/end delimiters (bracketed paste mode)
+     */
+    public void setBracketedPasteMode(boolean bracketedPasteMode) {
+        this.bracketedPasteMode = bracketedPasteMode;
+    }
+
+    private boolean bracketedPasteMode = false;
 
     /*
      * Term is really a container. Screen is where things get drawn and

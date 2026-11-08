@@ -88,11 +88,13 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, OUT);
+        //must be pre-registered before getTask(), as getTask() may already instantiate the Names service
+        // (see JavacParser#createJavacTask for the production usage)
+        NBNames.preRegister(context);
         JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, null, null, Arrays.asList("-source", "1.7", "-target", "1.7", "-classpath", workingDir.toString()), null, Arrays.asList(new MyFileObject("")), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
-        NBNames.preRegister(ct.getContext());
 
         ct.enter();
 
@@ -157,11 +159,13 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, OUT);
+        //must be pre-registered before getTask(), as getTask() may already instantiate the Names service
+        // (see JavacParser#createJavacTask for the production usage)
+        NBNames.preRegister(context);
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
-        NBNames.preRegister(ct.getContext());
 
         assertTrue(ct.call());
     }
@@ -177,12 +181,14 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, OUT);
+        //must be pre-registered before getTask(), as getTask() may already instantiate the Names service
+        // (see JavacParser#createJavacTask for the production usage)
+        NBNames.preRegister(context);
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
-        NBNames.preRegister(ct.getContext());
-        
+
         PackageElement pack = ct.getElements().getPackageElement(packageName);
         Set<String> actualClassNames = new HashSet<String>();
 

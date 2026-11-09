@@ -21,6 +21,7 @@ package org.netbeans.modules.maven;
 
 import java.io.File;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.maven.embedder.PlaceholderCapture;
 import org.netbeans.modules.maven.queries.MavenFileOwnerQueryImpl;
 import org.openide.util.Utilities;
 import org.openide.util.test.TestFileUtils;
@@ -49,9 +50,11 @@ public class NbArtifactFixerTest extends NbTestCase {
         MavenFileOwnerQueryImpl.getInstance().registerCoordinates("g", "a", "0", Utilities.toURI(getWorkDir()).toURL(), true);
         assertEquals(pom, new NbArtifactFixer().resolve(new DefaultArtifact("g:a:pom:0")));
         assertEquals(null, new NbArtifactFixer().resolve(new DefaultArtifact("g:a:jar:0")));
-        File fallback = new NbArtifactFixer().resolve(new DefaultArtifact("g:a:pom:1"));
+        PlaceholderCapture capture = new PlaceholderCapture();
+        File fallback = new NbArtifactFixer().resolve(new DefaultArtifact("g:a:pom:1"), capture);
         assertNotNull(fallback);
         assertFalse(fallback.equals(pom));
+        assertEquals(1, capture.getArtifacts().size());
         assertEquals(null, new NbArtifactFixer().resolve(new DefaultArtifact("g:a:pom:stuff:0")));
     }
 

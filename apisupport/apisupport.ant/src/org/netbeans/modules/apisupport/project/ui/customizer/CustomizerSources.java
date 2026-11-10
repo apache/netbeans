@@ -115,7 +115,10 @@ final class CustomizerSources extends NbPropertyPanel.Single {
     }
 
     private String getJavacLanguageLevelKey() {
-        return containsProperty(JAVAC_RELEASE) ? JAVAC_RELEASE : JAVAC_SOURCE;
+        // use javac.release if it is declared (even with a broken value, to fix it) or if
+        // the effective level comes from the default --release; otherwise keep javac.source
+        String release = props.getEvaluator().getProperty(JAVAC_RELEASE);
+        return (containsProperty(JAVAC_RELEASE) || isInteger(release)) ? JAVAC_RELEASE : JAVAC_SOURCE;
     }
 
     private String getEffectiveJavacTarget() {

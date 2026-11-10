@@ -20,6 +20,7 @@
 package org.netbeans.modules.debugger.jpda.heapwalk;
 
 import org.netbeans.lib.profiler.heap.Field;
+import org.netbeans.lib.profiler.heap.FieldValue;
 import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.lib.profiler.heap.Type;
 
@@ -58,4 +59,19 @@ public class FieldImpl implements Field {
         return new TypeImpl(field.getDeclaredType());
     }
     
+    static Object toPrimitiveValue(FieldValue fieldValue) {
+        String v = fieldValue.getValue();
+        Type typ = fieldValue.getField().getType();
+        return switch (typ.getName()) {
+            case "byte" -> Byte.valueOf(v);
+            case "short" -> Short.valueOf(v);
+            case "int" -> Integer.valueOf(v);
+            case "long" -> Long.valueOf(v);
+            case "float" -> Float.valueOf(v);
+            case "double" -> Double.valueOf(v);
+            case "char" -> v.charAt(1);
+            case "boolean" -> Boolean.valueOf(v);
+            default -> v;
+        };
+    }
 }

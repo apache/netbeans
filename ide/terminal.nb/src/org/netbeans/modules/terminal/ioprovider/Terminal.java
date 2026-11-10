@@ -27,7 +27,6 @@ import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -39,26 +38,22 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -102,7 +97,6 @@ import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.lib.terminalemulator.ActiveRegion;
-import org.netbeans.lib.terminalemulator.ActiveTermListener;
 import org.netbeans.lib.terminalemulator.Extent;
 import org.netbeans.lib.terminalemulator.TermAdapter;
 import org.netbeans.lib.terminalemulator.TermListener;
@@ -116,18 +110,15 @@ import org.netbeans.modules.terminal.support.TerminalPinSupport;
 import org.netbeans.modules.terminal.support.TerminalPinSupport.DetailsStateListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.cookies.*;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.text.Line;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.datatransfer.MultiTransferObject;
@@ -178,7 +169,7 @@ public final class Terminal extends JComponent {
         NbPreferences.forModule(TermAdvancedOption.class);
     private final TermOptions termOptions;
     private final TermOptionsPCL termOptionsPCL = new TermOptionsPCL();
-    
+
     private final FileObject shortcutsDir = FileUtil.getConfigFile("Terminal/Shortcuts"); //NOI18N
     private final ShortcutsListener shortcutsListener = new ShortcutsListener();
 
@@ -312,12 +303,12 @@ public final class Terminal extends JComponent {
             if (!command.startsWith(Term.ExternalCommandsConstants.COMMAND_PREFIX)) {
                 return;
             }
-            command = command.substring(Term.ExternalCommandsConstants.COMMAND_PREFIX.length());
-            if (!command.startsWith(Term.ExternalCommandsConstants.IDE_OPEN)) {
+            String decodedCommand = command.substring(Term.ExternalCommandsConstants.COMMAND_PREFIX.length());
+            if (!decodedCommand.startsWith(Term.ExternalCommandsConstants.IDE_OPEN)) {
                 return;
             }
-            
-            ExternalCommandActionProvider.getProvider(command).handle(command, Lookups.fixed(getCwd(), term));
+
+            ExternalCommandActionProvider.getProvider(decodedCommand).handle(decodedCommand, Lookups.fixed(getCwd(), term));
         }
     }
 
@@ -370,9 +361,9 @@ public final class Terminal extends JComponent {
 	shortcutsDir.addFileChangeListener(shortcutsListener);
         termOptions.addPropertyChangeListener(termOptionsPCL);
         applyTermOptions(true);
-	
-	final Set<Action> actions = new HashSet<Action>();
-	final Set<Action> awareActions = new HashSet<Action>();
+
+	final Set<Action> actions = new HashSet<>();
+	final Set<Action> awareActions = new HashSet<>();
 	actions.add(newTabAction);
 	actions.add(copyAction);
 	actions.add(pasteAction);
@@ -386,36 +377,33 @@ public final class Terminal extends JComponent {
 	actions.add(dumpSequencesAction);
 	actions.add(closeAction);
         actions.add(switchTabAction);
-	
-	for (Action action : actions) {
-	    if (action instanceof ContextAwareAction) {
-		action = ((ContextAwareAction) action).createContextAwareInstance(Lookups.fixed(this));
-	    }
-	    awareActions.add(action);
-	}
-	
-	final TerminalPinSupport support = TerminalPinSupport.getDefault();
-	TerminalPinSupport.DetailsStateListener listener = new TerminalPinSupport.DetailsStateListener() {
 
-	    @Override
-	    public void detailsAdded(Term notifiedTerm) {
-		if (notifiedTerm != term) {
-		    return;
-		}
-		TerminalPinSupport.TerminalPinningDetails pinDetails = support.findPinningDetails(notifiedTerm);
-		if (pinDetails != null) {
-		    boolean customTitle = pinDetails.isCustomTitle();
-		    setCustomTitle(customTitle);
-		    if (customTitle) {
-			setTitle(pinDetails.getTitle());
-		    }
-		    pin(true);
-		}
-	    }
-	};
+	for (Action action : actions) {
+	    if (action instanceof ContextAwareAction contextAwareAction) {
+		awareActions.add(contextAwareAction.createContextAwareInstance(Lookups.fixed(this)));
+	    } else {
+                awareActions.add(action);
+            }
+	}
+
+	final TerminalPinSupport support = TerminalPinSupport.getDefault();
+	TerminalPinSupport.DetailsStateListener listener = (Term notifiedTerm) -> {
+            if (notifiedTerm != term) {
+                return;
+            }
+            TerminalPinSupport.TerminalPinningDetails pinDetails = support.findPinningDetails(notifiedTerm);
+            if (pinDetails != null) {
+                boolean customTitle1 = pinDetails.isCustomTitle();
+                setCustomTitle(customTitle1);
+                if (customTitle1) {
+                    setTitle(pinDetails.getTitle());
+                }
+                pin(true);
+            }
+        };
 
 	support.addDetailsStateListener(WeakListeners.create(DetailsStateListener.class, listener, support));
-	
+
 	setupKeymap(awareActions);
 
         mouseAdapter = new MouseAdapter() {
@@ -455,61 +443,53 @@ public final class Terminal extends JComponent {
         }
         );
 
-        term.getScreen().addMouseWheelListener(new MouseWheelListener() {
-
-	    @Override
-	    public void mouseWheelMoved(final MouseWheelEvent e) {
-		if (e.isAltDown() || e.isAltGraphDown() || e.isControlDown()) {
-		    int change = -e.getWheelRotation();
-		    changeFontSizeBy(change);
-		    e.consume();
-		}
-	    }	
-	});
+        term.getScreen().addMouseWheelListener((final MouseWheelEvent e) -> {
+            if (e.isAltDown() || e.isAltGraphDown() || e.isControlDown()) {
+                int change = -e.getWheelRotation();
+                changeFontSizeBy(change);
+                e.consume();
+            }
+        });
 
 	termListener = new MyTermListener();
 	term.addListener(termListener);
-	
+
 //	final SupportStream supportStream = new SupportStream();
 //	term.pushStream(supportStream);
 //	term.setTransferHandler(new TransferHandlerImpl(supportStream));
 
         // Set up to convert clicks on active regions, created by OutputWriter.
         // println(), to outputLineAction notifications.
-        term.setActionListener(new ActiveTermListener() {
-            @Override
-            public void action(ActiveRegion r, InputEvent e) {
-                final Object userObject = r.getUserObject();
-                if (userObject == null) {
+        term.setActionListener((ActiveRegion r, InputEvent e) -> {
+            final Object userObject = r.getUserObject();
+            if (userObject == null) {
+                return;
+            }
+            if (r.isLink() && userObject instanceof String) {
+                String text = (String) userObject;
+
+                int lineNumber = -1;
+                String filePath = text;
+
+                int colonIdx = text.lastIndexOf(':');
+                // Shortest file path
+                if (colonIdx > 2) {
+                    try {
+                        lineNumber = Integer.parseInt(text.substring(colonIdx + 1));
+                        filePath = text.substring(0, colonIdx);
+                    } catch (NumberFormatException x) {
+                    }
+                }
+                OpenInEditorAction.post(filePath, lineNumber);
+            } else if (userObject instanceof OutputListener) {
+                OutputListener ol = (OutputListener) r.getUserObject();
+                if (ol == null) {
                     return;
                 }
-                if (r.isLink() && userObject instanceof String) {
-                    String text = (String) userObject;
-
-                    int lineNumber = -1;
-                    String filePath = text;
-
-                    int colonIdx = text.lastIndexOf(':');
-                    // Shortest file path
-                    if (colonIdx > 2) {
-                        try {
-                            lineNumber = Integer.parseInt(text.substring(colonIdx + 1));
-                            filePath = text.substring(0, colonIdx);
-                        } catch (NumberFormatException x) {
-                        }
-                    }
-                    OpenInEditorAction.post(filePath, lineNumber);
-                } 
-                else if (userObject instanceof OutputListener) {
-                    OutputListener ol = (OutputListener) r.getUserObject();
-                    if (ol == null) {
-                        return;
-                    }
-                    Extent extent = r.getExtent();
-                    String text = term.textWithin(extent.begin, extent.end);
-                    OutputEvent oe = new TerminalOutputEvent(Terminal.this.tio, text);
-                    ol.outputLineAction(oe);
-                }
+                Extent extent = r.getExtent();
+                String text = term.textWithin(extent.begin, extent.end);
+                OutputEvent oe = new TerminalOutputEvent(Terminal.this.tio, text);
+                ol.outputLineAction(oe);
             }
         });
 
@@ -624,7 +604,7 @@ public final class Terminal extends JComponent {
         if (initial) {
             term.setHorizontallyScrollable(!termOptions.getLineWrap());
 	}
-	
+
 	applyShortcuts();
 
         // If we change the font from smaller to bigger, the size
@@ -641,7 +621,7 @@ public final class Terminal extends JComponent {
     public ActiveTerm term() {
         return term;
     }
-    
+
     public String getCwd() {
 	return cwd;
     }
@@ -670,22 +650,22 @@ public final class Terminal extends JComponent {
         }
         findState.setVisible(true);
         Container ancestor = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
-        if (ancestor instanceof TerminalContainer) {
-            Task t = new Task.ActivateSearch((TerminalContainer) ancestor, this);
+        if (ancestor instanceof TerminalContainer terminalContainer) {
+            Task t = new Task.ActivateSearch(terminalContainer, this);
             t.post();
         }
     }
 
     public void changeFontSizeBy(final int d) {
 	int oldFontSize = termOptions.getFontSize();
-	
+
 	int newFontSze = oldFontSize + d;
 	if (newFontSze <= TermOptions.MIN_FONT_SIZE) {
 	    newFontSze = TermOptions.MIN_FONT_SIZE;
 	} else if (newFontSze >= TermOptions.MAX_FONT_SIZE) {
 	    newFontSze = TermOptions.MAX_FONT_SIZE;
-	} 
-	
+	}
+
 	TermOptions.getDefault(prefs).setFontSize(newFontSze);
     }
 
@@ -696,7 +676,7 @@ public final class Terminal extends JComponent {
     public void setPinned(boolean pinned) {
 	this.pinned = pinned;
     }
-    
+
     public boolean isCustomTitle() {
 	return customTitle;
     }
@@ -733,7 +713,7 @@ public final class Terminal extends JComponent {
 	}
 
 	if (isPinnable()) {
-	    /* Will be enabled after delegating actions from TerminalContainerTabber will 
+	    /* Will be enabled after delegating actions from TerminalContainerTabber will
 	     * be implemented. Enabling this now will cause inconsistensy or copy-pasting.
 	     */
 	    final AtomicBoolean canceled = new AtomicBoolean(false);
@@ -752,25 +732,20 @@ public final class Terminal extends JComponent {
 		    new JButton(NbBundle.getMessage(Terminal.class, "TXT_Cancel"))
 		};
 
-		ActionListener commandListener = new ActionListener() {
-
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-			String command = e.getActionCommand();
-
-			if (CMD_CLOSE_AND_UNPIN.equals(command)) {
-			    Action pinTabAction = ActionFactory.forID(ActionFactory.PIN_TAB_ACTION_ID);
-			    if (pinTabAction != null) {
-				pinTabAction.actionPerformed(null);
-			    }
-			} else if (CMD_CANCEL.equals(command)) {
-			    canceled.set(true);
-			    return;
-			} else if (CMD_CLOSE.equals(command)){
-			    return;
-			}
-		    }
-		};
+		ActionListener commandListener = (ActionEvent e) -> {
+                    String command = e.getActionCommand();
+                    switch (Optional.ofNullable(command).orElse("")) {
+                        case CMD_CLOSE_AND_UNPIN -> {
+                            Action pinTabAction1 = ActionFactory.forID(ActionFactory.PIN_TAB_ACTION_ID);
+                            if (pinTabAction1 != null) {
+                                pinTabAction1.actionPerformed(null);
+                            }
+                        }
+                        case CMD_CANCEL -> canceled.set(true);
+                        case CMD_CLOSE -> {}
+                        default -> {}
+                    }
+                };
 
 		options[CLOSE_AND_UNPIN].setActionCommand(CMD_CLOSE_AND_UNPIN);
 		options[CLOSE].setActionCommand(CMD_CLOSE);
@@ -895,7 +870,7 @@ public final class Terminal extends JComponent {
 	Task task = new Task.UpdateName(ioContainer, this);
 	task.post();
     }
-    
+
     private void updateTooltopText(String text) {
 	Task task = new Task.SetToolTipText(ioContainer, this, text);
 	task.post();
@@ -917,10 +892,10 @@ public final class Terminal extends JComponent {
 	TerminalPinSupport.getDefault().findPinningDetails(term).setPinned(newState);
 
 	setPinned(newState);
-	
+
 	pinTabAction.putValue("Name", PinTabAction.getMessage(newState)); //NOI18N
     }
-    
+
     private boolean isPinnable() {
 	Object clientProperty = this.getClientProperty("pinAction"); //NOI18N
 	return clientProperty != null && clientProperty.equals("enabled"); //NOI18N
@@ -951,7 +926,7 @@ public final class Terminal extends JComponent {
 	}
     }
     */
-    
+
     private Action copyAction = ActionFactory.forID(ActionFactory.COPY_ACTION_ID);
     private Action pasteAction = ActionFactory.forID(ActionFactory.PASTE_ACTION_ID);
     private Action findAction = ActionFactory.forID(ActionFactory.FIND_ACTION_ID);
@@ -980,7 +955,7 @@ public final class Terminal extends JComponent {
 	InputMap newInputMap = new InputMap();
 	newInputMap.setParent(inputMap);
 
-	Set<KeyStroke> passKeystrokes = new HashSet<KeyStroke>();
+	HashSet<KeyStroke> passKeystrokes = new HashSet<>();
 
 	for (Action a : actions) {
             String n = (String) a.getValue(Action.NAME);
@@ -988,13 +963,12 @@ public final class Terminal extends JComponent {
             if (key == null) {
                 continue;
             }
-            if (key instanceof KeyStroke) {
-                KeyStroke accelerator = (KeyStroke) key;
+            if (key instanceof KeyStroke accelerator) {
                 newInputMap.put(accelerator, n);
                 newActionMap.put(n, a);
                 passKeystrokes.add(accelerator);
-            } else if (key instanceof KeyStroke[]) {
-                for (KeyStroke accelerator : (KeyStroke[]) key) {
+            } else if (key instanceof KeyStroke[] keyStrokes) {
+                for (KeyStroke accelerator : keyStrokes) {
                     newInputMap.put(accelerator, n);
                     newActionMap.put(n, a);
                     passKeystrokes.add(accelerator);
@@ -1023,10 +997,10 @@ public final class Terminal extends JComponent {
 	// passKeystrokes.add(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
 	// passKeystrokes.add(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0));
 	 */
-	
+
 	comp.setActionMap(newActionMap);
 	comp.setInputMap(JComponent.WHEN_FOCUSED, newInputMap);
-        term.setKeyStrokeSet((HashSet) passKeystrokes);
+        term.setKeyStrokeSet(passKeystrokes);
     }
 
     private Point getPopupPosition() {
@@ -1041,10 +1015,10 @@ public final class Terminal extends JComponent {
 	// TMP Find is not operation so keep it disabled
 	// TODO IG fix
 	findAction.setEnabled(false);
-        
+
         Container container = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
         boolean isTerminalContainer = container instanceof TerminalContainer;
-	
+
 	JPopupMenu menu = Utilities.actionsToPopup(
 		new Action[]{
                     newTabAction,
@@ -1081,7 +1055,7 @@ public final class Terminal extends JComponent {
                 menu.add(new JSeparator());
         }
 	 */
-	
+
         menu.addPopupMenuListener(new PopupMenuListener() {
 	    @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -1125,36 +1099,34 @@ public final class Terminal extends JComponent {
     }
 
     public void setHyperlinkListener(final HyperlinkListener hyperlinkListener) {
-	term.setActionListener(new ActiveTermListener() {
-	    public void action(ActiveRegion r, InputEvent e) {
-		if (r.isLink()) {
-		    String url = (String) r.getUserObject();
-		    hyperlinkListener.action(url);
-		}
-	    }
-	});
+	term.setActionListener((ActiveRegion r, InputEvent e) -> {
+            if (r.isLink()) {
+                String url = (String) r.getUserObject();
+                hyperlinkListener.action(url);
+            }
+        });
     }
 
     void scrollTo(Coord coord) {
         term.possiblyNormalize(coord);
     }
-    
+
     private void applyShortcuts() {
 	if (!termOptions.getIgnoreKeymap()) {
-	    Set<String> actions = new HashSet<String>();
-	    for (FileObject def : shortcutsDir.getChildren()) {
-		try {
-		    DataObject dobj = DataObject.find(def);
-		    InstanceCookie ic = dobj.getLookup().lookup(InstanceCookie.class);
-		    if (ic != null) {
-			// put class names in the map,
-			// otherwise we may end with several instances of the action
-			actions.add(ic.instanceCreate().getClass().getName());
-		    }
-		} catch (Exception e) {
-		    Exceptions.printStackTrace(e);
-		}
-	    }
+            Set<String> actions = new HashSet<>();
+            for (FileObject def : shortcutsDir.getChildren()) {
+                try {
+                    DataObject dobj = DataObject.find(def);
+                    InstanceCookie ic = dobj.getLookup().lookup(InstanceCookie.class);
+                    if (ic != null) {
+                        // put class names in the map,
+                        // otherwise we may end with several instances of the action
+                        actions.add(ic.instanceCreate().getClass().getName());
+                    }
+                } catch (IOException | ClassNotFoundException | RuntimeException e) {
+                    Exceptions.printStackTrace(e);
+                }
+            }
 	    term.setKeymap(Lookup.getDefault().lookup(Keymap.class), actions);
 	    // needed for Ctrl+Tab, Ctrl+Shift+Tab switching
 	    term.getScreen().setFocusTraversalKeysEnabled(false);
@@ -1163,7 +1135,7 @@ public final class Terminal extends JComponent {
 	    term.getScreen().setFocusTraversalKeysEnabled(true);
 	}
     }
-    
+
     private class ShortcutsListener extends FileChangeAdapter {
 	@Override
 	public void fileAttributeChanged(FileAttributeEvent fe) {
@@ -1195,7 +1167,7 @@ public final class Terminal extends JComponent {
 	    applyShortcuts();
 	}
     }
-    
+
     private ActiveTerm createActiveTerminal() {
 	Clipboard aSystemClipboard = Lookup.getDefault().lookup(Clipboard.class);
 	if (aSystemClipboard == null) {
@@ -1203,14 +1175,14 @@ public final class Terminal extends JComponent {
 	}
 	return new MyActiveTerm(aSystemClipboard);
     }
-    
+
     private static final class MyActiveTerm extends ActiveTerm {
 	private final Clipboard systemClipboard;
-	
+
 	private MyActiveTerm(Clipboard systemClipboard) {
 	    this.systemClipboard = systemClipboard;
 	}
-	
+
 	@Override
 	public void copyToClipboard() {
 	    String text = getSelectedText();
@@ -1264,7 +1236,7 @@ public final class Terminal extends JComponent {
 
 	public TransferHandlerImpl(SupportStream stream) {
 	    /*
-	     * Trying to load data flavor for drag'n'drop operations . 
+	     * Trying to load data flavor for drag'n'drop operations .
 	     * So in this case just don't enable drag'n'drop feature for FileObjects.
 	     */
 	    try {
@@ -1275,7 +1247,7 @@ public final class Terminal extends JComponent {
 		this.multiTransferObject = new DataFlavor("application/x-java-openide-multinode;class=org.openide.util.datatransfer.MultiTransferObject;mask={0}");//NOI18N
 	    } catch (ClassNotFoundException ex) {
 	    }
-	    
+
 	    this.stream = stream;
 	}
 
@@ -1289,13 +1261,7 @@ public final class Terminal extends JComponent {
 	    }
 
 	    final String str = sb.toString();
-	    SwingUtilities.invokeLater(new Runnable() {
-
-		@Override
-		public void run() {
-		    stream.sendChars(str.toCharArray(), 0, str.length());
-		    }
-	    });
+	    SwingUtilities.invokeLater(() -> stream.sendChars(str.toCharArray(), 0, str.length()));
 	}
 
 	@Override
@@ -1303,7 +1269,7 @@ public final class Terminal extends JComponent {
 	    boolean canHandleDO = (dataObjectDnd != null && support.isDataFlavorSupported(dataObjectDnd));
 	    boolean canHandleMTO = (multiTransferObject != null && support.isDataFlavorSupported(multiTransferObject));
 	    boolean canHandleList = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
-	    
+
 	    if (canHandleDO || canHandleList) {
 		return true;
 	    } else if (canHandleMTO) {
@@ -1314,8 +1280,7 @@ public final class Terminal extends JComponent {
 			    return true;
 			}
 		    }
-		} catch (UnsupportedFlavorException ex) {
-		} catch (IOException ex) {
+		} catch (UnsupportedFlavorException | IOException ex) {
 		}
 	    }
 
@@ -1325,11 +1290,11 @@ public final class Terminal extends JComponent {
 	/**
 	 * Drops a list of objects to the Terminal, single quoted, space as
 	 * a delimiter. Terminal TC won't gain focus.
-	 * Order: 
-	 * 1. List of FileObject 
-	 * 2. Single FileObject 
-	 * 3. List of File. 
-	 * FO stands before File because list of RemoteFO is recognized as list 
+	 * Order:
+	 * 1. List of FileObject
+	 * 2. Single FileObject
+	 * 3. List of File.
+	 * FO stands before File because list of RemoteFO is recognized as list
 	 * of File but can't be correctly handled.
 	 *
 	 */
@@ -1340,7 +1305,7 @@ public final class Terminal extends JComponent {
 	    try {
 		if (multiTransferObject != null && support.isDataFlavorSupported(multiTransferObject)) {
 		    MultiTransferObject mto = (MultiTransferObject) transferable.getTransferData(multiTransferObject);
-		    List<String> strings = new ArrayList<String>();
+		    List<String> strings = new ArrayList<>();
 		    for (int i = 0; i < mto.getCount(); i++) {
 			if (mto.isDataFlavorSupported(i, dataObjectDnd)) {
 			    DataObject dObj = (DataObject) mto.getTransferData(i, dataObjectDnd);
@@ -1361,8 +1326,9 @@ public final class Terminal extends JComponent {
 			return true;
 		    }
 		} else if (support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    @SuppressWarnings("unchecked") // this must be a List<File> by specification
 		    List<File> list = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-		    List<String> strings = new ArrayList<String>();
+		    List<String> strings = new ArrayList<>();
 		    for (File file : list) {
 			strings.add(file.getAbsolutePath());
 		    }
@@ -1370,8 +1336,7 @@ public final class Terminal extends JComponent {
 		    display(strings);
 		    return true;
 		}
-	    } catch (UnsupportedFlavorException ex) {
-	    } catch (IOException ex) {
+	    } catch (UnsupportedFlavorException | IOException ex) {
 	    }
 
 	    return false;

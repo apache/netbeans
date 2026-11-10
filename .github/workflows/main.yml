@@ -1585,6 +1585,9 @@ jobs:
       - name: debugger.jpda.ui
         run: ant $OPTS -f java/debugger.jpda.ui test-unit
 
+      - name: debugger.jpda.heapwalk
+        run: ant $OPTS -f profiler/debugger.jpda.heapwalk test-unit
+
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
@@ -1634,6 +1637,9 @@ jobs:
 
       - name: profiler.oql
         run: ant $OPTS -f profiler/profiler.oql test
+
+      - name: profiler.heapwalker
+        run: ant $OPTS -f profiler/profiler.heapwalker test
 
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6

@@ -415,7 +415,7 @@ metabuild.hash=${metabuild.hash}</echo>
   </target>
 
   <target name="maven-install" depends="init" description="Finishes installation of artifacts into Maven repository">
-      <echo message="Run only after: ant build-source-zips build-nbms build-javadoc!"/>
+      <echo message="=== Run only after ===${line.separator} ant build-source-zips${line.separator} ant build-nbms${line.separator} ant build-javadoc${line.separator}=== Only then maven-install ===${line.separator}"/>
 
       <!--
       Inspired by following two invocations:

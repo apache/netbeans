@@ -2228,6 +2228,9 @@ public class Term extends JComponent implements Accessible {
                 System.out.println("Focus gained >>>>>>>>>>>>>>>>>>>>>>>"); // NOI18N
                  */
                 has_focus = true;
+                if (reportFocusEvents) {
+                    sendFocusEvent(true);
+                }
                 repaint(false);
             }
 
@@ -2239,9 +2242,22 @@ public class Term extends JComponent implements Accessible {
                  */
 
                 has_focus = false;
+                if (reportFocusEvents) {
+                    sendFocusEvent(false);
+                }
                 repaint(false);
             }
         });
+    }
+
+    private static final char[] FOCUS_GAINED = new char[]{ESC, '[', 'I'};
+    private static final char[] FOCUS_LOST = new char[]{ESC, '[', 'O'};
+    private void sendFocusEvent(boolean hasFocus) {
+        if (hasFocus) {
+            sendChars(FOCUS_GAINED, 0, FOCUS_GAINED.length);
+        } else {
+            sendChars(FOCUS_LOST, 0, FOCUS_GAINED.length);
+        }
     }
 
     private static final char[] MOUSE_REPORT_PREFIX_CLASSIC = new char[]{ESC, '[', 'M'};
@@ -4424,6 +4440,7 @@ public class Term extends JComponent implements Accessible {
             setReportMouseClick(false);
             setReportMouseMotionAll(false);
             setReportMouseMotionWhilePressed(false);
+            setReportFocusEvents(false);
 
             repaint(false);
         }
@@ -4599,6 +4616,11 @@ public class Term extends JComponent implements Accessible {
             setReportMouseClick(clickEvents);
             setReportMouseMotionWhilePressed(motionWhilePressed);
             setReportMouseMotionAll(motionAll);
+        }
+
+        @Override
+        public void op_focus_tracking(boolean enabled) {
+            setReportFocusEvents(enabled);
         }
     }
 
@@ -6164,6 +6186,26 @@ public class Term extends JComponent implements Accessible {
     private boolean reportMouseMotionWhilePressed;
     private boolean reportMouseMotionAll;
     private boolean reportFormatMouseSGR;
+
+    /**
+     * Report focus events
+     *
+     * @return {@code true} if enabled
+     */
+    public boolean isReportFocusEvents() {
+        return reportFocusEvents;
+    }
+
+    /**
+     * Report focus events
+     *
+     * @param reportFocusEvents
+     */
+    public void setReportFocusEvents(boolean reportFocusEvents) {
+        this.reportFocusEvents = reportFocusEvents;
+    }
+
+    private boolean reportFocusEvents;
 
     private void updateCursor() {
         if (reportMouseClick || reportMouseMotionWhilePressed) {

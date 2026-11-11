@@ -129,5 +129,7 @@ interface Ops {
 
     default public void op_mouse_tracking(boolean clickEvents, boolean motionWhilePressed, boolean motionAll) {}
 
+    default public void op_focus_tracking(boolean enabled) {}
+
     default public void op_mouse_report_sgr(boolean enabled) {}
 }

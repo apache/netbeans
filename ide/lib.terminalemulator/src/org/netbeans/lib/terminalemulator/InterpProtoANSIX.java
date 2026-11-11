@@ -230,6 +230,9 @@ class InterpProtoANSIX extends InterpProtoANSI {
                     case 1003:
                         ai.ops.op_mouse_tracking(true, true, true);
                         break;
+                    case 1004:
+                        ai.ops.op_focus_tracking(true);
+                        break;
                     case 1006:
                         ai.ops.op_mouse_report_sgr(true);
                         break;
@@ -260,6 +263,9 @@ class InterpProtoANSIX extends InterpProtoANSI {
                     case 1002:
                     case 1003:
                         ai.ops.op_mouse_tracking(false, false, false);
+                        break;
+                    case 1004:
+                        ai.ops.op_focus_tracking(false);
                         break;
                     case 1006:
                         ai.ops.op_mouse_report_sgr(false);

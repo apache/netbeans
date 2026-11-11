@@ -45,7 +45,7 @@ class State {
     } 
 
     // Current attribute as defined by class Attr
-    public int attr;
+    public Attr attr = new Attr();
 
     // If 'true' characters replace what's under cursor (default)
     // If 'false' act as an insert operation.

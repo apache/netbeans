@@ -24,26 +24,13 @@
 
 package org.netbeans.lib.terminalemulator;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-enum Attr {
-    BGCOLOR(9),		// encodes 0 or palette index+1 (was: 5)
-    FGCOLOR(9),		// encodes 0 or palette index+1 (was: 5)
-    HIDDEN(1),
-    REVERSE(1),
-    BLINK(1),
-    UNDERSCORE(1),
-    BRIGHT(1),
-    DIM(1),
-    ACTIVE(1),
-
-    // Since an attr value of 0 means render using default attributes
-    // We need a value that signifies that no attribute has been set.
-    // Can't use the highest (sign) bit since Java has no unsigned and
-    // we get complaints from the compiler.
-    UNSET(30, 1);
-
-    public static final int ALT;
-
+class Attr {
     //
     // Bases of various color ranges.
     // These are indexes into Term.palette
@@ -70,536 +57,598 @@ enum Attr {
 
     public static final int PAL_SIZE = 259;
 
-    private final int width;	// ... of field
-    private final int fmask;	// ... corresponding to width
+    private final Color fgColor;
 
-    private int offset;		// ... of field from the "left"
-    private int wmask;		// ... over the word. 1 where bits are set.
+    private final Color bgColor;
 
-    static {
-	// System.out.printf("Attr.static()\n");
-	for (Attr a : values())
-	    a.init();
-	ALT = Attr.BGCOLOR.wmask | Attr.FGCOLOR.wmask | Attr.REVERSE.wmask | Attr.ACTIVE.wmask;
+    private final int attributes;
+
+    public Attr() {
+        this(0, null, null);
     }
 
-    /*
-     * Explicitly set the offset.
-     */
-    private Attr(int offset, int width) {
-	// System.out.printf("Attr(%d, %d) -> %d\n", offset, width, ordinal());
-	this.offset = offset;
-	this.width = width;
-	this.fmask = (1<<width)-1;
+    public Attr(int attributes, Color fgColor, Color bgColor) {
+        this.attributes = attributes;
+        this.fgColor = fgColor;
+        this.bgColor = bgColor;
     }
 
-    /*
-     * Automatically set the offset.
-     */
-    private Attr(int width) {
-	// System.out.printf("Attr(%d) -> %d\n", width, ordinal());
-	this.offset = -1;
-	this.width = width;
-	this.fmask = (1<<width)-1;
+    public boolean isEmpty() {
+        return attributes == 0 && fgColor == null && bgColor == null;
     }
 
-    private void init() {
-	if (this.offset == -1) {
-	    if (ordinal() == 0) {
-		this.offset = 0;
-	    } else {
-		Attr prev = Attr.values()[ordinal()-1];
-		offset = prev.offset + prev.width;
-	    }
-	}
-	wmask = fmask << offset;
-	// System.out.printf("%s\n", this);
+    public boolean isHidden() {
+        return AttrEncoding.HIDDEN.isSet(this.attributes);
     }
 
-    @Override
-    public String toString() {
-	return String.format("%d %10s(%2d, %2d, 0x%02x %8s, 0x%08x %32s)", // NOI18N
-		             ordinal(), name(),
-			     offset, width,
-			     fmask, Integer.toBinaryString(fmask),
-			     wmask, Integer.toBinaryString(wmask) );
+    public boolean isReverse() {
+        return AttrEncoding.REVERSE.isSet(this.attributes);
     }
 
-    public static String toString(int attr) {
-	return String.format("%32s", Integer.toBinaryString(attr)).replace(" ", "0"); // NOI18N
-
+    public boolean isBlink() {
+        return AttrEncoding.BLINK.isSet(this.attributes);
     }
 
-    public final int get(int attr) {
-	return (attr >> offset) & fmask;
+    public boolean isUnderscore() {
+        return AttrEncoding.UNDERSCORE.isSet(this.attributes);
     }
 
-    /*
-     * Use for setting a wide field.
-     * Works for 1-bit field but set(int) is more efficient.
-     */
-    public final int set(int attr, int value) {
-	// value &= fmask;	// throw all but lowest relevant bits away
-	// attr &= ~ wmask;	// 0 out existing bits
-	// attr |= value << offset;// set new value
-
-	return (attr & ~wmask) | ((value & fmask) << offset);
+    public boolean isBright() {
+        return AttrEncoding.BRIGHT.isSet(this.attributes);
     }
 
-    /*
-     * Use for setting a 1 bit field
-     */
-    public final int set(int attr) {
-	assert width == 1;
-	return attr | (1 << offset);
+    public boolean isDim() {
+        return AttrEncoding.DIM.isSet(this.attributes);
     }
 
-    /*
-     * Use for clearing any width field.
-     */
-    public final int clear(int attr) {
-	return attr & ~wmask;
+    public boolean isActive() {
+        return AttrEncoding.ACTIVE.isSet(this.attributes);
     }
 
 
-    public final boolean isSet(int attr) {
-	return (attr & wmask) != 0;
+    public boolean isBGcolor() {
+        return bgColor != null || AttrEncoding.BGCOLOR.isSet(this.attributes);
+    }
+
+    public boolean isFGcolor() {
+        return fgColor != null || AttrEncoding.FGCOLOR.isSet(this.attributes);
     }
 
     /**
      * Use this to get at the FG palette index embedded in an attr.
      */
-    public static int foregroundColor(int attr) {
-	final int cx = FGCOLOR.get(attr);
-	if (cx == 0)
-	    return PAL_FG;
-	else
-	    return cx-1;
-    } 
+    public Color getFGcolor(Color[] palette) {
+        if (fgColor != null) {
+            return fgColor;
+        }
+        final int cx = AttrEncoding.FGCOLOR.get(this.attributes);
+        if (cx == 0) {
+            return palette[PAL_FG];
+        } else {
+            return palette[cx - 1];
+        }
+    }
 
     /**
      * Use this to get at the BG palette index embedded in an attr.
      */
-    public static int backgroundColor(int attr) {
-	final int cx = BGCOLOR.get(attr);
-	if (cx == 0)
-	    return PAL_BG;
-	else
-	    return cx-1;
+    public Color getBGColor(Color[] palette) {
+        if (bgColor != null) {
+            return bgColor;
+        }
+        final int cx = AttrEncoding.BGCOLOR.get(this.attributes);
+        if (cx == 0) {
+            return palette[PAL_BG];
+        } else {
+            return palette[cx - 1];
+        }
     }
 
-    /*
-     * Read-modify-write utility for setting bitfields in 'attr'.
-     */
-    @SuppressWarnings("AssignmentToMethodParameter")
-    public static int setAttribute(int attr, int value) {
-	switch (value) {
-	    case 0:
-		// Reset all attributes
-		attr = 0;
-		break;
-	    case 5:             // slow blink
-	    case 6:             // fast blink
-		// Attr.BLINK
-		// FALLTHRU
-	    case 1:
-		attr = DIM.clear(attr);
-		attr = BRIGHT.set(attr);
-		break;
-	    case 2:
-                // Faint - not implemented
-		attr = BRIGHT.clear(attr);
-		attr = DIM.set(attr);
-		break;
-            case 3:
-                // Italic - not supported
-                break;
-	    case 4:
-		attr = UNDERSCORE.set(attr);
-		break;
-	    case 7:
-		attr = REVERSE.set(attr);
-		break;
-	    case 8:
-		attr = HIDDEN.set(attr);
-		break;
+    public Attr setAttribute(List<Integer> parameterList) {
+        int attributesUpdated = this.attributes;
+        Color fgColorUpdated = this.fgColor;
+        Color bgColorUpdated = this.bgColor;
 
-	    case 9:
-		// Term specific
-		attr = ACTIVE.set(attr);
-		break;
-
-	    // turn individual attributes off (dtterm specific?)
-	    case 25:
-		// blinking off
-		// FALLTHRU
-	    case 22:
-		attr = DIM.clear(attr);
-		attr = BRIGHT.clear(attr);
-		break;
-	    case 24:
-		attr = UNDERSCORE.clear(attr);
-		break;
-	    case 27:
-		attr = REVERSE.clear(attr);
-		break;
-	    case 28:
-		attr = HIDDEN.clear(attr);
-		break;
-
-	    // default color
-	    case 39:
-		attr = FGCOLOR.clear(attr);
-		break;
-	    case 49:
-		attr = BGCOLOR.clear(attr);
-		break;
-
-
-	    // ANSI fg
-	    case 30:
-	    case 31:
-	    case 32:
-	    case 33:
-	    case 34:
-	    case 35:
-	    case 36:
-	    case 37:
-
-	    // ANSI bg
-	    case 40:
-	    case 41:
-	    case 42:
-	    case 43:
-	    case 44:
-	    case 45:
-	    case 46:
-	    case 47:
-
-	    // custom fg
-            case 50:
-	    case 51:
-	    case 52:
-	    case 53:
-	    case 54:
-	    case 55:
-	    case 56:
-	    case 57:
-
-	    // custom bg (was: 60-67)
-	    case 58:
-	    case 59:
-	    case 60:
-	    case 61:
-	    case 62:
-	    case 63:
-	    case 64:
-	    case 65:
-
-	    // bright fg
-	    case 90:
-	    case 91:
-	    case 92:
-	    case 93:
-	    case 94:
-	    case 95:
-	    case 96:
-	    case 97:
-
-	    // bright bg
-	    case 100:
-	    case 101:
-	    case 102:
-	    case 103:
-	    case 104:
-	    case 105:
-	    case 106:
-	    case 107:
-		try {
-		    Info i = map[value];
-		    if (i != null)
-			attr = i.field.set(attr, i.pindex+1);
-		} catch (ArrayStoreException x) {
-		    // silently ignore unrecognized attribute
-		    break;
-		}
-		break;
-
-	    default:
-		// silently ignore unrecognized attribute
-		break;
-	} 
-	return attr;
+        // Loop over the parameter list as multiple operations can be combined
+        // into a single call
+        List<Integer> workList = new ArrayList<>(parameterList);
+        if (workList.isEmpty()) {
+            workList.add(0); // No parameter implies reset
+        }
+        while (!workList.isEmpty()) {
+            Integer value = workList.removeFirst();
+            switch (value) {
+                case 0 -> {
+                    // Reset all attributes
+                    attributesUpdated = 0;
+                    fgColorUpdated = null;
+                    bgColorUpdated = null;
+                }
+                case 1, 5, 6 -> { // bold/bright // slow blink // fast blink (blink is not supported)
+                    attributesUpdated = AttrEncoding.DIM.clear(attributesUpdated);
+                    attributesUpdated = AttrEncoding.BRIGHT.set(attributesUpdated);
+                }
+                case 2 -> {
+                    // Faint - not implemented
+                    attributesUpdated = AttrEncoding.BRIGHT.clear(attributesUpdated);
+                    attributesUpdated = AttrEncoding.DIM.set(attributesUpdated);
+                }
+                case 3 -> {
+                    // Italic - not supported
+                }
+                case 4 -> {
+                    attributesUpdated = AttrEncoding.UNDERSCORE.set(attributesUpdated);
+                }
+                case 7 -> {
+                    attributesUpdated = AttrEncoding.REVERSE.set(attributesUpdated);
+                }
+                case 8 -> {
+                    attributesUpdated = AttrEncoding.HIDDEN.set(attributesUpdated);
+                }
+                case 9 -> {
+                    // Term specific
+                    attributesUpdated = AttrEncoding.ACTIVE.set(attributesUpdated);
+                }
+                case 22, 25 -> { // reset bold/dim // reset blink (not supported)
+                    attributesUpdated = AttrEncoding.DIM.clear(attributesUpdated);
+                    attributesUpdated = AttrEncoding.BRIGHT.clear(attributesUpdated);
+                }
+                case 24 -> {
+                    attributesUpdated = AttrEncoding.UNDERSCORE.clear(attributesUpdated);
+                }
+                case 27 -> {
+                    attributesUpdated = AttrEncoding.REVERSE.clear(attributesUpdated);
+                }
+                case 28 -> {
+                    attributesUpdated = AttrEncoding.HIDDEN.clear(attributesUpdated);
+                }
+                case 39 -> { // default color
+                    attributesUpdated = AttrEncoding.FGCOLOR.clear(attributesUpdated);
+                    fgColorUpdated = null;
+                }
+                case 49 -> { // default color
+                    attributesUpdated = AttrEncoding.BGCOLOR.clear(attributesUpdated);
+                    bgColorUpdated = null;
+                }
+                case 30, 31, 32, 33, 34, 35, 36, 37, // ANSI fg
+                     40, 41, 42, 43, 44, 45, 46, 47, // ANSI bg
+                     50, 51, 52, 53, 54, 55, 56, 57, // custom fg
+                     58, 59, 60, 61, 62, 63, 64, 65, // custom bg (was: 60-67)
+                     90, 91, 92, 93, 94, 95, 96, 97, // bright fg
+                     100, 101, 102, 103, 104, 105, 106, 107 -> { // bright bg
+                    try {
+                        Info i = map[value];
+                        if (i != null) {
+                            attributesUpdated = i.field.set(attributesUpdated, i.pindex + 1);
+                            // If color is switched to a predefined value, clear
+                            // clear the corresponding truecolor value
+                            if (i.field == AttrEncoding.FGCOLOR) {
+                                fgColorUpdated = null;
+                            } else if (i.field == AttrEncoding.BGCOLOR) {
+                                bgColorUpdated = null;
+                            }
+                        }
+                    } catch (ArrayStoreException x) {
+                        // silently ignore unrecognized attribute
+                        break;
+                    }
+                }
+                case 38, 48 -> { // Extended set color foreground / background
+                    if (workList.size() > 1) {
+                        boolean background  = value == 48;
+                        value = workList.removeFirst();
+                        if (value == 5) { // Color format indexed into 256 color palette
+                            value = workList.removeFirst();
+                            attributesUpdated =
+                                    (background ? AttrEncoding.BGCOLOR : AttrEncoding.FGCOLOR)
+                                    .set(attributesUpdated, value + 1);
+                        } else if (value == 2) { // Color format RGB values
+                            int r = workList.removeFirst();
+                            int g = workList.removeFirst();
+                            int b = workList.removeFirst();
+                            if (background) {
+                                bgColorUpdated = new Color(r, g, b);
+                            } else {
+                                fgColorUpdated = new Color(r, g, b);
+                            }
+                        }
+                    }
+                }
+                default -> {
+                    // silently ignore unrecognized attribute
+                }
+            }
+        }
+        return new Attr(attributesUpdated, fgColorUpdated, bgColorUpdated);
     }
 
-    /*
-     * Read-modify-write utility for unsetting bitfields in 'attr'.
-     * Note: this doesn't cover the unsetting operations which
-     * setAttributes does.
-     */
-    @SuppressWarnings("AssignmentToMethodParameter")
-    public static int unsetAttribute(int attr, int value) {
-	switch (value) {
-	    case 0:
-		// Reset all attributes
-		attr = 0;
-		break;
-	    case 5:
-		// Attr.BLINK
-		// FALLTHRU
-	    case 1:
-		attr = BRIGHT.clear(attr);
-		break;
-	    case 2:
-		attr = DIM.clear(attr);
-		break;
-	    case 4:
-		attr = UNDERSCORE.clear(attr);
-		break;
-	    case 7:
-		attr = REVERSE.clear(attr);
-		break;
-	    case 8:
-		attr = HIDDEN.clear(attr);
-		break;
-	    case 9:
-		attr = ACTIVE.clear(attr);
-		break;
+    public Attr unsetAttribute(int value) {
+        int attrUpdated = attributes;
+        Color fgColorUpdated = this.fgColor;
+        Color bgColorUpdated = this.bgColor;
+        switch (value) {
+            case 0 -> {
+                // Reset all attributes
+                attrUpdated = 0;
+                fgColorUpdated = null;
+                bgColorUpdated = null;
+            }
+            case 1, 5, 6 -> { // bold/bright // slow blink // fast blink (blink is not supported)
+                attrUpdated = AttrEncoding.BRIGHT.clear(attrUpdated);
+            }
+            case 2 -> {
+                attrUpdated = AttrEncoding.DIM.clear(attrUpdated);
+            }
+            case 4 -> {
+                attrUpdated = AttrEncoding.UNDERSCORE.clear(attrUpdated);
+            }
+            case 7 -> {
+                attrUpdated = AttrEncoding.REVERSE.clear(attrUpdated);
+            }
+            case 8 -> {
+                attrUpdated = AttrEncoding.HIDDEN.clear(attrUpdated);
+            }
+            case 9 -> {
+                attrUpdated = AttrEncoding.ACTIVE.clear(attrUpdated);
+            }
+            case 30, 31, 32, 33, 34, 35, 36, 37, // ANSI fg
+                 40, 41, 42, 43, 44, 45, 46, 47, // ANSI bg
+                 50, 51, 52, 53, 54, 55, 56, 57, // custom fg
+                 58, 59, 60, 61, 62, 63, 64, 65, // custom bg (was: 60-67)
+                 90, 91, 92, 93, 94, 95, 96, 97, // bright fg
+                 100, 101, 102, 103, 104, 105, 106, 107 -> { // bright bg
+                try {
+                    Info i = map[value];
+                    if (i != null) {
+                        attrUpdated = i.field.clear(attrUpdated);
+                        if (i.field == AttrEncoding.BGCOLOR) {
+                            fgColorUpdated = null;
+                        } else if (i.field == AttrEncoding.BGCOLOR) {
+                            bgColorUpdated = null;
+                        }
+                    }
+                } catch (ArrayStoreException x) {
+                    // silently ignore unrecognized attribute
+                    break;
+                }
+            }
+            default -> {
+                // silently ignore unrecognized attribute
+            }
+        }
+        return new Attr(attrUpdated, fgColorUpdated, bgColorUpdated);
+    }
 
-	    // ANSI fg
-	    case 30:
-	    case 31:
-	    case 32:
-	    case 33:
-	    case 34:
-	    case 35:
-	    case 36:
-	    case 37:
+    public Attr altVariant() {
+        return new Attr(this.attributes & ~ AttrEncoding.ALT, null, null);
+    }
 
-	    // ANSI bg
-	    case 40:
-	    case 41:
-	    case 42:
-	    case 43:
-	    case 44:
-	    case 45:
-	    case 46:
-	    case 47:
+    public Attr bgColorVariant() {
+        return new Attr(AttrEncoding.BGCOLOR.get(this.attributes), null, this.bgColor);
+    }
 
-	    // custom colors dtterm fg
-            case 50:
-	    case 51:
-	    case 52:
-	    case 53:
-	    case 54:
-	    case 55:
-	    case 56:
-	    case 57:
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.fgColor);
+        hash = 53 * hash + Objects.hashCode(this.bgColor);
+        hash = 53 * hash + this.attributes;
+        return hash;
+    }
 
-	    // custom colors dtterm bg
-	    case 58:
-	    case 59:
-	    case 60:
-	    case 61:
-	    case 62:
-	    case 63:
-	    case 64:
-	    case 65:
-                
-	    // bright fg
-	    case 90:
-	    case 91:
-	    case 92:
-	    case 93:
-	    case 94:
-	    case 95:
-	    case 96:
-	    case 97:
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Attr other = (Attr) obj;
+        if (this.attributes != other.attributes) {
+            return false;
+        }
+        if (!Objects.equals(this.fgColor, other.fgColor)) {
+            return false;
+        }
+        return Objects.equals(this.bgColor, other.bgColor);
+    }
 
-	    // bright bg
-	    case 100:
-	    case 101:
-	    case 102:
-	    case 103:
-	    case 104:
-	    case 105:
-	    case 106:
-	    case 107:
-		try {
-		    Info i = map[value];
-		    if (i != null)
-			attr = i.field.clear(attr);
-		} catch (ArrayStoreException x) {
-		    // silently ignore unrecognized attribute
-		    break;
-		}
-		break;
-	    default:
-		// silently ignore unrecognized attribute
-		break;
-	} 
-	return attr;
+    
+
+    @Override
+    public String toString() {
+        return "Attr {" +
+                "isActive=" + isActive() + ", " +
+                "isBGcolor=" + isBGcolor()+ ", " +
+                "isBlink=" + isBlink() + ", " +
+                "isDim=" + isDim() + ", " +
+                "isEmpty=" + isEmpty() + ", " +
+                "isFGcolor=" + isFGcolor() + ", " +
+                "isHidden=" + isHidden() + ", " +
+                "isReverse=" + isReverse() + ", " +
+                "isUnderscore=" + isUnderscore() + ", " +
+                "fgColor=" + fgColor + ", " +
+                "bgColor=" + bgColor +
+                "}";
+    }
+
+    private enum AttrEncoding {
+        BGCOLOR(9),		// encodes 0 or palette index+1 (was: 5), offset 0
+        FGCOLOR(9),		// encodes 0 or palette index+1 (was: 5), offset 9
+        HIDDEN(1),          // offset 10
+        REVERSE(1),         // offset 11
+        BLINK(1),           // offset 12
+        UNDERSCORE(1),      // offset 13
+        BRIGHT(1),          // offset 14
+        DIM(1),             // offset 15
+        ACTIVE(1),          // offset 16
+
+        // Since an attr value of 0 means render using default attributes
+        // We need a value that signifies that no attribute has been set.
+        // Can't use the highest (sign) bit since Java has no unsigned and
+        // we get complaints from the compiler.
+        UNSET(30, 1);
+
+        public static final int ALT;
+
+        private final int width;	// ... of field
+        private final int fmask;	// ... corresponding to width
+
+        private int offset;		// ... of field from the "left"
+        private int wmask;		// ... over the word. 1 where bits are set.
+
+        static {
+            // System.out.printf("Attr.static()\n");
+            for (AttrEncoding a : values())
+                a.init();
+            ALT = AttrEncoding.BGCOLOR.wmask | AttrEncoding.FGCOLOR.wmask | AttrEncoding.REVERSE.wmask | AttrEncoding.ACTIVE.wmask;
+        }
+
+        /*
+         * Explicitly set the offset.
+         */
+        private AttrEncoding(int offset, int width) {
+            // System.out.printf("Attr(%d, %d) -> %d\n", offset, width, ordinal());
+            this.offset = offset;
+            this.width = width;
+            this.fmask = (1<<width)-1;
+        }
+
+        /*
+         * Automatically set the offset.
+         */
+        private AttrEncoding(int width) {
+            // System.out.printf("Attr(%d) -> %d\n", width, ordinal());
+            this.offset = -1;
+            this.width = width;
+            this.fmask = (1<<width)-1;
+        }
+
+        private void init() {
+            if (this.offset == -1) {
+                if (ordinal() == 0) {
+                    this.offset = 0;
+                } else {
+                    AttrEncoding prev = AttrEncoding.values()[ordinal()-1];
+                    offset = prev.offset + prev.width;
+                }
+            }
+            wmask = fmask << offset;
+            // System.out.printf("%s\n", this);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%d %10s(%2d, %2d, 0x%02x %8s, 0x%08x %32s)", // NOI18N
+                                 ordinal(), name(),
+                                 offset, width,
+                                 fmask, Integer.toBinaryString(fmask),
+                                 wmask, Integer.toBinaryString(wmask) );
+        }
+
+        public static String toString(int attr) {
+            return String.format("%32s", Integer.toBinaryString(attr)).replace(" ", "0"); // NOI18N
+
+        }
+
+        public final int get(int attr) {
+            return (attr >> offset) & fmask;
+        }
+
+        /*
+         * Use for setting a wide field.
+         * Works for 1-bit field but set(int) is more efficient.
+         */
+        public final int set(int attr, int value) {
+            // value &= fmask;	// throw all but lowest relevant bits away
+            // attr &= ~ wmask;	// 0 out existing bits
+            // attr |= value << offset;// set new value
+
+            return (attr & ~wmask) | ((value & fmask) << offset);
+        }
+
+        /*
+         * Use for setting a 1 bit field
+         */
+        public final int set(int attr) {
+            assert width == 1;
+            return attr | (1 << offset);
+        }
+
+        /*
+         * Use for clearing any width field.
+         */
+        public final int clear(int attr) {
+            return attr & ~wmask;
+        }
+
+
+        public final boolean isSet(int attr) {
+            return (attr & wmask) != 0;
+        }
+
     }
 
     public static final int rendition_to_pindex(int rendition) {
-	try {
-	    Info i = map[rendition];
-	    if (i == null)
-		return -1;
-	    else
-		return i.pindex;
-	} catch (ArrayIndexOutOfBoundsException x) {
-	    return -1;
-	}
+        try {
+            Info i = map[rendition];
+            if (i == null) {
+                return -1;
+            } else {
+                return i.pindex;
+            }
+        } catch (ArrayIndexOutOfBoundsException x) {
+            return -1;
+        }
     }
 
     private static final class Info {
-	public final int rendition;	// map[r].rendition == r
-	public final Attr field;	// ... to set
-	public final int pindex;	// palette index
 
-	Info(int rendition, Attr field, int pindex) {
-	    this.rendition = rendition;
-	    this.field = field;
-	    this.pindex = pindex;
-	}
+        public final int rendition;	// map[r].rendition == r
+        public final AttrEncoding field; // ... to set
+        public final int pindex;	// palette index
+
+        Info(int rendition, AttrEncoding field, int pindex) {
+            this.rendition = rendition;
+            this.field = field;
+            this.pindex = pindex;
+        }
     }
 
     // Map a rendition to info needed for settig it's value
     private static final Info map[];
 
     static {
-	map = new Info[] {
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,	// 9
+        map = new Info[]{
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null, // 9
 
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,	// 19
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null, // 19
 
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,	// 29
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null, // 29
 
-	    // ANSI fg
-	    new Info(30, FGCOLOR, PAL_ANSI+0),
-	    new Info(31, FGCOLOR, PAL_ANSI+1),
-	    new Info(32, FGCOLOR, PAL_ANSI+2),
-	    new Info(33, FGCOLOR, PAL_ANSI+3),
-	    new Info(34, FGCOLOR, PAL_ANSI+4),
-	    new Info(35, FGCOLOR, PAL_ANSI+5),
-	    new Info(36, FGCOLOR, PAL_ANSI+6),
-	    new Info(37, FGCOLOR, PAL_ANSI+7),
-	    null,	// 38
-	    new Info(39, FGCOLOR, PAL_FG),
+            // ANSI fg
+            new Info(30, AttrEncoding.FGCOLOR, PAL_ANSI + 0),
+            new Info(31, AttrEncoding.FGCOLOR, PAL_ANSI + 1),
+            new Info(32, AttrEncoding.FGCOLOR, PAL_ANSI + 2),
+            new Info(33, AttrEncoding.FGCOLOR, PAL_ANSI + 3),
+            new Info(34, AttrEncoding.FGCOLOR, PAL_ANSI + 4),
+            new Info(35, AttrEncoding.FGCOLOR, PAL_ANSI + 5),
+            new Info(36, AttrEncoding.FGCOLOR, PAL_ANSI + 6),
+            new Info(37, AttrEncoding.FGCOLOR, PAL_ANSI + 7),
+            null, // 38
+            new Info(39, AttrEncoding.FGCOLOR, PAL_FG),
+            // ANSI bg
+            new Info(40, AttrEncoding.BGCOLOR, PAL_ANSI + 0),
+            new Info(41, AttrEncoding.BGCOLOR, PAL_ANSI + 1),
+            new Info(42, AttrEncoding.BGCOLOR, PAL_ANSI + 2),
+            new Info(43, AttrEncoding.BGCOLOR, PAL_ANSI + 3),
+            new Info(44, AttrEncoding.BGCOLOR, PAL_ANSI + 4),
+            new Info(45, AttrEncoding.BGCOLOR, PAL_ANSI + 5),
+            new Info(46, AttrEncoding.BGCOLOR, PAL_ANSI + 6),
+            new Info(47, AttrEncoding.BGCOLOR, PAL_ANSI + 7),
+            null, // 48
+            new Info(49, AttrEncoding.BGCOLOR, PAL_BG),
+            // dtterm/custom fg
+            new Info(50, AttrEncoding.FGCOLOR, PAL_BRIGHT + 0),
+            new Info(51, AttrEncoding.FGCOLOR, PAL_BRIGHT + 1),
+            new Info(52, AttrEncoding.FGCOLOR, PAL_BRIGHT + 2),
+            new Info(53, AttrEncoding.FGCOLOR, PAL_BRIGHT + 3),
+            new Info(54, AttrEncoding.FGCOLOR, PAL_BRIGHT + 4),
+            new Info(55, AttrEncoding.FGCOLOR, PAL_BRIGHT + 5),
+            new Info(56, AttrEncoding.FGCOLOR, PAL_BRIGHT + 6),
+            new Info(57, AttrEncoding.FGCOLOR, PAL_BRIGHT + 7),
+            // dtterm/custom bg
+            new Info(58, AttrEncoding.BGCOLOR, PAL_BRIGHT + 0),
+            new Info(59, AttrEncoding.BGCOLOR, PAL_BRIGHT + 1),
+            new Info(60, AttrEncoding.BGCOLOR, PAL_BRIGHT + 2),
+            new Info(61, AttrEncoding.BGCOLOR, PAL_BRIGHT + 3),
+            new Info(62, AttrEncoding.BGCOLOR, PAL_BRIGHT + 4),
+            new Info(63, AttrEncoding.BGCOLOR, PAL_BRIGHT + 5),
+            new Info(64, AttrEncoding.BGCOLOR, PAL_BRIGHT + 6),
+            new Info(65, AttrEncoding.BGCOLOR, PAL_BRIGHT + 7),
+            null, // 66
+            null,
+            null,
+            null, // 69
 
-	    // ANSI bg
-	    new Info(40, BGCOLOR, PAL_ANSI+0),
-	    new Info(41, BGCOLOR, PAL_ANSI+1),
-	    new Info(42, BGCOLOR, PAL_ANSI+2),
-	    new Info(43, BGCOLOR, PAL_ANSI+3),
-	    new Info(44, BGCOLOR, PAL_ANSI+4),
-	    new Info(45, BGCOLOR, PAL_ANSI+5),
-	    new Info(46, BGCOLOR, PAL_ANSI+6),
-	    new Info(47, BGCOLOR, PAL_ANSI+7),
-	    null,	// 48
-	    new Info(49, BGCOLOR, PAL_BG),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null, // 79
 
-	    // dtterm/custom fg
-	    new Info(50, FGCOLOR, PAL_BRIGHT+0),
-	    new Info(51, FGCOLOR, PAL_BRIGHT+1),
-	    new Info(52, FGCOLOR, PAL_BRIGHT+2),
-	    new Info(53, FGCOLOR, PAL_BRIGHT+3),
-	    new Info(54, FGCOLOR, PAL_BRIGHT+4),
-	    new Info(55, FGCOLOR, PAL_BRIGHT+5),
-	    new Info(56, FGCOLOR, PAL_BRIGHT+6),
-	    new Info(57, FGCOLOR, PAL_BRIGHT+7),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null, // 89
 
-	    // dtterm/custom bg
-	    new Info(58, BGCOLOR, PAL_BRIGHT+0),
-	    new Info(59, BGCOLOR, PAL_BRIGHT+1),
-	    new Info(60, BGCOLOR, PAL_BRIGHT+2),
-	    new Info(61, BGCOLOR, PAL_BRIGHT+3),
-	    new Info(62, BGCOLOR, PAL_BRIGHT+4),
-	    new Info(63, BGCOLOR, PAL_BRIGHT+5),
-	    new Info(64, BGCOLOR, PAL_BRIGHT+6),
-	    new Info(65, BGCOLOR, PAL_BRIGHT+7),
+            // BRIGHT fg
+            new Info(90, AttrEncoding.FGCOLOR, PAL_BRIGHT + 0),
+            new Info(91, AttrEncoding.FGCOLOR, PAL_BRIGHT + 1),
+            new Info(92, AttrEncoding.FGCOLOR, PAL_BRIGHT + 2),
+            new Info(93, AttrEncoding.FGCOLOR, PAL_BRIGHT + 3),
+            new Info(94, AttrEncoding.FGCOLOR, PAL_BRIGHT + 4),
+            new Info(95, AttrEncoding.FGCOLOR, PAL_BRIGHT + 5),
+            new Info(96, AttrEncoding.FGCOLOR, PAL_BRIGHT + 6),
+            new Info(97, AttrEncoding.FGCOLOR, PAL_BRIGHT + 7),
+            null, // 98
+            null, // 99
 
-	    null,	// 66
-	    null,
-	    null,
-	    null,	// 69
+            // BRIGHT bg
+            new Info(100, AttrEncoding.BGCOLOR, PAL_BRIGHT + 0),
+            new Info(101, AttrEncoding.BGCOLOR, PAL_BRIGHT + 1),
+            new Info(102, AttrEncoding.BGCOLOR, PAL_BRIGHT + 2),
+            new Info(103, AttrEncoding.BGCOLOR, PAL_BRIGHT + 3),
+            new Info(104, AttrEncoding.BGCOLOR, PAL_BRIGHT + 4),
+            new Info(105, AttrEncoding.BGCOLOR, PAL_BRIGHT + 5),
+            new Info(106, AttrEncoding.BGCOLOR, PAL_BRIGHT + 6),
+            new Info(107, AttrEncoding.BGCOLOR, PAL_BRIGHT + 7),};
 
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,	// 79
-
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,
-	    null,	// 89
-
-	    // BRIGHT fg
-	    new Info(90, FGCOLOR, PAL_BRIGHT+0),
-	    new Info(91, FGCOLOR, PAL_BRIGHT+1),
-	    new Info(92, FGCOLOR, PAL_BRIGHT+2),
-	    new Info(93, FGCOLOR, PAL_BRIGHT+3),
-	    new Info(94, FGCOLOR, PAL_BRIGHT+4),
-	    new Info(95, FGCOLOR, PAL_BRIGHT+5),
-	    new Info(96, FGCOLOR, PAL_BRIGHT+6),
-	    new Info(97, FGCOLOR, PAL_BRIGHT+7),
-	    null,	// 98
-	    null,	// 99
-
-	    // BRIGHT bg
-	    new Info(100, BGCOLOR, PAL_BRIGHT+0),
-	    new Info(101, BGCOLOR, PAL_BRIGHT+1),
-	    new Info(102, BGCOLOR, PAL_BRIGHT+2),
-	    new Info(103, BGCOLOR, PAL_BRIGHT+3),
-	    new Info(104, BGCOLOR, PAL_BRIGHT+4),
-	    new Info(105, BGCOLOR, PAL_BRIGHT+5),
-	    new Info(106, BGCOLOR, PAL_BRIGHT+6),
-	    new Info(107, BGCOLOR, PAL_BRIGHT+7),
-	};
-
-	for (int mx = 0; mx < map.length; mx++) {
-	    assert map[mx] == null ||
-		   map[mx].rendition == mx;
-	}
+        for (int mx = 0; mx < map.length; mx++) {
+            assert map[mx] == null
+                    || map[mx].rendition == mx;
+        }
     }
 }

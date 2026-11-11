@@ -39,11 +39,19 @@ import org.openide.filesystems.FileObject;
 public class TestChecker implements PrerequisitesChecker {
 
     /**
-     * Skip test execution.
+     * Skip (unit) test execution.
      * Do not use maven.test.skip as that skips also compilation; see #189466 for background.
-     * http://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html
+     * https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
      */
     public static final String PROP_SKIP_TEST = "skipTests"; // NOI18N
+    /**
+     * Skip integration test execution.
+     * Since surefire 3.6.0, skipTests only skips unit tests;
+     * integration tests must be skipped with the "skipITs" property
+     * https://maven.apache.org/surefire/maven-failsafe-plugin/integration-test-mojo.html#skipITs
+     * https://maven.apache.org/surefire/#3-6-0
+     */
+    public static final String PROP_SKIP_ITS = "skipITs"; // NOI18N
 
     @Override public boolean checkRunConfig(RunConfig config) {
         String action = config.getActionName();
@@ -74,6 +82,9 @@ public class TestChecker implements PrerequisitesChecker {
             if (!String.valueOf(config.getGoals()).contains("test")) { // incl. integration-test
                 if (config.getProperties().get(PROP_SKIP_TEST) == null) {
                     config.setProperty(PROP_SKIP_TEST, "true"); //NOI18N
+                }
+                if (config.getProperties().get(PROP_SKIP_ITS) == null) {
+                    config.setProperty(PROP_SKIP_ITS, "true"); //NOI18N
                 }
             }
         }

@@ -27,6 +27,7 @@
 package org.netbeans.lib.terminalemulator;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class InterpANSI extends InterpProtoANSI {
 
@@ -67,7 +68,18 @@ public class InterpANSI extends InterpProtoANSI {
      */
     @Override
     protected boolean dispatchAttr(AbstractInterp ai, int n) {
-        switch (n) {
+        return this.dispatchAttr(ai, List.of(n));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean dispatchAttr(AbstractInterp ai, List<Integer> n) {
+        if(n.isEmpty()) {
+            return false;
+        }
+        switch (n.getFirst()) {
             case 10:
             case 11:
             case 12:
@@ -78,7 +90,7 @@ public class InterpANSI extends InterpProtoANSI {
             case 17:
             case 18:
             case 19:
-                ai.ops.op_setG(0, n - 10);
+                ai.ops.op_setG(0, n.getFirst() - 10);
                 return true;
 
             case 0:
@@ -111,7 +123,6 @@ public class InterpANSI extends InterpProtoANSI {
             case 35:
             case 36:
             case 37:
-            // case 38:
             case 39:
 
             case 40:
@@ -122,8 +133,11 @@ public class InterpANSI extends InterpProtoANSI {
             case 45:
             case 46:
             case 47:
-            // case 48:
             case 49:
+
+            // 256 Color palette and true color mode
+            case 38:
+            case 48:
                 ai.ops.op_attr(n);
                 return true;
             default:

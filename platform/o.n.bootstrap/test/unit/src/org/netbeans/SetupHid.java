@@ -313,7 +313,7 @@ public abstract class SetupHid extends NbTestCase {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager mgr = compiler.getStandardFileManager(null, null, null);
         List<String> fullOptions = new ArrayList<String>(options);
-        fullOptions.addAll(Arrays.asList("-source", "8", "-target", "8"));
+        fullOptions.addAll(Arrays.asList("--release", "8", "-proc:full"));
         if (!compiler.getTask(null, mgr, null, fullOptions, null, mgr.getJavaFileObjectsFromFiles(files)).call()) {
             throw new IOException("compilation failed");
         }

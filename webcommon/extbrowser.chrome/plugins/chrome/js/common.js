@@ -27,8 +27,7 @@ NetBeans.serverURL = function() {
     return serverProtocol+'://'+serverHost+':'+serverPort+serverFile;
 };
 
-NetBeans.DEBUG = true;
-NetBeans.INFOBAR = false;
+NetBeans.DEBUG = false;
 
 // Version that the extension reports to the IDE in 'init' message
 NetBeans.VERSION = "1.8.1";
@@ -60,30 +59,38 @@ NetBeans.tabStatus = function(tabId) {
 NetBeans.cleanup = function() {
     this.socket = null;
     this.socketReady = false;
-    this.pendingMessages = [];
 };
 
 NetBeans.connectIfNeeded = function() {
     if (this.socket === null) {
         var self = this;
-        if (typeof(WebSocket) === 'undefined') {
-            this.socket = new MozWebSocket(this.serverURL());
-        } else {
-            this.socket = new WebSocket(this.serverURL());
-        }
-        this.socket.onerror = function(e) {
-            console.log('Socket error!');
-            if (e.name && e.message) {
-                console.log(e.name + ': ' + e.message);
+        const socket = this.socket = new WebSocket(this.serverURL());
+        socket.onclose = () => {
+            clearInterval(this.heartbeat);
+            this.cleanup();
+            for (const tabId of Object.keys(this.managedTabs)) {
+                chrome.action.disable(Number(tabId)).catch(() => {});
             }
-            self.cleanup();
+            this.managedTabs = {};
+            ResizeOptions = null;
+            NetBeans_Presets._presets = null;
+            this.selectionMode = false;
+            this.disconnectDebugger();
+            this.reconnect = setTimeout(() => this.connectIfNeeded(), 3000);
         };
-        this.socket.onclose = function() {
-            self.cleanup();
-        };
-        this.socket.onopen = function() {
-            self.socketReady = true;
-            self.sendPendingMessages();
+        socket.onopen = () => {
+            clearTimeout(this.reconnect);
+            this.socketReady = true;
+            this.sendReadyMessage(chrome.runtime.getManifest().version);
+            this.sendLoadResizeOptionsMessage();
+            chrome.tabs.query({}).then(tabs => {
+                if (this.socket === socket && this.socketReady) {
+                    tabs.forEach(tab => this.tabUpdated(tab));
+                }
+            });
+            this.heartbeat = setInterval(() => this.sendMessage({
+                message: 'load_resize_options'
+            }), 20000);
         };
         this.socket.onmessage = function(e) {
             if (NetBeans.DEBUG) {
@@ -98,7 +105,9 @@ NetBeans.connectIfNeeded = function() {
                 console.log(e.data);
                 return;
             }
-            self.processMessage(message);
+            if (message && typeof message.message === 'string') {
+                self.processMessage(message);
+            }
         };
     }
     return this.socketReady;    
@@ -111,9 +120,9 @@ NetBeans.sendMessage = function(message) {
             console.log('Sent message: ' + messageText);
         }
         this.socket.send(messageText);
-    } else {
-        this.pendingMessages.push(message);
+        return true;
     }
+    return false;
 };
 
 NetBeans.sendReadyMessage = function(version) {
@@ -172,25 +181,10 @@ NetBeans.sendSelectionModeMessage = function(selectionMode) {
     });
 };
 
-NetBeans.sendPendingMessages = function() {
-    for (var i=0; i<this.pendingMessages.length; i++) {
-        this.sendMessage(this.pendingMessages[i]);
-    }
-    this.pendingMessages = [];
-};
-
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.event == "onResourceContentCommitted") {
-      console.log('Sending changes from CDT back to NetBeans');
-      NetBeans.sendResourceChangedInCDT(request.resource, request.content);
-    }
-  });
-
-NetBeans.sendResourceChangedInCDT = function(url, content) {
+NetBeans.sendResourceChangedInCDT = function(resource, content) {
     this.sendMessage({
         message: 'resource_changed',
-        resource: url,
+        resource,
         content: content
     });
 };
@@ -256,9 +250,11 @@ NetBeans.processInitMessage = function(message) {
                     this.showPageIcon(tabId);
                     this.createContextMenu(tabId, tabInfo.url);
                 }
-            } else {
-                // Tab shouldn't be managed
+            } else if (tabInfo.closed) {
                 delete this.managedTabs[tabId];
+            } else {
+                tabInfo.status = this.STATUS_NOT_MANAGED;
+                chrome.action.disable(tabId).catch(() => {});
             }
         } else {
             console.log('Ignoring init message for a tab for which such message was not requested: '+tabId);
@@ -329,6 +325,7 @@ NetBeans.processDebuggerCommandMessage = function(message) {
 
 NetBeans.processLoadResizeOptionsMessage = function(message) {
     ResizeOptions = JSON.parse(message.resizeOptions);
+    NetBeans_Presets._presets = null;
 };
 
 NetBeans.processSaveResizeOptionsMessage = function(message) {
@@ -379,9 +376,20 @@ NetBeans.tabCreated = function(tabId) {
 };
 
 NetBeans.tabUpdated = function(tab) {
+    if (!/^(https?:|file:)/.test(tab.url || '')) {
+        return;
+    }
+    const previous = this.managedTabs[tab.id];
+    if (!previous || (previous.status === this.STATUS_NOT_MANAGED && previous.url !== tab.url)) {
+        this.tabCreated(tab.id);
+    }
     var status = this.tabStatus(tab.id);
     var tabInfo = this.managedTabs[tab.id];
     if (status === this.STATUS_NEW) {
+        if (!this.socketReady) {
+            this.connectIfNeeded();
+            return;
+        }
         tabInfo.status = this.STATUS_UNCONFIRMED;
         tabInfo.url = tab.url;
         // Send URL to IDE - ask if the tab is managed
@@ -402,9 +410,6 @@ NetBeans.tabUpdated = function(tab) {
             }
             this.showPageIcon(tab.id);
             this.createContextMenu(tab.id, tab.url);
-            if (this.INFOBAR) {
-                this.showInfoBar(tab.id);
-            }
         }
     }
 };
@@ -440,84 +445,6 @@ NetBeans.getSynchronizeSelection = function() {
 };
 
 /**
- * Class representing window preset.
- *
- * Internal presets cannot be removed.
- */
-function NetBeans_Preset(type, displayName, width, height, showInToolbar, isDefault) {
-    // type (its ident)
-    this.type = type;
-    // display name
-    this.displayName = displayName;
-    // width (in px)
-    this.width = width;
-    // height (in px)
-    this.height = height;
-    // show in toolbar
-    this.showInToolbar = showInToolbar;
-    // default or not?
-    this.isDefault = isDefault;
-}
-// preset type for Desktops
-NetBeans_Preset.DESKTOP = {
-    ident: 'DESKTOP',
-    title: I18n.message('_Desktop')
-};
-// preset type for Netbooks
-NetBeans_Preset.NETBOOK = {
-    ident: 'NETBOOK',
-    title: I18n.message('_Netbook')
-};
-NetBeans_Preset.WIDESCREEN = {
-    ident: 'WIDESCREEN',
-    title: I18n.message('_Widescreen')
-};
-// preset type for Tablets (Landscape)
-NetBeans_Preset.TABLET_LANDSCAPE = {
-    ident: 'TABLET_LANDSCAPE',
-    title: I18n.message('_TabletLandscape')
-};
-// preset type for Tablets (Portrait)
-NetBeans_Preset.TABLET_PORTRAIT = {
-    ident: 'TABLET_PORTRAIT',
-    title: I18n.message('_TabletPortrait')
-};
-// preset type for Smartphones  (Landscape)
-NetBeans_Preset.SMARTPHONE_LANDSCAPE = {
-    ident: 'SMARTPHONE_LANDSCAPE',
-    title: I18n.message('_SmartphoneLandscape')
-};
-// preset type for Smartphones  (Portrait)
-NetBeans_Preset.SMARTPHONE_PORTRAIT = {
-    ident: 'SMARTPHONE_PORTRAIT',
-    title: I18n.message('_SmartphonePortrait')
-};
-// get a list of all preset types
-NetBeans_Preset.allTypes = function() {
-    return [
-        NetBeans_Preset.DESKTOP,
-        NetBeans_Preset.NETBOOK,
-        NetBeans_Preset.WIDESCREEN,
-        NetBeans_Preset.TABLET_LANDSCAPE,
-        NetBeans_Preset.TABLET_PORTRAIT,
-        NetBeans_Preset.SMARTPHONE_LANDSCAPE,
-        NetBeans_Preset.SMARTPHONE_PORTRAIT
-    ];
-};
-// get preset type for the given ident, or null if not found
-NetBeans_Preset.typeForIdent = function(ident) {
-    var allTypes = NetBeans_Preset.allTypes();
-    for (i in allTypes) {
-        if (allTypes[i].ident === ident) {
-            return allTypes[i];
-        }
-    }
-    console.error('Type not found for ident: ' + ident);
-    // fallback, avoid NPE
-    return allTypes[0];
-};
-
-/**
  * Window presets manager.
  */
 var NetBeans_Presets = {};
@@ -529,7 +456,7 @@ NetBeans_Presets.getPreset = function(preset) {
     if (preset === undefined) {
         return this._preset;
     }
-    var tmp = this.getPresets()[preset];
+    var tmp = this.getPresets()?.[preset];
     if (tmp === undefined) {
         return null;
     }
@@ -550,7 +477,6 @@ NetBeans_Presets.getPresets = function(copy) {
 NetBeans_Presets.setPresets = function(presets) {
     this._presets = presets;
     this._savePresets();
-    this.presetsChanged();
 };
 // load presets from the central storage
 NetBeans_Presets._loadPresets = function() {

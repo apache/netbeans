@@ -471,8 +471,8 @@ metabuild.hash=${metabuild.hash}</echo>
           <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
           <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>
-          <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}" if:true="exists.netbeansSourcesDirectory"/>
-          <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}" if:true="exists.netbeansJavadocDirectory"/>
+          <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}" if:true="${exists.netbeansSourcesDirectory}"/>
+          <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}" if:true="${exists.netbeansJavadocDirectory}"/>
           <arg value="-DparentGAV=org.apache.netbeans:netbeans-parent:${nbm.install.parent.version}"/>
           <arg value="-DforcedVersion=${nbm.install.version}"/>
           <arg line="${mavenArgs}"/>

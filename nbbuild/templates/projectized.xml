@@ -929,6 +929,8 @@
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
             <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
+            <arg line="${mavenArgs}"/>
+            <env key="JAVA_HOME" value="${java.home}"/>
         </exec>
         <echo message="Installed -DmavenVersion=${mavenVersion} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
   </target>

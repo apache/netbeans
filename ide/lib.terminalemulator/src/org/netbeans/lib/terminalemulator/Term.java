@@ -38,6 +38,7 @@ import javax.accessibility.AccessibleRole;
 import javax.swing.JComponent.AccessibleJComponent;
 import javax.swing.*;
 import javax.swing.text.Keymap;
+import javax.swing.text.StyleContext;
 
 /**
  * Term is a pure Java multi-purpose terminal emulator.
@@ -5755,9 +5756,13 @@ public class Term extends JComponent implements Accessible {
     public final void setFont(Font new_font) {
         Font font;
         if (isFixedFont()) {
-            font = new_font;
+            font = StyleContext.getDefaultStyleContext().getFont(
+                            new_font.getName(),
+                            new_font.getStyle(),
+                            new_font.getSize());
         } else {
-            font = new Font("Monospaced",	// NOI18N
+            font = StyleContext.getDefaultStyleContext().getFont(
+                            "Monospaced",	// NOI18N
                             new_font.getStyle(),
                             new_font.getSize());
         }

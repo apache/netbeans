@@ -1096,7 +1096,7 @@ public final class Terminal extends JComponent {
         menu.show(term.getScreen(), p.x, p.y);
     }
 
-    private Map<?, ?> getRenderingHints() {
+    public static Map<?, ?> getRenderingHints() {
         Map<?, ?> renderingHints = null;
         // init hints if any
         Lookup lookup = MimeLookup.getLookup("text/plain"); // NOI18N

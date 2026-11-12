@@ -482,7 +482,7 @@ jobs:
           # remove one
           rm -r $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/
           # install a single NBM
-          ant -f platform/openide-awt maven-install -Dnbm.install.version=99-SNAPSHOT
+          ant -f platform/openide.awt maven-install -Dnbm.install.version=99-SNAPSHOT
           # verify pom is installed
           cat $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/org-openide-awt-99-SNAPSHOT.pom
 

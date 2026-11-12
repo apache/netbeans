@@ -456,7 +456,10 @@ metabuild.hash=${metabuild.hash}</echo>
       <property name="mavenArgs" value=""/>
       <mkdir dir="nbms" />
       <property name="base.nbm.target.dir" location="nbms" />
-      <exec executable="mvn" failonerror="true">
+      <condition property=".cmd" value=".cmd" else="">
+          <os family="windows"/>
+      </condition>
+      <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
           <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
           <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>

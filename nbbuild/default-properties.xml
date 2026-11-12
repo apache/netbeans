@@ -46,7 +46,6 @@
   </condition>
   <property name="netbeans.dest.dir" location="${nb_all}/nbbuild/netbeans"/> <!-- historical location, too much work to change default -->
   <property name="netbeans.javadoc.dir" location="${nb.build.dir}/javadoc"/>
-  <property name="base.nbm.target.dir" location="nbms" />
   <property name="moduleCluster.file" location="${netbeans.dest.dir}/moduleCluster.properties"/>
 
   <property name="autoupdate.catalog.url" value="http://bits.netbeans.org/dev/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/nbms/updates.xml.gz"/>

@@ -319,7 +319,8 @@ metabuild.hash=${metabuild.hash}</echo>
 
   <!-- build NBMs for selected modules -->
   <target name="build-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
-      <mkdir dir="${base.nbm.target.dir}"/>
+      <mkdir dir="nbms" />
+      <property name="base.nbm.target.dir" location="nbms" />
       <property name="nbms.fail.on.error" value="true"/>
       <subant-junit target="nbm" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
@@ -330,7 +331,8 @@ metabuild.hash=${metabuild.hash}</echo>
   </target>
 
   <target name="build-nonsigned-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
-      <mkdir dir="${base.nbm.target.dir}"/>
+      <mkdir dir="nbms" />
+      <property name="base.nbm.target.dir" location="nbms" />
       <property name="nbms.fail.on.error" value="true"/>
       <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
@@ -452,6 +454,8 @@ metabuild.hash=${metabuild.hash}</echo>
       zip zipFile:'mavenrepo.zip',dir:'mavenrepository',archive:'true'
       -->
       <property name="mavenArgs" value=""/>
+      <mkdir dir="nbms" />
+      <property name="base.nbm.target.dir" location="nbms" />
       <exec executable="mvn" failonerror="true">
           <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>

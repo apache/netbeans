@@ -407,16 +407,18 @@ metabuild.hash=${metabuild.hash}</echo>
       <nbbrowse file="${netbeans.javadoc.dir}/index.html"/>
   </target>
 
-  <!-- build source zips for selected modules - useful for populating maven repository only-->
-  <target name="build-source-zips" depends="init" description="Builds source zips for maven repository inclusion.">
+  <target name="-init-sources-zip" depends="init">
       <property name="netbeans.zipped.sources.dir" location="${nb.build.dir}/source-zips" />
-      
+  </target>
+
+  <!-- build source zips for selected modules - useful for populating maven repository only-->
+  <target name="build-source-zips" depends="init,-init-sources-zip" description="Builds source zips for maven repository inclusion.">
       <subant-junit target="sources-zip" failonerror="true">
           <buildpath path="${modules.sorted}"/>
       </subant-junit>
   </target>
 
-  <target name="maven-install" depends="init" description="Finishes installation of artifacts into Maven repository">
+  <target name="maven-install" depends="init,-init-sources-zip" description="Finishes installation of artifacts into Maven repository">
       <echo message="=== Run only after ===${line.separator} ant build-source-zips${line.separator} ant build-nbms${line.separator} ant build-javadoc${line.separator}=== Only then maven-install ===${line.separator}"/>
 
       <!--
@@ -459,12 +461,18 @@ metabuild.hash=${metabuild.hash}</echo>
       <condition property=".cmd" value=".cmd" else="">
           <os family="windows"/>
       </condition>
+      <condition property="exists.netbeansSourcesDirectory" value="true" else="false">
+          <available file="${netbeans.zipped.sources.dir}"/>
+      </condition>
+      <condition property="exists.netbeansJavadocDirectory" value="true" else="false">
+          <available file="${netbeans.javadoc.dir}"/>
+      </condition>
       <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
           <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
           <arg value="-DnetbeansInstallDirectory=${netbeans.dest.dir}"/>
           <arg value="-DnetbeansNbmDirectory=${base.nbm.target.dir}"/>
-          <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}"/>
-          <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}"/>
+          <arg value="-DnetbeansSourcesDirectory=${netbeans.zipped.sources.dir}" if:true="exists.netbeansSourcesDirectory"/>
+          <arg value="-DnetbeansJavadocDirectory=${netbeans.javadoc.dir}" if:true="exists.netbeansJavadocDirectory"/>
           <arg value="-DparentGAV=org.apache.netbeans:netbeans-parent:${nbm.install.parent.version}"/>
           <arg value="-DforcedVersion=${nbm.install.version}"/>
           <arg line="${mavenArgs}"/>

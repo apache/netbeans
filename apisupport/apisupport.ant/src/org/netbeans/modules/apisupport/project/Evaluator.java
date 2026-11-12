@@ -380,6 +380,8 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(nbbuild, "user.build.properties"))); // NOI18N
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(nbbuild, "site.build.properties"))); // NOI18N
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(System.getProperty("user.home"), ".nbbuild.properties"))); // NOI18N
+            // default property values for module builds (overridable by all of the above as well as the module's properties)
+            providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(nbbuild, "module-defaults.properties"))); // NOI18N
         }
         PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         providers.add(new NbJdkProvider(baseEval));
@@ -400,6 +402,13 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         defaults.put(SingleModuleProperties.JAVAC_SOURCE, "1.4"); // NOI18N
         if (type == NbModuleType.NETBEANS_ORG) {
             defaults.put("test.user.dir", "${nb_all}/nbbuild/testuserdir"); // NOI18N
+            // default --release for modules declaring none of javac.release/source/target (cf. nbbuild/templates/common.xml)
+            PropertyEvaluator levelEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
+            if (levelEval.getProperty(SingleModuleProperties.JAVAC_RELEASE) == null
+                    && levelEval.getProperty(SingleModuleProperties.JAVAC_SOURCE) == null
+                    && levelEval.getProperty("javac.target") == null) { // NOI18N
+                defaults.put(SingleModuleProperties.JAVAC_RELEASE, "${default.javac.release}"); // NOI18N
+            }
         } else if (type == NbModuleType.STANDALONE) {
             defaults.put("test.user.dir", "${build.dir}/testuserdir"); // NOI18N
         } else {

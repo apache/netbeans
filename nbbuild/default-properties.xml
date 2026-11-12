@@ -26,6 +26,8 @@
   <property file="${nb_all}/nbbuild/user.build.properties"/>
   <property file="${nb_all}/nbbuild/site.build.properties"/>
   <property file="${user.home}/.nbbuild.properties"/>
+  <!-- default property values for module builds (lowest precedence of the four: see file header) -->
+  <property file="${nb_all}/nbbuild/module-defaults.properties"/>
 
   <property name="-nb.build.dir-default" location="${nb_all}/nbbuild/build"/>
   <property name="nb.build.dir" value="${-nb.build.dir-default}"/>

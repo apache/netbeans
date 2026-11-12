@@ -65,6 +65,20 @@
         <condition property="javahelp.class.path.extension" value="docs/${javahelp.jar.basename}">
             <isset property="has.javahelp"/>
         </condition>
+        <!-- use the default release only if the module declared none of javac.release/source/target -->
+        <condition property="javac.release" value="${default.javac.release}">
+            <and>
+                <not>
+                    <isset property="javac.release"/>
+                </not>
+                <not>
+                    <isset property="javac.source"/>
+                </not>
+                <not>
+                    <isset property="javac.target"/>
+                </not>
+            </and>
+        </condition>
         <property name="javac.source" value="1.7"/>
         <property name="javac.default.target" value="${javac.source}"/>
         <property name="javac.target" value="${javac.default.target}"/>

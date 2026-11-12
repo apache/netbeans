@@ -894,7 +894,7 @@
     </target>
 
     <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
-    <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
+    <target name="maven-install" depends="init" description="Installs a -D{nbm.install.version} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
         <delete dir="${maven.tmp}"/>
         <property name="maven.tmp.nbms" location="${maven.tmp}/nbms"/>
@@ -920,7 +920,7 @@
         </condition>
         <property name="mavenArgs" value=""/>
         <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
-            <arg value="-DforcedVersion=${mavenVersion}"/>
+            <arg value="-DforcedVersion=${nbm.install.version}"/>
             <arg value="-DdefineCluster=false"/>
             <arg value="-DdependencyRepositoryId=netbeans-snapshot"/>
             <arg value="-DdependencyRepositoryUrl=https://repository.apache.org/content/groups/snapshots"/>
@@ -932,7 +932,7 @@
             <arg line="${mavenArgs}"/>
             <env key="JAVA_HOME" value="${java.home}"/>
         </exec>
-        <echo message="Installed -DmavenVersion=${mavenVersion} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
+        <echo message="Installed -Dnbm.install.version=${nbm.install.version} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
   </target>
     
 </project>

@@ -432,7 +432,7 @@ metabuild.hash=${metabuild.hash}</echo>
         -DnetbeansSourcesDirectory=${netbeansbase}/build/source-zips
         -DnetbeansJavadocDirectory=${netbeansbase}/build/javadoc
         -DparentGAV=org.apache.netbeans:netbeans-parent:5
-        -DforcedVersion=${mavenVersion}
+        -DforcedVersion=${nbm.install.version}
         -DskipInstall=true
         -DdeployId=apache.snapshots.https
         -DdeployUrl=https://repository.apache.org/content/repositories/snapshots
@@ -445,7 +445,7 @@ metabuild.hash=${metabuild.hash}</echo>
         -DnetbeansSourcesDirectory=${netbeansbase}/build/source-zips
         -DnetbeansJavadocDirectory=${netbeansbase}/build/javadoc
         -DparentGAV=org.apache.netbeans:netbeans-parent:5
-        -DforcedVersion=${mavenVersion}
+        -DforcedVersion=${nbm.install.version}
         -DskipInstall=true
         -DdeployUrl=file://${env.WORKSPACE}/mavenrepository
 

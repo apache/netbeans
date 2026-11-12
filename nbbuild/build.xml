@@ -422,10 +422,10 @@ metabuild.hash=${metabuild.hash}</echo>
 
       # https://github.com/apache/netbeans-jenkins-lib/blob/120b7fe817075c802dbc7f8cb59d5d218249e310/vars/asfMainNetBeansBuild.groovy#L200
       mvn org.apache.maven.plugins:maven-dependency-plugin:3.5.0:get
-        -Dartifact=org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}
+        -Dartifact=org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}
         -DremoteRepositories=apache.snapshots.https::::https://repository.apache.org/snapshots
 
-      mvn org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate
+      mvn org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate
         -X ${commonparam}
         -DnetbeansNbmDirectory=${netbeansbase}/nbms
         -DnetbeansInstallDirectory=${netbeansbase}/netbeans
@@ -438,7 +438,7 @@ metabuild.hash=${metabuild.hash}</echo>
         -DdeployUrl=https://repository.apache.org/content/repositories/snapshots
 
       # https://github.com/apache/netbeans-jenkins-lib/blob/120b7fe817075c802dbc7f8cb59d5d218249e310/vars/asfMainNetBeansBuild.groovy#L437
-      mvn org.apache.netbeans.utilities:nb-repository-plugin:${repopluginversion}:populate
+      mvn org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate
         ${commonparam}
         -DnetbeansNbmDirectory=${netbeansbase}/nbms
         -DnetbeansInstallDirectory=${netbeansbase}/netbeans

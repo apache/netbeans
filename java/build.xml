@@ -19,12 +19,6 @@
     under the License.
 
 -->
-<project name="java" basedir="../nbbuild" default="build">
-    <description>NetBeans Basic cluster  build script.</description>
-    <import file="../nbbuild/build.xml"/>
-
-  <target name="build" depends="build-basic" description="Build the NetBeans Basic cluster."/>
-
-  <target name="test" depends="test-basic" description="Test the NetBeans Basic cluster."/>
-
+<project name="IDE Cluster" basedir="../nbbuild" default="build-nozip">
+    <description>Java Cluster build script</description>
 </project>

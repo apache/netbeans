@@ -534,6 +534,9 @@
                         <file name="org-netbeans-modules-html-editor-hints-NotValidatedContent.instance">
                             <attr name="position" intvalue="190"/>                            
                         </file>
+                        <file name="org-netbeans-modules-html-editor-hints-other-AddMissingAltAttributeRule.instance">
+                            <attr name="position" intvalue="210"/>                            
+                        </file>
                         <!-- the following hint 'Other' must be last in the hints list!!! -->
                         <file name="org-netbeans-modules-html-editor-hints-Other.instance">
                             <attr name="position" intvalue="99999"/>                            

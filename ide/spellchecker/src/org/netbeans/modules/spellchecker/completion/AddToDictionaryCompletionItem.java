@@ -59,6 +59,7 @@ public class AddToDictionaryCompletionItem implements CompletionItem {
         this.projects = projects;
     }
     
+    @Override
     public void defaultAction (
         final JTextComponent    component
     ) {
@@ -77,11 +78,13 @@ public class AddToDictionaryCompletionItem implements CompletionItem {
         componentPeer.reschedule();
     }
     
+    @Override
     public void processKeyEvent (
         KeyEvent                evt
     ) {
     }
     
+    @Override
     public int getPreferredWidth (
         Graphics                g,
         Font                    defaultFont
@@ -89,6 +92,7 @@ public class AddToDictionaryCompletionItem implements CompletionItem {
         return CompletionUtilities.getPreferredWidth (getText (), null, g, defaultFont);
     }
     
+    @Override
     public void render (
         Graphics                g,
         Font                    defaultFont,
@@ -110,24 +114,29 @@ public class AddToDictionaryCompletionItem implements CompletionItem {
         );
     }
     
+    @Override
     public CompletionTask createDocumentationTask () {
         return null;
     }
     
+    @Override
     public CompletionTask createToolTipTask () {
         return null;
     }
     
+    @Override
     public boolean instantSubstitution (
         JTextComponent          component
     ) {
         return true;
     }
     
+    @Override
     public int getSortPriority () {
         return 200;
     }
     
+    @Override
     public CharSequence getSortText () {
         return getText();
     }
@@ -138,6 +147,7 @@ public class AddToDictionaryCompletionItem implements CompletionItem {
         return NbBundle.getMessage (AddToDictionaryCompletionItem.class, "CTL_Add_to_private");
     }
     
+    @Override
     public CharSequence getInsertPrefix () {
         return "";
     }

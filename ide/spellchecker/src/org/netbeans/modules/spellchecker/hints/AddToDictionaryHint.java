@@ -27,33 +27,22 @@ import org.netbeans.spi.editor.hints.EnhancedFix;
  *
  * @author Jan Lahoda
  */
-public final class AddToDictionaryHint implements EnhancedFix {
+public record AddToDictionaryHint(ComponentPeer peer, DictionaryImpl d, String word, String text, String sortText) implements EnhancedFix {
 
-    private DictionaryImpl d;
-    private String         word;
-    private String         text;
-    private ComponentPeer  peer;
-    private String         sortText;
-
-    public AddToDictionaryHint(ComponentPeer peer, DictionaryImpl d, String word, String text, String sortText) {
-        this.peer = peer;
-        this.d = d;
-        this.word = word;
-        this.text = text;
-        this.sortText = sortText;
-    }
-    
+    @Override
     public String getText() {
         return String.format(text, word);
     }
 
+    @Override
     public ChangeInfo implement() {
         d.addEntry(word);
-	peer.reschedule();
-        
-	return null;
+        peer.reschedule();
+
+        return null;
     }
 
+    @Override
     public CharSequence getSortText() {
         return sortText;
     }

@@ -45,7 +45,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -303,8 +302,8 @@ public class CustomizerLibraries extends JPanel implements HelpCtx.Provider, Lis
     private void enableModules() {
         Object selectedItem = this.jComboBoxTarget.getSelectedItem();
         JavaPlatform jp = (selectedItem == null ? null : PlatformUiSupport.getPlatform(selectedItem));
-        SpecificationVersion sv = jp != null ? jp.getSpecification().getVersion() : null;
-        boolean modulesEnabled = sv != null && new SpecificationVersion("1.9").compareTo(sv) <= 0;
+        Runtime.Version sv = jp != null ? jp.getSpecification().getJdkVersion() : null;
+        boolean modulesEnabled = sv != null && Runtime.Version.parse("1.9").compareTo(sv) <= 0;
         compilePathsCustomizer.setModulesEnabled(modulesEnabled);
         processorPathsCustomizer.setModulesEnabled(modulesEnabled);
         compileTestsPathsCustomizer.setModulesEnabled(modulesEnabled);

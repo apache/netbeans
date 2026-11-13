@@ -30,12 +30,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.j2seplatform.spi.J2SEPlatformDefaultSources;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -61,13 +61,13 @@ public class J2SEPlatformDefaultSourcesImpl implements J2SEPlatformDefaultSource
         if (javaHome == null) {
             return Collections.emptyList();
         }
-        return getSources(javaHome, platform.getSpecification().getVersion());
+        return getSources(javaHome, platform.getSpecification().getJdkVersion());
     }
 
     @NonNull
     private static List<URI> getSources (
             @NonNull final File javaHome,
-            @NonNull final SpecificationVersion version) {
+            @NullAllowed final Runtime.Version version) {
         try {
             File f;
             //On VMS, the root of the "src.zip" is "src", and this causes
@@ -97,7 +97,7 @@ public class J2SEPlatformDefaultSourcesImpl implements J2SEPlatformDefaultSource
             if (f.exists() && f.canRead()) {
                 URL url = FileUtil.getArchiveRoot(Utilities.toURI(f).toURL());
                 List<URI> res = Collections.singletonList (url.toURI());
-                if (Util.JDK9.compareTo(version)<=0) {
+                if (version != null && version.feature() >= 9) {
                     final FileObject fo = URLMapper.findFileObject(url);
                     if (fo.getFileObject("java.base") != null) {    //NOI18N
                         res = Arrays.stream(fo.getChildren())

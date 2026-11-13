@@ -101,7 +101,7 @@ public final class CommonProjectUtils {
                 null :
                 candidate;
         }
-        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification(platformType, null)); //NOI18N
+        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification(platformType)); //NOI18N
         for (JavaPlatform javaPlatform : installedPlatforms) {
             String antName = javaPlatform.getProperties().get("platform.ant.name"); //NOI18N
             if (antName != null && antName.equals(activePlatformId)) {

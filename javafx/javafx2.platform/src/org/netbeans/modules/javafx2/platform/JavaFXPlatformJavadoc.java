@@ -170,9 +170,7 @@ public class JavaFXPlatformJavadoc implements JavadocForBinaryQueryImplementatio
         private Collection<? extends JavaPlatform> findJavaPlatforms(@NonNull final File jfxrt) {
             final JavaPlatform[] jps = JavaPlatformManager.getDefault().getPlatforms(
                     null,
-                    new Specification(
-                        "j2se", //NOI18N
-                        null));
+                    new Specification("j2se")); //NOI18N
             final Collection<JavaPlatform> res = new ArrayList<JavaPlatform>(jps.length);
             final FileObject jfxrfFo = FileUtil.toFileObject(jfxrt);
             if (jfxrfFo != null) {

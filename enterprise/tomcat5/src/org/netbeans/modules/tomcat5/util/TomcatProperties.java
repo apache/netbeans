@@ -47,6 +47,7 @@ import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
+
 import org.openide.util.EditableProperties;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -392,7 +393,7 @@ public class TomcatProperties {
     public JavaPlatform getJavaPlatform() {
         String currentJvm = ip.getProperty(PROP_JAVA_PLATFORM);
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
-        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
+        JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE")); // NOI18N
         for (int i = 0; i < installedPlatforms.length; i++) {
             String platformName = installedPlatforms[i].getProperties().get(PLAT_PROP_ANT_NAME);
             if (platformName != null && platformName.equals(currentJvm)) {

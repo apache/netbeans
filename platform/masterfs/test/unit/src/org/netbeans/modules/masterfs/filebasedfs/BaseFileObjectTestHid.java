@@ -41,7 +41,7 @@ import org.junit.Assume;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileObj;
 import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileObjectFactory;
-import org.netbeans.modules.masterfs.filebasedfs.fileobjects.WriteLockUtils;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.TestUtils;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -1264,7 +1264,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         File testFile = FileUtil.toFile(testFo);
   
         
-        File lockFile = WriteLockUtils.getAssociatedLockFile(testFile);
+        File lockFile = TestUtils.getAssociatedLockFile(testFile);
         if (!lockFile.exists()) {
             assertTrue(lockFile.createNewFile());
         }

@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -506,21 +507,23 @@ final class BinaryFS extends FileSystem implements DataInput {
             return (attr != null) ? attr.getValue(this, attrName) : null;
         }
         
-        public FileObject getFileObjectForAttr() {
-            FileObject topFO = null;
-            // XXX big hack! See #29356 for explanation for this nonsense.
+        // XXX big hack! See #29356 for explanation for this nonsense.
+        @SuppressWarnings("unchecked")
+        private static final ThreadLocal<FileObject> ATTR_ASKED_FILE_OBJECT = (ThreadLocal<FileObject>) resolveAttrAskedFileObject();
+        private static Object resolveAttrAskedFileObject() {
             try {
-                Class<?> mfoClass = Class.forName("org.openide.filesystems.MultiFileObject"); //NOI18N
-                Field field = mfoClass.getDeclaredField("attrAskedFileObject"); //NOI18N
+                Field field = Class.forName("org.openide.filesystems.MultiFileObject") //NOI18N
+                    .getDeclaredField("attrAskedFileObject"); //NOI18N
                 field.setAccessible(true);
-
-                ThreadLocal<?> attrAskedFileObject = ThreadLocal.class.cast(field.get(null));
-                topFO = (FileObject)attrAskedFileObject.get();
-                //attrAskedFileObject.set(null);
+                return field.get(null);
             } catch (Exception e) {
                 Exceptions.printStackTrace(e);
+                return null;
             }
+        }
 
+        public FileObject getFileObjectForAttr() {
+            FileObject topFO = ATTR_ASKED_FILE_OBJECT != null ? ATTR_ASKED_FILE_OBJECT.get() : null;
             return topFO == null ? this : topFO;
         }
 
@@ -610,6 +613,8 @@ final class BinaryFS extends FileSystem implements DataInput {
     }
 
     static final class AttrImpl {
+
+        private static final ConcurrentHashMap<String, Method> methodValueCache = new ConcurrentHashMap<>(150);
         private int index;
         private String value;
 
@@ -735,12 +740,16 @@ final class BinaryFS extends FileSystem implements DataInput {
             }
         }
 
-        /** Constructs new attribute as Object. Used for dynamic creation: methodvalue. 
+        /** Constructs new attribute as Object. Used for dynamic creation: methodvalue.
          * @return MethodAndParams object or throws InstantiationException if method is not found
          */
         private MethodAndParams methodValue(String method, BFSBase foProvider, String attr) throws Exception {
-            int i = method.lastIndexOf('.');
-            if (i != -1) {
+            Method m = methodValueCache.get(method);
+            if (m == null) {
+                int i = method.lastIndexOf('.');
+                if (i == -1) {
+                    throw new InstantiationException(method);
+                }
                 // Cf. XMLMapAttr.Attr.methodValue:
                 Class<?> cls = findClass(method.substring(0, i));
                 String methodName = method.substring(i + 1);
@@ -749,29 +758,35 @@ final class BinaryFS extends FileSystem implements DataInput {
                     {FileObject.class}, {String.class}, {},
                     {Map.class, String.class}, {Map.class},
                 };
+                Method[] declared = cls.getDeclaredMethods();
+                outer:
                 for (Class<?>[] paramTypes : paramArray) {
-                    Method m;
-                    try {
-                        m = cls.getDeclaredMethod(methodName, paramTypes);
-                    } catch (NoSuchMethodException x) {
-                        continue;
-                    }
-                    Object[] values = new Object[paramTypes.length];
-                    for (int j = 0; j < paramTypes.length; j++) {
-                        if (paramTypes[j] == FileObject.class) {
-                            values[j] = foProvider.getFileObjectForAttr();
-                        } else if (paramTypes[j] == String.class) {
-                            values[j] = attr;
-                        } else {
-                            assert paramTypes[j] == Map.class;
-                            values[j] = wrapToMap(foProvider.getFileObjectForAttr());
+                    for (Method candidate : declared) {
+                        if (candidate.getName().equals(methodName)
+                                && Arrays.equals(candidate.getParameterTypes(), paramTypes)) {
+                            m = candidate;
+                            methodValueCache.put(method, m);
+                            break outer;
                         }
                     }
-                    return new MethodAndParams(m, values);
+                }
+                if (m == null) {
+                    throw new InstantiationException(method);
                 }
             }
-            // Some message to logFile
-            throw new InstantiationException(method);
+            Class<?>[] paramTypes = m.getParameterTypes();
+            Object[] values = new Object[paramTypes.length];
+            for (int j = 0; j < paramTypes.length; j++) {
+                if (paramTypes[j] == FileObject.class) {
+                    values[j] = foProvider.getFileObjectForAttr();
+                } else if (paramTypes[j] == String.class) {
+                    values[j] = attr;
+                } else {
+                    assert paramTypes[j] == Map.class;
+                    values[j] = wrapToMap(foProvider.getFileObjectForAttr());
+                }
+            }
+            return new MethodAndParams(m, values);
         }
 
         private Object decodeValue(String value) throws Exception {

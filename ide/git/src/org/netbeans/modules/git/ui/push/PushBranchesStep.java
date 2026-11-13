@@ -116,6 +116,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                 info.refresh();
                 localBranches.putAll(info.getBranches());
                 localTags.putAll(info.getTags());
+                String headId = info.getActiveBranch().getId();
                 
                 final List<PushMapping> l = new ArrayList<PushMapping>(branches.size());
                 GitClient client;
@@ -160,7 +161,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                                 }
                             }
                         }
-                        boolean preselected = !conflicted && updateNeeded;
+                        boolean preselected = !conflicted && (updateNeeded || branch.isActive());
 
                         //add current branch in the list for update or for adding
                         l.add(new PushMapping.PushBranchMapping(remoteBranch == null ? null : remoteBranch.getName(),
@@ -185,7 +186,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                     String repoTagId = tags.get(tag.getTagName());
                     if (!tag.getTagId().equals(repoTagId)) {
                         //in the remote there is no such tag, need to add it.
-                        l.add(new PushMapping.PushTagMapping(tag, repoTagId == null ? null : tag.getTagName()));
+                        l.add(new PushMapping.PushTagMapping(tag, repoTagId == null ? null : tag.getTagName(), tag.getTaggedObjectId().equals(headId)));
                     }
                 }
 
@@ -195,7 +196,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                     GitTag localTag = localTags.get(tag);
                     if (localTag == null) {
                         //in the local repo no such tag. Probably we need to delete in the remote?
-                        l.add(new PushMapping.PushTagMapping(tag));
+                        l.add(new PushMapping.PushTagMapping(tag, false));
                     }
                 }
 

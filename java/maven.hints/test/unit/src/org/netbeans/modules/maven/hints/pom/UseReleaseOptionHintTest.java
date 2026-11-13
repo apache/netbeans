@@ -89,6 +89,117 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         assertEquals(2, hints.size());
     }
 
+    public void testImplicitCompilerPluginTestProperties() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.testSource>11</maven.compiler.testSource>
+                    <maven.compiler.testTarget>11</maven.compiler.testTarget>
+                </properties>
+            </project>
+            """);
+
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());
+
+        PomModelUtils.activeMavenVersion = JDK_8_COMPATIBLE;
+        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(0, hints.size());
+
+        PomModelUtils.activeMavenVersion = JDK_9_PLUS_COMPATIBLE;
+        hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(2, hints.size());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(0).getDescription());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(0).getFixes().getFixes().get(0).getText());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(1).getDescription());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(1).getFixes().getFixes().get(0).getText());
+
+        hints.get(0).getFixes().getFixes().get(0).implement();
+        Utilities.saveChanges(model);
+
+        assertEquals(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.testRelease>11</maven.compiler.testRelease>
+                </properties>
+            </project>
+            """,
+            pom.asText()
+        );
+    }
+
+    public void testBothSourceAndTestSourceInProperties() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.source>11</maven.compiler.source>
+                    <maven.compiler.target>11</maven.compiler.target>
+                    <maven.compiler.testSource>17</maven.compiler.testSource>
+                    <maven.compiler.testTarget>17</maven.compiler.testTarget>
+                </properties>
+            </project>
+            """);
+
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());
+
+        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(4, hints.size());
+        assertEquals("Convert to release option for strict compatibility checks.", hints.get(0).getDescription());
+        assertEquals("Convert to release option for strict compatibility checks.", hints.get(1).getDescription());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(2).getDescription());
+        assertEquals("Convert to testRelease option for strict compatibility checks.", hints.get(3).getDescription());
+
+        // Apply first fix (release)
+        hints.get(0).getFixes().getFixes().get(0).implement();
+        // Apply second fix (testRelease)
+        hints.get(2).getFixes().getFixes().get(0).implement();
+        Utilities.saveChanges(model);
+
+        assertEquals(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.release>11</maven.compiler.release>
+                    <maven.compiler.testRelease>17</maven.compiler.testRelease>
+                </properties>
+            </project>
+            """,
+            pom.asText()
+        );
+    }
+
     private static final String COMPILER_POM =
             """
             <?xml version="1.0" encoding="UTF-8"?>

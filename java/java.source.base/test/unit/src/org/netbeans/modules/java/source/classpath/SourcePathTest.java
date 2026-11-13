@@ -20,16 +20,15 @@
 package org.netbeans.modules.java.source.classpath;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.TestUtilities;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
+import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
-import org.netbeans.modules.parsing.lucene.support.IndexManager;
+import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -80,7 +79,40 @@ public class SourcePathTest extends ClassIndexTestCase {
         final ClassPath sp3 = ClassPathFactory.createClassPath(SourcePath.filtered(baseImpl, false));
         assertEquals (base,sp3);
     }
-    
+
+    /**
+     * A source root whose usages index was created in a previous session
+     * (the "source" attribute is present) but was not re-indexed in the
+     * current session: the index exists only as a transient, NEW
+     * ClassIndexImpl. The source path must still keep the root, otherwise
+     * sources-only searches (e.g. the "Open Projects" Find Usages scope)
+     * silently drop the root's usages.
+     */
+    public void testSourcePathKeepsTransientUsagesIndexRoot() throws Exception {
+
+        File wd = this.getWorkDir();
+        File cache = new File(wd, "cache");
+        cache.mkdir();
+        TestUtilities.setCacheFolder(cache);
+        File r1 = new File(wd, "root1");
+        r1.mkdir();
+        URL r1url = Utilities.toURI(r1).toURL();
+
+        JavaIndex.setAttribute(r1url, ClassIndexManager.PROP_SOURCE_ROOT, "true");
+        ClassIndexImpl uq = ClassIndexManager.getDefault().getUsagesQuery(r1url, true);
+        assertNotNull(uq);
+        assertEquals(ClassIndexImpl.Type.SOURCE, uq.getType());
+        assertEquals(ClassIndexImpl.State.NEW, uq.getState());
+
+        ClassPathImplementation baseImpl = ClassPathSupport.createClassPathImplementation(
+            List.of(new PathResourceImplementation[]{ ClassPathSupport.createResource(r1url) })
+        );
+        ClassPath base = ClassPathFactory.createClassPath(baseImpl);
+
+        ClassPath sp = ClassPathFactory.createClassPath(SourcePath.filtered(baseImpl, false));
+        assertEquals(base, sp);
+    }
+
     private static void assertEquals (ClassPath ecp, ClassPath rcp) {
         List<? extends ClassPath.Entry> ee = ecp.entries();
         List<? extends ClassPath.Entry> re = rcp.entries();

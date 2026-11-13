@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.0.6.0
+#Version 7.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1839,7 +1839,9 @@ fld public java.lang.String pkcs11Unsupported
 fld public java.lang.String pkcs11Warning
 fld public java.lang.String proxyCannotAuthenticate
 fld public java.lang.String proxyHttpFailure
+fld public java.lang.String proxyHttpHeadersTooLong
 fld public java.lang.String proxyHttpInvalidUserName
+fld public java.lang.String proxyHttpMessageTooLong
 fld public java.lang.String proxyHttpUnexpectedReply
 fld public java.lang.String proxyHttpUnspecifiedFailureReason
 fld public java.lang.String proxyJumpAbort
@@ -2054,10 +2056,11 @@ meth protected long getTimeout()
 meth protected void adjustTimeout()
 meth protected void clearPassword()
 meth protected void init(org.apache.sshd.client.session.ClientSession)
-meth protected void setDone(boolean) throws java.lang.Exception
+meth protected void setDone(boolean,org.apache.sshd.common.util.buffer.Buffer) throws java.lang.Exception
 meth public void runWhenDone(java.util.concurrent.Callable<java.lang.Void>) throws java.lang.Exception
 supr java.lang.Object
-hfds DEFAULT_PROXY_TIMEOUT_NANOS,bufferedCommands,done,lastProxyOperationTime,lock,remainingProxyProtocolTime,unregister
+hfds DEFAULT_PROXY_TIMEOUT_NANOS,bufferedCommands,done,lastProxyOperationTime,lock,remainingProxyProtocolTime,trailingDataHandler,unregister
+hcls ThrowingConsumer
 
 CLSS public org.eclipse.jgit.internal.transport.sshd.proxy.AuthenticationChallenge
 cons public init(java.lang.String)
@@ -2079,7 +2082,7 @@ cons public init(java.net.InetSocketAddress,java.net.InetSocketAddress,java.lang
 meth public void messageReceived(org.apache.sshd.common.io.IoSession,org.apache.sshd.common.util.Readable) throws java.lang.Exception
 meth public void sendClientProxyMetadata(org.apache.sshd.client.session.ClientSession) throws java.lang.Exception
 supr org.eclipse.jgit.internal.transport.sshd.proxy.AbstractClientProxyConnector
-hfds HTTP_HEADER_PROXY_AUTHENTICATION,HTTP_HEADER_PROXY_AUTHORIZATION,authenticator,availableAuthentications,basic,clientAuthentications,negotiate,ongoing
+hfds HTTP_HEADER_PROXY_AUTHENTICATION,HTTP_HEADER_PROXY_AUTHORIZATION,MAX_REPLY_LENGTH,authenticator,availableAuthentications,basic,clientAuthentications,data,negotiate,ongoing
 hcls HttpAuthenticationHandler,HttpBasicAuthentication,NegotiateAuthentication
 
 CLSS public final org.eclipse.jgit.internal.transport.sshd.proxy.HttpParser

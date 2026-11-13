@@ -20,7 +20,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -111,6 +111,30 @@ is the proper place.
             </description>
             <class package="org.netbeans.modules.maven.embedder" name="EmbedderFactory"/>
             <class package="org.netbeans.modules.maven.embedder" name="DependencyTreeFactory"/>
+        </change>
+        <change id="placeholder-capture">
+            <api name="general"/>
+            <summary>ArtifactFixer placeholder artifacts are collected via a thread-safe PlaceholderCapture</summary>
+            <version major="2" minor="91"/>
+            <date day="9" month="11" year="2026"/>
+            <author login="mbien"/>
+            <compatibility addition="yes"/>
+            <description>
+                Dependency collection may run on multiple threads, and the placeholder (forged)
+                artifacts created by <a href="@TOP@/org/netbeans/modules/maven/embedder/ArtifactFixer.html">ArtifactFixer</a>
+                implementations are no longer collected via a thread-local, which does not survive
+                the thread switch to the collection worker threads. Implementations may override the
+                new <a href="@TOP@/org/netbeans/modules/maven/embedder/ArtifactFixer.html#resolve-org.eclipse.aether.artifact.Artifact-org.netbeans.modules.maven.embedder.PlaceholderCapture-">resolve()</a>
+                overload to record placeholder artifacts into the thread-safe
+                <a href="@TOP@/org/netbeans/modules/maven/embedder/PlaceholderCapture.html">PlaceholderCapture</a>
+                it receives; the parameter may be null if the caller does not need them. The default
+                implementation delegates to the existing <a href="@TOP@/org/netbeans/modules/maven/embedder/ArtifactFixer.html#resolve-org.eclipse.aether.artifact.Artifact-">resolve()</a>,
+                so existing implementations keep working. A capture is created per operation and wired
+                in by the caller, see <a href="@TOP@/org/netbeans/modules/maven/embedder/MavenEmbedder.html#readProjectWithDependencies-org.apache.maven.execution.MavenExecutionRequest-boolean-org.netbeans.modules.maven.embedder.PlaceholderCapture-">MavenEmbedder.readProjectWithDependencies()</a>.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="ArtifactFixer"/>
+            <class package="org.netbeans.modules.maven.embedder" name="PlaceholderCapture"/>
+            <class package="org.netbeans.modules.maven.embedder" name="MavenEmbedder"/>
         </change>
     </changes>
 

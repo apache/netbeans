@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.maven.embedder.impl;
 
+import java.util.function.Supplier;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.DefaultRepositoryCache;
 import org.eclipse.aether.RepositoryCache;
@@ -37,6 +38,7 @@ public class NbRepositoryCache implements RepositoryCache {
     
     //as in DataPool class..
     //TODO mkleint: the constants have wrong values, the caching is not taking effect,
+    // -> this is purely a passthrough to the delegate atm
     //interestingly both the Dependency and Artifact instances are bigger in live IDE when correct value is used..
     
     private static final String ARTIFACT_POOL = "org.eclipse.org.eclipse.aether.DataPool$Artifact";
@@ -79,6 +81,25 @@ public class NbRepositoryCache implements RepositoryCache {
             return;
         }
         superDelegate.put(session, key, data);
+    }
+
+    @Override
+    public Object computeIfAbsent(RepositorySystemSession session, Object key, Supplier<Object> supplier) {
+        if (ARTIFACT_POOL.equals(key)) {
+            Object value = supplier.get();
+            synchronized (LOCK) {
+                artifacts = value;
+            }
+            return value;
+        }
+        if (DEPENDENCY_POOL.equals(key)) {
+            Object value = supplier.get();
+            synchronized (LOCK) {
+                dependencies = value;
+            }
+            return value;
+        }
+        return superDelegate.computeIfAbsent(session, key, supplier);
     }
     
 }

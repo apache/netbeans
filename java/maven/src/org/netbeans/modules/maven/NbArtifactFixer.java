@@ -38,6 +38,7 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.ArtifactFixer;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.maven.embedder.PlaceholderCapture;
 import org.netbeans.modules.maven.queries.MavenFileOwnerQueryImpl;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
@@ -52,8 +53,14 @@ public class NbArtifactFixer implements ArtifactFixer {
     private static final Logger LOG = Logger.getLogger(NbArtifactFixer.class.getName());
 
     private final ThreadLocal<Set<String>> gav = new ThreadLocal<Set<String>>();        //#234586
-            
-    public @Override File resolve(Artifact artifact) {
+
+    @Override
+    public File resolve(Artifact artifact) {
+        return resolve(artifact, null);
+    }
+
+    @Override
+    public File resolve(Artifact artifact, PlaceholderCapture capture) {
         if (!artifact.getExtension().equals(NbMavenProject.TYPE_POM)) {
             return null;
         }
@@ -88,9 +95,6 @@ public class NbArtifactFixer implements ArtifactFixer {
                 gavSet.add(id); //#234586
                 File pom = MavenFileOwnerQueryImpl.getInstance().getOwnerPOM(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
                 if (pom != null) {
-                    //instead of workarounds down the road, we set the artifact's file here.
-                    // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
-                    artifact.setFile(pom);
                     return pom;
                 }
             } finally {
@@ -105,11 +109,7 @@ public class NbArtifactFixer implements ArtifactFixer {
         // NOTE: this catches metadata request for all artifacts not locally cached, but all will be repored as POMs.
         try {
             File f = createFallbackPOM(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
-            //instead of workarounds down the road, we set the artifact's file here.
-            // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
-            artifact.setFile(f);
-            Set<Artifact> s = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
-            if (s != null) {
+            if (capture != null) {
                 String c = artifact.getProperty("nbResolvingArtifact.classifier", null);
                 String e = artifact.getProperty("nbResolvingArtifact.extension", null);
 
@@ -119,7 +119,7 @@ public class NbArtifactFixer implements ArtifactFixer {
                 // If it really resolves a POM dependency, add to missing artifacts.
                 if ((c == null && e == null) ||
                     (Objects.equals(c, artifact.getClassifier()) && Objects.equals(e, artifact.getExtension()))) {
-                    s.add(artifact);
+                    capture.add(artifact);
                 } else {
                     if (local.getLayout() != null) { // #189807: for unknown reasons, there is no layout when running inside MavenCommandLineExecutor.run
 
@@ -136,7 +136,7 @@ public class NbArtifactFixer implements ArtifactFixer {
                         org.eclipse.aether.artifact.DefaultArtifact da = new org.eclipse.aether.artifact.DefaultArtifact(
                                 art.getGroupId(), art.getArtifactId(), art.getClassifier(), art.getType(), 
                                 art.getVersion(), artifact.getProperties(), af);
-                        s.add(da);
+                        capture.add(da);
                     }
                 }
             }
@@ -194,38 +194,33 @@ public class NbArtifactFixer implements ArtifactFixer {
     }        
     
     /**
-     * Collects placeholder artifacts, which would be otherwise hidden in maven infrastructure. The value is only valid during {@link #collectPlaceholderArtifacts}, which
-     * can be invoked recursively.
-     */
-    private static final ThreadLocal<Set<Artifact>> CAPTURE_PLACEHOLDER_ARTIFACTS = new ThreadLocal<Set<Artifact>>();
-
-    /**
-     * Performs an operation and collects forged artifacts created during that operation. The invocation can be nested; each invocation gets only artifacts from its own 'level',
-     * not those from possible nested invocations. The function passes on all runtime exceptions and checked exception thrown by the operation.
-     * 
+     * Performs an operation and collects the placeholder (forged) artifacts created during that
+     * operation. The invocation can be nested; each invocation gets only the artifacts recorded
+     * into its own {@link PlaceholderCapture}. The function passes on all runtime exceptions and
+     * checked exception thrown by the operation. The capture must be wired into the operation,
+     * see e.g. {@link MavenEmbedder#readProjectWithDependencies(MavenExecutionRequest, boolean, PlaceholderCapture)}.
+     *
      * @param <T> value produced by the executed operation
      * @param <E> exception thrown from the operation
+     * @param capture the sink the operation records placeholder artifacts into
      * @param code the operation to call and monitor
      * @param collector callback that will get collected artifacts.
      * @return
-     * @throws E 
+     * @throws E
      */
-    public static <T, E extends Throwable> T collectPlaceholderArtifacts(ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
-        Set<Artifact> save = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
+    public static <T, E extends Throwable> T collectPlaceholderArtifacts(PlaceholderCapture capture, ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
         try {
-            CAPTURE_PLACEHOLDER_ARTIFACTS.set(new HashSet<>());
             return code.call();
         } catch (Error | RuntimeException r) {
             throw r;
         } catch (Exception ex) {
             sneakyThrow(ex);
             // unreachable
-            throw new Error(); 
+            throw new Error();
         } finally {
             if (collector != null) {
-                collector.accept(CAPTURE_PLACEHOLDER_ARTIFACTS.get());
+                collector.accept(capture.getArtifacts());
             }
-            CAPTURE_PLACEHOLDER_ARTIFACTS.set(save);
         }
     }
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.netbeans.modules.maven.embedder.ArtifactFixer;
+import org.netbeans.modules.maven.embedder.PlaceholderCapture;
 import org.openide.util.Lookup;
 import org.eclipse.aether.repository.WorkspaceReader;
 import org.eclipse.aether.repository.WorkspaceRepository;
@@ -38,12 +39,14 @@ public class NbWorkspaceReader implements WorkspaceReader {
     private final WorkspaceRepository repo;
     private final NbVersionResolver2 resolver;
     private final Collection<? extends ArtifactFixer> fixers;
-    boolean silence = false;
+    private final PlaceholderCapture capture;
+    volatile boolean silence = false;
     
-    public NbWorkspaceReader(NbVersionResolver2 resolver) {
+    public NbWorkspaceReader(NbVersionResolver2 resolver, PlaceholderCapture capture) {
         repo = new WorkspaceRepository("ide", getClass());
         fixers = Lookup.getDefault().lookupAll(ArtifactFixer.class);
         this.resolver = resolver;
+        this.capture = capture;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class NbWorkspaceReader implements WorkspaceReader {
             }
         }
         for (ArtifactFixer fixer : fixers) {
-            File f = fixer.resolve(artifact);
+            File f = fixer.resolve(artifact, capture);
             if (f != null) {
                 return f;
             }
@@ -107,7 +110,7 @@ public class NbWorkspaceReader implements WorkspaceReader {
             }
         }
         for (ArtifactFixer fixer : fixers) {
-            File f = fixer.resolve(artifact);
+            File f = fixer.resolve(artifact, capture);
             if (f != null) {
                 return Collections.singletonList(artifact.getBaseVersion());
             }

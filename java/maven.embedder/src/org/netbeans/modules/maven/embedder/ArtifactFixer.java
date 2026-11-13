@@ -28,10 +28,29 @@ import org.eclipse.aether.artifact.Artifact;
 public interface ArtifactFixer {
 
     /**
-     * Possibly resolves an artifact.
+     * Possibly resolves an artifact. May be called concurrently from multiple
+     * threads of the dependency collection.
      * @param artifact an artifact which might or might not be available in local repo
      * @return a file to resolve it to locally, or null to skip
      */
     File resolve(Artifact artifact);
+
+    /**
+     * Possibly resolves an artifact, recording any placeholder artifacts it forges
+     * into the given capture. May be called concurrently from multiple threads of the
+     * dependency collection, so implementations must not rely on thread-locals to
+     * receive the sink.
+     * <p>
+     * The default implementation simply delegates to {@link #resolve(Artifact)}, so
+     * existing implementations keep working; they just do not report placeholder
+     * artifacts.
+     * @param artifact an artifact which might or might not be available in local repo
+     * @param capture sink for the placeholder artifacts forged by this method, or
+     *        null if the caller does not need them
+     * @return a file to resolve it to locally, or null to skip
+     */
+    default File resolve(Artifact artifact, PlaceholderCapture capture) {
+        return resolve(artifact);
+    }
 
 }

@@ -102,7 +102,7 @@ public class GitCommitParameters extends DefaultCommitParameters implements Item
 
     @Override
     public String getCommitMessage() {
-        return ((CommitPanel) getPanel()).messageTextArea.getText();
+        return getPanel().messageTextArea.getCommitMessage();
     }
 
     public boolean isAmend() {

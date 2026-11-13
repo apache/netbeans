@@ -22,7 +22,7 @@ import org.netbeans.modules.java.graph.GraphNode;
 import org.netbeans.modules.java.graph.DependencyGraphScene;
 import java.util.Set;
 import javax.swing.Action;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.CommonArtifactActions;
 import org.netbeans.modules.maven.api.NbMavenProject;

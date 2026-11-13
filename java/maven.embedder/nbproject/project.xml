@@ -225,11 +225,6 @@
                 <package>org.apache.maven.settings.building</package>
                 <package>org.apache.maven.settings.crypto</package>
                 <package>org.apache.maven.settings.io.xpp3</package>
-                <package>org.apache.maven.shared.dependency.tree</package>
-                <package>org.apache.maven.shared.dependency.tree.traversal</package>
-                <package>org.apache.maven.shared.dependency.graph</package>
-                <package>org.apache.maven.shared.dependency.graph.filter</package>
-                <package>org.apache.maven.shared.dependency.graph.traversal</package>
                 <package>org.apache.maven.wagon</package>
                 <package>org.apache.maven.wagon.authentication</package>
                 <package>org.apache.maven.wagon.authorization</package>
@@ -264,6 +259,7 @@
                 <package>org.jdom2.util</package>
                 <package>org.netbeans.modules.maven.embedder</package>
                 <package>org.netbeans.modules.maven.embedder.exec</package>
+                <package>org.netbeans.modules.maven.embedder.tree</package>
                 <!-- maven-resolver-api -->
                 <package>org.eclipse.aether</package>
                 <package>org.eclipse.aether.artifact</package>
@@ -309,12 +305,6 @@
                 <package>org.apache.maven.wagon.shared.http</package>
                 <package>org.apache.maven.wagon.providers.http.wagon.shared</package>
             </friend-packages>
-            <!-- TODO: DROP THIS BEGIN-->
-            <class-path-extension>
-                <runtime-relative-path>ext/maven/maven-dependency-tree-2.2.jar</runtime-relative-path>
-                <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
-            </class-path-extension>
-            <!-- TODO: DROP THIS END -->
             <class-path-extension>
                 <runtime-relative-path>ext/maven/jdom2-2.0.6.1.jar</runtime-relative-path>
                 <binary-origin>external/jdom2-2.0.6.1.jar</binary-origin>

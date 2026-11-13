@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.net.URL;
@@ -29,20 +30,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.*;
-import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.MoveRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
-import org.netbeans.modules.refactoring.api.ProgressEvent;
 import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.spi.JavaRefactoringPlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
@@ -66,6 +64,8 @@ import org.openide.util.NbBundle;
     "ERR_MoveAbstractMember=Cannot move abstract method \"{0}\"",
     "# {0} - Method name",
     "ERR_MoveMethodPolymorphic=Cannot move polymorphic method \"{0}\"",
+    "# {0} - Field name",
+    "ERR_MoveNotInitializedToInterface=Member \"{0}\" cannot be moved to interface, it is not initialized.",
     "WRN_InitNoAccess=Field initializer uses local accessors which will not be accessible",
     "# {0} - File displayname : line number",
     "WRN_NoAccessor=No accessor found to invoke the method from: {0}",
@@ -238,6 +238,19 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
         PackageElement sourcePackage = (PackageElement) javac.getElementUtilities().outermostTypeElement(sourceElement).getEnclosingElement();
         if(targetPackage.isUnnamed() && !sourcePackage.isUnnamed()) {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_MovingMemberToDefaultPackage")); //NOI18N
+        }
+        if (targetClass.getKind().isInterface()) {
+            
+            for (TreePathHandle treePathHandle : source) {
+                Element element = treePathHandle.resolveElement(javac);
+                if (element != null && element.getKind() == ElementKind.FIELD) {
+                    VariableElement variableElement = (VariableElement) element;
+                    VariableTree variableTree = (VariableTree) javac.getTrees().getTree(variableElement);
+                    if (variableTree != null && variableTree.getInitializer() == null) {
+                        return createProblem(p, true, NbBundle.getMessage(PullUpRefactoringPlugin.class, "ERR_MoveNotInitializedToInterface", element.getSimpleName()));
+                    }
+                }
+            }
         }
         for (TreePathHandle treePathHandle : source) {
             Element element = treePathHandle.resolveElement(javac);

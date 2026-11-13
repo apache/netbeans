@@ -172,6 +172,23 @@ public class PullUpTest extends RefactoringTestBase {
         performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE, new Problem(true, "ERR_PullUp_MemberAlreadyExists"));
     }
 
+    public void testPullUpNotInitializedFieldToInterface() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java", "package pullup; public interface A {}"),
+                new File("pullup/B.java", "package pullup; public class B implements A { public int i; }"));
+        performPullUpIface(src.getFileObject("pullup/B.java"), 1, 0, Boolean.FALSE, new Problem(true, "ERR_PullupNonNotInitializedToInterface"));
+    }
+
+    public void testPullUpInitializedFieldToInterface() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java", "package pullup; public interface A {}"),
+                new File("t/B.java", "package pullup; public class B implements A { public int i = 1; }"));
+        performPullUpIface(src.getFileObject("t/B.java"), 1,0, Boolean.FALSE);
+        verifyContent(src,
+                new File("t/A.java", "package pullup; public interface A { public int i = 1; }"),
+                new File("t/B.java", "package pullup; public class B implements A {}"));
+    }
+
     public void testPullUpField() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A extends B { public int i; }"),

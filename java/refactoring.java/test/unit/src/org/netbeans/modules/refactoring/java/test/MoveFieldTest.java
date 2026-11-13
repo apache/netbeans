@@ -57,6 +57,50 @@ public class MoveFieldTest extends MoveBase {
                         + "}\n"));
     }
     
+    public void testMoveNotInitializedFieldToInterface() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java", "package t;\n"
+                        + "public class A {\n"
+                        + "    public static int i;\n"
+                        + "}\n"),
+                new File("t/B.java", "package t;\n"
+                        + "public interface B {\n"
+                        + "}\n"));
+        performMove(src.getFileObject("t/A.java"), new int[]{1}, src.getFileObject("t/B.java"), Visibility.ESCALATE, false, new Problem(true, "ERR_MoveNotInitializedToInterface"));
+    }
+
+    public void testMoveInitializedFieldToInterface() throws Exception {
+        writeFilesAndWaitForScan(src, 
+                new File("t/A.java", 
+                        """
+                        package t;
+                        public class A {
+                            public static int i = 1;
+                        }
+                        """),
+                new File("t/B.java",
+                        """
+                        package t;
+                        public interface B {
+                        }
+                        """));
+        performMove(src.getFileObject("t/A.java"), new int[]{1}, src.getFileObject("t/B.java"), Visibility.ESCALATE, false);
+        verifyContent(src, 
+                new File("t/A.java", 
+                        """
+                        package t;
+                        public class A {
+                        }
+                        """),
+                new File("t/B.java", 
+                        """
+                        package t;
+                        public interface B {
+                            public static int i = 1;
+                        }
+                        """));
+    }
+
     public void test242909() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("t/A.java", "package t;\n"

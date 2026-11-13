@@ -1206,6 +1206,63 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/B.java", "package pullup; public class B { protected void foo() { } }"));
     }
 
+    public void testIssue7800() throws Exception{
+        String clsA="""
+                    class A extends SubClass {
+                        void method() {
+                            System.out.println("Class A method");
+                        }
+                    }
+                    """;
+        String parentCls="""
+                         class ParentClass {
+                            void method() {
+                               System.out.println("ParentClass method");
+                            }
+                         }
+                         """;
+        String subCls="""
+                    class SubClass extends ParentClass {
+                        void test() {
+                            method();
+                        }
+                    }
+                    """;
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java", clsA),
+                new File("pullup/ParentClass.java", parentCls),
+                new File("pullup/SubClass.java", subCls));
+        performPullUp(src.getFileObject("pullup/SubClass.java"), 1, Boolean.FALSE);
+        verifyContent(src,
+                new File("pullup/A.java",
+                        """
+                        class A extends SubClass {
+                            void method() {
+                                System.out.println("Class A method");
+                            }
+                        }
+                        """),
+                new File("pullup/ParentClass.java",
+                        """
+                        class ParentClass {
+                            void method() {
+                                System.out.println("ParentClass method");
+                            }
+                            void test() {
+                                method();
+                            }
+                        }
+                        """),
+                new File("pullup/SubClass.java",
+                        """
+                        class SubClass extends ParentClass {
+                        }
+                        """
+                ));
+
+    }
+
+
     private void performPullUpImplements(FileObject source, final int position, final int supertype, Problem... expectedProblems) throws IOException, IllegalArgumentException, InterruptedException {
         final PullUpRefactoring[] r = new PullUpRefactoring[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {

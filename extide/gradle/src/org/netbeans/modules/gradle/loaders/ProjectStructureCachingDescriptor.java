@@ -25,6 +25,7 @@ import org.gradle.tooling.model.GradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider.GradleRuntime;
 
 /**
  *
@@ -50,7 +51,7 @@ public class ProjectStructureCachingDescriptor implements ModelCachingDescriptor
     }
 
     @Override
-    public GradleCommandLine gradleCommandLine() {
+    public GradleCommandLine gradleCommandLine(GradleRuntime rt) {
         return new GradleCommandLine();
     }
 

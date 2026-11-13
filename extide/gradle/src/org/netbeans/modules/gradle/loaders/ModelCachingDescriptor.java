@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle.loaders;
 import java.util.Set;
 import org.gradle.tooling.model.Model;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider.GradleRuntime;
 
 /**
  *
@@ -32,7 +33,7 @@ public interface ModelCachingDescriptor <T extends Model> {
 
     Set<String> getTargets();
 
-    GradleCommandLine gradleCommandLine();
+    GradleCommandLine gradleCommandLine(GradleRuntime rt);
 
     void onLoad(String target, T model);
     void onError(String target, Exception ex);

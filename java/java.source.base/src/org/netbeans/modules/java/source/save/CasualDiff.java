@@ -993,6 +993,9 @@ public class CasualDiff {
             } else if ((newT.mods.flags & Flags.INTERFACE) != 0) {
                 copyTo(localPointer, pos);
                 printer.print("interface"); //NOI18N
+            } else if ((newT.mods.flags & Flags.RECORD) != 0) {
+                copyTo(localPointer, pos);
+                printer.print("record"); //NOI18N
             } else {
                 copyTo(localPointer, pos);
                 printer.print("class"); //NOI18N
@@ -1031,7 +1034,6 @@ public class CasualDiff {
                 localPointer = insertHint;
             }
         }
-        //TODO: class to record and vice versa!
         if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
             ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
             ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
@@ -1070,6 +1072,41 @@ public class CasualDiff {
             tokenSequence.move(localPointer);
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             // it can be > (GT) or >> (SHIFT)
+            insertHint = tokenSequence.offset() + tokenSequence.token().length();
+        } else if (newT.getKind() == Kind.RECORD) {
+            // class (or other non-record) -> record: print the new record
+            // components in the header. The old body members are diffed below;
+            // the ones that became components are simply deleted there.
+            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
+            if (!newParts.components().isEmpty()) {
+                int posHint = insertHint;
+                copyTo(localPointer, posHint);
+                int old = printer.setPrec(TreeInfo.noPrec);
+                parameterPrint = true;
+                JCClassDecl oldEnclClass = printer.enclClass;
+                printer.enclClass = null;
+                localPointer = diffParameterList(
+                    Collections.emptyList(), newParts.components(), new JavaTokenId[] { JavaTokenId.LPAREN, JavaTokenId.RPAREN }, posHint, Measure.MEMBER
+                );
+                printer.enclClass = oldEnclClass;
+                parameterPrint = false;
+                printer.setPrec(old);
+            }
+            filteredNewTDefs = newParts.defs();
+        } else if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.CLASS) {
+            // record to class: the components in the old header become field
+            // declarations in the new body, where they are diffed as inserted
+            // members below. The old component parameter list is dropped.
+            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
+            filteredOldTDefs = oldParts.defs;
+            if (!oldParts.components().isEmpty()) {
+                // skip the old component parameter list '(...)':
+                moveFwdToToken(tokenSequence, endPos(oldParts.components.getLast()), JavaTokenId.RPAREN);
+                tokenSequence.moveNext();
+                localPointer = tokenSequence.offset();
+            }
+            tokenSequence.move(localPointer);
+            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             insertHint = tokenSequence.offset() + tokenSequence.token().length();
         }
         switch (getChangeKind(oldT.extending, newT.extending)) {
@@ -1202,7 +1239,26 @@ public class CasualDiff {
                 }
             }
         }
-        localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
+        if (newT.getKind() == Kind.RECORD && oldT.getKind() != Kind.RECORD && filteredNewTDefs.isEmpty() && !filteredOldTDefs.isEmpty()) {
+            // class -> record conversion in which every body member became
+            // a record component: the body is now empty, emit '{}'.
+            // (Skipping the member diff would otherwise leave a stray
+            // line break before the closing brace.)
+            tokenSequence.move(localPointer);
+            tokenSequence.moveNext(); // right after the opening '{'
+            int braceDepth = 0;
+            while (tokenSequence.moveNext()) {
+                JavaTokenId id = tokenSequence.token().id();
+                if (id == JavaTokenId.LBRACE) {
+                    braceDepth++;
+                } else if (id == JavaTokenId.RBRACE && --braceDepth < 0) {
+                    break;
+                }
+            }
+            localPointer = tokenSequence.offset();
+        } else {
+            localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
+        }
         printer.enclClass = origClass;
         origClassName = origOuterClassName;
         newClassName = newOuterClassName;
@@ -3498,8 +3554,8 @@ public class CasualDiff {
     }
 
     private boolean kindChanged(long oldFlags, long newFlags) {
-        return (oldFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION))
-                != (newFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION));
+        return (oldFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION | Flags.RECORD))
+                != (newFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION | Flags.RECORD));
     }
 
     protected boolean nameChanged(Name oldName, Name newName) {

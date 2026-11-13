@@ -52,6 +52,11 @@ import org.openide.util.lookup.ServiceProvider;
  *      use cases</a>
  *      <LI>the examples of <a href="lookup/doc-files/lookup-spi.html">how to write your own lookup</a>
  * </UL>
+ * <p>
+ * <i>Note:</i> Lookup implementations may use hash-based storage internally.
+ * Objects registered in a lookup should maintain stable
+ * {@link Object#hashCode()} and {@link Object#equals(Object)} values while
+ * they are present, or removal and lookup operations may behave unexpectedly.
  *
  * @see org.openide.util.lookup.AbstractLookup
  * @see Lookups

@@ -50,6 +50,16 @@
 
   <property name="autoupdate.catalog.url" value="http://bits.netbeans.org/dev/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/nbms/updates.xml.gz"/>
 
+  <!--
+  Version of [NetBeans Repository Plugin](https://bits.netbeans.org/mavenutilities/nbm-maven-plugin/nb-repository-plugin/index.html)
+  to use when handling `ant maven-install` invocation.
+  -->
+  <property name="nbm.plugin.version" value="14.5"/>
+  <!-- default version to use when installing into Maven repository -->
+  <property name="nbm.install.version" value="dev-SNAPSHOT"/>
+  <!-- default NBM pom parent version -->
+  <property name="nbm.install.parent.version" value="5"/>
+
   <macrodef name="resolve">
     <attribute name="name"/>
     <attribute name="value"/>

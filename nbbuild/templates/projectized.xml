@@ -234,8 +234,7 @@
         <condition property="nbm.distribution" value="${dist.base}/${nbm}"> <!-- compatibility -->
             <isset property="dist.base"/>
         </condition>
-        <property name="dist.base.structured" value="http://deadlock.netbeans.org/job/nbms-and-javadoc/lastStableBuild/artifact/nbbuild/nbms"/>
-        <property name="nbm.distribution" value="${dist.base.structured}/${cluster.dir}/${nbm}"/>
+        <property name="nbm.distribution" value="m2:/org.netbeans.modules:${code.name.base.dashes}:${nbm.install.version}:nbm"/>
         <property name="nbm.module.author" value=""/>
         <property name="nbm.release.date" value=""/>
         <property name="nbm.needs.restart" value="false"/>
@@ -894,9 +893,8 @@
     </target>
 
     <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
-    <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
+    <target name="maven-install" depends="init" description="Installs a -D{nbm.install.version} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
-        <property name="mavenVersion" value="dev-SNAPSHOT"/>
         <delete dir="${maven.tmp}"/>
         <property name="maven.tmp.nbms" location="${maven.tmp}/nbms"/>
         <antcall target="nbm" inheritall="false">
@@ -919,8 +917,9 @@
         <condition property=".cmd" value=".cmd" else="">
           <os family="windows"/>
         </condition>
+        <property name="mavenArgs" value=""/>
         <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
-            <arg value="-DforcedVersion=${mavenVersion}"/>
+            <arg value="-DforcedVersion=${nbm.install.version}"/>
             <arg value="-DdefineCluster=false"/>
             <arg value="-DdependencyRepositoryId=netbeans-snapshot"/>
             <arg value="-DdependencyRepositoryUrl=https://repository.apache.org/content/groups/snapshots"/>
@@ -928,8 +927,11 @@
             <arg value="-DnetbeansNbmDirectory=${maven.tmp.nbms}"/>
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
-            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:14.5:populate"/>
+            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:${nbm.plugin.version}:populate"/>
+            <arg line="${mavenArgs}"/>
+            <env key="JAVA_HOME" value="${java.home}"/>
         </exec>
-    </target>
+        <echo message="Installed -Dnbm.install.version=${nbm.install.version} into Maven repository with additional -DmavenArgs=${mavenArgs}"/>
+  </target>
     
 </project>

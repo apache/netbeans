@@ -34,7 +34,7 @@ import org.openide.util.Exceptions;
  *
  * @author sdedic
  */
-@MimeRegistration(service = DocumentFactory.class, mimeType = "")
+@MimeRegistration(service = DocumentFactory.class, mimeType = "", position = 710)
 public class DocumentFactoryImpl implements DocumentFactory {
 
     @Override

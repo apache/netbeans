@@ -956,7 +956,7 @@ public class InstantRenamePerformer implements DocumentListener, KeyListener {
         }
 
         @MimeRegistrations({
-            @MimeRegistration(mimeType = JavaKit.JAVA_MIME_TYPE, service = DeletedTextInterceptor.Factory.class)
+            @MimeRegistration(mimeType = JavaKit.JAVA_MIME_TYPE, service = DeletedTextInterceptor.Factory.class, position = 860)
         })
         public static class Factory implements DeletedTextInterceptor.Factory {
 

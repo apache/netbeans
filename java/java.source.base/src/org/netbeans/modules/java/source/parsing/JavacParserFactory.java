@@ -37,7 +37,7 @@ import org.openide.util.Lookup;
  *
  * @author Tomas Zezula
  */
-@MimeRegistration(mimeType = "text/x-java", service = ParserFactory.class)
+@MimeRegistration(mimeType = "text/x-java", service = ParserFactory.class, position = 1080)
 public class JavacParserFactory extends ParserFactory {
     private static final Logger LOG = Logger.getLogger(JavacParserFactory.class.getName());
     

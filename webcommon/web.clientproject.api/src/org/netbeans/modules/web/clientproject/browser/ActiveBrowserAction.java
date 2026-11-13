@@ -37,7 +37,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -99,6 +98,10 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
     private Lookup.Result<ProjectBrowserProvider> resultPBP;
     private LookupListener lookupListener;
     private WebBrowser lastWebBrowser = null;
+
+    private volatile boolean pendingProjectLookupChange;
+    private final RequestProcessor.Task pendingRefresh
+            = RP.create(() -> refreshView(pendingProjectLookupChange));
 
     private ChangeListener ideBrowserChangeListener = new ChangeListener() {
         @Override
@@ -292,11 +295,8 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
     }
 
     private void refreshViewLater(final boolean projectLookupChange) {
-        RP.post(new Runnable() {
-            public @Override void run() {
-                refreshView(projectLookupChange);
-            }
-        });
+        pendingProjectLookupChange = projectLookupChange;
+        pendingRefresh.schedule(100); // debounce: coalesce rapid lookup changes
     }
 
     private void refreshView(boolean projectLookupChange) {

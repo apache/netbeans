@@ -88,7 +88,7 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
     protected boolean init() {
         boolean needsInit = super.init();
         if (needsInit) {
-            refreshView(null, true);
+            doRefreshWork(null);
         }
         return needsInit;
     }
@@ -144,7 +144,7 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
             return;
         }
         switch (prop) {
-            case PROPERTY_MAIN_PROJECT, PROPERTY_OPEN_PROJECTS -> refreshView(null, false);
+            case PROPERTY_MAIN_PROJECT, PROPERTY_OPEN_PROJECTS -> scheduleRefresh();
         }
     }
 
@@ -169,10 +169,7 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
         return new Project[0];
     }
 
-    private void refreshView(final Lookup context, boolean immediate) {
-        Runnable r= new Runnable() {
-            public @Override void run() {
-
+    private void doRefreshWork(Lookup context) {
         Project mainProject = OpenProjectList.getDefault().getMainProject();
         final Project[] projects = selection(mainProject, context);
 
@@ -203,13 +200,6 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
         setEnabled(enabled);
             }
         });
-            }
-        };
-        if (immediate) {
-            r.run();
-        } else {
-            RP.post(r);
-        }
     }
 
     private String getPresenterName(String name, Project mPrj, Project[] cPrj) {
@@ -223,8 +213,8 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
     }
 
     @Override
-    protected void refresh(Lookup context, boolean immediate) {
-        refreshView(context, immediate);
+    protected void refresh(Lookup context) {
+        doRefreshWork(context);
     }
 
 }

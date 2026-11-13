@@ -123,6 +123,7 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
     private Lookup.Result<ProjectConfigurationProvider> currentResult;
 
     private final Lookup lookup;
+    private final RequestProcessor.Task pendingRefresh;
 
     private void initConfigListCombo() {
         assert EventQueue.isDispatchThread();
@@ -239,6 +240,7 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
         OpenProjectList.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OpenProjectList.getDefault()));
 
         lookup = LookupSensitiveAction.LastActivatedWindowLookup.INSTANCE;
+        pendingRefresh = RP.create(() -> refreshView(lookup));
         Lookup.Result<Project> resultPrj = lookup.lookupResult(Project.class);
         Lookup.Result<DataObject> resultDO = lookup.lookupResult(DataObject.class);
         resultPrj.addLookupListener(WeakListeners.create(LookupListener.class, this, resultPrj));
@@ -683,13 +685,7 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
     }
 
     private void refreshViewLater() {
-        RP.post(new Runnable() {
-            public @Override void run() {
-                refreshView(lookup);
-                //TEST: ActiveConfigActionTest
-                LOGGER.log(Level.FINEST, "view-refreshed");   //NOI18N
-            }
-        });
+        pendingRefresh.schedule(100); // debounce: coalesce rapid lookup changes
     }
 
 }

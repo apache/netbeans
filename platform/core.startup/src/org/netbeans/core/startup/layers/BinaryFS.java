@@ -744,10 +744,15 @@ final class BinaryFS extends FileSystem implements DataInput {
                 // Cf. XMLMapAttr.Attr.methodValue:
                 Class<?> cls = findClass(method.substring(0, i));
                 String methodName = method.substring(i + 1);
+                // optimized order based on encountered frequency (startup and some tree interaction)
                 Class<?>[][] paramArray = {
-                    {FileObject.class, String.class}, {String.class, FileObject.class},
-                    {FileObject.class}, {String.class}, {},
-                    {Map.class, String.class}, {Map.class},
+                    {Map.class},                        // 696 ← hot case, no conflicts
+                    {FileObject.class, String.class},   // 0   ← must stay before {} (specificity)
+                    {String.class, FileObject.class},   // 0
+                    {FileObject.class},                 // 23
+                    {String.class},                     // 0
+                    {},                                 // 135 ← must stay after all 1+-param non-Map
+                    {Map.class, String.class},          // 0
                 };
                 for (Class<?>[] paramTypes : paramArray) {
                     Method m;

@@ -20,13 +20,6 @@
 // Initialization/cleanup
 NetBeans.cleanup();
 
-// Notify IDE that the extension has been installed/updated
-chrome.runtime.onInstalled.addListener(function() {
-    var manifest = chrome.runtime.getManifest();
-    var version = manifest.version;
-    NetBeans.sendReadyMessage(version);
-});
-
 // Register reload-callback
 NetBeans.browserReloadCallback = function(tabId, newUrl) {
     if (newUrl !== undefined) {
@@ -48,28 +41,33 @@ NetBeans.browserCloseCallback = function(tabId) {
 
 NetBeans.debuggedTab = null;
 NetBeans.windowWithDebuggedTab = null;
-NetBeans.browserAttachDebugger = function(tabId) {
-    if (NetBeans.DEBUG) {
-        console.log('debugger attach for tab ' + tabId);
+NetBeans.attachments = new Map();
+NetBeans.disconnectDebugger = function() {
+    for (const tabId of NetBeans.attachments.keys()) {
+        NetBeans.browserDetachDebugger(tabId);
     }
-    chrome.debugger.attach({tabId : tabId}, "1.0", function(){
-        var err = chrome.runtime.lastError;
-        if (err) {
-            if (err.message) {
-                console.log('NetBeans cannot debug this tab because: ' + err.message);
-            }
-        } else {
-            if (NetBeans.debuggedTab !== null && NetBeans.debuggedTab !== tabId) {
-                NetBeans.hidePageIcon(NetBeans.debuggedTab);
-            }
-            NetBeans.debuggedTab = tabId;
-            chrome.tabs.get(tabId, function(tab) {
-                NetBeans.windowWithDebuggedTab = tab.windowId;
-                NetBeans.createContextMenu(tabId, tab.url);
-            });
-            // detect viewport
-            NetBeans.detectViewPort();
+};
+NetBeans.browserAttachDebugger = function(tabId) {
+    if (NetBeans.attachments.has(tabId)) {
+        return;
+    }
+    const attachment = chrome.debugger.attach({tabId}, '1.0');
+    NetBeans.attachments.set(tabId, attachment);
+    attachment.then(async () => {
+        if (NetBeans.attachments.get(tabId) !== attachment) {
+            return;
         }
+        NetBeans.debuggedTab = tabId;
+        const tab = await chrome.tabs.get(tabId).catch(() => null);
+        if (tab && NetBeans.attachments.get(tabId) === attachment) {
+            NetBeans.windowWithDebuggedTab = tab.windowId;
+            NetBeans.createContextMenu(tabId, tab.url);
+        }
+    }).catch(error => {
+        if (NetBeans.attachments.get(tabId) === attachment) {
+            NetBeans.attachments.delete(tabId);
+        }
+        console.warn('Cannot attach NetBeans debugger:', error);
     });
 };
 
@@ -77,10 +75,11 @@ NetBeans.browserDetachDebugger = function(tabId) {
     if (NetBeans.DEBUG) {
         console.log('debugger detaching from tab ' + tabId);
     }
-    chrome.debugger.detach({tabId : tabId});
+    const attachment = NetBeans.attachments.get(tabId);
+    NetBeans.attachments.delete(tabId);
+    attachment?.then(() => chrome.debugger.detach({tabId})).catch(() => {});
     chrome.contextMenus.removeAll();
     if (NetBeans.debuggedTab === tabId) {
-        NetBeans.hidePageIcon(tabId);
         NetBeans.debuggedTab = null;
         NetBeans.windowWithDebuggedTab = null;
     }
@@ -88,14 +87,8 @@ NetBeans.browserDetachDebugger = function(tabId) {
 
 // display NB icon in URL bar
 NetBeans.showPageIcon = function(tabId) {
-    chrome.pageAction.show(tabId);
+    chrome.action.enable(tabId).catch(() => {});
 };
-NetBeans.hidePageIcon = function(tabId) {
-// Do not hide page icon. The tab is managed still and the page icon
-// can be used to reconnect to IDE.
-//    chrome.pageAction.hide(tabId);
-};
-
 // Creates the Select Mode context menu
 NetBeans.createContextMenu = function(tabId, url) {
     if (NetBeans.debuggedTab !== tabId) {
@@ -121,10 +114,7 @@ NetBeans.createContextMenu = function(tabId, url) {
             id: 'selectionMode',
             title: NetBeans.contextMenuName(),
             contexts: ['all'],
-            documentUrlPatterns: [NetBeans.contextMenuUrl],
-            onclick: function() {
-                NetBeans.setSelectionMode(!NetBeans.getSelectionMode());
-            }
+            documentUrlPatterns: [NetBeans.contextMenuUrl]
         },
         function() {
             NetBeans.contextMenuCreationInProgress = false;
@@ -144,16 +134,6 @@ NetBeans.contextMenuName = function() {
     return chrome.i18n.getMessage(NetBeans.getSelectionMode() ? '_StopSelectMode' : '_StartSelectMode');
 };
 
-// show infobar
-NetBeans.showInfoBar = function(tabId) {
-    chrome.experimental.infobars.show({
-        tabId : tabId,
-        path: 'html/infobar.html'
-    });
-};
-NetBeans.getWindowInfo = function(callback) {
-    chrome.windows.getLastFocused({ populate: true }, callback);
-};
 NetBeans.detectViewPort = function(callback) {
     if (NetBeans.debuggedTab === null) {
         console.log('No debuggedTab so bypassing the detection');
@@ -162,18 +142,22 @@ NetBeans.detectViewPort = function(callback) {
         }
         return;
     }
-    var script = 'NetBeans_ViewPort = {'
+    var script = '({'
             + '    width: window.innerWidth,'
             + '    height: window.innerHeight,'
             + '    marginWidth: window.outerWidth - window.innerWidth,'
             + '    marginHeight: window.outerHeight - window.innerHeight,'
             + '    isMac: navigator.platform.toUpperCase().indexOf("MAC") !== -1'
-            + '};';
+            + '})';
     chrome.debugger.sendCommand(
         {tabId : NetBeans.debuggedTab},
         'Runtime.evaluate',
         {expression: script, returnByValue: true},
         function(result) {
+            if (chrome.runtime.lastError || !result?.result?.value) {
+                callback?.();
+                return;
+            }
             var viewport = result.result.value;
             NetBeans_ViewPort.width = viewport.width;
             NetBeans_ViewPort.height = viewport.height;
@@ -231,53 +215,38 @@ NetBeans._resizePage = function(width, height, callback) {
         });
     });
 };
-// show preset customizer
-NetBeans.showPresetCustomizer = function() {
-    chrome.tabs.create({'url': 'html/options.html'});
-};
-
-NetBeans.browserSendCommand = function(tabId, id, method, params, callback) {
-    if (NetBeans.DEBUG) {
-        console.log('send ['+tabId+","+id+","+method+","+JSON.stringify(params));
-    }
-    chrome.debugger.sendCommand({tabId : tabId}, method, params,
-        function(result) {
-            if (chrome.runtime.lastError) {
-                var error = JSON.stringify(chrome.runtime.lastError);
-                console.log('debugger send command result code: ' + error);
-                NetBeans.sendDebuggingResponse(tabId, {id : id, error : error});
-            } else {
-                console.log('debugger send command response: ' + result);
-                NetBeans.sendDebuggingResponse(tabId, {id : id, result : result});
-            }
-        });
-};
-
-// "fired" when presets changed
-NetBeans_Presets.presetsChanged = function() {
-    // no need to refresh popup, refresh only infobar(s)
-    var views = chrome.extension.getViews({type: "infobar"});
-    console.log('Refreshing ' + views.length +  ' infobars');
-    for (var i in views) {
-        var view = views[i];
-        view.NetBeans_Infobar.redrawPresets();
-    }
-};
-
-// Updates the context menu and the info-bar according to changes of page-inspection properties
-NetBeans.addPageInspectionPropertyListener(function(event) {
-    var name = event.name;
-    if (name !== 'selectionMode') {
-        return;
-    }
-    NetBeans.updateContextMenu();
-    var value = event.value;
-    var views = chrome.extension.getViews({type: "infobar"});
-    for (var i in views) {
-        var view = views[i];
-        if (view.NetBeans_Infobar) {
-            view.NetBeans_Infobar.setSelectionMode(value);
+NetBeans.browserSendCommand = async function(tabId, id, method, params) {
+    const attachment = NetBeans.attachments.get(tabId);
+    const socket = NetBeans.socket;
+    let response;
+    try {
+        if (!attachment) {
+            throw new Error('Debugger is not attached.');
         }
+        await attachment;
+        if (NetBeans.attachments.get(tabId) !== attachment) {
+            throw new Error('Debugger was detached.');
+        }
+        const result = await chrome.debugger.sendCommand({tabId}, method, params);
+        response = {id, result: result || {}};
+    } catch (error) {
+        response = {id, error: JSON.stringify({message: error.message})};
+    }
+    if (NetBeans.socketReady && NetBeans.socket === socket) {
+        NetBeans.sendDebuggingResponse(tabId, response);
+    }
+};
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === 'selectionMode' && tab?.id === NetBeans.debuggedTab
+            && NetBeans.socketReady) {
+        NetBeans.setSelectionMode(!NetBeans.getSelectionMode());
+    }
+});
+
+NetBeans.addPageInspectionPropertyListener(event => {
+    if (event.name === 'selectionMode' && NetBeans.debuggedTab !== null) {
+        NetBeans.updateContextMenu();
     }
 });
 
@@ -343,10 +312,15 @@ NetBeans.openPopup = function(url, width, height) {
 };
 
 chrome.debugger.onEvent.addListener(function(source, method, params) {
-    NetBeans.sendDebuggingResponse(source.tabId, {method : method, params : params});
+    if (NetBeans.socketReady && NetBeans.attachments.has(source.tabId)) {
+        NetBeans.sendDebuggingResponse(source.tabId, {method : method, params : params});
+    }
 });
 
 chrome.debugger.onDetach.addListener(function(source, reason) {
+    if (!NetBeans.attachments.delete(source.tabId)) {
+        return;
+    }
     NetBeans._checkUnexpectedDetach(source.tabId, reason);
     chrome.contextMenus.removeAll();
     if (source.tabId === NetBeans.debuggedTab) {
@@ -361,29 +335,12 @@ chrome.tabs.onCreated.addListener(function(tab) {
     NetBeans.tabCreated(tab.id);
 });
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    NetBeans.tabUpdated(tab);
+    if (changeInfo.url || changeInfo.status === 'complete') {
+        NetBeans.tabUpdated(tab);
+    }
 });
 chrome.tabs.onRemoved.addListener(function(tabId) {
     NetBeans.tabRemoved(tabId);
-});
-
-// onCreated event is not delivered for the first tab;
-// As a workaround, we go through all existing tabs and consider them as new.
-// onUpdated event is not delivered sometimes as well for the first tab;
-// Hence, we consider also tab urls that are known already.
-chrome.windows.getAll({populate: true}, function(windows) {
-    for (var i=0; i<windows.length; i++) {
-        var window = windows[i];
-        for (var j=0; j<window.tabs.length; j++) {
-            var tab = window.tabs[j];
-            NetBeans.tabCreated(tab.id);
-            var url = tab.url;
-            if (url !== undefined && url !== null && url.length !== 0) {
-                // URL of the tab is known already
-                NetBeans.tabUpdated(tab);
-            }
-        }
-    }
 });
 
 NetBeans.windowFocused = function(windowId) {
@@ -489,7 +446,7 @@ NetBeans_DevTools.PROPAGATE_CHANGES_KEY = 'devtools.changes.propagate';
 NetBeans_DevTools.areChangesPropagated = function(task) {
     chrome.storage.sync.get(NetBeans_DevTools.PROPAGATE_CHANGES_KEY, function(items) {
         NetBeans_Storage._logError('get', NetBeans_DevTools.PROPAGATE_CHANGES_KEY);
-        var enabled = true;
+        var enabled = false;
         if (items[NetBeans_DevTools.PROPAGATE_CHANGES_KEY] !== undefined) {
             enabled = items[NetBeans_DevTools.PROPAGATE_CHANGES_KEY];
         }
@@ -503,39 +460,6 @@ NetBeans_DevTools.setChangesPropagated = function(enabled) {
         NetBeans_Storage._logError('set', NetBeans_DevTools.PROPAGATE_CHANGES_KEY);
     });
 };
-/**
- * Connect dev tools page.
- */
-chrome.runtime.onConnect.addListener(function(devToolsConnection) {
-    var devToolsListener = function(message) {
-        var event = message.event;
-        if (event === 'onResourceContentCommitted') {
-            NetBeans_DevTools.areChangesPropagated(function(enabled) {
-                if (enabled) {
-                    // propagate change to NB
-                    chrome.extension.sendMessage({
-                        event: "onResourceContentCommitted",
-                        resource : message.resource,
-                        content: message.content
-                    });
-                }
-            });
-        } else if (event === 'areChangesPropagated') {
-            NetBeans_DevTools.areChangesPropagated(function(enabled) {
-                devToolsConnection.postMessage({
-                    enabled: enabled
-                });
-            });
-        } else if (event === 'setChangesPropagated') {
-            NetBeans_DevTools.setChangesPropagated(message.enabled);
-        }
-    };
-    devToolsConnection.onMessage.addListener(devToolsListener);
-    devToolsConnection.onDisconnect.addListener(function() {
-        devToolsConnection.onMessage.removeListener(devToolsListener);
-    });
-});
-
 /**
  * Storage logging
  */

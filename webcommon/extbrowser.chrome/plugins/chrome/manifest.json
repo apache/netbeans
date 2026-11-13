@@ -1,42 +1,36 @@
 {
   "name": "__MSG__pluginName__",
   "description": "__MSG__pluginDescription__",
-  "manifest_version": 2,
-  "minimum_chrome_version": "21",
-
-  "version": "1.1.5",
-
+  "manifest_version": 3,
+  "minimum_chrome_version": "120",
+  "version": "1.1.6",
   "homepage_url": "https://chrome.google.com/webstore/detail/netbeans-connector/hafdlehgocfcodbgjnpecfajgkeejnaa",
-
   "background": {
-    "page": "html/main.html"
+    "service_worker": "js/background.js"
   },
-
   "devtools_page": "html/devtools.html",
-
   "options_page": "html/options.html",
-
-  "page_action": {
-    "default_icon": "img/netbeans16.png",
-    "default_title": "Open NetBeans actions",
-    "default_popup": "html/popup.html"
-  },
-
   "permissions": [
     "contextMenus",
     "tabs",
     "debugger",
-    "storage"
+    "storage",
+    "alarms"
   ],
-
-  "content_security_policy": "default-src 'self'; connect-src ws://127.0.0.1:8008/",
-
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src ws://127.0.0.1:8008/"
+  },
   "icons": {
     "16": "img/netbeans16.png",
     "48": "img/netbeans48.png",
     "128": "img/netbeans128.png"
   },
-
-  "default_locale": "en"
-
+  "default_locale": "en",
+  "action": {
+    "default_state": "disabled",
+    "default_icon": "img/netbeans16.png",
+    "default_title": "Open NetBeans actions",
+    "default_popup": "html/popup.html"
+  },
+  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgo89CrO8f/2srD2BGUP9+dG4IkTC2D3gzEjXITaMaQgy8B4ObVpkA3bc27qc7HB9jhVj8P51aAETr89u+AvFgCeFtvtva0h0oodKRC3dCkQLnEWPGi7mEKB98cRhZmQ1Wa9A9tg3plKsujwwWskaFEL/hO7uu7myF0qLIeuiG6wIDAQAB"
 }

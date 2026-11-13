@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.48
 
 CLSS public abstract interface java.io.Serializable
 
@@ -944,6 +944,7 @@ meth public abstract void setTestName(java.lang.String)
 meth public abstract void setThrowable(java.lang.Throwable)
 meth public abstract void setWasRetried(boolean)
 meth public boolean isNotRunning()
+meth public int getParameterIndex()
 meth public java.util.List<org.testng.ITestNGMethod> getSkipCausedBy()
 meth public static boolean wasFailureDueToTimeout(org.testng.ITestResult)
 meth public static java.util.List<java.lang.String> finalStatuses()
@@ -2456,6 +2457,8 @@ fld public final static java.lang.Boolean DEFAULT_ALLOW_RETURN_VALUES
 fld public final static java.lang.Boolean DEFAULT_GROUP_BY_INSTANCES
 fld public final static java.lang.Boolean DEFAULT_MIXED
 fld public final static java.lang.Boolean DEFAULT_PRESERVE_ORDER
+fld public final static java.lang.Boolean DEFAULT_SHARE_THREAD_POOL
+fld public final static java.lang.Boolean DEFAULT_SHARE_THREAD_POOL_FOR_DATA_PROVIDERS
 fld public final static java.lang.Boolean DEFAULT_SKIP_FAILED_INVOCATION_COUNTS
 fld public final static java.lang.Integer DEFAULT_DATA_PROVIDER_THREAD_COUNT
 fld public final static java.lang.Integer DEFAULT_THREAD_COUNT

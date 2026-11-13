@@ -456,6 +456,17 @@ jobs:
       - name: Build nbms
         run: ant $OPTS build-nbms
 
+      - name: Maven Install
+        run: |
+          # install all NBMs
+          ant maven-install -Dnbm.install.version=99-SNAPSHOT
+          # remove one
+          rm -r $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/
+          # install a single NBM
+          ant -f platform/openide.awt maven-install -Dnbm.install.version=99-SNAPSHOT
+          # verify pom is installed
+          cat $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/org-openide-awt-99-SNAPSHOT.pom
+
       # runs only in PRs if requested; ~18 min
       - name: Build all Tests
         if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
@@ -474,17 +485,6 @@ jobs:
         if: env.test_javadoc == 'true' && success()
         run: |
           ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
-
-      - name: Maven Install
-        run: |
-          # install all NBMs
-          ant maven-install -Dnbm.install.version=99-SNAPSHOT
-          # remove one
-          rm -r $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/
-          # install a single NBM
-          ant -f platform/openide.awt maven-install -Dnbm.install.version=99-SNAPSHOT
-          # verify pom is installed
-          cat $HOME/.m2/repository/org/netbeans/api/org-openide-awt/99-SNAPSHOT/org-openide-awt-99-SNAPSHOT.pom
 
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6

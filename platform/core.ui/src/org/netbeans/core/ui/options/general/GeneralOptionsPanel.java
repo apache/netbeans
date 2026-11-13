@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.beaninfo.editors.HtmlBrowser;
+import org.netbeans.core.ExitDialog;
 import org.netbeans.core.ProxySettings;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.DialogDescriptor;
@@ -127,6 +128,7 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
         loc (rbNoProxy, "No_Proxy");
         loc (rbUseSystemProxy, "Use_System_Proxy_Settings");
         loc (rbHTTPProxy, "Use_HTTP_Proxy");
+        loc (cbExitConfirmation, "Exit_Confirmation");
         
         loc (lUsage, "Usage_Statistics");
         lUsage.getAccessibleContext ().setAccessibleDescription (loc ("AD_Usage_Statistics"));
@@ -186,6 +188,7 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
         lblLearnMore = new javax.swing.JLabel();
         lblUsageInfo = new javax.swing.JLabel();
         jUsageCheck = new javax.swing.JCheckBox();
+        cbExitConfirmation = new javax.swing.JCheckBox();
         lUsage = new javax.swing.JLabel();
         bReloadProxy = new javax.swing.JButton();
         bTestConnection = new javax.swing.JButton();
@@ -291,6 +294,7 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
         gridBagConstraints.insets = new java.awt.Insets(0, 15, 5, 0);
         jPanel1.add(jUsageCheck, gridBagConstraints);
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbExitConfirmation, org.openide.util.NbBundle.getMessage(GeneralOptionsPanel.class, "CTL_Exit_Confirmation")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lUsage, "Usage Statistics:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -373,7 +377,8 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
                     .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 1495, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addComponent(cbExitConfirmation, javax.swing.GroupLayout.Alignment.LEADING)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,6 +418,8 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbExitConfirmation)
                 .addContainerGap())
         );
 
@@ -535,6 +542,7 @@ private void bMoreProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JButton bReloadProxy;
     private javax.swing.JButton bTestConnection;
     private javax.swing.JComboBox cbWebBrowser;
+    private javax.swing.JCheckBox cbExitConfirmation;
     private javax.swing.JButton editBrowserButton;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JPanel jPanel1;
@@ -684,6 +692,7 @@ private void bMoreProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         rbUseSystemProxy.setToolTipText (getUseSystemProxyToolTip ());
 
         jUsageCheck.setSelected(model.getUsageStatistics());
+        cbExitConfirmation.setSelected(ExitDialog.isExitConfirmationEnabled());
         
         updateWebBrowsers();
     }
@@ -761,6 +770,7 @@ private void bMoreProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         editor.setAsText ((String) cbWebBrowser.getSelectedItem ());
 
         model.setUsageStatistics(jUsageCheck.isSelected());
+        ExitDialog.setExitConfirmationEnabled(cbExitConfirmation.isSelected());
     }
     
     void cancel () {
@@ -773,6 +783,9 @@ private void bMoreProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     boolean isChanged () {
         if (model == null) {
             return false;
+        }
+        if (cbExitConfirmation.isSelected() != ExitDialog.isExitConfirmationEnabled()) {
+            return true;
         }
         // web browser settings
         if (editor == null) {

@@ -51,8 +51,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.jdk.fallback.lang.NBLazyConstant;
 import org.openide.util.lookup.Lookups;
 
 /** Request processor is {@link Executor} (since version 7.16) capable to
@@ -2078,8 +2080,9 @@ outer:  do {
             logger().log(Level.SEVERE, "Error in RequestProcessor " + todo.debug(), ex);
         }
 
-        // TODO LazyConstant candidate
-        private static final Set<Class<? extends Runnable>> warnedClasses = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+        private static final Supplier<Set<Class<? extends Runnable>>> warnedClasses = NBLazyConstant.of(
+                () -> Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()))
+        );
         private void registerParallel(Task todo, RequestProcessor rp) {
             if (rp.warnParallel == 0 || todo.run == null) {
                 return;
@@ -2097,7 +2100,7 @@ outer:  do {
                     number.incrementAndGet();
                 }
             }
-            if (number.get() >= rp.warnParallel && warnedClasses.add(c)) {
+            if (number.get() >= rp.warnParallel && warnedClasses.get().add(c)) {
                 final String msg = "Too many " + c.getName() + " (" + number + ") in shared RequestProcessor; create your own"; // NOI18N
                 Exception ex = null;
                 Item itm = todo.item;

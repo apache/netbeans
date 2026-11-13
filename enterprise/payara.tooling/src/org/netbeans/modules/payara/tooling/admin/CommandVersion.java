@@ -117,14 +117,17 @@ public class CommandVersion extends Command {
     }
 
     /**
-     * Verifies if domain directory returned by version command result matches
-     * domain directory of provided Payara server entity.
+     * Verifies if version command result confirms Payara server is running.
+     * <p/>
+     * The version returned by the server must match the version of the local
+     * Payara installation. Both major and minor version values are compared.
      * <p/>
      * @param result Version command result.
      * @param server Payara server entity.
-     * @return For local server value of <code>true</code> means that server
-     *         major and minor version value matches values returned by version
-     *         command and value of <code>false</code> that they differs.
+     * @return Value of <code>true</code> means that server major and minor
+     *         version value matches values returned by version command and
+     *         value of <code>false</code> that they differ or a comparison
+     *         could not be made.
      */
     public static boolean verifyResult(
             final ResultString result, final PayaraServer server) {
@@ -138,6 +141,34 @@ public class CommandVersion extends Command {
             }
         }
         return verifyResult;
+    }
+
+    /**
+     * Checks whether the version returned by the server is a known mismatch
+     * against the locally registered Payara installation.
+     * <p/>
+     * A version mismatch is reported only when both the server response and
+     * the local installation carry parseable version information that differs.
+     * When either side is unknown this method returns <code>false</code>.
+     * <p/>
+     * @param result Version command result.
+     * @param server Payara server entity.
+     * @return Value of <code>true</code> when the server responded with a
+     *         version that is different from the locally registered version,
+     *         or <code>false</code> when the versions match or comparison
+     *         could not be performed.
+     */
+    public static boolean isVersionMismatch(
+            final ResultString result, final PayaraServer server) {
+        String value = ServerUtils.getVersionString(result.getValue());
+        if (value != null) {
+            PayaraPlatformVersionAPI valueVersion = PayaraPlatformVersion.toValue(value);
+            PayaraPlatformVersionAPI serverVersion = server.getPlatformVersion();
+            if (valueVersion != null && serverVersion != null) {
+                return !serverVersion.equals(valueVersion);
+            }
+        }
+        return false;
     }
 
     // Constructors                                                           //

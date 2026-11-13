@@ -363,7 +363,9 @@ class ComponentDragger
             for (int i=0; i < n; i++) {
                 newCompsArray[i] = newComponents.get(i);
                 othersMetaCont.add(newCompsArray[i]);
-                newCompsArray[i].resetConstraintsProperties();
+                if (newCompsArray[i] != null) {
+                    newCompsArray[i].resetConstraintsProperties();
+                }
             }
         }
 

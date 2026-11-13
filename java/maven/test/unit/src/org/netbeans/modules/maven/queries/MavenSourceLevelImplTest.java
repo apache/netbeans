@@ -202,13 +202,15 @@ public class MavenSourceLevelImplTest extends NbTestCase {
                     <version>1.0</version>
                     <build>
                         <pluginManagement>
-                            <plugin>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                                <version>2.3.2</version>
-                                <configuration>
-                                    <source>1.4</source>
-                                </configuration>
-                            </plugin>
+                            <plugins>
+                                <plugin>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>2.3.2</version>
+                                    <configuration>
+                                        <source>1.4</source>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
                         </pluginManagement>
                         <plugins>
                             <plugin>

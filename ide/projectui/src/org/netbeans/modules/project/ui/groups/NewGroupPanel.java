@@ -29,6 +29,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -439,6 +440,13 @@ public class NewGroupPanel extends JPanel {
         chooser.setCurrentDirectory(start);
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
+            if (f != null) {
+                    FileObject fo = FileUtil.toFileObject(f);
+                Project owner = FileOwnerQuery.getOwner(fo);
+                if (owner != null) {
+                    f = FileUtil.toFile(owner.getProjectDirectory());
+                }
+            }
             if (f != null) {
                 directoryField.setText(f.getAbsolutePath());
                 updateNameField();

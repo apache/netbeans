@@ -35,6 +35,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
 import static org.netbeans.modules.project.ui.groups.ManageGroupsPanel.NONE_GOUP;
+import org.netbeans.modules.project.ui.OpenProjectList;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.NotificationLineSupport;
 import org.openide.filesystems.FileObject;
@@ -217,8 +218,18 @@ public class NewGroupPanel extends JPanel {
             }
         } else {
             assert Type.DIR == type;
-            FileObject f = FileUtil.toFileObject(FileUtil.normalizeFile(new File(directory)));
-            return DirectoryGroup.create(name, f);
+            FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(directory)));
+            Project prj;
+            try {
+                prj = ProjectManager.getDefault().findOrCreateDirProject(fo);
+            } catch (IOException x) {
+                throw new AssertionError(x);
+            }
+            if (prj == null) {
+                throw new IllegalStateException("Cannot create a project group for directory: " + fo.getName());
+            }
+            OpenProjectList.getDefault().open(new Project[] {prj}, false, false, true, null);
+            return SubprojectsGroup.create(name, prj);
         }
     }
 

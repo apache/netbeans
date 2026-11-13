@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.jcef
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jcef/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Needs: org.netbeans.libs.jcef.native
+

@@ -166,7 +166,7 @@ public class SourceGroupSupport {
         return null;
     }
 
-    private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
+    private static Map<FileObject, SourceGroup> createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
         Map<FileObject, SourceGroup> result;
         if (sourceGroups.length == 0) {
             result = Collections.<FileObject, SourceGroup>emptyMap();
@@ -189,7 +189,7 @@ public class SourceGroupSupport {
         return testGroups;
     }
 
-    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
+    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map<FileObject, SourceGroup> foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
             return new ArrayList<SourceGroup>();

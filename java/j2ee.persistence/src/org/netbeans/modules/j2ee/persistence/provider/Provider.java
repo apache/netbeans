@@ -260,7 +260,7 @@ public abstract class Provider {
     /**
      * @return Map{@code <String, String>} containing vendor specific properties.
      */
-    public abstract Map getUnresolvedVendorSpecificProperties();
+    public abstract Map<String, String> getUnresolvedVendorSpecificProperties();
     
     /**
      * @return Map{@code <String, String>} containing vendor specific properties

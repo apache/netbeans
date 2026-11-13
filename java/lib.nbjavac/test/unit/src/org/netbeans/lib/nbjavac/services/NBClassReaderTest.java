@@ -135,11 +135,13 @@ public class NBClassReaderTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, DEV_NULL);
+        //must be pre-registered before getTask(), as getTask() may already instantiate the Names service
+        // (see JavacParser#createJavacTask for the production usage)
+        NBNames.preRegister(context);
         DiagnosticCollector<JavaFileObject> diags = new DiagnosticCollector<>();
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, diags, Arrays.asList("-source", "1.8", "-target", "1.8", "-Xlint:-options", "-XDrawDiagnostics"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
-        NBNames.preRegister(ct.getContext());
 
         ct.analyze();
 

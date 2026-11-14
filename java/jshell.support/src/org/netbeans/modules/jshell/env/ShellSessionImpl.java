@@ -288,15 +288,12 @@ final class ShellSessionImpl extends ShellSession {
 
     private Task detach() {
         Task t;
-        synchronized (allSessions) {
-            Reference<ShellSession> refS = allSessions.get(consoleDocument);
-            if (refS != null && refS.get() == this) {
-                allSessions.remove(consoleDocument);
-                detached = true;
-            } else {
-                return Task.EMPTY;
-            }
+        if (get(consoleDocument) == this) {
+            new ShellSessionImpl(null).associateWith(consoleDocument);
+        } else {
+            return Task.EMPTY;
         }
+        detached = true;
 //        closed = true;
         model.detach();
         closed();
@@ -485,16 +482,7 @@ final class ShellSessionImpl extends ShellSession {
     private volatile Launcher launcher;
 
     public Pair<ShellSession, Task> start() {
-        ShellSession previous  = null;
-
-        synchronized (allSessions) {
-            Reference<ShellSession> sr = allSessions.get(env.getConsoleDocument());
-            ShellSession s = null;
-
-            if (sr != null) {
-                previous = sr.get();
-            }
-        }
+        ShellSession previous  = get(env.getConsoleDocument());
         if (previous instanceof ShellSessionImpl impl) {
             impl.detach();
             AtomicLockDocument ald = LineDocumentUtils.asRequired(consoleDocument, AtomicLockDocument.class);
@@ -511,9 +499,7 @@ final class ShellSessionImpl extends ShellSession {
             refreshGuardedSection();
         } catch (BadLocationException ex) {
         }
-        synchronized (allSessions) {
-            allSessions.put(consoleDocument, new WeakReference<>(this));
-        }
+        associateWith(consoleDocument);
         GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {
             env.getSnippetClassPath()
         });
@@ -1193,32 +1179,6 @@ final class ShellSessionImpl extends ShellSession {
         return get(d);
     }
 
-    public static ShellSession get(Document d) {
-        if (d == null) {
-            return null;
-        }
-        synchronized (allSessions) {
-            Reference<ShellSession> sr = allSessions.get(d);
-            return sr == null ? null : sr.get();
-        }
-    }
-
-    public static Collection<ShellSession> allSessions() {
-        Collection<Reference<ShellSession>> ll;
-        synchronized (allSessions) {
-            ll = allSessions.values();
-        }
-        Collection<ShellSession> res = new ArrayList<>(ll.size());
-        for (Iterator<Reference<ShellSession>> it = ll.iterator(); it.hasNext(); ) {
-            Reference<ShellSession> sr = it.next();
-            ShellSession s = sr.get();
-            if (s != null) {
-                res.add(s);
-            }
-        }
-        return res;
-    }
-
     private void addNewline(int offset) {
         AtomicLockDocument ald = LineDocumentUtils.asRequired(consoleDocument, AtomicLockDocument.class);
         ald.runAtomic(() -> {
@@ -1506,8 +1466,6 @@ final class ShellSessionImpl extends ShellSession {
                     "scrollback"); // NOI18N
         }
     }
-
-    private static final Map<Document, Reference<ShellSession>> allSessions = new WeakHashMap<>();
 
     private class GuardedSectionUpdater implements ConsoleListener {
         @Override

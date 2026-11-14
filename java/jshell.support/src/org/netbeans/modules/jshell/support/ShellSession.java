@@ -19,8 +19,15 @@
 package org.netbeans.modules.jshell.support;
 
 import java.io.IOException;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import javax.swing.text.Document;
 import jdk.jshell.JShell;
 import jdk.jshell.Snippet;
@@ -40,9 +47,31 @@ import org.openide.util.Task;
 public abstract class ShellSession {
     public static final String PROP_ACTIVE = "active";
     public static final String PROP_ENGINE = "engine";
+    private static final Map<Document, Reference<ShellSession>> allSessions = new WeakHashMap<>();
+
 
     public static ShellSession get(Document d) {
-        throw new UnsupportedOperationException();
+        if (d == null) {
+            return null;
+        }
+        synchronized (allSessions) {
+            Reference<ShellSession> sr = allSessions.get(d);
+            return sr == null ? null : sr.get();
+        }
+    }
+
+    public static Collection<ShellSession> allSessions() {
+        Collection<ShellSession> res = new ArrayList<>();
+        synchronized (allSessions) {
+            for (Iterator<Reference<ShellSession>> it = allSessions.values().iterator(); it.hasNext(); ) {
+                Reference<ShellSession> sr = it.next();
+                ShellSession s = sr.get();
+                if (s != null) {
+                    res.add(s);
+                }
+            }
+        }
+        return res;
     }
 
     public abstract List<Snippet> getSnippets(boolean onlyUser, boolean onlyValid);
@@ -67,11 +96,11 @@ public abstract class ShellSession {
     public abstract ClasspathInfo getClasspathInfo();
 
     public abstract Path resolvePath(String s);
-    
+
     // needed only by ConsoleEditor:
     public abstract FileObject getConsoleFile();
     public abstract Task post(Runnable r);
-    
+
     // needed only by GenerateClassAction
     public abstract Project getProject();
 
@@ -80,4 +109,20 @@ public abstract class ShellSession {
     // the access to ShellHistory and the other one needs direct access !?
     public abstract ShellHistory getShellHistory();
     public abstract List<ShellHistory.Item> historyItems();
+
+    //
+    // Methods for subclasses to access internal functionality
+    //
+
+    /** Associates this session with provided document. As a result of
+     * such a registration one can call {@link #get(javax.swing.text.Document)}
+     * and obtain this instance. The registration is using {@link WeakReference}s.
+     *
+     * @param doc the document to register this session with
+     */
+    protected final void associateWith(Document doc) {
+        synchronized ((allSessions)) {
+            allSessions.put(doc, new WeakReference<>(this));
+        }
+    }
 }

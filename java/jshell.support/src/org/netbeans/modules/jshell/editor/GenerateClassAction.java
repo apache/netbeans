@@ -20,12 +20,9 @@ package org.netbeans.modules.jshell.editor;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionRegistration;
-import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.project.Project;
-import org.netbeans.editor.BaseAction;
 import org.netbeans.modules.jshell.support.ShellSession;
 import org.openide.*;
 import org.openide.awt.ActionID;
@@ -75,7 +72,7 @@ public class GenerateClassAction extends ShellActionBase {
         "ERROR_NoClassTemplate=Class template not found; chech Templates in Tools menu."
     })
     private void doGenerateForSession(JTextComponent target, ShellSession s, FileObject anchor) {
-        Project p = s.getEnv().getProject();
+        Project p = s.getProject();
         String n = (String)target.getClientProperty(CLASSNAME_PROPERTY);
         if (anchor == null) {
             anchor = (FileObject)target.getClientProperty(FOLDER_PROPERTY);

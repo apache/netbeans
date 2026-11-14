@@ -87,11 +87,11 @@ public class JShellEnvironment {
 
     private JavaPlatform      platform;
     
-    private String            displayName;
-    
-    private ConfigurableClasspath  userClassPathImpl = new ConfigurableClasspath();
-    
-    private ClassPath         userLibraryPath = ClassPathFactory.createClassPath(userClassPathImpl);
+    private final String displayName;
+
+    private final ConfigurableClasspath userClassPathImpl = new ConfigurableClasspath();
+
+    private final ClassPath userLibraryPath = ClassPathFactory.createClassPath(userClassPathImpl);
     
     private ClassPath         snippetClassPath;
     
@@ -393,7 +393,7 @@ public class JShellEnvironment {
         this.classpathInfo = cpi;
         forceOpenDocument();
         // createSession will get opened document, shutdown runs under lock
-        doStartAndFire(ShellSession.createSession(this));
+        doStartAndFire(ShellSessionImpl.createSession(this));
     }
 
     private void fireShellStatus(ShellEvent event) {
@@ -433,7 +433,7 @@ public class JShellEnvironment {
     
     public void reset() {
         assert workRoot != null;
-        doStartAndFire(ShellSession.createSession(this));
+        doStartAndFire(ShellSessionImpl.createSession(this));
     }
     
     private void fireExecuting(ShellSession session, boolean start) {
@@ -449,7 +449,7 @@ public class JShellEnvironment {
         ll.stream().forEach(l -> l.shellStatusChanged(e));
     }
     
-    private void doStartAndFire(ShellSession nss) {
+    private void doStartAndFire(ShellSessionImpl nss) {
         synchronized (this) {
             this.shellSession = nss;
             starting = true;
@@ -470,12 +470,11 @@ public class JShellEnvironment {
             @Override
             public void closed(ConsoleEvent e) {}
         });
-        ShellSession previous = res.first();
-        if (previous != null) {
+        if (res.first() instanceof ShellSessionImpl previous) {
             previous.removePropertyChangeListener(shellL);
         }
         nss.addPropertyChangeListener(shellL);
-        ShellEvent event = new ShellEvent(this, nss, previous);
+        ShellEvent event = new ShellEvent(this, nss, res.first());
         fireShellStatus(event);
         
         res.second().addTaskListener(e -> {

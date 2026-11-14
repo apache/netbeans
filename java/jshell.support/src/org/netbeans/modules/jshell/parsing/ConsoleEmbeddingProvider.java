@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.jshell.parsing;
 
-import org.netbeans.modules.jshell.model.ConsoleModel;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.text.Document;

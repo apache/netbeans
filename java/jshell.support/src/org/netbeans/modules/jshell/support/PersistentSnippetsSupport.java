@@ -105,11 +105,11 @@ public class PersistentSnippetsSupport  {
             return Collections.emptyList();
         }
     };
-    
+
     private final Lookup lookup;
     private final Project prj;
     private PersistentSnippets delegate;
-    
+
     private static final Map<Project, Reference<PersistentSnippets>> cache = new WeakHashMap<>();
 
     public PersistentSnippetsSupport(Lookup lookup, Project prj, PersistentSnippets delegate) {
@@ -117,9 +117,9 @@ public class PersistentSnippetsSupport  {
         this.prj = prj;
         this.delegate = delegate;
     }
-    
+
     private static StartupSnippetsTracker tracker;
-    
+
     private static void initialize() {
         synchronized (PersistentSnippetsSupport.class) {
             if (tracker != null) {
@@ -143,7 +143,7 @@ public class PersistentSnippetsSupport  {
             }
         }
     }
-    
+
     private static class StartupSnippetsTracker implements ShellListener {
         @Override
         public void shellCreated(ShellEvent ev) {
@@ -168,7 +168,7 @@ public class PersistentSnippetsSupport  {
         public void shellSettingsChanged(ShellEvent ev) {
         }
     }
-    
+
     private static void runStartupSnippets(JShellEnvironment env) {
         if (env == null || env.isClosed()) {
             return;
@@ -192,7 +192,7 @@ public class PersistentSnippetsSupport  {
             }
         }
     }
-    
+
     private static Project findProject(Lookup context) {
         Project prj = context.lookup(Project.class);
         if (prj == null) {
@@ -210,13 +210,13 @@ public class PersistentSnippetsSupport  {
         }
         return prj;
     }
-    
+
     private static void unregister(Project prj) {
         synchronized (cache) {
             cache.remove(prj);
         }
     }
-    
+
     public static PersistentSnippets create(Lookup context) {
         initialize();
         Project prj = findProject(context);
@@ -243,9 +243,9 @@ public class PersistentSnippetsSupport  {
         }
         try {
             SnippetFileSystem snipFS = new SnippetFileSystem(
-                    projectStorageDir, 
-                    FileUtil.getConfigRoot(), 
-                    storage.resourcePrefix(), 
+                    projectStorageDir,
+                    FileUtil.getConfigRoot(),
+                    storage.resourcePrefix(),
                     "jshell-snippets"); // NOI18N
             SnippetsFolder fld = new ProjectSnippetsFolder(snipFS.getRoot(), snipFS, storage, prj);
             snips = fld;
@@ -269,7 +269,7 @@ public class PersistentSnippetsSupport  {
             return snips;
         }
     }
-    
+
     private static final String RUN_METHOD = "run"; // NOI18N
 
     @NbBundle.Messages({
@@ -277,7 +277,7 @@ public class PersistentSnippetsSupport  {
         "ERR_NoSourceFile=Could not build source for file {0}",
         "ERR_UnexpectedFielContent=File must contain exactly one toplevel class"
     })
-    public static void runScript(FileObject scriptFile, ShellSession session, 
+    public static void runScript(FileObject scriptFile, ShellSession session,
             boolean shared) throws IOException {
         JavaSource src = JavaSource.forFileObject(scriptFile);
         if (src == null) {
@@ -367,11 +367,11 @@ public class PersistentSnippetsSupport  {
         String execCommands = sb.toString();
         session.clearInputAndEvaluateExternal(execCommands, scriptFile.getName());
     }
-    
+
     static final class ProjectSnippetsFolder extends SnippetsFolder implements PropertyChangeListener  {
         final SnippetStorage projectStorage;
         final Project project;
-        
+
         public ProjectSnippetsFolder(FileObject parentFolder, Callable<FileObject> creator, SnippetStorage projectStorage, Project project) {
             super(parentFolder, creator);
             this.projectStorage = projectStorage;

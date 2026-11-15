@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
+import org.netbeans.api.java.platform.JavaPlatform;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,10 +29,6 @@ import java.util.List;
  * @author Rastislav Komara
  */
 public class OptionsDialog extends JDialog {
-
-    private OptionsDialog() {
-        this((Frame) null);
-    }
 
     private OptionsDialog(Frame owner) {
         super(owner);
@@ -57,21 +55,26 @@ public class OptionsDialog extends JDialog {
         setContentPane(new VMOptionEditorPanel(callback, model));
     }
 
-
-    public static String showCustomizer(Window owner, String options) throws Exception {
+    /**
+     * Shows the customizer with the options supported by the given
+     * platform's {@code java} launcher; when the platform or its options
+     * are unknown the built-in option list is used.
+     *
+     * @param owner the dialog owner
+     * @param options the origin options to be preselected in the customizer
+     * @param platform the platform whose options are offered, may be {@code null}
+     * @return the options selected in the customizer dialog
+     * @throws Exception if it isn't possible to parse the vm options.
+     */
+    public static String showCustomizer(Window owner, String options, JavaPlatform platform) throws Exception {
         final String[] result = {options};
-        final OptionsDialog od;
-        if (owner instanceof Frame) {
-            od = new OptionsDialog((Frame)owner);
-        } else if (owner instanceof Dialog) {
-            od = new OptionsDialog((Dialog)owner);
-        } else if (owner instanceof Window) {
-            od = new OptionsDialog((Window)owner);
-        } else {
-            od = new OptionsDialog();
-        }
+        OptionsDialog od = switch (owner) {
+            case Frame frame -> new OptionsDialog(frame);
+            case Dialog dialog -> new OptionsDialog(dialog);
+            case Window window -> new OptionsDialog(window);
+        };
         final VMOptionsTableModel tableModel = new VMOptionsTableModel();
-        tableModel.fill(options);
+        tableModel.fill(options, JdkOptions.loadOptions(platform));
         
         od.createLayout(new VMOptionEditorPanel.Callback() {
             @Override
@@ -92,7 +95,7 @@ public class OptionsDialog extends JDialog {
             }
         }, tableModel);
 
-        od.setSize(480,360);        
+        od.setSize(400, 600);        
 
         setScreenCenter(owner, od);
 
@@ -103,16 +106,11 @@ public class OptionsDialog extends JDialog {
     }
 
     private static void setScreenCenter(Object owner, OptionsDialog od) {
-        final Rectangle parentRect;
-        if (owner instanceof Window) {
-            Window window = (Window) owner;
-            parentRect = new Rectangle(window.getLocationOnScreen(), window.getSize());
-        } else if (owner instanceof Component) {
-            Component component = (Component) owner;
-            parentRect = new Rectangle(component.getLocationOnScreen(), component.getSize());
-        } else {
-            parentRect = new Rectangle(new Point(0,0), Toolkit.getDefaultToolkit().getScreenSize());
-        }
+        Rectangle parentRect = switch (owner) {
+            case Window window -> new Rectangle(window.getLocationOnScreen(), window.getSize());
+            case Component component -> new Rectangle(component.getLocationOnScreen(), component.getSize());
+            default -> new Rectangle(new Point(0,0), Toolkit.getDefaultToolkit().getScreenSize());
+        };
         od.setLocation(new Point((int) parentRect.getCenterX() - (od.getWidth() >> 1), (int) parentRect.getCenterY() - (od.getHeight() >> 1) ));
     }
 

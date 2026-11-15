@@ -18,28 +18,21 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.Token;
-
 /**
+ * A switch (boolean) VM option, e.g. {@code -server}.
+ *
  * @author Rastislav Komara
  */
 public class SwitchNode extends JavaVMOption<OptionValue.SwitchOnly> {
 
-    public SwitchNode(Token t) {
-        super(t);
-        if (t != null) {
-            setName(t.getText());
-            setValue((OptionValue.SwitchOnly) OptionValue.createSwitch());
-        }
-    }
-        
-    public SwitchNode(int ttype, Token t) {
-        this(t);
+    public SwitchNode(String name) {
+        this(name, false);
     }
 
-    public SwitchNode(String name) {
-        super(name);
-        setValue(new OptionValue.SwitchOnly(false));
+    public SwitchNode(String name, boolean present) {
+        super();
+        setName(name);
+        setValue(new OptionValue.SwitchOnly(present));
     }
 
     @Override
@@ -47,5 +40,5 @@ public class SwitchNode extends JavaVMOption<OptionValue.SwitchOnly> {
         StringBuilder sb = super.print(builder);
         return getValue().isPresent() ? sb.append(SPACE).append(HYPHEN).append(getName()) : sb;
     }
-    
+
 }

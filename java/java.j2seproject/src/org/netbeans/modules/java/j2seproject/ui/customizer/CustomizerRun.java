@@ -21,6 +21,7 @@ package org.netbeans.modules.java.j2seproject.ui.customizer;
 
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.api.common.SourceRoots;
+import org.netbeans.modules.java.api.common.project.ProjectPlatformProvider;
 import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.api.common.project.ui.customizer.MainClassChooser;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -600,12 +601,18 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
     private void customizeVMOptionsByDialog(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customizeVMOptionsByDialog
         String origin = jTextVMOptions.getText();
         try {
-            String result = ProjectUISupport.showVMOptionCustomizer(SwingUtilities.getWindowAncestor(this), origin);
+            String result = ProjectUISupport.showVMOptionCustomizer(SwingUtilities.getWindowAncestor(this), origin, getProjectPlatform());
             jTextVMOptions.setText(result);
         } catch (Exception e) {
             log.log(Level.WARNING, "Cannot parse vm options.", e); // NOI18N
         }
     }//GEN-LAST:event_customizeVMOptionsByDialog
+
+    private JavaPlatform getProjectPlatform() {
+        ProjectPlatformProvider provider = project.getLookup().lookup(ProjectPlatformProvider.class);
+        JavaPlatform platform = provider == null ? null : provider.getProjectPlatform();
+        return platform != null ? platform : JavaPlatform.getDefault();
+    }
 
     private void jButtonManagePlatformsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonManagePlatformsActionPerformed
         PlatformKey currentPlatform = (PlatformKey) platform.getSelectedItem();

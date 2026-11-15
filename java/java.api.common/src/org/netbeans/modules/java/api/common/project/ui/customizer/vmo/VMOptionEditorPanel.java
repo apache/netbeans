@@ -110,8 +110,8 @@ public class VMOptionEditorPanel extends javax.swing.JPanel {
             final TableColumn column = tcm.getColumn(i);
             setUpColumn(column);
             if (i == 0) {
-                column.setPreferredWidth(150);
-                column.setMaxWidth(150);
+                column.setPreferredWidth(200);
+                column.setMaxWidth(200);
             }
         }
     }

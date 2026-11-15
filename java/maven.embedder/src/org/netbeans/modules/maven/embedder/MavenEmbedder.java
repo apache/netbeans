@@ -242,10 +242,23 @@ public final class MavenEmbedder {
     public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req) {
         return readProjectWithDependencies(req, true);
     }
-    
+
     public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req, boolean useWorkspaceResolution) {
+        return readProjectWithDependencies(req, useWorkspaceResolution, null);
+    }
+
+    /**
+     * Reads a project and resolves its dependencies with workspace resolution
+     * enabled, collecting the placeholder artifacts forged by artifact fixers
+     * into the given capture.
+     * @param req the request to build the project from
+     * @param useWorkspaceResolution whether to use the workspace (project) resolution
+     * @param capture sink for the placeholder artifacts, may be null if they are not needed
+     * @return the result of reading the project
+     */
+    public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req, boolean useWorkspaceResolution, PlaceholderCapture capture) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver, capture));
         }
         File pomFile = req.getPom();
         MavenExecutionResult result = new DefaultMavenExecutionResult();
@@ -269,7 +282,7 @@ public final class MavenEmbedder {
 
     public List<MavenExecutionResult> readProjectsWithDependencies(MavenExecutionRequest req, List<File> poms, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver, null));
         }
 //        File pomFile = req.getPom();
         

@@ -137,6 +137,7 @@ public class SuppressWarningsFixer implements ErrorRule<Void> {
             entry("compiler.warn.ineffectual.serial.method.enum", "serial"),   // NOI18N
             entry("compiler.warn.ineffectual.serial.method.externalizable", "serial"),   // NOI18N
             entry("compiler.warn.ineffectual.serial.method.record", "serial"),   // NOI18N
+            entry("compiler.warn.ineffectual.serial.method.value.class", "serial"),   // NOI18N
             entry("compiler.warn.long.SVUID", "serial"),   // NOI18N
             entry("compiler.warn.missing.SVUID", "serial"),   // NOI18N
             entry("compiler.warn.non.private.method.weaker.access", "serial"),   // NOI18N
@@ -151,6 +152,8 @@ public class SuppressWarningsFixer implements ErrorRule<Void> {
             entry("compiler.warn.serial.method.unexpected.exception", "serial"),   // NOI18N
             entry("compiler.warn.serial.method.unexpected.return.type", "serial"),   // NOI18N
             entry("compiler.warn.serializable.missing.access.no.arg.ctor", "serial"),   // NOI18N
+            entry("compiler.warn.serializable.value.class.without.write.replace.1", "serial"),   // NOI18N
+            entry("compiler.warn.serializable.value.class.without.write.replace.2", "serial"),   // NOI18N
             entry("compiler.warn.static.not.qualified.by.type", "static"),   // NOI18N
             entry("compiler.warn.static.not.qualified.by.type2", "static"),   // NOI18N
             entry("compiler.warn.strictfp", "strictfp"),   // NOI18N

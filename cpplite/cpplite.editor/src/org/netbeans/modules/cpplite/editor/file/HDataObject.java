@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.lsp.client.api.LanguageConfigurationRegistration;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -115,6 +116,7 @@ import org.openide.windows.TopComponent;
     )
 })
 @GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.H)
+@LanguageConfigurationRegistration(languageConfiguration="resources/language-configuration.json", mimeType=MIMETypes.H)
 public class HDataObject extends MultiDataObject {
 
     @StaticResource

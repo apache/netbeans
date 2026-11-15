@@ -23,7 +23,9 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Target;
 
 /** Register the given Textmate grammar for use in the IDE.
- * 
+ *
+ * <p>Also consider using <a href="@TOP@../org-netbeans-modules-lsp-client/org/netbeans/modules/lsp/client/api/LanguageConfigurationRegistration.html">LanguageConfigurationRegistration</a>
+ *
  * @since 1.2
  */
 @Repeatable(GrammarRegistrations.class)

@@ -40,7 +40,7 @@ import org.openide.util.NbBundle.Messages;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
 
-    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null, false, null);
+    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, null, "MMMMMMMMMMMMMMMMM", null, false, null);
     private final LanguageServersOptionsPanelController controller;
     private final DefaultListModel<LanguageDescription> languages;
     private final Set<String> usedIds;
@@ -244,7 +244,7 @@ final class LanguageServersPanel extends javax.swing.JPanel {
             if (value instanceof LanguageDescription) {
                 LanguageDescription ld = (LanguageDescription) value;
                 value = ld.name != null && !ld.name.isEmpty() ? ld.name : Bundle.TXT_Files(ld.extensions);
-                icon = ImageUtilities.image2Icon(Utils.loadIcon(ld.icon != null ? FileUtil.toFileObject(new File(ld.icon)) : null, BeanInfo.ICON_COLOR_16x16));
+                icon = ImageUtilities.image2Icon(Utils.loadIcon(ld.icon != null && !ld.icon.isBlank() ? FileUtil.toFileObject(FileUtil.normalizeFile(new File(ld.icon))) : null, BeanInfo.ICON_COLOR_16x16));
             }
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             setIcon(icon);

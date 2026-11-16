@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.36
+#Version 3.37
 
 CLSS public java.lang.Object
 cons public init()
@@ -222,6 +222,10 @@ meth public com.sun.jdi.Value getValue()
 meth public org.netbeans.api.debugger.jpda.Variable getVariable()
 supr java.lang.Object
 hfds v,var
+
+CLSS public abstract interface org.netbeans.spi.debugger.jpda.ObjectInfoProvider
+meth public abstract boolean display(org.netbeans.api.debugger.Session,org.netbeans.api.debugger.jpda.ObjectVariable)
+meth public static boolean showObjectInfo(org.netbeans.api.debugger.Session,org.netbeans.api.debugger.jpda.ObjectVariable)
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.SmartSteppingCallback
 cons public init()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.43
+#Version 3.45
 
 CLSS public abstract interface java.io.Serializable
 
@@ -80,7 +80,7 @@ CLSS public java.util.EventObject
 cons public init(java.lang.Object)
 fld protected java.lang.Object source
 intf java.io.Serializable
-meth public org.netbeans.api.debugger.jpda.JPDABreakpoint getSource()
+meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
 
@@ -382,6 +382,7 @@ meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object,boolean) throws java.io.InvalidObjectException
+meth public org.netbeans.api.debugger.jpda.Variable evaluate(java.lang.String,org.netbeans.api.debugger.jpda.CallStackFrame) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 meth public static org.netbeans.api.debugger.DebuggerEngine[] startListeningAndGetEngines(com.sun.jdi.connect.ListeningConnector,java.util.Map<java.lang.String,? extends com.sun.jdi.connect.Connector$Argument>,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
 meth public static org.netbeans.api.debugger.jpda.JPDADebugger attach(java.lang.String,int,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
 meth public static org.netbeans.api.debugger.jpda.JPDADebugger attach(java.lang.String,java.lang.Object[]) throws org.netbeans.api.debugger.jpda.DebuggerStartException
@@ -674,9 +675,11 @@ fld public final static int CONDITION_FALSE = 2
 fld public final static int CONDITION_NONE = 0
 fld public final static int CONDITION_TRUE = 1
 meth public boolean getResume()
+meth public boolean isThreadDeath()
 meth public com.sun.jdi.ReferenceType getReferenceType()
 meth public int getConditionResult()
 meth public java.lang.Throwable getConditionException()
+meth public org.netbeans.api.debugger.jpda.JPDABreakpoint getSource()
 meth public org.netbeans.api.debugger.jpda.JPDADebugger getDebugger()
 meth public org.netbeans.api.debugger.jpda.JPDAThread getThread()
 meth public org.netbeans.api.debugger.jpda.Variable getVariable()
@@ -868,6 +871,10 @@ meth public com.sun.jdi.Value getValue()
 meth public org.netbeans.api.debugger.jpda.Variable getVariable()
 supr java.lang.Object
 hfds v,var
+
+CLSS public abstract interface org.netbeans.spi.debugger.jpda.ObjectInfoProvider
+meth public abstract boolean display(org.netbeans.api.debugger.Session,org.netbeans.api.debugger.jpda.ObjectVariable)
+meth public static boolean showObjectInfo(org.netbeans.api.debugger.Session,org.netbeans.api.debugger.jpda.ObjectVariable)
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.SmartSteppingCallback
 cons public init()

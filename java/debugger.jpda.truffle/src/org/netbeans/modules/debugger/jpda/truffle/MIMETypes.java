@@ -160,7 +160,7 @@ public final class MIMETypes {
             };
             pm.addPropertyChangeListener(allPlatformsListener);
         }
-        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se", null));   //NOI18N
+        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se"));   //NOI18N
         Set<String> mTypes = new HashSet<>();
         for (int i = 0; i < installedPlatforms.length; i++) {
             mTypes.addAll(get(installedPlatforms[i]));
@@ -182,7 +182,7 @@ public final class MIMETypes {
         ClassPath bootClassPath = ClassPath.getClassPath(sourceGroups[0].getRootFolder(), ClassPath.BOOT);
         FileObject[] prjBootRoots = bootClassPath.getRoots();
         JavaPlatformManager pm = JavaPlatformManager.getDefault();
-        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se", null));   //NOI18N
+        JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification ("j2se"));   //NOI18N
         for (int i = 0; i < installedPlatforms.length; i++) {
             ClassPath bootstrapLibraries = installedPlatforms[i].getBootstrapLibraries();
             if (Arrays.equals(prjBootRoots, bootstrapLibraries.getRoots())) {

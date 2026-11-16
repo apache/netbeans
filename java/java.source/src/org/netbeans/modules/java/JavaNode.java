@@ -80,7 +80,6 @@ import org.openide.filesystems.FileUIUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
-import org.openide.modules.SpecificationVersion;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
@@ -431,18 +430,15 @@ public final class JavaNode extends DataNode implements ChangeListener {
 
             private void initModel() {
                 jdks = Stream.of(JavaPlatformManager.getDefault().getInstalledPlatforms())
-                             .filter(jdk -> isCompatible(jdk.getSpecification().getVersion()))
+                             .filter(jdk -> isCompatible(jdk.getSpecification().getJdkVersion()))
                              .map(jdk -> jdk.getDisplayName())
                              .sorted(Comparator.reverseOrder())
                              .toArray(String[]::new);
                 jdkCombo.setModel(new DefaultComboBoxModel(jdks));
             }
 
-            private static boolean isCompatible(SpecificationVersion jdkVerison) {
-                try {
-                    return Integer.parseInt(jdkVerison.toString()) >= 11;
-                } catch (NumberFormatException ignore) {}
-                return false;
+            private static boolean isCompatible(Runtime.Version jdkVersion) {
+                return jdkVersion != null && jdkVersion.feature() >= 11;
             }
 
             @Override

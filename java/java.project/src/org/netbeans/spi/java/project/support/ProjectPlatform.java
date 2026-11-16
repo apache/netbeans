@@ -40,6 +40,7 @@ import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
 import org.openide.util.Lookup;
 import org.openide.util.Parameters;
 
@@ -181,7 +182,7 @@ public final class ProjectPlatform {
     private static JavaPlatform findJavaPlatform(
             @NonNull final FileObject jdkHome,
             @NonNull final String platformType) {
-        return Arrays.stream(JavaPlatformManager.getDefault().getPlatforms(null, new Specification(platformType, null)))
+        return Arrays.stream(JavaPlatformManager.getDefault().getPlatforms(null, new Specification(platformType)))
                 .filter((jp) -> jp.getInstallFolders().contains(jdkHome))
                 .findFirst()
                 .orElse(null);

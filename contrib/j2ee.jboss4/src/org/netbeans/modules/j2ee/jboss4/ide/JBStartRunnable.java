@@ -49,7 +49,6 @@ import org.netbeans.modules.j2ee.jboss4.util.JBProperties;
 import org.openide.execution.NbProcessDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -96,8 +95,8 @@ class JBStartRunnable implements Runnable {
     private static final String NEW_IF_CONDITION_STRING = 
                 "\"xx\" == \"x\"";                      // NOI18N 
     
-    private static final SpecificationVersion 
-        JDK_14 = new SpecificationVersion("1.4");       // NOI18N
+    private static final Runtime.Version
+        JDK_14 = Runtime.Version.parse("1.4");          // NOI18N
 
     private static final Logger LOGGER = Logger.getLogger(JBStartRunnable.class.getName());
 
@@ -191,7 +190,8 @@ class JBStartRunnable implements Runnable {
 
         if (startServer.getMode() == JBStartServer.MODE.DEBUG && !haveDebugOptions(javaOptsBuilder.toString())) {
             // if in debug mode and the debug options not specified manually
-            if (platform.getSpecification().getVersion().compareTo(JDK_14) <= 0) {
+            Runtime.Version platformVersion = platform.getSpecification().getJdkVersion();
+            if (platformVersion != null && platformVersion.compareTo(JDK_14) <= 0) {
                 javaOptsBuilder.append(" -classic");
                 javaOptsBuilder.append(" -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address="). // NOI18N
                                 append(dm.getDebuggingPort()).

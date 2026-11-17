@@ -54,6 +54,7 @@ import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
+import org.netbeans.modules.maven.embedder.PlaceholderCapture;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.openide.filesystems.FileObject;
@@ -234,8 +235,9 @@ public final class MavenProjectCache {
         long startLoading = System.currentTimeMillis();
         
         try {
-            res = NbArtifactFixer.collectPlaceholderArtifacts(
-                    () -> projectEmbedder.readProjectWithDependencies(req, true),
+            PlaceholderCapture capture = new PlaceholderCapture();
+            res = NbArtifactFixer.collectPlaceholderArtifacts(capture,
+                    () -> projectEmbedder.readProjectWithDependencies(req, true, capture),
                     set -> set.forEach(a -> {
                         // artifact fixer only injects POMs.
                         placeholders.add(

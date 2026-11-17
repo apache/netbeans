@@ -71,6 +71,7 @@ import org.openide.util.NbBundle;
  *
  * @author mbien
  */
+@SuppressWarnings("serial")
 public class InteractiveRebasePanel extends JPanel {
 
     private final TodoTableModel tableModel;
@@ -218,6 +219,13 @@ public class InteractiveRebasePanel extends JPanel {
         private final List<GitRevisionInfo> revisions = new ArrayList<>();
         private final List<RebaseAction> actions = new ArrayList<>();
         private final List<Integer> numbers = new ArrayList<>();
+        // the message the user settled for the commit of the row (a reword),
+        // or <code>null</code> if the commit keeps its original message
+        private final List<String> messages = new ArrayList<>();
+        // the message the user settled for the run of squashed or fixup-ed
+        // rows the row absorbs, or <code>null</code> if the run keeps its
+        // auto-combined message
+        private final List<String> runMessages = new ArrayList<>();
         // the order and the position of each commit when the plan was
         // loaded: the chain the branch has now, the plan is compared to it
         private final List<String> loadOrder = new ArrayList<>();
@@ -235,6 +243,8 @@ public class InteractiveRebasePanel extends JPanel {
             this.revisions.clear();
             this.actions.clear();
             this.numbers.clear();
+            this.messages.clear();
+            this.runMessages.clear();
             this.loadOrder.clear();
             this.loadIndices.clear();
             this.rowStates.clear();
@@ -247,10 +257,36 @@ public class InteractiveRebasePanel extends JPanel {
             int n = this.revisions.size();
             for (int i = 0; i < n; i++) {
                 this.numbers.add(n - i);
+                this.messages.add(null);
+                this.runMessages.add(null);
                 this.rowStates.add(RowState.UNCHANGED);
             }
             computeRowStates();
             fireTableDataChanged();
+        }
+
+        /** The message the user settled for the commit of a row, or
+         * <code>null</code> if the commit keeps its original message. */
+        public String getMessage(int rowIndex) {
+            return messages.get(rowIndex);
+        }
+
+        /** Stores the message the user settled for the commit of a row. */
+        public void setMessage(int rowIndex, String message) {
+            messages.set(rowIndex, message);
+        }
+
+        /** The message the user settled for the run of squashed or fixup-ed
+         * rows a row absorbs, or <code>null</code> if the run keeps its
+         * auto-combined message. */
+        public String getRunMessage(int rowIndex) {
+            return runMessages.get(rowIndex);
+        }
+
+        /** Stores the message the user settled for the run of squashed or
+         * fixup-ed rows a row absorbs. */
+        public void setRunMessage(int rowIndex, String message) {
+            runMessages.set(rowIndex, message);
         }
 
         @Override
@@ -294,8 +330,22 @@ public class InteractiveRebasePanel extends JPanel {
         public void setValueAt(Object value, int rowIndex, int columnIndex) {
             if (columnIndex == 1 && value instanceof RebaseAction ra) {
                 actions.set(rowIndex, ra);
+                clearRunMessages();
                 computeRowStates();
                 fireTableCellUpdated(rowIndex, columnIndex);
+            }
+        }
+
+        /**
+         * Forgets the messages the user settled for the squashed runs: the
+         * composition of the runs changed, the settled messages apply to a
+         * different set of commits and are settled again when the rebase is
+         * started. The reword messages are kept, they belong to the commits
+         * themselves.
+         */
+        private void clearRunMessages() {
+            for (int i = 0; i < runMessages.size(); i++) {
+                runMessages.set(i, null);
             }
         }
 
@@ -331,12 +381,17 @@ public class InteractiveRebasePanel extends JPanel {
             GitRevisionInfo revision = revisions.remove(from);
             RebaseAction moved = actions.remove(from);
             int number = numbers.remove(from);
+            String message = messages.remove(from);
+            String runMessage = runMessages.remove(from);
             revisions.add(to, revision);
             actions.add(to, moved);
             numbers.add(to, number);
+            messages.add(to, message);
+            runMessages.add(to, runMessage);
             if (to == 0 && (moved == RebaseAction.SQUASH || moved == RebaseAction.FIXUP)) {
                 actions.set(to, RebaseAction.PICK);
             }
+            clearRunMessages();
             computeRowStates();
             fireTableDataChanged();
         }
@@ -513,7 +568,7 @@ public class InteractiveRebasePanel extends JPanel {
         table.setDefaultRenderer(Object.class, new StateLabel(JLabel.LEFT));
 
         JComboBox<RebaseAction> actions = new JComboBox<>(new RebaseAction[] {
-            RebaseAction.PICK, RebaseAction.SQUASH, RebaseAction.FIXUP, RebaseAction.DROP
+            RebaseAction.PICK, RebaseAction.REWORD, RebaseAction.SQUASH, RebaseAction.FIXUP, RebaseAction.DROP
         });
         // the combo box that edits the action column centers its values like
         // the table does; a dedicated renderer is used (not the table's

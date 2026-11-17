@@ -20,9 +20,7 @@ package org.netbeans.modules.git.ui.rebase;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.libs.git.GitClient;
 import org.netbeans.libs.git.GitRebaseInteractiveHandler;
 import org.netbeans.libs.git.GitRebaseTodoLine;
@@ -186,10 +184,10 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
 
     public void testHandlerAppliesTheActions() {
         GitRebaseInteractiveHandler handler = new InteractiveRebaseDialog.InteractiveRebaseHandler(
-                idList(b, c, d), actions(
-                    b.getRevision(), RebaseAction.PICK,
-                    c.getRevision(), RebaseAction.FIXUP,
-                    d.getRevision(), RebaseAction.SQUASH));
+                repositoryLocation, plan(
+                    b, RebaseAction.PICK,
+                    c, RebaseAction.FIXUP,
+                    d, RebaseAction.SQUASH));
         List<GitRebaseTodoLine> steps = stepList(b, c, d);
         handler.prepareSteps(steps);
         assertEquals(3, steps.size());
@@ -205,10 +203,10 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
         // the table order after a move: d (the newest commit) on top,
         // b (the oldest) at the bottom
         GitRebaseInteractiveHandler handler = new InteractiveRebaseDialog.InteractiveRebaseHandler(
-                idList(d, b, c), actions(
-                    b.getRevision(), RebaseAction.PICK,
-                    c.getRevision(), RebaseAction.PICK,
-                    d.getRevision(), RebaseAction.PICK));
+                repositoryLocation, plan(
+                    d, RebaseAction.PICK,
+                    b, RebaseAction.PICK,
+                    c, RebaseAction.PICK));
         List<GitRebaseTodoLine> steps = stepList(b, c, d);
         handler.prepareSteps(steps);
         assertEquals(3, steps.size());
@@ -223,10 +221,10 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
      */
     public void testHandlerMarksTheDroppedStep() {
         GitRebaseInteractiveHandler handler = new InteractiveRebaseDialog.InteractiveRebaseHandler(
-                idList(b, c, d), actions(
-                    b.getRevision(), RebaseAction.PICK,
-                    c.getRevision(), RebaseAction.DROP,
-                    d.getRevision(), RebaseAction.PICK));
+                repositoryLocation, plan(
+                    b, RebaseAction.PICK,
+                    c, RebaseAction.DROP,
+                    d, RebaseAction.PICK));
         List<GitRebaseTodoLine> steps = stepList(b, c, d);
         handler.prepareSteps(steps);
         assertEquals(3, steps.size());
@@ -240,10 +238,10 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
 
     public void testHandlerMarksEveryStepDropped() {
         GitRebaseInteractiveHandler handler = new InteractiveRebaseDialog.InteractiveRebaseHandler(
-                idList(b, c, d), actions(
-                    b.getRevision(), RebaseAction.DROP,
-                    c.getRevision(), RebaseAction.DROP,
-                    d.getRevision(), RebaseAction.DROP));
+                repositoryLocation, plan(
+                    b, RebaseAction.DROP,
+                    c, RebaseAction.DROP,
+                    d, RebaseAction.DROP));
         List<GitRebaseTodoLine> steps = stepList(b, c, d);
         handler.prepareSteps(steps);
         assertEquals(3, steps.size());
@@ -264,12 +262,18 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
         return list;
     }
 
-    private static List<String> idList(GitRevisionInfo... revisions) {
-        List<String> ids = new ArrayList<String>();
-        for (GitRevisionInfo revision : revisions) {
-            ids.add(revision.getRevision());
+    /**
+     * A plan with the given commits in the given order and actions, the
+     * commits keep their original messages.
+     */
+    private static RebasePlan plan(Object... keyValues) {
+        List<RebasePlan.Row> rows = new ArrayList<RebasePlan.Row>();
+        for (int i = 0; i < keyValues.length; i += 2) {
+            GitRevisionInfo revision = (GitRevisionInfo) keyValues[i];
+            rows.add(new RebasePlan.Row(revision.getRevision(), (RebaseAction) keyValues[i + 1],
+                    revision.getFullMessage(), null, null));
         }
-        return ids;
+        return RebasePlan.of(rows);
     }
 
     /**
@@ -287,12 +291,102 @@ public class InteractiveRebaseTest extends AbstractGitTestCase {
         return steps;
     }
 
-    private static Map<String, RebaseAction> actions(Object... keyValues) {
-        Map<String, RebaseAction> map = new HashMap<String, RebaseAction>();
-        for (int i = 0; i < keyValues.length; i += 2) {
-            map.put((String) keyValues[i], (RebaseAction) keyValues[i + 1]);
-        }
-        return map;
+    /**
+     * The settled message of a reworded commit replaces the original
+     * message when the driver asks for the modified message of the commit.
+     */
+    public void testHandlerRewordMessage() {
+        RebasePlan plan = RebasePlan.of(List.of(
+                new RebasePlan.Row(b.getRevision(), RebaseAction.REWORD, b.getFullMessage(), "B: reworded", null)));
+        InteractiveRebaseDialog.InteractiveRebaseHandler handler =
+                new InteractiveRebaseDialog.InteractiveRebaseHandler(repositoryLocation, plan);
+        assertEquals("B: reworded", handler.modifyCommitMessage(b.getFullMessage()));
+        // the message of a commit without a settled message is kept
+        assertEquals(c.getFullMessage(), handler.modifyCommitMessage(c.getFullMessage()));
     }
 
+    /**
+     * The settled message of a run of squashed commits replaces the combined
+     * message the driver composes for the run; a combined message that does
+     * not match any run is kept.
+     */
+    public void testHandlerSquashRunMessage() {
+        RebasePlan plan = RebasePlan.of(List.of(
+                new RebasePlan.Row(b.getRevision(), RebaseAction.PICK, b.getFullMessage(), null, "combined message"),
+                new RebasePlan.Row(c.getRevision(), RebaseAction.SQUASH, c.getFullMessage(), null, null),
+                new RebasePlan.Row(d.getRevision(), RebaseAction.FIXUP, d.getFullMessage(), null, null)));
+        InteractiveRebaseDialog.InteractiveRebaseHandler handler =
+                new InteractiveRebaseDialog.InteractiveRebaseHandler(repositoryLocation, plan);
+        // the combined message of the driver: the count of the run, the
+        // message of the head commit and the messages of the squashed rows
+        String combined = "# This is a combination of 3 commits.\n"
+                + b.getFullMessage()
+                + "\n# This is the 2nd commit message:\n" + c.getFullMessage();
+        assertEquals("combined message", handler.modifyCommitMessage(combined));
+        // a combined message of a run of a different size does not match
+        String other = "# This is a combination of 2 commits.\n"
+                + b.getFullMessage() + "\n# x:\n" + c.getFullMessage();
+        assertEquals(other, handler.modifyCommitMessage(other));
+    }
+
+    /**
+     * The plan persisted in the rebase folder is read back: the order of
+     * the rows, the actions and the settled messages are kept.
+     */
+    public void testPlanRoundTrip() throws Exception {
+        RebasePlan plan = RebasePlan.of(List.of(
+                new RebasePlan.Row(b.getRevision(), RebaseAction.REWORD, b.getFullMessage(), "B: reworded", null),
+                new RebasePlan.Row(c.getRevision(), RebaseAction.SQUASH, c.getFullMessage(), null, null),
+                new RebasePlan.Row(d.getRevision(), RebaseAction.DROP, d.getFullMessage(), null, "run message")));
+        File folder = new File(getWorkDir(), "rebase-merge");
+        assertTrue(folder.mkdirs() || folder.isDirectory());
+        plan.persistIfAbsent(folder);
+        RebasePlan read = RebasePlan.read(folder);
+        assertNotNull(read);
+        assertEquals(3, read.getRows().size());
+        assertEquals(b.getRevision(), read.getRows().get(0).id());
+        assertEquals(RebaseAction.REWORD, read.getRows().get(0).action());
+        assertEquals(b.getFullMessage(), read.getRows().get(0).originalMessage());
+        assertEquals("B: reworded", read.getRows().get(0).settledMessage());
+        assertNull(read.getRows().get(0).settledRunMessage());
+        assertEquals(RebaseAction.SQUASH, read.getRows().get(1).action());
+        assertNull(read.getRows().get(1).settledMessage());
+        assertEquals(RebaseAction.DROP, read.getRows().get(2).action());
+        assertEquals("run message", read.getRows().get(2).settledRunMessage());
+        // the file is written once, a second persist does not overwrite it
+        plan.persistIfAbsent(folder);
+        assertEquals(3, RebasePlan.read(folder).getRows().size());
+        // a folder without a plan returns null
+        File empty = new File(getWorkDir(), "empty");
+        assertTrue(empty.mkdirs() || empty.isDirectory());
+        assertNull(RebasePlan.read(empty));
+    }
+
+    /**
+     * The helpers of the dialog that compute the runs of the plan.
+     */
+    public void testRunHelpers() {
+        TodoTableModel model = new TodoTableModel();
+        model.setRevisions(idsList(b, c, d));
+        model.setValueAt(RebaseAction.SQUASH, 1, 1);
+        model.setValueAt(RebaseAction.FIXUP, 2, 1);
+        assertEquals(2, InteractiveRebaseDialog.runEnd(0, model));
+        assertEquals(2, InteractiveRebaseDialog.runEnd(1, model));
+        assertEquals(2, InteractiveRebaseDialog.runEnd(2, model));
+        assertTrue(InteractiveRebaseDialog.runContainsSquash(0, 2, model));
+        // the run of the row 1 (the head) only contains the fixup row
+        assertFalse(InteractiveRebaseDialog.runContainsSquash(1, 2, model));
+        assertFalse(InteractiveRebaseDialog.runContainsSquash(2, 2, model));
+        String combined = InteractiveRebaseDialog.combinedSquashMessage(model, 1, 2);
+        assertTrue(combined.contains("# This is a combination of 2 commits"));
+        assertTrue(combined.contains(c.getFullMessage()));
+        assertTrue(combined.contains(d.getFullMessage()));
+        // the head message is not the message of the head commit, the
+        // combined message is
+        assertFalse(combined.contains(b.getFullMessage()));
+        assertEquals("st", InteractiveRebaseDialog.ordinal(1));
+        assertEquals("nd", InteractiveRebaseDialog.ordinal(2));
+        assertEquals("rd", InteractiveRebaseDialog.ordinal(3));
+        assertEquals("th", InteractiveRebaseDialog.ordinal(4));
+    }
 }

@@ -247,15 +247,16 @@ public class RepositoryRevision {
                 });
             }
         }
-        if (isInCurrentBranch()) {
-            actions.add(new AbstractAction(NbBundle.getMessage(RepositoryRevision.class, "LBL_Action.InteractiveRebase")) { //NOI18N
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String baseRevision = getLog().getRevision();
-                    Utils.post(() -> SystemAction.get(RebaseAction.class).rebaseInteractive(repositoryRoot, baseRevision));
-                }
-            });
-        }
+        // offered for every commit: the range above the commit is only a
+        // valid rebase range while the commit is on the current branch, the
+        // dialog validates that and the range when it is opened
+        actions.add(new AbstractAction(NbBundle.getMessage(RepositoryRevision.class, "LBL_Action.InteractiveRebase")) { //NOI18N
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String baseRevision = getLog().getRevision();
+                Utils.post(() -> SystemAction.get(RebaseAction.class).rebaseInteractive(repositoryRoot, baseRevision));
+            }
+        });
         return actions.toArray(Action[]::new);
     }
 

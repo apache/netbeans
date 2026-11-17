@@ -206,16 +206,24 @@ public class RebaseAction extends SingleRepositoryAction {
         if (todo.isEmpty()) {
             todo = readRebaseFile(folder, TODO_APPLY);
         }
-        if (todoLineRequiresHandler(todo)) {
-            return CONTINUE_HANDLER;
+        boolean handlerRequired = todoLineRequiresHandler(todo);
+        if (!handlerRequired) {
+            // a step interrupted by a conflict is moved to the done file and
+            // is re-processed when the rebase is continued
+            String lastDone = lastTodoLine(readRebaseFile(folder, DONE));
+            handlerRequired = isSquashLine(lastDone) || isFixupLine(lastDone) || isRewordLine(lastDone);
         }
-        // a step interrupted by a conflict is moved to the done file and is
-        // re-processed when the rebase is continued
-        String lastDone = lastTodoLine(readRebaseFile(folder, DONE));
-        if (isSquashLine(lastDone) || isFixupLine(lastDone) || isRewordLine(lastDone)) {
-            return CONTINUE_HANDLER;
+        if (!handlerRequired) {
+            return null;
         }
-        return null;
+        // a plan persisted by the interactive rebase dialog carries the
+        // settled commit messages, a rebase started from outside carries
+        // none and the messages of the driver are kept
+        RebasePlan plan = RebasePlan.read(folder);
+        if (plan != null) {
+            return new InteractiveRebaseDialog.InteractiveRebaseHandler(repository, plan);
+        }
+        return CONTINUE_HANDLER;
     }
 
     private static boolean todoLineRequiresHandler(List<String> lines) {
@@ -383,7 +391,7 @@ public class RebaseAction extends SingleRepositoryAction {
         return null;
     }
 
-    private static File getRebaseFolder (File repository) {
+    static File getRebaseFolder (File repository) {
         File rebaseFolder = new File(GitUtils.getGitFolderForRoot(repository), REBASE_APPLY_DIR);
         if (!rebaseFolder.exists()) {
             rebaseFolder = new File(GitUtils.getGitFolderForRoot(repository), REBASE_MERGE_DIR);

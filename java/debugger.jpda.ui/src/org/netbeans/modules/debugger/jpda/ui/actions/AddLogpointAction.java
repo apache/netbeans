@@ -19,9 +19,10 @@
 package org.netbeans.modules.debugger.jpda.ui.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Comparator;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
@@ -40,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionRegistration(
         displayName = "#CTL_AddLogpointAction",
-        enabledOn = @ActionState( property = "hasJavaSource", type = Action.class )
+        enabledOn = @ActionState( property = "canAddLogpoint", type = Action.class )
 )
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/Popup", position = 1900),
@@ -63,9 +64,16 @@ public final class AddLogpointAction extends AbstractAction {
 
     @Override
     public Object getValue(String key) {
-        if ("hasJavaSource".equals(key)) {
+        if ("canAddLogpoint".equals(key)) {
             String mime = context.getPrimaryFile().getMIMEType("text/x-java");
-            return "text/x-java".equals(mime);
+            if ("text/x-java".equals(mime)) {
+                String where = EditorContextBridge.getContext().getCurrentURL();
+                int at = EditorContextBridge.getContext().getCurrentLineNumber();
+
+                LineBreakpoint lb = LineBreakpoint.create(where, at);
+                var prev = findSimilarBreakpoint(lb);
+                return prev == null;
+            }
         }
         return super.getValue(key);
     }
@@ -80,6 +88,29 @@ public final class AddLogpointAction extends AbstractAction {
         lb.setSuspend(JPDABreakpoint.SUSPEND_NONE);
         lb.setPrintText(Bundle.MSG_LogpointAt("{className}", "{methodName}", "{lineNumber}", "{locals}"));
 
+        addOrReplaceBreakpoint(lb);
+    }
+
+    private static void addOrReplaceBreakpoint(LineBreakpoint lb) {
+        Breakpoint found = findSimilarBreakpoint(lb);
+        if (found != null) {
+            DebuggerManager.getDebuggerManager().removeBreakpoint(found);
+        }
         DebuggerManager.getDebuggerManager().addBreakpoint(lb);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Breakpoint findSimilarBreakpoint(LineBreakpoint lb) {
+        Comparator<Comparable<Object>> comp = Comparator.naturalOrder();
+        Breakpoint found = null;
+        for (Breakpoint existing : DebuggerManager.getDebuggerManager().getBreakpoints()) {
+            if (lb instanceof Comparable c1 && existing instanceof Comparable c2) {
+                if (comp.compare(c1, c2) == 0) {
+                    found = existing;
+                    break;
+                }
+            }
+        }
+        return found;
     }
 }

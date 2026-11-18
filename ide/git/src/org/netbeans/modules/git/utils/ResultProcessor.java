@@ -20,13 +20,13 @@ package org.netbeans.modules.git.utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import org.netbeans.modules.git.client.GitClient;
+import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.progress.ProgressMonitor;
 import org.netbeans.modules.git.Git;
@@ -85,7 +85,7 @@ public class ResultProcessor {
         if (o == review) {
             openInVersioningView(conflicts);
         } else if (o == resolve) {
-            GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(new File[0]));
+            GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(File[]::new));
             supp.start(Git.getInstance().getRequestProcessor(repository), repository, NbBundle.getMessage(ResolveConflictsAction.class, "MSG_PreparingMerge")); //NOI18N
         }
     }
@@ -94,37 +94,64 @@ public class ResultProcessor {
         return resolveLocalChanges(getFilesInConflict(conflicts));
     }
         
-    public final boolean resolveLocalChanges (File[] localChanges) throws GitException {
+    public final boolean resolveLocalChanges(File[] localChanges) throws GitException {
+        JButton stash = new JButton();
+        Mnemonics.setLocalizedText(stash, NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.stashButton.text")); //NOI18N
+        stash.setToolTipText(NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.stashButton.TTtext")); //NOI18N
         JButton revert = new JButton();
         Mnemonics.setLocalizedText(revert, NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.revertButton.text")); //NOI18N
         revert.setToolTipText(NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.revertButton.TTtext")); //NOI18N
-        JButton review = new JButton();
-        Mnemonics.setLocalizedText(review, NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.reviewButton.text")); //NOI18N
-        review.setToolTipText(NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.reviewButton.TTtext")); //NOI18N
-        Object o = DialogDisplayer.getDefault().notify(new NotifyDescriptor(NbBundle.getMessage(ResultProcessor.class, "MSG_ResultProcessor.localModifications"), //NOI18N
-                NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.localModifications"), //NOI18N
-                NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, new Object[] { revert, review, NotifyDescriptor.CANCEL_OPTION }, revert));
-        if (o == revert) {
+        Object result = DialogDisplayer.getDefault().notify(
+                new NotifyDescriptor(
+                    NbBundle.getMessage(ResultProcessor.class, "MSG_ResultProcessor.localModifications"), //NOI18N
+                    NbBundle.getMessage(ResultProcessor.class, "LBL_ResultProcessor.localModifications"), //NOI18N
+                    NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, new Object[] { stash, revert, NotifyDescriptor.CANCEL_OPTION },
+                    stash
+                )
+        );
+        if (result == stash) {
+            String message = stashMessage();
+            LOG.log(Level.FINE, "Stashing local changes: {0} - {1}", new Object[] { repository, message }); //NOI18N
+            client.stashSave(message, false, pm);
+            LOG.log(Level.FINE, "Checking out branch: {0}, second shot", revision); //NOI18N
+            return true;
+        } else if (result == revert) {
             LOG.log(Level.FINE, "Checking out paths from HEAD"); //NOI18N
             client.checkout(localChanges, GitUtils.HEAD, true, pm);
             LOG.log(Level.FINE, "Cleanup new files"); //NOI18N
             client.clean(localChanges, pm);
             LOG.log(Level.FINE, "Checking out branch: {0}, second shot", revision); //NOI18N
             return true;
-        } else if (o == review) {
-            openInVersioningView(Arrays.asList(localChanges));
-            return false;
         } else {
             return false;
         }
     }
 
-    private File[] getFilesInConflict (String[] conflicts) {
-        List<File> files = new ArrayList<File>(conflicts.length);
+    /**
+     * The message of the stash the local changes are saved to: the name of
+     * the current branch, or the short id of the head commit if the
+     * repository is not on a branch.
+     */
+    private String stashMessage() throws GitException {
+        String ref = null;
+        for (GitBranch branch : client.getBranches(false, pm).values()) {
+            if (branch.isActive()) {
+                ref = branch.getName();
+                break;
+            }
+        }
+        if (ref == null) {
+            ref = client.log(GitUtils.HEAD, pm).getRevision().substring(0, 7);
+        }
+        return NbBundle.getMessage(ResultProcessor.class, "MSG_ResultProcessor.stashMessage", ref);
+    }
+
+    private File[] getFilesInConflict(String[] conflicts) {
+        List<File> files = new ArrayList<>(conflicts.length);
         for (String path : conflicts) {
             files.add(new File(repository, path));
         }
-        return files.toArray(new File[0]);
+        return files.toArray(File[]::new);
     }
 
     protected final void openInVersioningView (final Collection<File> files) {

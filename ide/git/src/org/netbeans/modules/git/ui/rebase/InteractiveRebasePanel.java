@@ -26,17 +26,21 @@ import java.awt.Font;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DropMode;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -44,7 +48,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.LayoutStyle;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
@@ -53,48 +59,60 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import org.netbeans.libs.git.GitRebaseTodoLine.RebaseAction;
 import org.netbeans.libs.git.GitRevisionInfo;
+import org.netbeans.modules.git.ui.diff.DiffAction;
+import org.netbeans.modules.git.ui.repository.Revision;
+import org.netbeans.modules.versioning.spi.VCSContext;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
+import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.Lookups;
 
 /**
  * The table of the rebase steps to be performed, like the todo file of
- * <code>git rebase -i</code>: the number of each commit (1 is the newest
- * commit, at the head), the action (pick, squash, fixup, drop), the
- * revision id and the subject, oldest first. A squash or fixup row folds
- * the commit into the commit of the row above. The buttons above the table
- * move the selected step towards the top or the bottom of the list.
+ * <code>git rebase -i</code>. It displays the commits in the order they are
+ * to be applied, allowing the user to select actions (pick, squash, fixup,
+ * drop) and reorder the steps.
  *
- * <p>The rows are colored after the colors of the diff view: a dropped row
- * like a deleted diff line, a squashed or fixup-ed row like a changed diff
- * line, and the revision of a commit that the rebase rebuilds (with a new
- * hash) is painted like a changed diff line.
+ * <p>Rows are visually styled to reflect the nature of the commit action,
+ * such as dropped or modified commits.
  *
  * @author mbien
  */
 @SuppressWarnings("serial")
 public class InteractiveRebasePanel extends JPanel {
 
+    private final File repository;
     private final TodoTableModel tableModel;
+    private final OpenDiffAction openDiffAction;
 
     @NbBundle.Messages({
-        "TTT_InteractiveRebasePanel.btnUp=Move the selected commit up in the list",
-        "TTT_InteractiveRebasePanel.btnDown=Move the selected commit down in the list"
+        "LBL_InteractiveRebasePanel_popup_up=Move Up",
+        "LBL_InteractiveRebasePanel_popup_down=Move Down"
     })
     /** Creates new form InteractiveRebasePanel */
-    public InteractiveRebasePanel() {
+    public InteractiveRebasePanel(File repository) {
+        this.repository = repository;
         initComponents();
         tableModel = new TodoTableModel();
         tblRebase.setModel(tableModel);
         initializeColumns(tblRebase);
         pnlInfo.setLayout(new BorderLayout());
-        btnUp.setToolTipText(Bundle.TTT_InteractiveRebasePanel_btnUp());
-        btnDown.setToolTipText(Bundle.TTT_InteractiveRebasePanel_btnDown());
-        btnUp.addActionListener(e -> moveSelection(-1));
-        btnDown.addActionListener(e -> moveSelection(1));
-        tblRebase.getSelectionModel().addListSelectionListener(e -> updateMoveButtons());
         tblRebase.setDragEnabled(true);
         tblRebase.setDropMode(DropMode.INSERT_ROWS);
         tblRebase.setTransferHandler(new RowTransferHandler());
+        openDiffAction = OpenDiffAction.getAction(tblRebase, this);
+        tblRebase.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "OpenDiffAction"); // NOI18N
+        tblRebase.getActionMap().put("OpenDiffAction", openDiffAction); // NOI18N
+        // TODO get from editor bindings?
+        tblRebase.getInputMap(JComponent.WHEN_FOCUSED).put(Utilities.stringToKey("OS-UP"), "RebaseMoveUp"); // NOI18N
+        tblRebase.getActionMap().put("RebaseMoveUp", new RowMoveAction(-1)); // NOI18N
+        tblRebase.getInputMap(JComponent.WHEN_FOCUSED).put(Utilities.stringToKey("OS-DOWN"), "RebaseMoveDown"); // NOI18N
+        tblRebase.getActionMap().put("RebaseMoveDown", new RowMoveAction(1)); // NOI18N
+        tblRebase.addMouseListener(new TableMouseAdapter());
     }
 
     /**
@@ -113,14 +131,23 @@ public class InteractiveRebasePanel extends JPanel {
         tblRebase.setRowSelectionInterval(target, target);
     }
 
+    /** Whether the diff of the given row can be opened. */
+    public boolean canOpenDiff(int row) {
+        return row >= 0 && row < tableModel.getRowCount();
+    }
+
     /**
-     * The move buttons are only enabled for a row that has a neighbor in the
-     * direction it is moved to.
+     * Opens the diff of the commit of a todo row as a diff tab in the main
+     * window. It always diffs against its original parent.
      */
-    private void updateMoveButtons() {
-        int row = tblRebase.getSelectedRow();
-        btnUp.setEnabled(row > 0);
-        btnDown.setEnabled(row >= 0 && row < tableModel.getRowCount() - 1);
+    public void openDiff(int row) {
+        GitRevisionInfo revision = tableModel.getRevision(row);
+        String parent = revision.getParents()[0];
+        SystemAction.get(DiffAction.class).diff(
+            VCSContext.forNodes(new Node[] { new AbstractNode(Children.LEAF, Lookups.fixed(repository)) }),
+            new Revision(parent, parent.substring(0, 7)),
+            new Revision(revision.getRevision(), revision.getRevision().substring(0, 7), revision.getShortMessage(), null)
+        );
     }
 
     /** The info panel the controller fills with the details of the commit
@@ -143,18 +170,10 @@ public class InteractiveRebasePanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnUp = new JButton();
-        btnDown = new JButton();
         splitPane = new JSplitPane();
         scrollRebase = new JScrollPane();
         tblRebase = new JTable();
         pnlInfo = new JPanel();
-
-        btnUp.setIcon(ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/rebase-up.png", false));
-        btnUp.setFocusPainted(false);
-
-        btnDown.setIcon(ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/rebase-down.png", false));
-        btnDown.setFocusPainted(false);
 
         splitPane.setDividerLocation(350);
 
@@ -169,30 +188,18 @@ public class InteractiveRebasePanel extends JPanel {
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnUp)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDown)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnUp, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-                    .addComponent(btnDown, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(7, 7, 7)
                 .addComponent(splitPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    JButton btnDown;
-    JButton btnUp;
     JPanel pnlInfo;
     JScrollPane scrollRebase;
     JSplitPane splitPane;
@@ -460,8 +467,87 @@ public class InteractiveRebasePanel extends JPanel {
     }
 
     /**
+     * The action moving the selected row one step towards the top or the
+     * bottom of the list, bound to the move keys of the table, see the
+     * constructor.
+     */
+    private final class RowMoveAction extends AbstractAction {
+
+        private final int delta;
+
+        RowMoveAction(int delta) {
+            this.delta = delta;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            moveSelection(delta);
+        }
+    }
+
+    /**
+     * The mouse handling of the todo table.
+     */
+    private final class TableMouseAdapter extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() != 2 || e.getButton() != MouseEvent.BUTTON1
+                    || tblRebase.columnAtPoint(e.getPoint()) == 1) {
+                return;
+            }
+            int row = tblRebase.rowAtPoint(e.getPoint());
+            if (row >= 0) {
+                // the first click of the double-click selected the row
+                openDiffAction.actionPerformed(null);
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+
+        /**
+         * The popup of the table.
+         */
+        private void showPopup(MouseEvent e) {
+            int row = tblRebase.rowAtPoint(e.getPoint());
+            if (row >= 0 && !tblRebase.isRowSelected(row)) {
+                tblRebase.setRowSelectionInterval(row, row);
+            }
+            JPopupMenu popup = new JPopupMenu();
+            JMenuItem up = new JMenuItem(Bundle.LBL_InteractiveRebasePanel_popup_up());
+            up.setIcon(ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/rebase-up.png", false));
+            up.addActionListener(a -> moveSelection(-1));
+            up.setEnabled(row > 0);
+            JMenuItem down = new JMenuItem(Bundle.LBL_InteractiveRebasePanel_popup_down());
+            down.setIcon(ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/rebase-down.png", false));
+            down.addActionListener(a -> moveSelection(1));
+            down.setEnabled(row >= 0 && row < tableModel.getRowCount() - 1);
+            JMenuItem diff = new JMenuItem(openDiffAction);
+            diff.setIcon(ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff.png", false));
+            diff.setEnabled(openDiffAction.canOpenDiff());
+            popup.add(up);
+            popup.add(down);
+            popup.addSeparator();
+            popup.add(diff);
+            popup.show(tblRebase, e.getX(), e.getY());
+        }
+    }
+
+    /**
      * Allows reordering of commits via drag and drop.
-     * 
+     *
      * Insertion goes through TodoTableModel.moveRow, which also switches a squash
      * or fixup dropped onto the first row back to pick.
      */

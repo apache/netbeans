@@ -19,9 +19,8 @@
 
 package org.netbeans.modules.git.ui.rebase;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -48,22 +47,15 @@ import org.netbeans.modules.git.client.GitClient;
 import org.netbeans.modules.git.client.GitClientExceptionHandler;
 import org.netbeans.modules.git.ui.commit.GitCommitParameters;
 import org.netbeans.modules.git.ui.commit.RewordCommitPanel;
-import org.netbeans.modules.git.ui.diff.DiffAction;
-import org.netbeans.modules.git.ui.repository.Revision;
 import org.netbeans.modules.git.ui.repository.RevisionInfoPanelController;
 import org.netbeans.modules.git.utils.GitUtils;
 import org.netbeans.modules.versioning.spi.VCSContext;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.awt.Mnemonics;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.actions.SystemAction;
-import org.openide.util.lookup.Lookups;
 
 /**
  * The dialog listing the commits to be rebased in an interactive rebase
@@ -105,10 +97,10 @@ public class InteractiveRebaseDialog {
     public InteractiveRebaseDialog(File repository, String baseRevision) {
         this.repository = repository;
         this.baseRevision = baseRevision;
-        panel = new InteractiveRebasePanel();
+        panel = new InteractiveRebasePanel(repository);
         infoPanelController = new RevisionInfoPanelController(repository);
-        panel.getInfoPanel().add(infoPanelController.getPanel(), java.awt.BorderLayout.CENTER);
-        panel.getTableModel().setRevisions(EMPTY);
+        panel.getInfoPanel().add(infoPanelController.getPanel(), BorderLayout.CENTER);
+        panel.getTableModel().setRevisions(List.of());
         panel.getTable().getSelectionModel().addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) {
                 return;
@@ -118,22 +110,6 @@ public class InteractiveRebaseDialog {
                 infoPanelController.loadInfo(panel.getTableModel().getRevision(row).getRevision());
             } else {
                 infoPanelController.loadInfo(null);
-            }
-        });
-        panel.getTable().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // a double-click opens the diff of the commit against its
-                // parent in the main window; on the action column the
-                // double-click still opens the action combo
-                if (e.getClickCount() != 2 || e.getButton() != MouseEvent.BUTTON1
-                        || panel.getTable().columnAtPoint(e.getPoint()) == 1) {
-                    return;
-                }
-                int row = panel.getTable().rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    showDiff(row);
-                }
             }
         });
         okButton = new JButton();
@@ -168,26 +144,6 @@ public class InteractiveRebaseDialog {
         }
         return false;
     }
-
-    /**
-     * Opens the diff of the commit of a todo row, against its parent, as a
-     * diff tab in the main window, like the diff action of the git file
-     * nodes does.
-     */
-    private void showDiff(int row) {
-        GitRevisionInfo revision = panel.getTableModel().getRevision(row);
-        // the range is linear (checked when the dialog is created), so the
-        // commit has a single parent; for the oldest commit it is the base
-        // of the range
-        String parent = revision.getParents()[0];
-        SystemAction.get(DiffAction.class).diff(
-            VCSContext.forNodes(new Node[] { new AbstractNode(Children.LEAF, Lookups.fixed(repository)) }),
-            new Revision(parent, parent.substring(0, 7)),
-            new Revision(revision.getRevision(), revision.getRevision().substring(0, 7), revision.getShortMessage(), null)
-        );
-    }
-
-    private static final List<GitRevisionInfo> EMPTY = new ArrayList<>(0);
 
     private void loadRange(File repository) {
         try (GitClient client = Git.getInstance().getClient(repository)) {

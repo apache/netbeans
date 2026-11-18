@@ -28,6 +28,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -42,40 +43,53 @@ import org.openide.util.NbBundle;
 public class DiffAction extends GitAction {
     private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/diff.png"; //NOI18N
     
-    public DiffAction () {
+    public DiffAction() {
         super(ICON_RESOURCE);
     }
 
     @Override
-    protected void performContextAction (Node[] nodes) {
+    protected void performContextAction(Node[] nodes) {
         VCSContext context = getCurrentContext(nodes);
         diff(context);
     }
 
     @Override
-    protected String iconResource () {
+    protected String iconResource() {
         return ICON_RESOURCE;
     }
 
-    public void diff (VCSContext context) {
+    public void diff(VCSContext context) {
         diff(context, Revision.HEAD, Revision.LOCAL);
     }
 
-    public void diff (VCSContext context, Revision left, Revision right) {
-        String contextName = Utils.getContextDisplayName(context);
-        MultiDiffPanelController controller = new MultiDiffPanelController(context, left, right);
-        DiffTopComponent tc = new DiffTopComponent(controller);
-        controller.setActions(tc);
-        tc.setName(NbBundle.getMessage(DiffAction.class, "CTL_DiffPanel_Title", contextName)); //NOI18N
-        tc.open();
-        tc.requestActive();
+    public void diff(VCSContext context, Revision left, Revision right) {
+        DiffId id = DiffId.of(context, left, right);
+        TopComponent existing = DiffTopComponent.find(id);
+        if (existing != null) {
+            open(existing);
+        } else {
+            openNew(new MultiDiffPanelController(context, left, right), id, Utils.getContextDisplayName(context));
+        }
     }
 
-    public void diff (File file, Revision rev1, Revision rev2, int requestedRightLine) {
-        MultiDiffPanelController controller = new MultiDiffPanelController(file, rev1, rev2, requestedRightLine);
-        DiffTopComponent tc = new DiffTopComponent(controller);
+    public void diff(File file, Revision left, Revision right, int requestedRightLine) {
+        DiffId id = DiffId.of(file, left, right);
+        TopComponent existing = DiffTopComponent.find(id);
+        if (existing != null) {
+            open(existing);
+        } else {
+            openNew(new MultiDiffPanelController(file, left, right, requestedRightLine), id, file.getName());
+        }
+    }
+
+    private static void openNew(MultiDiffPanelController controller, DiffId id, String name) {
+        DiffTopComponent tc = new DiffTopComponent(controller, id);
         controller.setActions(tc);
-        tc.setName(NbBundle.getMessage(DiffAction.class, "CTL_DiffPanel_Title", file.getName())); // NOI18N
+        tc.setName(NbBundle.getMessage(DiffAction.class, "CTL_DiffPanel_Title", name)); //NOI18N
+        open(tc);
+    }
+
+    private static void open(TopComponent tc) {
         tc.open();
         tc.requestActive();
     }

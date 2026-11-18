@@ -199,6 +199,9 @@ public class InteractiveRebaseDialog {
             }
             chain = chain.reversed(); // oldest first
             panel.getTableModel().setRevisions(chain);
+            // the range the plan is settled for: the simulation replays the
+            // commits of the range onto the base, like the real rebase
+            panel.setSimulationRange(baseRevision, chain.getLast().getRevision());
             panel.getTable().setRowSelectionInterval(0, 0);
             infoPanelController.loadInfo(chain.getFirst().getRevision());
         } catch (GitException ex) {
@@ -214,19 +217,7 @@ public class InteractiveRebaseDialog {
      * recovery path.
      */
     GitRebaseInteractiveHandler getHandler() {
-        InteractiveRebasePanel.TodoTableModel model = panel.getTableModel();
-        List<RebasePlan.Row> rows = new ArrayList<>(model.getRowCount());
-        for (int i = 0; i < model.getRowCount(); i++) {
-            GitRevisionInfo revision = model.getRevision(i);
-            rows.add(new RebasePlan.Row(
-                    revision.getRevision(),
-                    model.getAction(i),
-                    revision.getFullMessage(),
-                    model.getMessage(i),
-                    model.getRunMessage(i)
-            ));
-        }
-        return new InteractiveRebaseHandler(repository, RebasePlan.of(rows));
+        return panel.getTableModel().createRebaseHandler(repository);
     }
 
     /**

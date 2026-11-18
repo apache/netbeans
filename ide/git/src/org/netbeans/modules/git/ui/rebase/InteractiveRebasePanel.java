@@ -57,6 +57,7 @@ import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import org.netbeans.libs.git.GitRebaseInteractiveHandler;
 import org.netbeans.libs.git.GitRebaseTodoLine.RebaseAction;
 import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.modules.git.ui.diff.DiffAction;
@@ -88,6 +89,7 @@ public class InteractiveRebasePanel extends JPanel {
     private final File repository;
     private final TodoTableModel tableModel;
     private final OpenDiffAction openDiffAction;
+    private final SimulationPanel simulationPanel;
 
     @NbBundle.Messages({
         "LBL_InteractiveRebasePanel_popup_up=Move Up",
@@ -101,6 +103,8 @@ public class InteractiveRebasePanel extends JPanel {
         tblRebase.setModel(tableModel);
         initializeColumns(tblRebase);
         pnlInfo.setLayout(new BorderLayout());
+        simulationPanel = new SimulationPanel(repository, tblRebase, tableModel);
+        pnlSimulation.add(simulationPanel, BorderLayout.CENTER);
         tblRebase.setDragEnabled(true);
         tblRebase.setDropMode(DropMode.INSERT_ROWS);
         tblRebase.setTransferHandler(new RowTransferHandler());
@@ -166,6 +170,20 @@ public class InteractiveRebasePanel extends JPanel {
         return tableModel;
     }
 
+    /**
+     * The range the plan is settled for: the commits between
+     * <code>baseRevision</code> (excluded) and <code>tipRevision</code>
+     * (included). It is settled by the dialog after it loaded the range,
+     * the simulation replays the commits of the range onto the base, like
+     * the real rebase.
+     *
+     * @param baseRevision the commit the range is rebased onto
+     * @param tipRevision the head of the range, the newest commit of the plan
+     */
+    public void setSimulationRange(String baseRevision, String tipRevision) {
+        simulationPanel.setRange(baseRevision, tipRevision);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,7 +191,9 @@ public class InteractiveRebasePanel extends JPanel {
         splitPane = new JSplitPane();
         scrollRebase = new JScrollPane();
         tblRebase = new JTable();
+        rightSplit = new JSplitPane();
         pnlInfo = new JPanel();
+        pnlSimulation = new JPanel();
 
         splitPane.setDividerLocation(350);
 
@@ -181,14 +201,22 @@ public class InteractiveRebasePanel extends JPanel {
         scrollRebase.setViewportView(tblRebase);
 
         splitPane.setLeftComponent(scrollRebase);
-        splitPane.setRightComponent(pnlInfo);
+
+        rightSplit.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        rightSplit.setResizeWeight(0.6);
+        rightSplit.setTopComponent(pnlInfo);
+
+        pnlSimulation.setLayout(new BorderLayout());
+        rightSplit.setBottomComponent(pnlSimulation);
+
+        splitPane.setRightComponent(rightSplit);
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+                .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -201,6 +229,8 @@ public class InteractiveRebasePanel extends JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     JPanel pnlInfo;
+    JPanel pnlSimulation;
+    JSplitPane rightSplit;
     JScrollPane scrollRebase;
     JSplitPane splitPane;
     JTable tblRebase;
@@ -294,6 +324,27 @@ public class InteractiveRebasePanel extends JPanel {
          * fixup-ed rows a row absorbs. */
         public void setRunMessage(int rowIndex, String message) {
             runMessages.set(rowIndex, message);
+        }
+
+        /**
+         * The handler applying the plan currently settled in the table: the
+         * actions and the order of the steps, the messages settled for the
+         * reworded commits and the squashed runs. It is used for the rebase
+         * itself and for the simulation of the plan.
+         */
+        public GitRebaseInteractiveHandler createRebaseHandler(File repository) {
+            List<RebasePlan.Row> rows = new ArrayList<>(revisions.size());
+            for (int i = 0; i < revisions.size(); i++) {
+                GitRevisionInfo revision = revisions.get(i);
+                rows.add(new RebasePlan.Row(
+                        revision.getRevision(),
+                        actions.get(i),
+                        revision.getFullMessage(),
+                        messages.get(i),
+                        runMessages.get(i)
+                ));
+            }
+            return new InteractiveRebaseDialog.InteractiveRebaseHandler(repository, RebasePlan.of(rows));
         }
 
         @Override

@@ -196,6 +196,7 @@ public class InteractiveRebasePanel extends JPanel {
         pnlSimulation = new JPanel();
 
         splitPane.setDividerLocation(350);
+        splitPane.setResizeWeight(1.0);
 
         tblRebase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollRebase.setViewportView(tblRebase);

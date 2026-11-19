@@ -29,11 +29,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.RebaseCommand.InteractiveHandler;
 import org.eclipse.jgit.api.RebaseCommand.Operation;
 import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.IllegalTodoFileModification;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.RebaseTodoLine;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.ResolveMerger;
@@ -133,21 +135,13 @@ public class RebaseCommand extends GitCommand {
      * interactive rebase driver: maps todo lines in both directions and
      * applies the client's modifications back to the driver's list.
      */
-    private static final class JGitRebaseHandler implements org.eclipse.jgit.api.RebaseCommand.InteractiveHandler {
-
-        private final GitRebaseInteractiveHandler handler;
-        private final GitClient.RebaseOperationType operation;
-
-        JGitRebaseHandler(GitRebaseInteractiveHandler handler, GitClient.RebaseOperationType operation) {
-            this.handler = handler;
-            this.operation = operation;
-        }
+    private record JGitRebaseHandler(GitRebaseInteractiveHandler handler, GitClient.RebaseOperationType operation) implements InteractiveHandler {
 
         @Override
-        public void prepareSteps(List<org.eclipse.jgit.lib.RebaseTodoLine> steps) {
-            List<GitRebaseTodoLine> spiSteps = new ArrayList<> (steps.size());
-            Map<GitRebaseTodoLine, org.eclipse.jgit.lib.RebaseTodoLine> originals = new IdentityHashMap<> (steps.size());
-            for (org.eclipse.jgit.lib.RebaseTodoLine line : steps) {
+        public void prepareSteps(List<RebaseTodoLine> steps) {
+            List<GitRebaseTodoLine> spiSteps = new ArrayList<>(steps.size());
+            Map<GitRebaseTodoLine, RebaseTodoLine> originals = new IdentityHashMap<>(steps.size());
+            for (RebaseTodoLine line : steps) {
                 GitRebaseTodoLine spiLine = new GitRebaseTodoLine (
                     toSpiAction(line.getAction()),
                     line.getCommit() == null ? "" : line.getCommit().name(),
@@ -157,13 +151,13 @@ public class RebaseCommand extends GitCommand {
                 originals.put(spiLine, line);
             }
             handler.prepareSteps(spiSteps);
-            for (Iterator<GitRebaseTodoLine> it = spiSteps.iterator(); it.hasNext(); ) {
+            for (Iterator<GitRebaseTodoLine> it = spiSteps.iterator(); it.hasNext();) {
                 GitRebaseTodoLine spiLine = it.next();
                 if (spiLine.getAction() == GitRebaseTodoLine.RebaseAction.DROP) {
                     it.remove(); // dropped by the client
                     continue;
                 }
-                org.eclipse.jgit.lib.RebaseTodoLine line = originals.get(spiLine);
+                RebaseTodoLine line = originals.get(spiLine);
                 if (line == null) {
                     it.remove(); // added by the client, no driver counterpart
                     continue;
@@ -192,12 +186,12 @@ public class RebaseCommand extends GitCommand {
             return handler.modifyCommitMessage(message);
         }
 
-        private static GitRebaseTodoLine.RebaseAction toSpiAction(org.eclipse.jgit.lib.RebaseTodoLine.Action action) {
+        private static GitRebaseTodoLine.RebaseAction toSpiAction(RebaseTodoLine.Action action) {
             return GitRebaseTodoLine.RebaseAction.valueOf(action.name());
         }
 
-        private static org.eclipse.jgit.lib.RebaseTodoLine.Action toJgitAction(GitRebaseTodoLine.RebaseAction action) {
-            return org.eclipse.jgit.lib.RebaseTodoLine.Action.valueOf(action.name());
+        private static RebaseTodoLine.Action toJgitAction(GitRebaseTodoLine.RebaseAction action) {
+            return RebaseTodoLine.Action.valueOf(action.name());
         }
     }
 

@@ -60,7 +60,7 @@ class SimulationPanel extends JPanel {
     private final File repository;
     private final JTable table;
     private final InteractiveRebasePanel.TodoTableModel model;
-    private final DefaultListModel<String> conflictsModel;
+    private final DefaultListModel<String> logModel;
     private final RequestProcessor processor = new RequestProcessor("RebaseSimulation", 1); //NOI18N
 
     private String baseRevision;
@@ -75,10 +75,10 @@ class SimulationPanel extends JPanel {
         this.repository = repository;
         this.table = table;
         this.model = model;
-        conflictsModel = new DefaultListModel<>();
         initComponents();
         progressBar.setVisible(false);
-        conflictsList.setModel(conflictsModel);
+        logModel = new DefaultListModel<>();
+        logList.setModel(logModel);
         simulateButton.addActionListener(e -> {
             if (running) {
                 cancelSimulation();
@@ -153,11 +153,20 @@ class SimulationPanel extends JPanel {
             }
         }
         int generation = ++this.generation;
-        monitor = new ProgressMonitor.DefaultProgressMonitor();
+        monitor = new ProgressMonitor.DefaultProgressMonitor() {
+            @Override
+            public void started(String command) {
+                addLogLine(generation, command);
+            }
+            @Override
+            public void beginTask(String taskName, int totalWorkUnits) {
+                addLogLine(generation, taskName);
+            }
+        };
         running = true;
         hasResult = false;
         statusLabel.setText(Bundle.LBL_SimulationPanel_running());
-        conflictsModel.clear();
+        logModel.clear();
         progressBar.setVisible(true);
         simulateButton.setText(Bundle.CTL_SimulationPanel_cancel());
         simulateButton.setEnabled(true);
@@ -165,6 +174,14 @@ class SimulationPanel extends JPanel {
         processor.submit(() -> {
             RebaseSimulator.Result result = runSimulation(plan, monitor);
             SwingUtilities.invokeLater(() -> finishSimulation(generation, result));
+        });
+    }
+
+    private void addLogLine(int generation, String line) {
+        SwingUtilities.invokeLater(() -> {
+            if (running && generation == this.generation) {
+                logModel.addElement(line);
+            }
         });
     }
 
@@ -217,8 +234,8 @@ class SimulationPanel extends JPanel {
                 }
                 hasResult = true;
                 statusLabel.setText(Bundle.MSG_SimulationPanel_stopped(shortId, result.conflicts().size()));
-                conflictsModel.clear();
-                conflictsModel.addAll(result.conflicts());
+                logModel.clear();
+                logModel.addAll(result.conflicts());
                 OutputLogger.getLogger(repository).outputLine(Bundle.MSG_SimulationPanel_log_stopped(shortId));
                 for (String file : result.conflicts()) {
                     OutputLogger.getLogger(repository).outputLine("    " + file);
@@ -245,7 +262,7 @@ class SimulationPanel extends JPanel {
         progressBar.setVisible(false);
         simulateButton.setText(Bundle.CTL_SimulationPanel_simulate());
         statusLabel.setText(Bundle.LBL_SimulationPanel_idle());
-        conflictsModel.clear();
+        logModel.clear();
     }
 
     /**
@@ -306,8 +323,8 @@ class SimulationPanel extends JPanel {
         simulateButton = new JButton();
         statusLabel = new JLabel();
         progressBar = new JProgressBar();
-        conflictsScroll = new JScrollPane();
-        conflictsList = new JList<>();
+        logScroll = new JScrollPane();
+        logList = new JList<>();
 
         setBorder(BorderFactory.createEtchedBorder());
 
@@ -319,7 +336,7 @@ class SimulationPanel extends JPanel {
 
         progressBar.setIndeterminate(true);
 
-        conflictsScroll.setViewportView(conflictsList);
+        logScroll.setViewportView(logList);
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -332,7 +349,7 @@ class SimulationPanel extends JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(simulateButton))
                     .addComponent(statusLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(conflictsScroll))
+                    .addComponent(logScroll))
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -340,7 +357,7 @@ class SimulationPanel extends JPanel {
                 .addContainerGap()
                 .addComponent(statusLabel)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(conflictsScroll, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                .addComponent(logScroll, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(simulateButton, GroupLayout.Alignment.TRAILING)
@@ -350,8 +367,8 @@ class SimulationPanel extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    JList<String> conflictsList;
-    JScrollPane conflictsScroll;
+    JList<String> logList;
+    JScrollPane logScroll;
     JProgressBar progressBar;
     JButton simulateButton;
     JLabel statusLabel;

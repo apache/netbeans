@@ -715,13 +715,15 @@ public class InteractiveRebasePanel extends JPanel {
         table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(actions));
         table.getColumnModel().getColumn(1).setCellRenderer(new ActionCellRenderer());
         table.getColumnModel().getColumn(2).setCellRenderer(new MonospaceCellRenderer());
+        fixColumnWidth(table, 0, "99"); //NOI18N
+        fixColumnWidth(table, 1, "↑ SQUASH"); //NOI18N
+        fixColumnWidth(table, 2, "0123456789A"); //NOI18N
+    }
 
-        int column = 0;
-        TableCellRenderer renderer = table.getDefaultRenderer(table.getColumnClass(column));
-        Component comp = renderer.getTableCellRendererComponent(
-            table, "99", false, false, 0, column
-        );
-        int width = comp.getPreferredSize().width; // padding
+    private static void fixColumnWidth(JTable table, int column, String placeholder) {
+        Component comp = table.getDefaultRenderer(table.getColumnClass(column))
+                              .getTableCellRendererComponent(table, placeholder, false, false, 0, column);
+        int width = comp.getPreferredSize().width;
         table.getColumnModel().getColumn(column).setPreferredWidth(width);
         table.getColumnModel().getColumn(column).setMaxWidth(width);
     }

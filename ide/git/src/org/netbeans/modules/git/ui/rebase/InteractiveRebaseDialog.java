@@ -280,7 +280,6 @@ public class InteractiveRebaseDialog {
             dd.setHelpCtx(new HelpCtx("org.netbeans.modules.git.ui.rebase.InteractiveRebasePanel")); //NOI18N
             Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
             dialog.getAccessibleContext().setAccessibleDescription(Bundle.CTL_InteractiveRebaseDialog_ACSD());
-            dialog.setAlwaysOnTop(true);
             dialog.setResizable(true);
             dialog.addWindowListener(new WindowAdapter() {
                 @Override

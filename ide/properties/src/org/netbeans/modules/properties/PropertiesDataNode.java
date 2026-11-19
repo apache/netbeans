@@ -330,11 +330,23 @@ public class PropertiesDataNode extends DataNode {
         }
 
         @Override
-        public Object getValue() throws InvocationTargetException {
+        public boolean isDefaultValue() {
+            return getValue() == null;
+        }
+
+        @Override
+        public void restoreDefaultValue() throws IllegalAccessException, InvocationTargetException {
+            setValue(null);
+        }
+
+        @Override
+        public boolean supportsDefaultValue() {
+            return true;
+        }
+
+        @Override
+        public Object getValue() {
             Object attribute = getDataObject().getPrimaryFile().getAttribute(PROPERTY_ENCODING);
-            if (attribute == null) {
-                return false;
-            }
             return attribute;
         }
 

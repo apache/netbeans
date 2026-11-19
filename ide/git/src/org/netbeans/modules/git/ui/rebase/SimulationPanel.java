@@ -161,8 +161,9 @@ class SimulationPanel extends JPanel {
         progressBar.setVisible(true);
         simulateButton.setText(Bundle.CTL_SimulationPanel_cancel());
         simulateButton.setEnabled(true);
+        RebasePlan plan = model.createPlan();
         processor.submit(() -> {
-            RebaseSimulator.Result result = runSimulation(monitor);
+            RebaseSimulator.Result result = runSimulation(plan, monitor);
             SwingUtilities.invokeLater(() -> finishSimulation(generation, result));
         });
     }
@@ -170,13 +171,13 @@ class SimulationPanel extends JPanel {
     /**
      * The simulation on a background thread, never throws.
      */
-    private RebaseSimulator.Result runSimulation(ProgressMonitor.DefaultProgressMonitor monitor) {
+    private RebaseSimulator.Result runSimulation(RebasePlan plan, ProgressMonitor.DefaultProgressMonitor monitor) {
         try {
             return RebaseSimulator.simulate(
                     repository,
                     baseRevision,
                     tipRevision,
-                    scratch -> model.createRebaseHandler(scratch),
+                    scratch -> new InteractiveRebaseDialog.InteractiveRebaseHandler(scratch, plan),
                     monitor
             );
         } catch (RuntimeException ex) {

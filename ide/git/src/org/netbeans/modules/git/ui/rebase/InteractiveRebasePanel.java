@@ -216,7 +216,7 @@ public class InteractiveRebasePanel extends JPanel {
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                .addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -327,12 +327,9 @@ public class InteractiveRebasePanel extends JPanel {
         }
 
         /**
-         * The handler applying the plan currently settled in the table: the
-         * actions and the order of the steps, the messages settled for the
-         * reworded commits and the squashed runs. It is used for the rebase
-         * itself and for the simulation of the plan.
+         * A snapshot of the plan currently settled in the table.
          */
-        public GitRebaseInteractiveHandler createRebaseHandler(File repository) {
+        public RebasePlan createPlan() {
             List<RebasePlan.Row> rows = new ArrayList<>(revisions.size());
             for (int i = 0; i < revisions.size(); i++) {
                 GitRevisionInfo revision = revisions.get(i);
@@ -344,7 +341,16 @@ public class InteractiveRebasePanel extends JPanel {
                         runMessages.get(i)
                 ));
             }
-            return new InteractiveRebaseDialog.InteractiveRebaseHandler(repository, RebasePlan.of(rows));
+            return RebasePlan.of(rows);
+        }
+
+        /**
+         * The handler applying the plan currently settled in the table. It
+         * is used for the rebase itself; the simulation snapshots the plan
+         * instead, see {@link #createPlan()}.
+         */
+        public GitRebaseInteractiveHandler createRebaseHandler(File repository) {
+            return new InteractiveRebaseDialog.InteractiveRebaseHandler(repository, createPlan());
         }
 
         @Override

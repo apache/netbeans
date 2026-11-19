@@ -32,8 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRebaseInteractiveHandler;
 import org.netbeans.libs.git.GitRebaseTodoLine;
@@ -53,9 +56,12 @@ import org.netbeans.modules.versioning.spi.VCSContext;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.awt.Mnemonics;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
+
+import static org.netbeans.modules.git.ui.rebase.EdtUtil.await;
+import static org.netbeans.modules.git.ui.rebase.EdtUtil.onEdt;
 
 /**
  * The dialog listing the commits to be rebased in an interactive rebase
@@ -118,7 +124,6 @@ public class InteractiveRebaseDialog {
         cancelButton = new JButton();
         Mnemonics.setLocalizedText(cancelButton, Bundle.CTL_InteractiveRebaseDialog_cancelButton_text());
         panel.getTableModel().addTableModelListener(e -> updateOkButton());
-        loadRange(repository);
     }
 
     /**
@@ -145,7 +150,15 @@ public class InteractiveRebaseDialog {
         return false;
     }
 
-    private void loadRange(File repository) {
+    /**
+     * Loads the range to be rebased and fills the table. The git work runs
+     * on the calling background thread, the update of the UI hops to the
+     * event dispatch thread.
+     */
+    void loadRange() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            throw new IllegalStateException();
+        }
         try (GitClient client = Git.getInstance().getClient(repository)) {
             SearchCriteria criteria = new SearchCriteria();
             criteria.setRevisionFrom(baseRevision);
@@ -198,12 +211,15 @@ public class InteractiveRebaseDialog {
                 return;
             }
             chain = chain.reversed(); // oldest first
-            panel.getTableModel().setRevisions(chain);
-            // the range the plan is settled for: the simulation replays the
-            // commits of the range onto the base, like the real rebase
-            panel.setSimulationRange(baseRevision, chain.getLast().getRevision());
-            panel.getTable().setRowSelectionInterval(0, 0);
-            infoPanelController.loadInfo(chain.getFirst().getRevision());
+            List<GitRevisionInfo> plan = chain;
+            onEdt(() -> {
+                panel.getTableModel().setRevisions(plan);
+                // the range the plan is settled for: the simulation replays the
+                // commits of the range onto the base, like the real rebase
+                panel.setSimulationRange(baseRevision, plan.getLast().getRevision());
+                panel.getTable().setRowSelectionInterval(0, 0);
+                infoPanelController.loadInfo(plan.getFirst().getRevision());
+            });
         } catch (GitException ex) {
             GitClientExceptionHandler.notifyException(ex, true);
         }
@@ -228,10 +244,17 @@ public class InteractiveRebaseDialog {
         return error;
     }
 
-    public boolean showDialog() {
+    boolean showDialog() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            throw new IllegalStateException();
+        }
         if (error != null) {
-            javax.swing.JOptionPane.showMessageDialog(org.openide.windows.WindowManager.getDefault().getMainWindow(),
-                    error, Bundle.CTL_InteractiveRebaseDialog_ACSD(), javax.swing.JOptionPane.ERROR_MESSAGE);
+            onEdt(() -> JOptionPane.showMessageDialog(
+                WindowManager.getDefault().getMainWindow(),
+                error,
+                Bundle.CTL_InteractiveRebaseDialog_ACSD(),
+                JOptionPane.ERROR_MESSAGE)
+            );
             return false;
         }
         // the rebase runs only once the commit messages are settled: after
@@ -249,33 +272,25 @@ public class InteractiveRebaseDialog {
     }
 
     private boolean showPlanDialog() {
-        DialogDescriptor dialogDescriptor = new DialogDescriptor(panel, Bundle.CTL_InteractiveRebaseDialog_ACSD());
-        dialogDescriptor.setOptions(new Object[] { okButton, cancelButton });
-        dialogDescriptor.setModal(false); // must allow interaction with diff views
-        dialogDescriptor.setHelpCtx(new HelpCtx("org.netbeans.modules.git.ui.rebase.InteractiveRebasePanel")); //NOI18N
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(dialogDescriptor);
-        dialog.getAccessibleContext().setAccessibleDescription(Bundle.CTL_InteractiveRebaseDialog_ACSD());
-        dialog.setAlwaysOnTop(true);
-        dialog.setResizable(true);
-        openAndBlock(dialog);
-        return dialogDescriptor.getValue() == okButton;
-    }
-
-    private static void openAndBlock(Dialog dialog) {
-        CountDownLatch closed = new CountDownLatch(1);
-        dialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                closed.countDown();
-            }
+        CompletableFuture<Boolean> okPressed = new CompletableFuture<>();
+        SwingUtilities.invokeLater(() -> {
+            DialogDescriptor dd = new DialogDescriptor(panel, Bundle.CTL_InteractiveRebaseDialog_ACSD());
+            dd.setOptions(new Object[] { okButton, cancelButton });
+            dd.setModal(false); // must allow interaction with diff views
+            dd.setHelpCtx(new HelpCtx("org.netbeans.modules.git.ui.rebase.InteractiveRebasePanel")); //NOI18N
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+            dialog.getAccessibleContext().setAccessibleDescription(Bundle.CTL_InteractiveRebaseDialog_ACSD());
+            dialog.setAlwaysOnTop(true);
+            dialog.setResizable(true);
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    okPressed.complete(dd.getValue() == okButton);
+                }
+            });
+            dialog.setVisible(true);
         });
-        dialog.setVisible(true);
-        try {
-            closed.await();
-        } catch (InterruptedException ex) {
-            Thread.interrupted();
-            Exceptions.printStackTrace(ex);
-        }
+        return await(okPressed).orElse(false);
     }
 
     /**
@@ -298,42 +313,47 @@ public class InteractiveRebaseDialog {
             GitClientExceptionHandler.notifyException(ex, true);
             return false;
         }
-        for (int i = 0; i < model.getRowCount(); i++) {
-            RebaseAction action = model.getAction(i);
-            if (action != RebaseAction.PICK && action != RebaseAction.REWORD) {
-                continue; // the row does not survive on the branch
-            }
-            GitRevisionInfo revision = model.getRevision(i);
-            if (action == RebaseAction.REWORD && model.getMessage(i) == null) {
-                // the message of a reworded commit is settled once and kept
-                // if a later prompt of the batch was canceled
-                String result = promptCommitMessage(
-                        revision.getParents()[0],
-                        revision.getRevision(),
-                        revision.getFullMessage(),
-                        user,
-                        Bundle.CTL_InteractiveRebaseDialog_rewordTitle()
-                );
-                if (result == null) {
-                    return false;
+        AtomicBoolean confirmed = new AtomicBoolean(true);
+        onEdt(() -> {
+            for (int i = 0; i < model.getRowCount(); i++) {
+                RebaseAction action = model.getAction(i);
+                if (action != RebaseAction.PICK && action != RebaseAction.REWORD) {
+                    continue; // the row does not survive on the branch
                 }
-                model.setMessage(i, result);
-            }
-            int end = runEnd(i, model);
-            if (end > i && runContainsSquash(i, end, model) && model.getRunMessage(i) == null) {
-                String result = promptCommitMessage(
-                        revision.getParents()[0],
-                        model.getRevision(end).getRevision(),
-                        combinedSquashMessage(model, i, end), user,
-                        Bundle.CTL_InteractiveRebaseDialog_squashTitle()
-                );
-                if (result == null) {
-                    return false;
+                GitRevisionInfo revision = model.getRevision(i);
+                if (action == RebaseAction.REWORD && model.getMessage(i) == null) {
+                    // the message of a reworded commit is settled once and kept
+                    // if a later prompt of the batch was canceled
+                    String result = promptCommitMessage(
+                            revision.getParents()[0],
+                            revision.getRevision(),
+                            revision.getFullMessage(),
+                            user,
+                            Bundle.CTL_InteractiveRebaseDialog_rewordTitle()
+                    );
+                    if (result == null) {
+                        confirmed.set(false);
+                        return;
+                    }
+                    model.setMessage(i, result);
                 }
-                model.setRunMessage(i, result);
+                int end = runEnd(i, model);
+                if (end > i && runContainsSquash(i, end, model) && model.getRunMessage(i) == null) {
+                    String result = promptCommitMessage(
+                            revision.getParents()[0],
+                            model.getRevision(end).getRevision(),
+                            combinedSquashMessage(model, i, end), user,
+                            Bundle.CTL_InteractiveRebaseDialog_squashTitle()
+                    );
+                    if (result == null) {
+                        confirmed.set(false);
+                        return;
+                    }
+                    model.setRunMessage(i, result);
+                }
             }
-        }
-        return true;
+        });
+        return confirmed.get();
     }
 
     /**

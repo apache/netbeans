@@ -31,10 +31,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitClient.RebaseOperationType;
 import org.netbeans.libs.git.GitException;
@@ -71,6 +73,8 @@ import org.openide.awt.ActionRegistration;
 import org.openide.awt.Mnemonics;
 import org.openide.util.Mutex;
 import org.openide.windows.WindowManager;
+
+import static org.netbeans.modules.git.ui.rebase.EdtUtil.await;
 
 /**
  *
@@ -187,10 +191,16 @@ public class RebaseAction extends SingleRepositoryAction {
             return;
         }
         String origHead = info.getActiveBranch().getId();
-        InteractiveRebaseDialog dialog = new InteractiveRebaseDialog(repository, baseRevision);
-        if (dialog.showDialog()) {
-            runRebase(repository, RebaseOperationType.BEGIN, origHead, baseRevision, baseRevision, dialog.getHandler());
-        }
+        CompletableFuture<InteractiveRebaseDialog> dialogFactory = CompletableFuture.supplyAsync(
+                () -> new InteractiveRebaseDialog(repository, baseRevision),
+                SwingUtilities::invokeLater
+        );
+        await(dialogFactory).ifPresent((dialog) -> {
+            dialog.loadRange();
+            if (dialog.showDialog()) {
+                runRebase(repository, RebaseOperationType.BEGIN, origHead, baseRevision, baseRevision, dialog.getHandler());
+            }
+        });
     }
 
     /**

@@ -294,11 +294,11 @@ class SimulationPanel extends JPanel {
         "MSG_SimulationPanel_stopped=<html>The rebase would stop applying {0} with {1,choice,1#a conflict|1<conflicts} in the files listed below.</html>",
         "# {0} - the error of the simulation",
         "MSG_SimulationPanel_error=<html>Simulation failed: {0}</html>",
-        "MSG_SimulationPanel_log_clean=<html>Simulated rebase: the plan applies without conflicts.</html>",
+        "MSG_SimulationPanel_log_clean=Simulated rebase: the plan applies without conflicts.",
         "# {0} - short id of the stopping commit",
-        "MSG_SimulationPanel_log_stopped=<html>Simulated rebase: would stop applying {0} with conflicts in:</html>",
+        "MSG_SimulationPanel_log_stopped=Simulated rebase: would stop applying {0} with conflicts in:",
         "# {0} - the error of the simulation",
-        "MSG_SimulationPanel_log_error=<html>Simulated rebase failed: {0}</html>"
+        "MSG_SimulationPanel_log_error=Simulated rebase failed: {0}"
     })
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -28,6 +28,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -83,6 +84,8 @@ public class DocumentationScrollPane extends JScrollPane {
     private static final int ACTION_JAVADOC_OPEN_IN_BROWSER = 3;
     private static final int ACTION_JAVADOC_OPEN_SOURCE = 4;
     private static final int ACTION_JAVADOC_COPY = 5;
+    
+    private static final int BORDER_DRAG_TRESHOLD = 10;
 
     private static final RequestProcessor RP = new RequestProcessor(DocumentationScrollPane.class);
 
@@ -96,6 +99,13 @@ public class DocumentationScrollPane extends JScrollPane {
     
     private Dimension documentationPreferredSize;
     private final JTextComponent editorComponent;
+    
+    private boolean resize = false;
+    private Point resizePoint;
+    private boolean drag = false;
+    private Point dragPoint;
+
+    private Cursor defaultCursor;
 
     /** Creates a new instance of ScrollJavaDocPane */
     public DocumentationScrollPane(JTextComponent editorComponent) {
@@ -104,6 +114,59 @@ public class DocumentationScrollPane extends JScrollPane {
         // Determine and use fixed preferred size
         documentationPreferredSize = CompletionSettings.getInstance(editorComponent).documentationPopupPreferredSize();
         setPreferredSize(null); // Use the documentationPopupPreferredSize
+        
+        defaultCursor = getCursor();
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                resize = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                resize = true;
+                resizePoint = e.getPoint();
+            }
+
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                if (resize) {
+                    int deltaX = (int) (e.getPoint().getX() - resizePoint.getX());
+                    int deltaY = (int) (e.getPoint().getY() - resizePoint.getY());
+                    if (resizePoint.getX() > (getWidth() - BORDER_DRAG_TRESHOLD) && resizePoint.getY() > (getHeight() - BORDER_DRAG_TRESHOLD)) {
+                        resizeContainer(getWidth() + deltaX, getHeight() + deltaY);
+                        resizePoint = e.getPoint();
+                    } else if (resizePoint.getX() > (getWidth() - BORDER_DRAG_TRESHOLD)) {
+                        resizeContainer(getWidth() + deltaX, getHeight());
+                        resizePoint = e.getPoint();
+                    } else if (resizePoint.getY() > (getHeight() - BORDER_DRAG_TRESHOLD)) {
+                        resizeContainer(getWidth(), getHeight() + deltaY);
+                        resizePoint = e.getPoint();
+                    }
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+                if (e.getX() > getWidth() - BORDER_DRAG_TRESHOLD && e.getY() > getHeight() - BORDER_DRAG_TRESHOLD) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                } else if (e.getX() > getWidth() - BORDER_DRAG_TRESHOLD) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+                } else if (e.getY() > getHeight() - BORDER_DRAG_TRESHOLD) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                } else {
+                    setCursor(defaultCursor);
+                }
+            }
+
+        });
         
         Color bgColor = new JEditorPane().getBackground();
         bgColor = new Color(
@@ -130,6 +193,14 @@ public class DocumentationScrollPane extends JScrollPane {
         installKeybindings(editorComponent);
         this.editorComponent = editorComponent;
         setFocusable(true);
+    }
+    
+    private void resizeContainer(int width, int height) {
+        SwingUtilities.getWindowAncestor(this).setSize(width, height);
+    }
+
+    private void moveContainer(int x, int y) {
+        SwingUtilities.getWindowAncestor(this).setLocation(x, y);
     }
     
     public @Override void setPreferredSize(Dimension preferredSize) {
@@ -223,6 +294,43 @@ public class DocumentationScrollPane extends JScrollPane {
             bGoToSource.setToolTipText(NbBundle.getMessage(DocumentationScrollPane.class, "HINT_doc_browser_goto_source_button")); //NOI18N
             toolbar.add(bGoToSource, gdc);
         }
+        
+        toolbar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                drag = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                drag = true;
+                dragPoint = e.getPoint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                setCursor(defaultCursor);
+            }
+
+        });
+        toolbar.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (drag) {
+                    moveContainer((e.getXOnScreen() - (int) dragPoint.getX()),
+                            (e.getYOnScreen() - (int) dragPoint.getY()));
+                }
+            }
+
+        });
         setColumnHeaderView(toolbar);
     }
     

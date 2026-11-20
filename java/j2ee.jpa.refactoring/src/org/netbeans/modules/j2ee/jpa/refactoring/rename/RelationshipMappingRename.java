@@ -123,7 +123,7 @@ public final class RelationshipMappingRename extends JavaRefactoringPlugin {
                         ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         Element resElement = handle.resolveElement(ci);
                         VariableElement var = (VariableElement) resElement;
-                        Element mainEntTmp = var.getEnclosingElement();
+                        Element mainEntTmp = var != null ? var.getEnclosingElement() : null;
                         TypeElement mainEnt = mainEntTmp instanceof TypeElement ? (TypeElement) mainEntTmp : null;
                         if (mainEnt == null) {
                             return;

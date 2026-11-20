@@ -189,7 +189,7 @@ public class HistoryCompletionProvider implements CompletionProvider {
             } catch (BadLocationException ex) {
             }
             final String fPrefix = prefix;
-            ShellHistory  h = session.getEnv().getLookup().lookup(ShellHistory.class);
+            ShellHistory  h = session.getShellHistory();
             resultSet.addAllItems(
                     session.historyItems().stream().
                             filter(i -> i.getContents().startsWith(fPrefix)).

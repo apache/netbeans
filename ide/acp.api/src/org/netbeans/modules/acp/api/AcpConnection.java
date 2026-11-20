@@ -44,6 +44,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.openide.filesystems.FileUtil;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -197,20 +198,26 @@ public final class AcpConnection {
                 : new AcpSchema.NewSessionRequest(dir, mcpServers);
     }
 
-    private static List<AcpSchema.McpServer> discoverMcpServers() {
-        List<AcpSchema.McpServer> mcpServers = new ArrayList<>();
-        try {
-            for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
-                    .lookupAll(AcpMcpServerProvider.class)) {
-                List<AcpSchema.McpServer> servers = provider.getMcpServers();
+    private List<AcpSchema.McpServer> discoverMcpServers() {
+        return discoverMcpServers(org.openide.util.Lookup.getDefault()
+                .lookupAll(AcpMcpServerProvider.class), descriptor.getEnabledTools());
+    }
+
+    static List<AcpSchema.McpServer> discoverMcpServers(
+            Iterable<? extends AcpMcpServerProvider> providers, Set<String> enabledTools) {
+        Set<AcpSchema.McpServer> mcpServers = new LinkedHashSet<>();
+        for (AcpMcpServerProvider provider : providers) {
+            try {
+                List<AcpSchema.McpServer> servers = provider.getMcpServers(enabledTools);
                 if (servers != null) {
                     mcpServers.addAll(servers);
                 }
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "MCP server discovery failed for provider " // NOI18N
+                        + provider.getClass().getName(), ex);
             }
-        } catch (Exception ex) {
-            LOG.log(Level.WARNING, "MCP server discovery failed", ex); // NOI18N
         }
-        return mcpServers;
+        return new ArrayList<>(mcpServers);
     }
 
     private static List<String> collectBearerTokens(List<AcpSchema.McpServer> servers) {
@@ -872,14 +879,16 @@ public final class AcpConnection {
         Path filePath = Path.of(request.path());
         if (!isPathTrusted(request.sessionId(), filePath)) {
             LOG.log(Level.WARNING, "Agent read blocked outside trusted directory: {0}", request.path()); // NOI18N
-            return new AcpSchema.ReadTextFileResponse(""); // NOI18N
+            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS,
+                    "Read blocked: path is outside the trusted directories: " + request.path()); // NOI18N
         }
         try {
             String content = Files.readString(filePath);
             return new AcpSchema.ReadTextFileResponse(content);
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Failed to read file requested by agent: " + request.path(), ex); // NOI18N
-            return new AcpSchema.ReadTextFileResponse(""); // NOI18N
+            throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR,
+                    "Failed to read file: " + request.path()); // NOI18N
         }
     }
 

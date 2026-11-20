@@ -146,4 +146,23 @@ public class AcpConnectionTest extends NbTestCase {
         assertEquals(List.of(stdio, sse), AcpConnection.supportedMcpServers(servers, false, true));
         assertEquals(servers, AcpConnection.supportedMcpServers(servers, true, true));
     }
+
+    public void testMcpDiscoveryContinuesAfterProviderFailureAndRemovesDuplicates() {
+        AcpSchema.McpServer first = new AcpSchema.McpServerHttp("first", "http://127.0.0.1/mcp", List.of());
+        AcpSchema.McpServer second = new AcpSchema.McpServerStdio("second", "server", List.of(), List.of());
+        AcpMcpServerProvider failing = () -> { throw new IllegalStateException("failure"); };
+        AcpMcpServerProvider provider = () -> List.of(first, second);
+        AcpMcpServerProvider duplicate = () -> List.of(first);
+        assertEquals(List.of(first, second), AcpConnection.discoverMcpServers(
+                List.of(failing, provider, duplicate), null));
+    }
+
+    public void testMcpDiscoveryPreservesDifferentCredentials() {
+        AcpSchema.McpServer first = new AcpSchema.McpServerHttp("server", "http://127.0.0.1/mcp",
+                List.of(new AcpSchema.HttpHeader("Authorization", "Bearer first")));
+        AcpSchema.McpServer second = new AcpSchema.McpServerHttp("server", "http://127.0.0.1/mcp",
+                List.of(new AcpSchema.HttpHeader("Authorization", "Bearer second")));
+        assertEquals(List.of(first, second), AcpConnection.discoverMcpServers(
+                List.of(() -> List.of(first), () -> List.of(second)), null));
+    }
 }

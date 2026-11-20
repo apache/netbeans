@@ -19,6 +19,8 @@
 package org.netbeans.modules.acp.api;
 
 import com.agentclientprotocol.sdk.spec.AcpSchema;
+import com.agentclientprotocol.sdk.error.AcpErrorCodes;
+import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +53,7 @@ public final class AcpTerminalHandler {
         final Process process;
         final StringBuilder output = new StringBuilder();
         volatile boolean outputDone;
+        boolean truncated;
         volatile Integer exitCode;
         final Object lock = new Object();
 
@@ -74,13 +77,7 @@ public final class AcpTerminalHandler {
                 cmd.addAll(request.args());
             }
             if (cmd.isEmpty()) {
-                LOG.log(Level.WARNING, "createTerminal: no command specified, terminal {0} will be empty", terminalId);
-                TerminalState empty = new TerminalState(ProcessHandle.current().isAlive()
-                        ? new ProcessBuilder("true").start() : new ProcessBuilder("true").start());
-                empty.outputDone = true;
-                empty.exitCode = 0;
-                terminals.put(terminalId, empty);
-                return new AcpSchema.CreateTerminalResponse(terminalId);
+                throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS, "Terminal command is required");
             }
 
             ProcessBuilder pb = new ProcessBuilder(cmd);
@@ -107,6 +104,7 @@ public final class AcpTerminalHandler {
             LOG.log(Level.FINE, "Terminal created: id={0}, cmd={1}", new Object[]{terminalId, cmd});
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Failed to start terminal process for id=" + terminalId, ex);
+            throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR, "Failed to start terminal process: " + ex.getMessage());
         }
         return new AcpSchema.CreateTerminalResponse(terminalId);
     }
@@ -120,17 +118,19 @@ public final class AcpTerminalHandler {
         }
         String output;
         boolean done;
+        boolean truncated;
         AcpSchema.TerminalExitStatus exitStatus = null;
         synchronized (state.lock) {
             output = state.output.toString();
             done = state.outputDone;
+            truncated = state.truncated;
             if (done && state.exitCode != null) {
                 exitStatus = new AcpSchema.TerminalExitStatus(state.exitCode, null);
             }
         }
         LOG.log(Level.FINE, "terminalOutput: id={0}, outputLen={1}, done={2}",
                 new Object[]{request.terminalId(), output.length(), done});
-        return new AcpSchema.TerminalOutputResponse(output, false, exitStatus);
+        return new AcpSchema.TerminalOutputResponse(output, truncated, exitStatus);
     }
 
     /** Blocks until the subprocess exits (or the thread is interrupted). */
@@ -204,6 +204,7 @@ public final class AcpTerminalHandler {
                         if (totalBytes > MAX_OUTPUT_BYTES) {
                             state.output.append("\n[...output truncated...]"); // NOI18N
                             truncated = true;
+                            state.truncated = true;
                         }
                     }
                 }

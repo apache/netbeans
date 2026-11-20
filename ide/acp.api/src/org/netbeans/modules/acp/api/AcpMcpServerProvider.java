@@ -20,15 +20,24 @@ package org.netbeans.modules.acp.api;
 
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.util.List;
+import java.util.Set;
 
 /**
  * SPI for providing MCP servers to ACP sessions. Implementations
  * registered in the default Lookup are automatically discovered
  * when creating new ACP sessions.
+ * Providers that start an HTTP server must bind it to 127.0.0.1 and
+ * protect it with unpredictable, revocable bearer tokens. They must
+ * implement {@link #releaseBearerToken} to revoke tokens they issue.
  */
 public interface AcpMcpServerProvider {
 
     List<AcpSchema.McpServer> getMcpServers();
+
+    /** Creates servers for a session with the requested tools, or defaults if null. */
+    default List<AcpSchema.McpServer> getMcpServers(Set<String> enabledTools) {
+        return getMcpServers();
+    }
 
     /**
      * Revokes a bearer token that was previously issued by this provider.

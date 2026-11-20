@@ -33,7 +33,6 @@ public final class McpServerManager {
 
     private final McpToolRegistry registry;
     private final McpHttpServer httpServer;
-    private final ThreadLocal<Set<String>> pendingEnabledTools = new ThreadLocal<>();
 
     private McpServerManager() {
         this.registry = McpToolRegistry.getInstance();
@@ -58,20 +57,12 @@ public final class McpServerManager {
         httpServer.stop();
     }
 
-    public void setEnabledTools(Set<String> enabledTools) {
-        pendingEnabledTools.set(enabledTools);
-        LOG.log(Level.INFO, "MCP tools staged for next session: {0}",
-                enabledTools != null ? enabledTools : "all");
-    }
-
-    public AcpSchema.McpServer createSession() {
+    public AcpSchema.McpServer createSession(Set<String> enabledTools) {
         ensureRunning();
         if (!httpServer.isRunning()) {
             return null;
         }
-        Set<String> tools = pendingEnabledTools.get();
-        pendingEnabledTools.remove();
-        String token = httpServer.createSessionToken(tools);
+        String token = httpServer.createSessionToken(enabledTools);
         List<AcpSchema.HttpHeader> headers = List.of(
                 new AcpSchema.HttpHeader("Authorization", "Bearer " + token));
         return new AcpSchema.McpServerHttp(

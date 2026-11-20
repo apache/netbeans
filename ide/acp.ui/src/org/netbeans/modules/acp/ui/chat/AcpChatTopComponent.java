@@ -71,7 +71,6 @@ import org.netbeans.modules.acp.api.AcpCommand;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentManager;
 import org.netbeans.modules.acp.api.AcpConnection;
-import org.netbeans.modules.acp.api.AcpMcpServerProvider;
 import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpModeInfo;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
@@ -91,7 +90,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.TopComponent;
@@ -140,6 +138,7 @@ import org.openide.windows.TopComponent;
     "LBL_Plan=Plan:",
     "BTN_Sessions=Sessions",
     "TTL_SessionBrowser=Past Sessions",
+    "LBL_SessionEntry={0} — {1}",
     "LBL_NoSessions=No past sessions found.",
     "BTN_ResumeSession=Resume",
     "BTN_DeleteSession=Delete",
@@ -188,7 +187,6 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final Map<String, AcpToolCall.DiffContent> diffStore = new HashMap<>();
     private int diffCounter;
     private final AcpFileMentionSupport mentionSupport;
-    private List<AcpMcpServerProvider.ToolInfo> currentMcpTools = List.of();
     private List<AcpCommand> currentCommands = List.of();
     private String commandPrefix = "/"; // NOI18N
     private String currentModeId;
@@ -661,6 +659,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     currentConnection = null;
                     currentSessionId = null;
                     currentEnabledTools = null;
+                    toolsButton.setText(Bundle.BTN_Tools(0, 0));
+                    toolsButton.setEnabled(false);
                     currentWorkingDir = null;
                     currentCommands = List.of();
                     commandPrefix = "/"; // NOI18N
@@ -697,8 +697,6 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             String fallbackDir = getMainProjectDirectory();
             RP.post(() -> {
                 try {
-                    org.netbeans.modules.acp.mcp.McpServerManager.getInstance()
-                            .setEnabledTools(descriptor.getEnabledTools());
                     AcpConnection connection = AcpConnectionManager.getDefault().connect(descriptor);
                     connection.addSessionListener(sessionListener);
                     connection.setPermissionHandler(req -> {
@@ -747,27 +745,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         RP.post(() -> {
             try {
                 String sessionId = currentConnection.newSession(mainDir, openDirs);
-                List<AcpMcpServerProvider.ToolInfo> mcpTools = gatherMcpToolInfo();
-                McpToolRegistry registry = McpToolRegistry.getInstance();
-                List<McpToolProvider.McpToolDefinition> allAvailable = registry.getAllAvailableTools();
-                int totalCount = allAvailable.size();
-                Set<String> enabledSet = currentEnabledTools;
-                int enabledCount;
-                if (enabledSet != null) {
-                    enabledCount = enabledSet.size();
-                } else {
-                    enabledCount = (int) allAvailable.stream()
-                            .filter(t -> registry.isToolEnabledByDefault(t.name()))
-                            .count();
-                }
+                ToolCounts toolCounts = countTools(currentEnabledTools);
                 SwingUtilities.invokeLater(() -> {
                     currentSessionId = sessionId;
                     chatHtml.setLength(0);
                     renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
-                    currentMcpTools = mcpTools;
-                    toolsButton.setText(Bundle.BTN_Tools(enabledCount, totalCount));
-                    toolsButton.setEnabled(totalCount > 0);
+                    updateToolsButton(toolCounts);
                     statusLabel.setText(Bundle.STS_Ready());
                     List<AcpModeInfo> modes = currentConnection.getAvailableModes();
                     modeButton.setEnabled(!modes.isEmpty());
@@ -874,19 +858,19 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         updateChatDisplay();
     }
 
-    private static List<AcpMcpServerProvider.ToolInfo> gatherMcpToolInfo() {
-        List<AcpMcpServerProvider.ToolInfo> allTools = new ArrayList<>();
-        java.util.Collection<? extends AcpMcpServerProvider> providers =
-                Lookup.getDefault().lookupAll(AcpMcpServerProvider.class);
-        LOG.log(Level.FINE, "MCP tool info: found {0} provider(s)", providers.size());
-        for (AcpMcpServerProvider provider : providers) {
-            List<AcpMcpServerProvider.ToolInfo> tools = provider.getAvailableTools();
-            LOG.log(Level.FINE, "MCP tool info: {0} returned {1} tool(s)",
-                    new Object[]{provider.getClass().getName(), tools.size()});
-            allTools.addAll(tools);
-        }
-        LOG.log(Level.FINE, "MCP tool info: total {0} tools", allTools.size());
-        return allTools;
+    private record ToolCounts(int enabled, int total) { }
+
+    private static ToolCounts countTools(Set<String> enabledTools) {
+        McpToolRegistry registry = McpToolRegistry.getInstance();
+        List<McpToolProvider.McpToolDefinition> tools = registry.getAllAvailableTools();
+        int enabled = (int) tools.stream().filter(tool -> enabledTools != null
+                ? enabledTools.contains(tool.name()) : registry.isToolEnabledByDefault(tool.name())).count();
+        return new ToolCounts(enabled, tools.size());
+    }
+
+    private void updateToolsButton(ToolCounts counts) {
+        toolsButton.setText(Bundle.BTN_Tools(counts.enabled(), counts.total()));
+        toolsButton.setEnabled(counts.total() > 0);
     }
 
     private void showToolsPopup() {
@@ -1082,14 +1066,15 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void showSessionBrowser() {
-        if (currentConnection == null || !currentConnection.isConnected()) {
+        AcpConnection connection = currentConnection;
+        if (connection == null || !connection.isConnected()) {
             return;
         }
         String mainDir = getMainProjectDirectory();
         RP.post(() -> {
             List<AcpSessionInfo> sessions;
             try {
-                sessions = currentConnection.listSessions(mainDir);
+                sessions = connection.listSessions(mainDir);
             } catch (IOException ex) {
                 handleSessionListError(ex);
                 return;
@@ -1099,7 +1084,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     appendSystemMessage(Bundle.LBL_NoSessions());
                     return;
                 }
-                showSessionBrowserDialog(sessions);
+                showSessionBrowserDialog(sessions, connection);
             });
         });
     }
@@ -1117,10 +1102,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         }
     }
 
-    private void showSessionBrowserDialog(List<AcpSessionInfo> sessions) {
-        AcpConnection connection = currentConnection;
+    private void showSessionBrowserDialog(List<AcpSessionInfo> sessions, AcpConnection connection) {
         DefaultListModel<AcpSessionInfo> listModel = new DefaultListModel<>();
-        JList<AcpSessionInfo> sessionList = buildSessionList(sessions, listModel);
+        JList<AcpSessionInfo> sessionList = buildSessionList(sessions, listModel,
+                connection.getDescriptor().getName());
 
         JPanel browserPanel = new JPanel(new BorderLayout(4, 4));
         browserPanel.setPreferredSize(new Dimension(SESSION_BROWSER_WIDTH, SESSION_BROWSER_HEIGHT));
@@ -1161,13 +1146,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private JList<AcpSessionInfo> buildSessionList(List<AcpSessionInfo> sessions,
-            DefaultListModel<AcpSessionInfo> listModel) {
+            DefaultListModel<AcpSessionInfo> listModel, String agentName) {
         for (AcpSessionInfo si : sessions) {
             listModel.addElement(si);
         }
         JList<AcpSessionInfo> sessionList = new JList<>(listModel);
         sessionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        sessionList.setCellRenderer(new SessionListCellRenderer());
+        sessionList.setCellRenderer(new SessionListCellRenderer(agentName));
         sessionList.setSelectedIndex(0);
         return sessionList;
     }
@@ -1180,11 +1165,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             try {
                 String sid = connection.resumeSession(
                         session.sessionId(), mainDir, openDirs);
+                ToolCounts toolCounts = countTools(currentEnabledTools);
                 SwingUtilities.invokeLater(() -> {
                     currentSessionId = sid;
                     chatHtml.setLength(0);
                     renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
+                    updateToolsButton(toolCounts);
                     appendSystemMessage(Bundle.MSG_SessionResumed());
                     statusLabel.setText(Bundle.STS_Ready());
                     List<AcpModeInfo> modes = connection.getAvailableModes();
@@ -1234,6 +1221,12 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private static final class SessionListCellRenderer extends DefaultListCellRenderer {
 
+        private final String agentName;
+
+        SessionListCellRenderer(String agentName) {
+            this.agentName = agentName;
+        }
+
         private static final java.time.format.DateTimeFormatter DISPLAY_FORMAT =
                 java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm");
 
@@ -1243,7 +1236,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof AcpSessionInfo si) {
-                String label = si.title() != null ? si.title() : si.sessionId();
+                String title = si.title() != null && !si.title().isBlank() ? si.title() : si.sessionId();
+                String label = Bundle.LBL_SessionEntry(agentName, title);
                 if (si.updatedAt() != null) {
                     label += "  (" + formatDate(si.updatedAt()) + ")";
                 }

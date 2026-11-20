@@ -21,6 +21,7 @@ package org.netbeans.modules.acp.mcp;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.acp.api.AcpMcpServerProvider;
@@ -35,8 +36,13 @@ public final class McpServerProviderImpl implements AcpMcpServerProvider {
 
     @Override
     public List<AcpSchema.McpServer> getMcpServers() {
+        return getMcpServers(null);
+    }
+
+    @Override
+    public List<AcpSchema.McpServer> getMcpServers(Set<String> enabledTools) {
         McpServerManager manager = McpServerManager.getInstance();
-        AcpSchema.McpServer server = manager.createSession();
+        AcpSchema.McpServer server = manager.createSession(enabledTools);
         if (server == null) {
             LOG.log(Level.WARNING, "MCP server could not be started");
             return List.of();

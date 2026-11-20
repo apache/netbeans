@@ -271,28 +271,45 @@ public final class GitToolProvider implements McpToolProvider {
         pb.redirectErrorStream(true);
         Process proc = pb.start();
         StringBuilder output = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(proc.getInputStream(), StandardCharsets.UTF_8))) {
-            String line;
-            boolean truncated = false;
-            while ((line = reader.readLine()) != null) {
-                if (output.length() > MAX_OUTPUT_CHARS) {
-                    truncated = true;
-                    break;
+        Thread readerThread = new Thread(() -> {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(proc.getInputStream(), StandardCharsets.UTF_8))) {
+                char[] buffer = new char[4096];
+                int count;
+                boolean truncated = false;
+                while ((count = reader.read(buffer)) != -1) {
+                    int remaining = MAX_OUTPUT_CHARS - output.length();
+                    if (remaining > 0) {
+                        output.append(buffer, 0, Math.min(count, remaining));
+                    }
+                    if (count > remaining) {
+                        truncated = true;
+                    }
                 }
-                if (output.length() > 0) {
-                    output.append("\n");
+                if (truncated) {
+                    output.append("\n[...output truncated...]");
                 }
-                output.append(line);
+            } catch (java.io.IOException ex) {
+                LOG.log(Level.FINE, "Failed to read Git output", ex);
             }
-            if (truncated) {
-                output.append("\n[...output truncated...]");
+        }, "ACP-Git-output");
+        readerThread.setDaemon(true);
+        readerThread.start();
+        boolean finished;
+        try {
+            finished = proc.waitFor(30, TimeUnit.SECONDS);
+            if (!finished) {
+                proc.destroyForcibly();
+                return ToolResult.error("Git command timed out");
             }
-        }
-        boolean finished = proc.waitFor(30, TimeUnit.SECONDS);
-        if (!finished) {
+            readerThread.join(1000);
+            if (readerThread.isAlive()) {
+                return ToolResult.error("Git output did not close");
+            }
+        } catch (InterruptedException ex) {
             proc.destroyForcibly();
-            return ToolResult.error("Git command timed out");
+            Thread.currentThread().interrupt();
+            throw ex;
         }
         return ToolResult.ok("output", output.toString(), "exitCode", proc.exitValue());
     }

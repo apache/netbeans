@@ -70,7 +70,9 @@ public final class McpHttpServer {
         byte[] tokenBytes = new byte[TOKEN_BYTES];
         secureRandom.nextBytes(tokenBytes);
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
-        sessionTokens.put(token, enabledTools != null ? enabledTools : Set.of());
+        sessionTokens.put(token, enabledTools != null ? Set.copyOf(enabledTools)
+                : registry.getAllTools().stream().map(McpToolProvider.McpToolDefinition::name)
+                        .collect(java.util.stream.Collectors.toUnmodifiableSet()));
         LOG.log(Level.INFO, "MCP session created, tools: {0}",
                 enabledTools != null ? enabledTools : "all");
         return token;
@@ -252,11 +254,10 @@ public final class McpHttpServer {
         }
 
         private Map<String, Object> handleToolsList(Object id, Set<String> filter) {
-            List<McpToolProvider.McpToolDefinition> tools = filter.isEmpty()
-                    ? registry.getAllTools() : registry.getAllAvailableTools();
+            List<McpToolProvider.McpToolDefinition> tools = registry.getAllAvailableTools();
             List<Map<String, Object>> toolList = new ArrayList<>();
             for (McpToolProvider.McpToolDefinition tool : tools) {
-                if (!filter.isEmpty() && !filter.contains(tool.name())) {
+                if (!filter.contains(tool.name())) {
                     continue;
                 }
                 Map<String, Object> toolMap = new LinkedHashMap<>();
@@ -274,7 +275,7 @@ public final class McpHttpServer {
             if (name == null) {
                 return errorResponse(id, -32602, "Invalid params: missing tool name");
             }
-            if (!filter.isEmpty() && !filter.contains(name)) {
+            if (!filter.contains(name)) {
                 return errorResponse(id, -32602, "Tool not enabled: " + name);
             }
             @SuppressWarnings("unchecked")

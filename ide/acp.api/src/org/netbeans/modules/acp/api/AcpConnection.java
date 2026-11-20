@@ -182,6 +182,7 @@ public final class AcpConnection {
      * @throws IOException if session creation fails
      */
     public String newSession(String workingDirectory, List<String> additionalDirs) throws IOException {
+        ensureConnected();
         List<AcpSchema.McpServer> mcpServers = discoverMcpServers();
         if (!mcpServers.isEmpty()) {
             LOG.log(Level.INFO, "Discovered {0} MCP server(s) for new session", mcpServers.size());
@@ -230,6 +231,19 @@ public final class AcpConnection {
         return tokens;
     }
 
+    static List<AcpSchema.McpServer> supportedMcpServers(List<AcpSchema.McpServer> servers,
+            boolean supportsHttp, boolean supportsSse) {
+        return servers.stream().filter(server -> {
+            boolean supported = (!(server instanceof AcpSchema.McpServerHttp) || supportsHttp)
+                    && (!(server instanceof AcpSchema.McpServerSse) || supportsSse);
+            if (!supported) {
+                LOG.log(Level.INFO, "Skipping MCP server with transport unsupported by agent: {0}", // NOI18N
+                        server instanceof AcpSchema.McpServerHttp ? "http" : "sse"); // NOI18N
+            }
+            return supported;
+        }).toList();
+    }
+
     /**
      * Creates a new agent session with explicit MCP servers.
      *
@@ -247,9 +261,11 @@ public final class AcpConnection {
             if (effectiveDir == null || effectiveDir.isBlank()) {
                 effectiveDir = descriptor.getWorkingDirectory();
             }
-            List<AcpSchema.McpServer> effectiveMcpServers =
-                    mcpServers != null ? mcpServers : List.of();
-            List<String> collectedTokens = collectBearerTokens(effectiveMcpServers);
+            List<AcpSchema.McpServer> suppliedServers = mcpServers != null ? mcpServers : List.of();
+            issuedBearerTokens.addAll(collectBearerTokens(suppliedServers));
+            List<AcpSchema.McpServer> effectiveMcpServers = supportedMcpServers(suppliedServers,
+                    client.getAgentCapabilities().supportsMcpHttp(),
+                    client.getAgentCapabilities().supportsMcpSse());
 
             AcpSchema.NewSessionResponse newResp;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
@@ -257,6 +273,9 @@ public final class AcpConnection {
                     newResp = client.newSession(new AcpSchema.NewSessionRequest(
                             effectiveDir, effectiveMcpServers, additionalDirs));
                 } catch (AcpCapabilityException ex) {
+                    if (!"sessionCapabilities.additionalDirectories".equals(ex.getCapability())) { // NOI18N
+                        throw ex;
+                    }
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
                     newResp = client.newSession(
@@ -270,7 +289,6 @@ public final class AcpConnection {
             captureModes(newResp.modes());
 
             List<Path> resolved = buildTrustedDirectories(effectiveDir, additionalDirs);
-            issuedBearerTokens.addAll(collectedTokens);
             trustedDirectories.put(sessionId, resolved);
             return sessionId;
         } catch (Exception ex) {
@@ -339,8 +357,11 @@ public final class AcpConnection {
                 effectiveDir = descriptor.getWorkingDirectory();
             }
 
-            List<AcpSchema.McpServer> mcpServers = discoverMcpServers();
-            List<String> collectedTokens = collectBearerTokens(mcpServers);
+            List<AcpSchema.McpServer> suppliedServers = discoverMcpServers();
+            issuedBearerTokens.addAll(collectBearerTokens(suppliedServers));
+            List<AcpSchema.McpServer> mcpServers = supportedMcpServers(suppliedServers,
+                    client.getAgentCapabilities().supportsMcpHttp(),
+                    client.getAgentCapabilities().supportsMcpSse());
 
             AcpSchema.ResumeSessionResponse resumeResp;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
@@ -348,6 +369,9 @@ public final class AcpConnection {
                     resumeResp = client.resumeSession(new AcpSchema.ResumeSessionRequest(
                             sessionId, effectiveDir, mcpServers, additionalDirs));
                 } catch (AcpCapabilityException ex) {
+                    if (!"sessionCapabilities.additionalDirectories".equals(ex.getCapability())) { // NOI18N
+                        throw ex;
+                    }
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories on resume, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
                     resumeResp = client.resumeSession(new AcpSchema.ResumeSessionRequest(
@@ -360,7 +384,6 @@ public final class AcpConnection {
             captureModes(resumeResp.modes());
 
             List<Path> resolved = buildTrustedDirectories(effectiveDir, additionalDirs);
-            issuedBearerTokens.addAll(collectedTokens);
             trustedDirectories.put(sessionId, resolved);
             return sessionId;
         } catch (RuntimeException ex) {

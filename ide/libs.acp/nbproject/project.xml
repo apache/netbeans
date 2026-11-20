@@ -48,16 +48,16 @@
                 <package>com.agentclientprotocol.sdk.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/acp-core-0.80.0.jar</runtime-relative-path>
-                <binary-origin>external/acp-core-0.80.0.jar</binary-origin>
+                <runtime-relative-path>ext/acp-core-0.81.0.jar</runtime-relative-path>
+                <binary-origin>external/acp-core-0.81.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/acp-annotations-0.80.0.jar</runtime-relative-path>
-                <binary-origin>external/acp-annotations-0.80.0.jar</binary-origin>
+                <runtime-relative-path>ext/acp-annotations-0.81.0.jar</runtime-relative-path>
+                <binary-origin>external/acp-annotations-0.81.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/acp-json-jackson2-0.80.0.jar</runtime-relative-path>
-                <binary-origin>external/acp-json-jackson2-0.80.0.jar</binary-origin>
+                <runtime-relative-path>ext/acp-json-jackson2-0.81.0.jar</runtime-relative-path>
+                <binary-origin>external/acp-json-jackson2-0.81.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/reactor-core-3.8.7.jar</runtime-relative-path>

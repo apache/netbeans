@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.acp.api;
 
+import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.util.List;
 import org.netbeans.junit.NbTestCase;
 
@@ -132,5 +133,17 @@ public class AcpConnectionTest extends NbTestCase {
         AcpConnection conn = new AcpConnection(createDescriptor());
         conn.setPermissionHandler(req -> null);
         conn.setPermissionHandler(null);
+    }
+
+    public void testMcpServersFilteredByAgentCapabilities() {
+        AcpSchema.McpServer stdio = new AcpSchema.McpServerStdio("stdio", "server", List.of(), List.of());
+        AcpSchema.McpServer http = new AcpSchema.McpServerHttp("http", "http://localhost", List.of());
+        AcpSchema.McpServer sse = new AcpSchema.McpServerSse("sse", "http://localhost", List.of());
+        List<AcpSchema.McpServer> servers = List.of(stdio, http, sse);
+
+        assertEquals(List.of(stdio), AcpConnection.supportedMcpServers(servers, false, false));
+        assertEquals(List.of(stdio, http), AcpConnection.supportedMcpServers(servers, true, false));
+        assertEquals(List.of(stdio, sse), AcpConnection.supportedMcpServers(servers, false, true));
+        assertEquals(servers, AcpConnection.supportedMcpServers(servers, true, true));
     }
 }

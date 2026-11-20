@@ -15,9 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-999A4B1AC918F324E783A4462E4FD66DDC592C2B com.agentclientprotocol:acp-core:0.80.0
-8695E0F93DC520584997C154A58C5EABBD5EDA2E com.agentclientprotocol:acp-annotations:0.80.0
-C4E39D3BB8755AD15499795A124816700A4A6B60 com.agentclientprotocol:acp-json-jackson2:0.80.0
+0CE03C66CE29A7C9838A4280E28DD56E1C56CA02 com.agentclientprotocol:acp-core:0.81.0
+F941396794EB088A1C040B02D8D97890DE5D685D com.agentclientprotocol:acp-annotations:0.81.0
+788FDE9F93251CAFFE440C20DF7005B80D58BFFA com.agentclientprotocol:acp-json-jackson2:0.81.0
 CF54BB43D59D6BB9B3BA5C160C975D4A18F351AB io.projectreactor:reactor-core:3.8.7
 3864A1320D97D7B045F729A326E1E077661F31B7 org.reactivestreams:reactive-streams:1.0.4
 7425A601C1C7EC76645A78D22B8C6A627EDEE507 org.jspecify:jspecify:1.0.0

@@ -26,6 +26,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.java.graph.GraphNodeImplementation;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 
 /**
  *
@@ -37,18 +38,18 @@ public class MavenDependencyNode implements GraphNodeImplementation {
     static final Color COMPILE = new Color(191, 191, 255);
     static final Color RUNTIME = new Color(191, 255, 191);
     static final Color TEST = new Color(202, 151, 151);
-    private final org.apache.maven.shared.dependency.tree.DependencyNode dependencyNode;
+    private final DependencyNode dependencyNode;
     private DefaultArtifactVersion version;
     private List<String> scopes;
     private MavenDependencyNode parent;
 
-    private final HashMap<org.apache.maven.shared.dependency.tree.DependencyNode, MavenDependencyNode> children = new HashMap<>();
+    private final HashMap<DependencyNode, MavenDependencyNode> children = new HashMap<>();
     
-    public MavenDependencyNode(org.apache.maven.shared.dependency.tree.DependencyNode dependencyNode) {
+    public MavenDependencyNode(DependencyNode dependencyNode) {
         this(null, dependencyNode);
     }
     
-    private MavenDependencyNode(MavenDependencyNode parent, org.apache.maven.shared.dependency.tree.DependencyNode dependencyNode) {
+    private MavenDependencyNode(MavenDependencyNode parent, DependencyNode dependencyNode) {
         this.dependencyNode = dependencyNode;
         this.parent = parent;
     }
@@ -117,7 +118,7 @@ public class MavenDependencyNode implements GraphNodeImplementation {
 
     @Override
     public MavenDependencyNode getParent() {
-        org.apache.maven.shared.dependency.tree.DependencyNode p = dependencyNode.getParent();
+        DependencyNode p = dependencyNode.getParent();
         if(parent == null) {
             parent = p != null ? new MavenDependencyNode(dependencyNode.getParent()) : null;
         }
@@ -140,7 +141,7 @@ public class MavenDependencyNode implements GraphNodeImplementation {
     public List<MavenDependencyNode> getChildren() {
         synchronized(children) {
             List<MavenDependencyNode> ret = new ArrayList<>();
-            for (org.apache.maven.shared.dependency.tree.DependencyNode n : dependencyNode.getChildren()) {
+            for (DependencyNode n : dependencyNode.getChildren()) {
                 MavenDependencyNode mn = children.get(n);
                 if(mn == null) {
                     mn = new MavenDependencyNode(this, n);

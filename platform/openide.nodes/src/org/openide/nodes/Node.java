@@ -19,6 +19,7 @@
 
 package org.openide.nodes;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.beans.FeatureDescriptor;
@@ -33,8 +34,10 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,8 +90,18 @@ import org.openide.util.datatransfer.PasteType;
 * @author Jaroslav Tulach,
 */
 public abstract class Node extends FeatureDescriptor implements Lookup.Provider, HelpCtx.Provider {
+
+    static {
+        //hook for testing:
+        boolean doLog = false;
+        assert doLog = true;
+        if (doLog) {
+            Logger.getLogger("org.openide.nodes.Node-init").log(Level.FINEST, "Initializing org.openide.nodes.Node"); //NOI18N
+        }
+    }
+
     /** An empty leaf node. */
-    public static final Node EMPTY = new AbstractNode(Children.LEAF);
+    public static final Node EMPTY = new EmptyNode();
 
     /* here is list of property names that can be changed in the Node object.
     * These properties can be notified to the <CODE>NodeListener</CODE>.

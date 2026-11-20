@@ -65,6 +65,14 @@
 </td>
 </tr>
 <tr align="left" valign="top">
+<td align="left" id="r3a1-t4" headers="r1c1-t4">
+<p>Date/Time API</p>
+</td>
+<td align="left" headers="r3a1-t4 r1c2-t4">Select the Java type family used for temporal columns (<code dir="ltr">DATE</code>, <code dir="ltr">TIME</code>, <code dir="ltr">TIMESTAMP</code>).
+<p>When <code dir="ltr">java.util.Date</code> is selected, columns are mapped to <code dir="ltr">java.util.Date</code> with a <code dir="ltr">@Temporal</code> annotation. When <code dir="ltr">java.time (Java 8+)</code> is selected, columns are mapped to <code dir="ltr">java.time.LocalDate</code>, <code dir="ltr">java.time.LocalTime</code> and <code dir="ltr">java.time.LocalDateTime</code>, which are mapped natively by JPA 2.2 and later and therefore need no <code dir="ltr">@Temporal</code> annotation. <code dir="ltr">java.util.Date</code> is selected by default.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
 <td align="left" id="r4c1-t4" headers="r1c1-t4">
 <p>Fully Qualified Database Table Names</p>
 </td>

@@ -54,6 +54,7 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.CMPMappingModel;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.CMPMappingModel.ColumnData;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityClass;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityMember;
+import org.netbeans.modules.j2ee.persistence.entitygenerator.DateTimeType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.CollectionType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.RelationshipRole;
@@ -150,7 +151,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 helper.isFullyQualifiedTableNames(), helper.isRegenTablesAttrs(),
                 helper.isUseDefaults(),
                 helper.isGenerateMappedSuperclasses(),
-                helper.getFetchType(), helper.getCollectionType(),
+                helper.getFetchType(), helper.getCollectionType(), helper.getDateTimeType(),
                 handle, progressPanel, helper.getProject());
     }
 
@@ -159,15 +160,15 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             boolean generateJAXBAnnotations,
             boolean generateValidationConstraints,
             boolean fullyQualifiedTableNames, boolean regenTablesAttrs,
-            FetchType fetchType, CollectionType collectionType,
+            FetchType fetchType, CollectionType collectionType, DateTimeType dateTimeType,
             ProgressContributor progressContributor, ProgressPanel panel, Project prj) throws IOException {
-        
-        generateBeans(entityClasses, generateNamedQueries, generateJAXBAnnotations, 
-                generateValidationConstraints, fullyQualifiedTableNames, regenTablesAttrs, 
-                false, false, fetchType, collectionType, progressContributor, panel, prj);
-        
+
+        generateBeans(entityClasses, generateNamedQueries, generateJAXBAnnotations,
+                generateValidationConstraints, fullyQualifiedTableNames, regenTablesAttrs,
+                false, false, fetchType, collectionType, dateTimeType, progressContributor, panel, prj);
+
     }
-            
+
 
     private void generateBeans(EntityClass[] entityClasses, boolean generateNamedQueries,
             boolean generateJAXBAnnotations,
@@ -175,7 +176,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             boolean fullyQualifiedTableNames, boolean regenTablesAttrs,
             boolean useDefaults,
             boolean generateMappedSC,
-            FetchType fetchType, CollectionType collectionType,
+            FetchType fetchType, CollectionType collectionType, DateTimeType dateTimeType,
             ProgressContributor progressContributor, ProgressPanel panel, Project prj) throws IOException {
 
         int progressMax = entityClasses.length * 3;
@@ -200,7 +201,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 fullyQualifiedTableNames, regenTablesAttrs,
                 useDefaults,
                 generateMappedSC,
-                fetchType, collectionType,
+                fetchType, collectionType, dateTimeType,
                 progressContributor, panel, this).run();
         addToPersistenceUnit(result);
         progressContributor.progress(progressMax);
@@ -329,6 +330,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
         private final boolean regenTablesAttrs, generateMappedSC;
         private final FetchType fetchType;
         private final CollectionType collectionType;
+        private final DateTimeType dateTimeType;
         private final Set<FileObject> generatedEntityFOs;
         private final Set<FileObject> generatedFOs;
         private final PersistenceGenerator persistenceGen;
@@ -342,7 +344,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 boolean fullyQualifiedTableNames, boolean regenTablesAttrs,
                 boolean useDefaults,
                 boolean generateMappedSC,
-                FetchType fetchType, CollectionType collectionType,
+                FetchType fetchType, CollectionType collectionType, DateTimeType dateTimeType,
                 ProgressContributor progressContributor, ProgressPanel progressPanel,
                 PersistenceGenerator persistenceGen) {
             this.entityClasses = entityClasses;
@@ -355,6 +357,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             this.regenTablesAttrs = regenTablesAttrs;
             this.fetchType = fetchType;
             this.collectionType = collectionType;
+            this.dateTimeType = dateTimeType;
             this.progressContributor = progressContributor;
             this.progressPanel = progressPanel;
             generatedFOs = new HashSet<FileObject>();
@@ -811,12 +814,22 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
             String getMemberType(EntityMember m) {
                 String memberType = m.getMemberType();
-                if ("java.sql.Date".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Time".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Timestamp".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
+                if (DateTimeType.JAVA_8.equals(dateTimeType)) {
+                    if ("java.sql.Date".equals(memberType)) { //NOI18N
+                        memberType = "java.time.LocalDate"; //NOI18N
+                    } else if ("java.sql.Time".equals(memberType)) { //NOI18N
+                        memberType = "java.time.LocalTime"; //NOI18N
+                    } else if ("java.sql.Timestamp".equals(memberType)) { //NOI18N
+                        memberType = "java.time.LocalDateTime"; //NOI18N
+                    }
+                } else {
+                    if ("java.sql.Date".equals(memberType)) { //NOI18N
+                        memberType = "java.util.Date"; //NOI18N
+                    } else if ("java.sql.Time".equals(memberType)) { //NOI18N
+                        memberType = "java.util.Date"; //NOI18N
+                    } else if ("java.sql.Timestamp".equals(memberType)) { //NOI18N
+                        memberType = "java.util.Date"; //NOI18N
+                    }
                 }
                 return memberType;
             }
@@ -834,6 +847,11 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             }
 
             private String getMemberTemporalType(EntityMember m) {
+                // java.time types are mapped natively by JPA 2.2+ and must not
+                // carry a @Temporal annotation.
+                if (DateTimeType.JAVA_8.equals(dateTimeType)) {
+                    return null;
+                }
                 String memberType = m.getMemberType();
                 String temporalType = null;
                 if ("java.sql.Date".equals(memberType)) { //NOI18N

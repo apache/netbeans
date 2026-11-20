@@ -33,12 +33,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -81,14 +83,17 @@ import org.openide.util.Utilities;
     "ERR_InvalidPath={0} isn't valid folder",
     "# {0} - path",
     "ERR_ExistingPath={0} already exists",
+    "# {0} - packageName",
+    "ERR_InvalidPackageName={0} isn't valid package name"
 })
-final class LspTemplateUI {
+    final class LspTemplateUI {
     /**
      * Creation thread. All requests are serialized; make sure that no creation process can block e.g. waiting
      * for the client's response.
      */
     private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
-    private static final Logger LOG = Logger.getLogger(LspTemplateUI.class.getName()); 
+    private static final Logger LOG = Logger.getLogger(LspTemplateUI.class.getName());
+    private static final String JAVA_PKG_TEMPLATE = "Templates/Classes/Package";
     
     private LspTemplateUI() {
     }
@@ -108,33 +113,43 @@ final class LspTemplateUI {
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client, params);
         CompletionStage<DataFolder> findTargetFolder = findTargetForTemplate(findTemplate, client, params);
-        return findTargetFolder.thenCombine(findTemplate, (target, source) -> {
-            final FileObject templateFileObject = source.getPrimaryFile();
-            return new FileBuilder(templateFileObject, target.getPrimaryFile()).name(templateFileObject.getName());
-        }).thenCompose(builder -> configure(builder, client)).thenApplyAsync(builder -> {
-            try {
-                if (builder != null) {
-                    List<FileObject> created = builder.build();
-                    if (created == null) {
-                        return null;
-                    } else if (created.isEmpty()) {
-                        return Collections.emptyList();
-                    }
-                    // Make sure the newly created files are indexed before returned to client
-                    IndexingManager.getDefault().refreshAllIndices(false, true, created.toArray(new FileObject[0]));
-                    return (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList());
-                }
-                return null;
-            } catch (IOException ex) {
-                throw raise(RuntimeException.class, ex);
+        return findTargetFolder.thenCombine(findTemplate, Pair::of).thenCompose(targetAndTemplate -> {
+            final DataFolder target = targetAndTemplate.first();
+            final DataObject source = targetAndTemplate.second();
+
+            if (isPkgTemplate(source)) {
+                return createPackage(target, client);
             }
-        }, CREATION_RP).exceptionally((error) -> {
+
+            final FileObject templateFileObject = source.getPrimaryFile();
+            return configure(new FileBuilder(templateFileObject, target.getPrimaryFile()).name(templateFileObject.getName()), client)
+                    .thenApplyAsync(LspTemplateUI::buildTemplate, CREATION_RP);
+        }).exceptionally((error) -> {
             if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
                 return null;
             }
             Exceptions.printStackTrace(error);
             return null;
         }).toCompletableFuture();
+    }
+
+    private static Object buildTemplate(FileBuilder builder) {
+        try {
+            if (builder != null) {
+                List<FileObject> created = builder.build();
+                if (created == null) {
+                    return null;
+                } else if (created.isEmpty()) {
+                    return Collections.emptyList();
+                }
+                // Make sure the newly created files are indexed before returned to client
+                IndexingManager.getDefault().refreshAllIndices(false, true, created.toArray(new FileObject[0]));
+                return created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList());
+            }
+            return null;
+        } catch (IOException ex) {
+            throw raise(RuntimeException.class, ex);
+        }
     }
 
     private CompletableFuture<Object> projectUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
@@ -229,11 +244,103 @@ final class LspTemplateUI {
         FileObject template = desc.getTemplate();
         Object handler = template.getAttribute(FileBuilder.ATTR_TEMPLATE_HANDLER);
         if (handler == null) {
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenApply(name -> {
-                return name != null ? builder.name(name) : null;
-            });
+            class ValidateJavaObjectName implements Function<String, CompletionStage<String>> {
+
+                @Override
+                public CompletionStage<String> apply(String name) {
+                    FileObject existingTargetFile = findExistingTargetFile(desc, name);
+                    if (existingTargetFile != null) {
+                        client.showMessage(new MessageParams(MessageType.Error,
+                                Bundle.ERR_ExistingPath(FileUtil.getFileDisplayName(existingTargetFile))));
+                        return client.showInputBox(
+                                new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenCompose(this);
+                    }
+                    return CompletableFuture.completedFuture(name);
+                }
+            }
         }
         return CompletableFuture.completedFuture(builder);
+    }
+
+    private static CompletionStage<Object> createPackage(DataFolder target, NbCodeLanguageClient client) {
+        class ValidatePackageName implements Function<String, CompletionStage<Object>> {
+            @Override
+            public CompletionStage<Object> apply(String packageName) {
+                if (packageName == null) {
+                    throw raise(RuntimeException.class, new UserCancelException(""));
+                }
+                if (!SourceVersion.isName(packageName)) {
+                    client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPackageName(packageName)));
+                    return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), "")).thenCompose(this);
+                }
+                FileObject existingTarget = checkExistingPkgTarget(target.getPrimaryFile(), packageName);
+                if (existingTarget != null) {
+                    client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_ExistingPath(FileUtil.getFileDisplayName(existingTarget))));
+                    return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), "")).thenCompose(this);
+                }
+                try {
+                    FileObject created = createPkgFolderStructure(target.getPrimaryFile(), packageName);
+                    IndexingManager.getDefault().refreshAllIndices(false, true, created);
+                    return CompletableFuture.completedFuture(created.toURI().toString());
+                } catch (IOException ex) {
+                    throw raise(RuntimeException.class, ex);
+                }
+            }
+        }
+        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), "")).thenCompose(new ValidatePackageName());
+    }
+
+    static FileObject findExistingTargetFile(CreateDescriptor desc, String name) {
+        if (desc == null || name == null) {
+            return null;
+        }
+
+        FileObject target = desc.getTarget();
+        if (target == null) {
+            return null;
+        }
+
+        if (desc.hasFreeExtension()) {
+            return target.getFileObject(name);
+        }
+
+        String extension = desc.getTemplate().getExt();
+        String baseName = name;
+
+        if (!extension.isEmpty() && name.endsWith("." + extension)) {
+            baseName = name.substring(0, name.length() - extension.length() - 1);
+        }
+
+        return extension.isEmpty()
+                ? target.getFileObject(baseName)
+                : target.getFileObject(baseName, extension);
+    }
+
+    static FileObject checkExistingPkgTarget(FileObject target, String pkgName) {
+        if (target == null || pkgName == null) {
+            return null;
+        }
+        FileObject current = target;
+        StringTokenizer pkgTokens = new StringTokenizer(pkgName, ".");
+        while (pkgTokens.hasMoreTokens()) {
+            FileObject next = current.getFileObject(pkgTokens.nextToken());
+            if (next == null) {
+                return null;
+            }
+            if (next.isData() || !pkgTokens.hasMoreTokens()) {
+                return next;
+            }
+            current = next;
+        }
+        return null;
+    }
+
+    static FileObject createPkgFolderStructure(FileObject targetFile, String pkgName) throws IOException {
+        return FileUtil.createFolder(targetFile, pkgName.replace('.', '/'));
+    }
+
+    private static boolean isPkgTemplate(DataObject inputTemplate) {
+        return JAVA_PKG_TEMPLATE.equals(inputTemplate.getPrimaryFile().getPath());
     }
 
     private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {

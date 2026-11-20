@@ -20,7 +20,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -83,6 +83,28 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="directory-project-provider">
+            <api name="general"/>
+            <summary>Provider SPI for promoting a directory to a project when it becomes a group in the projects view.</summary>
+            <version major="1" minor="125"/>
+            <date day="19" month="10" year="2026"/>
+            <author login="mbien"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    New <code>DirectoryProjectProvider</code> SPI in
+                    <code>org.netbeans.spi.project.ui.support</code>:
+                    implementations registered in the default lookup may
+                    turn the directory chosen in the "New Group" dialog
+                    into a project of their type. The group machinery uses
+                    the returned project to create a stock subprojects
+                    group, and falls back to the stock directory group
+                    when no implementation is registered or it returns
+                    null.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="DirectoryProjectProvider"/>
+        </change>
         <change id="project-problems-implementation">
             <api name="general"/>
             <summary>Allow pluggable implementation for ProjectProblems API.</summary>

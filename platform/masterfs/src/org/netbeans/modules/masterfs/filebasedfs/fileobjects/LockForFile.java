@@ -19,16 +19,11 @@
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
 import org.netbeans.modules.masterfs.filebasedfs.utils.Utils;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileLock;
@@ -43,8 +38,8 @@ import org.openide.util.Exceptions;
 public class LockForFile extends FileLock {
 
     private static final ConcurrentHashMap<String, Namesakes> name2Namesakes = new ConcurrentHashMap<>();
-    private static final String PREFIX = ".LCK";
-    private static final String SUFFIX = "~";
+            static final String PREFIX = ".LCK";
+            static final String SUFFIX = "~";
     private File file;
     private File lock;
     private boolean valid = false;
@@ -79,7 +74,7 @@ public class LockForFile extends FileLock {
         File file = result.getFile();
         Namesakes namesakes = new Namesakes();
         Namesakes oldNamesakes = name2Namesakes.putIfAbsent(file.getName(), namesakes);
-        if (oldNamesakes != null) { 
+        if (oldNamesakes != null) {
             namesakes = oldNamesakes;
         }
         if (namesakes.putInstance(file, result) == null) {
@@ -152,18 +147,17 @@ public class LockForFile extends FileLock {
         if (isHardLocked()) {
             throw new FileAlreadyLockedException(file.getAbsolutePath());
         }
+
         File hardLock = getLock();
-        hardLock.getParentFile().mkdirs();
-        hardLock.createNewFile();
-        try (OutputStream os = Files.newOutputStream(hardLock.toPath())) {
-            os.write(getFile().getAbsolutePath().getBytes());
-            return true;
-        }
+
+        HardLockRegistry.getInstance().doHardLock(hardLock, getFile().getAbsolutePath());
+
+        return true;
     }
 
     /*not private for tests*/
     boolean hardUnlock() {
-        return getLock().delete();
+        return HardLockRegistry.getInstance().doHardUnlock(getLock());
     }
 
     private static synchronized boolean hardUnlockAll() {
@@ -194,25 +188,9 @@ public class LockForFile extends FileLock {
     }
 
     public File getHardLock() {
-        if (FileChangedManager.getInstance().exists(lock)) {
-            InputStream is = null;
-            try {
-                is = new FileInputStream(lock);
-                byte[] path = new byte[is.available()];
-                if (path.length > 0 && is.read(path) == path.length) {
-                    return new File(new String(path));
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
+        String content = HardLockRegistry.getInstance().getHardLockContent(lock);
+        if (content != null) {
+            return new File(content);
         }
         return null;
     }
@@ -238,7 +216,7 @@ public class LockForFile extends FileLock {
 
         final String lckName = sb.toString();
         final File lck = new File(parentFile, lckName);
-        return lck;
+        return lck.getAbsoluteFile();
     }
 
     @Override
@@ -286,7 +264,7 @@ public class LockForFile extends FileLock {
                 if (reference != null) {
                     LockForFile lockForFile = reference.get();
                     if (lockForFile != null) {
-                        if (!FileChangedManager.getInstance().exists(lockForFile.getLock())) {
+                        if (!HardLockRegistry.getInstance().hardLockExists(lockForFile.getLock())) {
                             lockForFile.hardLock();
                         }
                     }
@@ -294,4 +272,9 @@ public class LockForFile extends FileLock {
             }
         }
     }
+
+    public static boolean hasActiveLockFileSigns(final String filename) {
+        return filename.startsWith(PREFIX) && filename.endsWith(SUFFIX);
+    }
+
 }

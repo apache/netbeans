@@ -50,7 +50,7 @@ public class FtpClientTest extends NbTestCase {
                     return ConfigManager.createEmptyConfigs();
                 }
             });
-            ConfigManager.Configuration configuration = manager.defaultConfiguration();
+            ConfigManager.Configuration configuration = manager.createNew("demo", "Demo config");
             FtpConnectionProvider.get().createRemoteConfiguration(configuration);
             configuration.putValue(FtpConnectionProvider.HOST, "127.0.0.1");
             configuration.putValue(FtpConnectionProvider.PORT, Integer.toString(server.getPort()));

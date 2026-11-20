@@ -177,6 +177,8 @@ public class FtpClient implements RemoteClient {
                     ftpClient.setActivePortRange(activePortMin, activePortMax);
                 }
             }
+            // Detect UTF-8 support before connect() creates the control streams.
+            ftpClient.setAutodetectUTF8(true);
             ftpClient.connect(configuration.getHost(), configuration.getPort());
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, "Reply is {0}", getReplyString());

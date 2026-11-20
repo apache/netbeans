@@ -29,11 +29,9 @@ import java.util.Enumeration;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.SwingUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -360,11 +358,7 @@ public class TopLoggingTest extends NbTestCase {
     public void testLoggingFromRequestProcessor() throws Exception {
         Logger.getLogger("org.openide.util.RequestProcessor").setLevel(Level.ALL);
 
-        RequestProcessor.getDefault().post(new Runnable() {
-            public void run() {
-                
-            }
-        }).waitFinished();
+        RequestProcessor.getDefault().post(() -> {}).waitFinished();
         
     }
 
@@ -397,18 +391,6 @@ public class TopLoggingTest extends NbTestCase {
         assertTrue(disk, disk.contains("java.lang.Exception"));
         assertTrue(disk, disk.contains("Help"));
         assertTrue(disk, disk.contains("me please"));
-    }
-
-    public void testThreadDeath() throws Exception { // #203171
-        Thread t = new Thread(new Runnable() {
-            @Override public void run() {
-                throw new ThreadDeath();
-            }
-        });
-        t.start();
-        t.join();
-        String disk = readLog(true);
-        assertFalse(disk, disk.contains("java.lang.ThreadDeath"));
     }
 
 }

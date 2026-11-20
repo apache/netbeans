@@ -145,7 +145,6 @@ public class FileActionTest extends NbTestCase {
     }
     
     public void testAgregateRefreshes() throws InterruptedException {
-        FileAction action = new FileAction("COMMAND", "TestFileCommandAction", (Icon) null, Lookup.EMPTY);
         final Semaphore s = new Semaphore(0);
 
         // Lookup that will be queried inside refreshImpl.
@@ -168,8 +167,9 @@ public class FileActionTest extends NbTestCase {
                 return Lookup.EMPTY.lookup(template);
             }
         };
+        FileAction action = new FileAction("COMMAND", "TestFileCommandAction", (Icon) null, l);
         for (int i = 0; i < 10; i++) {
-            action.refresh(l, false); // invoke async refresh
+            action.scheduleRefresh(); // invoke debounced refresh
         }
 
         assertTrue("refreshImpl should be called at least once",

@@ -85,11 +85,11 @@ public class NewFile extends ProjectAction implements Popup {
         super((String) null, LBL_NewFileAction_Name(), null, context);
         putValue("iconBase","org/netbeans/modules/project/ui/resources/newFile.png"); //NOI18N
         putValue(SHORT_DESCRIPTION, LBL_NewFileAction_Tooltip());
-        refresh(getLookup(), true);
+        refresh(getLookup());
     }
 
     @Override
-    protected void refresh(Lookup context, boolean immediate) {
+    protected void refresh(Lookup context) {
         // #59615: update synch if possible; only replan if not already in EQ.
         Mutex.EVENT.readAccess(new Runnable() {
             @Override

@@ -126,7 +126,7 @@ public class MainProjectActionTest extends NbTestCase {
         LookupSensitiveAction a = new MainProjectAction(CMD, null, "a", null, context);
         assertFalse(a.isEnabled());
         ic.add(prj1);
-        a.refresh(context, true);
+        a.refresh(context);
         assertTrue(a.isEnabled());
         a.actionPerformed(context);
         assertFalse(a.isEnabled());
@@ -138,7 +138,7 @@ public class MainProjectActionTest extends NbTestCase {
         prj2.setLookup(Lookups.singleton(new SlowRun()));
         ic.remove(prj1);
         ic.add(prj2);
-        a.refresh(context, true);
+        a.refresh(context);
         assertTrue(a.isEnabled());
     }
 

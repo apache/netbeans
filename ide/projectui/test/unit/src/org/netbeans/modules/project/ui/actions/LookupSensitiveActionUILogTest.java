@@ -40,6 +40,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 
 public class LookupSensitiveActionUILogTest extends NbTestCase {
@@ -83,6 +84,8 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
         TestPropertyChangeListener tpcl = new TestPropertyChangeListener();
         tlsa.addPropertyChangeListener( tpcl );
         lookup.change(d2);
+        // a state query forces the pending refresh, as the UI does when displaying the action
+        assertTrue("Action is enabled", tlsa.isEnabled());
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );
         assertTrue("Action is enabled", tlsa.isEnabled());
@@ -106,6 +109,8 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
         tlsa.clear();
         tpcl.clear();
         lookup.change(d3);
+        // a state query forces the pending refresh, as the UI does when displaying the action
+        assertTrue("Action is enabled", tlsa.isEnabled());
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );        
     }
@@ -118,6 +123,8 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
         TestPropertyChangeListener tpcl = new TestPropertyChangeListener();
         tlsa.addPropertyChangeListener( tpcl );
         lookup.change(d2);
+        // a state query forces the pending refresh, as the UI does when displaying the action
+        assertTrue("Action is enabled", tlsa.isEnabled());
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );
         assertTrue("Action is enabled", tlsa.isEnabled());
@@ -141,6 +148,8 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
         tlsa.clear();
         tpcl.clear();
         lookup.change(d3);
+        // a state query forces the pending refresh, as the UI does when displaying the action
+        assertTrue("Action is enabled", tlsa.isEnabled());
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );        
     }
@@ -153,6 +162,8 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
         TestPropertyChangeListener tpcl = new TestPropertyChangeListener();
         tlsa.addPropertyChangeListener( tpcl );
         lookup.change(d2);
+        // a state query forces the pending refresh, as the UI does when displaying the action
+        assertTrue("Action is enabled", tlsa.isEnabled());
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );
         assertTrue("Action is enabled", tlsa.isEnabled());
@@ -206,14 +217,17 @@ public class LookupSensitiveActionUILogTest extends NbTestCase {
             performCounter++;
         }
            
-        protected @Override void refresh(Lookup context, boolean immediate) {
+        protected @Override void refresh(Lookup context) {
             refreshCounter++;
             
             DataObject dobj = context.lookup(DataObject.class);
             
-            if (dobj != null) {
-		putValue( Action.NAME, dobj.getName() );
-	    }
+            final String name = dobj != null ? dobj.getName() : null;
+            Mutex.EVENT.writeAccess(() -> {
+                if (name != null) {
+                    putValue( Action.NAME, name );
+                }
+            });
             
         }
         

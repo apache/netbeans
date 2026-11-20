@@ -22,16 +22,16 @@ package org.netbeans.modules.gradle.loaders;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider.GradleRuntime;
 
 import org.openide.modules.InstalledFileLocator;
-import org.openide.modules.Places;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -52,22 +52,45 @@ public final class GradleDaemon {
 
     private GradleDaemon() {}
 
-    public static String initScript() {
-        File initScript = Places.getCacheSubfile("gradle/nb-tooling.gradle"); //NOI18N
-        synchronized (initScriptReady) {
-            if (!initScriptReady.get()) {
-                File initTemplate = InstalledFileLocator.getDefault().locate(INIT_SCRIPT_NAME, NbGradleProject.CODENAME_BASE, false);
-                try (Stream<String> lines = Files.lines(initTemplate.toPath())) {
-                    List<String> script = lines.map(line -> line.replace(PROP_TOOLING_JAR, TOOLING_JAR)).collect(Collectors.toList());
-                    Files.write(initScript.toPath(), script);
-                    initScriptReady.set(true);
-                } catch(IOException ex) {
-                    // This one is unlikely
-                    LOG.log(Level.WARNING, "Can't create NetBeans Gradle init script", ex); //NOI18N
-                    // Let it pass trough. Gradle call will display some errors as well
+    public static String initScript(GradleRuntime rt) {
+        Path initScript = rt.rootDir.toPath().resolve(".gradle/nb-tooling.gradle"); //NOI18N
+        String onDisk = "";
+        try {
+            onDisk = Files.readString(initScript);
+        } catch (IOException ex) {}
+        String init = generateInitScript(rt);
+        if (!onDisk.equals(init)) {
+            try {
+                Files.createDirectories(initScript.getParent());
+                Files.writeString(initScript, init);
+            } catch (IOException ex) {}
+        }
+        return initScript.toString();
+    }
+    
+    private static String generateInitScript(GradleRuntime rt) {
+        var providers = Lookup.getDefault().lookupAll(GradlePluginProvider.class);
+        try (var wr = new StringWriter()) {
+            wr.append("initscript {\n");
+            wr.append("    dependencies {\n");
+            for (GradlePluginProvider pvd : providers) {
+                for (File f : pvd.classpath(rt)) {
+                    String fname = f.getAbsolutePath();
+                    wr.append("        classpath files('").append(fname).append("')\n");
                 }
             }
-        }
-        return initScript.getAbsolutePath();
+            wr.append("    }\n}\n\n");
+            
+            wr.append("allprojects {\n");
+            for (GradlePluginProvider pvd : providers) {
+                for (var plugin : pvd.plugins(rt)) {
+                    wr.append("    apply plugin: ").append(plugin).append("\n");
+                }
+            }
+            wr.append("}\n");
+            
+            return wr.toString();
+        } catch (IOException ex) {}
+        return null;
     }
 }

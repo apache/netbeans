@@ -178,6 +178,23 @@ class InterpProtoANSIX extends InterpProtoANSI {
                         } else {
                             ai.ops.op_hyperlink(p2, p3);
                         }
+                        break;
+                    }
+
+                    case 52: { // OSC52 - Copy to clipboard
+                        int semix2 = p2.indexOf(';');
+                        if (semix2 == -1) {
+                            return null;
+                        }
+                        String p3 = p2.substring(semix2 + 1);
+                        p2 = p2.substring(0, semix2);
+
+                        if ("?".equals(p3)) {
+                             // Read request - currently unsupported
+                        } else {
+                            ai.ops.op_set_clipboard(p2, p3);
+                        }
+                        break;
                     }
                 }
 		return null;
@@ -204,6 +221,24 @@ class InterpProtoANSIX extends InterpProtoANSI {
                     case 25:
                         ai.ops.op_cursor_visible(true);
                         break;
+                    case 1000:
+                        ai.ops.op_mouse_tracking(true, false, false);
+                        break;
+                    case 1002:
+                        ai.ops.op_mouse_tracking(true, true, false);
+                        break;
+                    case 1003:
+                        ai.ops.op_mouse_tracking(true, true, true);
+                        break;
+                    case 1004:
+                        ai.ops.op_focus_tracking(true);
+                        break;
+                    case 1006:
+                        ai.ops.op_mouse_report_sgr(true);
+                        break;
+                    case 2004:
+                        ai.ops.op_bracketed_paste(true);
+                        break;
                     default:
                         return "act_DEC_private: unrecognized code " + n;	// NOI18N
                 }
@@ -223,6 +258,20 @@ class InterpProtoANSIX extends InterpProtoANSI {
                         break;
                     case 25:
                         ai.ops.op_cursor_visible(false);
+                        break;
+                    case 1000:
+                    case 1002:
+                    case 1003:
+                        ai.ops.op_mouse_tracking(false, false, false);
+                        break;
+                    case 1004:
+                        ai.ops.op_focus_tracking(false);
+                        break;
+                    case 1006:
+                        ai.ops.op_mouse_report_sgr(false);
+                        break;
+                    case 2004:
+                        ai.ops.op_bracketed_paste(false);
                         break;
                     default:
                         return "act_DEC_private: unrecognized code " + n;	// NOI18N

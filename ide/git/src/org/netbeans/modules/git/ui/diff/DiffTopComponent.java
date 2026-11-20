@@ -27,6 +27,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -35,15 +36,36 @@ import org.openide.windows.TopComponent;
 public class DiffTopComponent extends TopComponent {
 
     private final MultiDiffPanelController controller;
+    private final DiffId identity;
 
-    DiffTopComponent (MultiDiffPanelController controller) {
+    DiffTopComponent (MultiDiffPanelController controller, DiffId identity) {
         setLayout(new BorderLayout());
         this.controller = controller;
+        this.identity = identity;
         JPanel panel = controller.getPanel();
         panel.putClientProperty(TopComponent.class, this);
         add(panel, BorderLayout.CENTER);
         getAccessibleContext().setAccessibleName(NbBundle.getMessage(DiffTopComponent.class, "ACSN_Diff_Top_Component")); // NOI18N
         getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(DiffTopComponent.class, "ACSD_Diff_Top_Component")); // NOI18N
+    }
+
+    /**
+     * Finds an already opened diff tab showing the diff with the given
+     * identity.
+     *
+     * @param identity the identity of the diff to look for, see
+     *                 {@link DiffId}
+     * @return the opened diff tab, or <code>null</code> if none is open
+     */
+    static DiffTopComponent find(DiffId identity) {
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof DiffTopComponent dc) {
+                if (identity.equals(dc.identity)) {
+                    return dc;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

@@ -1074,6 +1074,31 @@ public final class GitClient implements AutoCloseable {
     }
     
     /**
+     * Rebases the current HEAD onto a commit specified by the given revision,
+     * in interactive mode: the given handler is consulted before the list of
+     * steps is processed and whenever a commit message of a combined
+     * squash/fixup sequence is finalized.
+     *
+     * @param operation kind of rebase operation you want to perform
+     * @param revision id of a destination commit. Considered only
+     * when <code>operation</code> is set
+     * to <code>RebaseOperationType.BEGIN</code> otherwise it's meaningless.
+     * @param handler interactive callbacks customizing the rebase
+     * @param monitor progress monitor
+     * @return result of the rebase
+     * @throws GitException an unexpected error occurs
+     * @since 1.32
+     */
+    public GitRebaseResult rebase(RebaseOperationType operation, String revision,
+            GitRebaseInteractiveHandler handler, ProgressMonitor monitor) throws GitException {
+        Repository repository = gitRepository.getRepository();
+        RebaseCommand cmd = new RebaseCommand(repository, getClassFactory(), revision, operation, monitor);
+        cmd.setInteractiveHandler(handler);
+        cmd.execute();
+        return cmd.getResult();
+    }
+    
+    /**
      * Marks this client as released and notifies the repository it does not 
      * have to stay open for this client. When all repository's clients are
      * released the repository closes, flushes all cached metadata and closes

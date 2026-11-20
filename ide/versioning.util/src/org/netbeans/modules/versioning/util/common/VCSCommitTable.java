@@ -103,7 +103,7 @@ public class VCSCommitTable<F extends VCSFileNode> implements AncestorListener, 
             }
         });
         table.addMouseListener(this);
-        setColumns(VCSCommitTableModel.COMMIT_COLUMNS);
+        setColumns(getColumns());
     }
 
     void labelFor(JLabel label) {
@@ -227,6 +227,10 @@ public class VCSCommitTable<F extends VCSFileNode> implements AncestorListener, 
         columns = cols;
         tableModel.setColumns(cols);
         setDefaultColumnSizes();
+    }
+
+    protected String[] getColumns() {
+        return VCSCommitTableModel.COMMIT_COLUMNS;
     }
 
     public void setNodes(F[] nodes) {

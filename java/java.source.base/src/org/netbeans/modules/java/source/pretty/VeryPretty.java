@@ -873,6 +873,41 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 		wrapTrees(tree.implementing, cs.wrapExtendsImplementsList(), cs.alignMultilineImplements()
                         ? out.col : out.leftMargin + cs.getContinuationIndentSize());
 	    }
+	} else if ((flags & RECORD) != 0) {
+            print("record ");
+            print(tree.name);
+            printTypeParameters(tree.typarams);
+            List<JCTree> components = recordComponents(tree);
+            if (components.nonEmpty()) {
+                print(cs.spaceBeforeMethodDeclParen() ? " (" : "(");
+                if (cs.spaceWithinMethodDeclParens()) {
+                    print(' ');
+                }
+                int oldPrec = setPrec(TreeInfo.noPrec);
+                wrapTrees(
+                    components,
+                    cs.wrapMethodParams(),
+                    cs.alignMultilineMethodParams()
+                        ? out.col
+                        : out.leftMargin + cs.getContinuationIndentSize(),
+                    true
+                );
+                setPrec(oldPrec);
+                if (cs.spaceWithinMethodDeclParens()) {
+                    needSpace();
+                }
+                print(')');
+            }
+            if (tree.implementing.nonEmpty()) {
+                wrap("implements ", cs.wrapExtendsImplementsKeyword());
+                wrapTrees(
+                    tree.implementing,
+                    cs.wrapExtendsImplementsList(),
+                    cs.alignMultilineImplements()
+                        ? out.col
+                        : out.leftMargin + cs.getContinuationIndentSize()
+                );
+            }
 	} else {
 	    if ((flags & ENUM) != 0)
 		print("enum ");
@@ -916,6 +951,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	print('{');
         printInnerCommentsAsTrailing(tree, true);
         java.util.List<JCTree> members = CasualDiff.filterHidden(diffContext, tree.defs);
+        if ((flags & RECORD) != 0) {
+            // the record components are printed in the class header:
+            members.removeIf(t -> t instanceof JCVariableDecl var && (var.mods.flags & RECORD) != 0);
+        }
 	if (!members.isEmpty()) {
 	    blankLines(enclClass.name.isEmpty() ? cs.getBlankLinesAfterAnonymousClassHeader() : (flags & ENUM) != 0 ? cs.getBlankLinesAfterEnumHeader() : cs.getBlankLinesAfterClassHeader());
             boolean firstMember = true;
@@ -931,6 +970,22 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	undent(old);
 	print('}');
 	enclClass = enclClassPrev;
+    }
+
+    /**
+     * Returns the record components of the given record class declaration.
+     *
+     * @param tree the record class declaration
+     * @return the list of the record components (variables with the {@code RECORD} flag)
+     */
+    private static List<JCTree> recordComponents(JCClassDecl tree) {
+        ListBuffer<JCTree> components = new ListBuffer<>();
+        for (JCTree t : tree.defs) {
+            if (t instanceof JCVariableDecl var && (var.mods.flags & RECORD) != 0) {
+                components.add(t);
+            }
+        }
+        return components.toList();
     }
 
     private void printEnumConstants(java.util.List<? extends JCTree> defs, boolean forceSemicolon, boolean printComments) {

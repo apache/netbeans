@@ -38,6 +38,9 @@ public enum Feature {
     /// https://openjdk.org/jeps/394
     INSTANCEOF_PATTERN(14, 16),
 
+    /// https://openjdk.org/jeps/395
+    RECORD(14, 16),
+
     /// https://openjdk.org/jeps/441
     SWITCH_PATTERN(17, 21),
 

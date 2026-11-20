@@ -18,24 +18,15 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.Token;
-
 /**
+ * A word from the options string that does not start with a hyphen.
+ *
  * @author Rastislav Komara
  */
 public class UnknownOption extends SwitchNode {
 
-    public UnknownOption(Token t) {
-        super(t);
-        if (t != null) {
-            setName(t.getText());
-            setValue(new OptionValue.SwitchOnly(true));
-        }
-    }
-
     public UnknownOption(String name) {
-        super(name);
-        setValue(new OptionValue.SwitchOnly(true));
+        super(name, true);
     }
 
     @Override
@@ -45,6 +36,7 @@ public class UnknownOption extends SwitchNode {
         return sb;
     }
 
+    @Override
     public String toString() {
         return "UnknownOption{" +
                 "name='" + getName() + '\'' +

@@ -24,6 +24,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.api.common.ant.UpdateHelper;
@@ -112,8 +113,9 @@ public final class ProjectUISupport{
     }
 
     /**
-     * Opens the java VM Options customizer.
-     * 
+     * Opens the java VM Options customizer with the options of the default
+     * platform.
+     *
      * @param owner the customizer dialog owner
      * @param options the origin options to be preselected in the customizer
      * @return the options selected in the customizer dialog
@@ -121,6 +123,24 @@ public final class ProjectUISupport{
      */
     @NonNull
     public static String showVMOptionCustomizer(Window owner, String options) throws Exception {
-        return OptionsDialog.showCustomizer(owner, options != null ? options : ""); //NOI18N
-    }    
+        return showVMOptionCustomizer(owner, options, JavaPlatform.getDefault());
+    }
+
+    /**
+     * Opens the java VM Options customizer with the options supported by
+     * the given platform's {@code java} launcher. When the platform is
+     * {@code null} or its options cannot be determined, the built-in
+     * option list is used.
+     *
+     * @param owner the customizer dialog owner.
+     * @param options the origin options to be preselected in the customizer
+     * @param platform the platform whose options are offered, may be {@code null}
+     * @return the options selected in the customizer dialog
+     * @throws Exception if it isn't possible to parse the vm options.
+     * @since 1.158
+     */
+    @NonNull
+    public static String showVMOptionCustomizer(Window owner, String options, JavaPlatform platform) throws Exception {
+        return OptionsDialog.showCustomizer(owner, options != null ? options : "", platform); //NOI18N
+    }
 }

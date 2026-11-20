@@ -86,7 +86,7 @@ import org.openide.util.Union2;
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="text/x-java", service=ErrorProvider.class)
+@MimeRegistration(mimeType = "text/x-java", service = ErrorProvider.class, position = 970)
 public class JavaErrorProvider implements ErrorProvider {
     
     public static final String HINTS_TOOL_ID = "hints";

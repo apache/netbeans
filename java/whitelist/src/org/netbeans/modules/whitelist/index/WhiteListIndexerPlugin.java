@@ -199,7 +199,7 @@ public class WhiteListIndexerPlugin implements JavaIndexerPlugin {
         return result;
     }
 
-    @MimeRegistration(mimeType="text/x-java",service=JavaIndexerPlugin.Factory.class)
+    @MimeRegistration(mimeType = "text/x-java", service = JavaIndexerPlugin.Factory.class, position = 1350)
     public static class Factory implements JavaIndexerPlugin.Factory {
         @Override
         public JavaIndexerPlugin create(final URL root, final FileObject cacheFolder) {

@@ -134,7 +134,7 @@ public class EmbeddedHintsCollector extends JavaParserResultTask<Parser.Result> 
     }
     
     
-    @MimeRegistration(service = TaskFactory.class, mimeType = "")
+    @MimeRegistration(service = TaskFactory.class, mimeType = "", position = 930)
     public static class Factory extends TaskFactory {
 
         @Override

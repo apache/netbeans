@@ -795,7 +795,7 @@ public final class InstantRefactoringPerformer implements DocumentListener, KeyL
         }
     }
     
-    @MimeRegistration(mimeType = "text/x-java", service = UndoableEditWrapper.class)
+    @MimeRegistration(mimeType = "text/x-java", service = UndoableEditWrapper.class, position = 1250)
     public static class UndoableWrapper implements UndoableEditWrapper {
 
         private AtomicBoolean active = new AtomicBoolean(false);
@@ -1036,7 +1036,7 @@ public final class InstantRefactoringPerformer implements DocumentListener, KeyL
         }
 
         @MimeRegistrations({
-            @MimeRegistration(mimeType = "text/x-java", service = DeletedTextInterceptor.Factory.class)
+            @MimeRegistration(mimeType = "text/x-java", service = DeletedTextInterceptor.Factory.class,position = 1240)
         })
         public static class Factory implements DeletedTextInterceptor.Factory {
 

@@ -33,7 +33,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="text/x-java", service=PositionRefresherHelper.class)
+@MimeRegistration(mimeType = "text/x-java", service = PositionRefresherHelper.class, position = 950)
 public class ErrorPositionRefresherHelper extends PositionRefresherHelper<DocumentVersionImpl> {
     public ErrorPositionRefresherHelper() {
         super(ErrorHintsProvider.class.getName());

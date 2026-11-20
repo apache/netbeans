@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.libs.jcef</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.40</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.23</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>org.cef</package>
+                <package>org.cef.browser</package>
+                <package>org.cef.browser.mac</package>
+                <package>org.cef.callback</package>
+                <package>org.cef.handler</package>
+                <package>org.cef.misc</package>
+                <package>org.cef.network</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>jcef/jcef-api.jar</runtime-relative-path>
+                <binary-origin>external/jcef-api-jcef-37f25dc+cef-116.0.19+gc6a20bc+chromium-116.0.5845.141.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>jcef/jogl-all.jar</runtime-relative-path>
+                <binary-origin>external/jogl-all-v2.4.0-rc-20210111.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>jcef/gluten-rt.jar</runtime-relative-path>
+                <binary-origin>external/gluegen-rt-v2.4.0-rc-20210111.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

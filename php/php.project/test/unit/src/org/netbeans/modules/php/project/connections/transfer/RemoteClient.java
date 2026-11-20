@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.project.connections.transfer;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.modules.php.project.connections.RemoteClientImplementation;
@@ -26,7 +27,7 @@ import org.netbeans.modules.php.project.connections.RemoteException;
 /**
  * Mock implementation of {@link RemoteClientImplementation}.
  */
-public final class RemoteClient implements RemoteClientImplementation {
+public final class RemoteClient extends RemoteClientImplementation {
 
     private final String baseLocalDirectory;
     private final String baseRemoteDirectory;

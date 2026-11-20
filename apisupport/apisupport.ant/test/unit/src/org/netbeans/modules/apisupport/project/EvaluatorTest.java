@@ -105,6 +105,32 @@ public class EvaluatorTest extends TestBase {
         assertEquals("suite component ${cluster}", file(getWorkDir(), "suite1/build/cluster"), p2.getHelper().resolveFile(eval.getProperty("cluster")));
     }
 
+    // default.javac.release from nbbuild/module-defaults.properties only applies if the module
+    // declares none of javac.release / javac.source / javac.target
+    public void testDefaultJavacRelease() throws Exception {
+
+        // an explicit javac.release wins over the default;
+        // the fixture is platform/openide.loaders, its value read from its own properties file
+        EditableProperties expected1 = loadersProject.getHelper().getProperties("nbproject/project.properties");
+        assertNotNull("fixture declares javac.release", expected1.getProperty("javac.release"));
+        assertEquals("explicit javac.release kept", expected1.getProperty("javac.release"), loadersProject.evaluator().getProperty("javac.release"));
+
+        // a module declaring no javac.* properties picks up the default;
+        // the fixture is a resource-only kit, which has no reason to declare a level
+        FileObject dir = nbRoot().getFileObject("ide/spellchecker.kit");
+        assertNotNull("have spellchecker.kit checked out", dir);
+        NbModuleProject plain = (NbModuleProject)ProjectManager.getDefault().findProject(dir);
+        EditableProperties expected2 = plain.getHelper().getProperties("nbproject/project.properties");
+        assertNull("fixture declares javac.release", expected2.getProperty("javac.release"));
+        assertNull("fixture declares javac.source", expected2.getProperty("javac.source"));
+        assertNull("fixture declares javac.target", expected2.getProperty("javac.target"));
+
+        // the expected value is the default from nbbuild/module-defaults.properties,
+        // the same file the Evaluator's provider reads
+        EditableProperties defs = Util.loadProperties(nbRoot().getFileObject("nbbuild/module-defaults.properties"));
+        assertEquals("default javac.release", defs.getProperty("default.javac.release"), plain.evaluator().getProperty("javac.release"));
+    }
+
     /** @see "#63541" */
     public void testJdkProperties() throws Exception {
         File testjdk = new File(getWorkDir(), "testjdk");

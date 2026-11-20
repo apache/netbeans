@@ -45,7 +45,7 @@ import javax.swing.text.JTextComponent;
  */
 public class QueryBuilderSqlCompletion extends DefaultStyledDocument {
 
-    private List dictionary = new ArrayList();
+    private List<String> dictionary = new ArrayList<>();
     private JTextComponent comp;
     private int charCount = -1;
     private int lastOffset = 0;
@@ -91,8 +91,8 @@ public class QueryBuilderSqlCompletion extends DefaultStyledDocument {
 
     // Compare prefix of chars typed with  sqlReservedWords from QueryBuilderSqlTextArea
     public String completeText( String text ) {
-        for( Iterator i = dictionary.iterator(); i.hasNext(); ) {
-            String word = (String) i.next();
+        for( Iterator<String> i = dictionary.iterator(); i.hasNext(); ) {
+            String word = i.next();
             if( word.startsWith( text ) ) {
                 return word.substring( text.length() );
             } else if (word.startsWith(text.toUpperCase()))

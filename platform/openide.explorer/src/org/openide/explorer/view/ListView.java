@@ -1194,7 +1194,7 @@ public class ListView extends JScrollPane implements Externalizable {
 
         private class SearchFieldListener extends KeyAdapter implements DocumentListener, FocusListener {
             /** The last search results */
-            private List results = new ArrayList();
+            private List<Integer> results = new ArrayList<>();
 
             /** The last selected index from the search results. */
             private int currentSelectionIndex;
@@ -1272,9 +1272,9 @@ public class ListView extends JScrollPane implements Externalizable {
                         currentSelectionIndex = 0;
                     }
 
-                    Integer index = (Integer) results.get(currentSelectionIndex);
-                    list.setSelectedIndex(index.intValue());
-                    list.ensureIndexIsVisible(index.intValue());
+                    Integer index = results.get(currentSelectionIndex);
+                    list.setSelectedIndex(index);
+                    list.ensureIndexIsVisible(index);
                 } else {
                     list.clearSelection();
                 }

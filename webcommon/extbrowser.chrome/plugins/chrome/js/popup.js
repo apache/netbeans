@@ -18,11 +18,6 @@
  */
 
 // references from bg page
-var NetBeans = chrome.extension.getBackgroundPage().NetBeans;
-var NetBeans_Presets = chrome.extension.getBackgroundPage().NetBeans_Presets;
-var NetBeans_Preset = chrome.extension.getBackgroundPage().NetBeans_Preset;
-var NetBeans_ViewPort = chrome.extension.getBackgroundPage().NetBeans_ViewPort;
-
 /**
  * Window presets menu.
  */
@@ -31,6 +26,13 @@ var NetBeans_PresetMenu = {};
 NetBeans_PresetMenu._container = null;
 // menu presets
 NetBeans_PresetMenu._presets = null;
+let popupState;
+let activeTab;
+
+function runAction(action, value) {
+    chrome.runtime.sendMessage({action, value, tabId: activeTab.id})
+        .then(() => window.close());
+}
 // show the menu
 NetBeans_PresetMenu.show = function(presets, activeTab) {
     this._init(activeTab);
@@ -43,16 +45,10 @@ NetBeans_PresetMenu.hide = function() {
     window.close();
 };
 NetBeans_PresetMenu.resetPage = function() {
-    var that = this;
-    NetBeans.resetPageSize(function() {
-        that.hide();
-    });
+    runAction('resize', null);
 };
 NetBeans_PresetMenu.resizePage = function(preset) {
-    var that = this;
-    NetBeans.resizePage(preset, function() {
-        that.hide();
-    });
+    runAction('resize', preset);
 };
 NetBeans_PresetMenu.setAutoPresetActive = function() {
     document.getElementById('autoPresetMenu').setAttribute('class', 'active');
@@ -70,9 +66,9 @@ NetBeans_PresetMenu._init = function(activeTab) {
 // selection mode init
 NetBeans_PresetMenu._initSelectionMode = function(activeTab) {
     var selectionMode = document.getElementById('selectionModeCheckBox');
-    selectionMode.checked = NetBeans.getSelectionMode();
+    selectionMode.checked = popupState.selectionMode;
     var selectionModeMenu = document.getElementById('selectionModeMenu');
-    var display = NetBeans.debuggedTab === activeTab.id ? 'block' : 'none';
+    var display = popupState.debuggedTab === activeTab.id ? 'block' : 'none';
     selectionModeMenu.style.display = display;
     var selectionModeSeparator = document.getElementById('selectionModeSeparator');
     if (selectionModeSeparator) {
@@ -82,7 +78,7 @@ NetBeans_PresetMenu._initSelectionMode = function(activeTab) {
 // Debug in NetBeans init
 NetBeans_PresetMenu._initDebugInNetBeans = function(activeTab) {
     var menu = document.getElementById('debugInNetBeansMenu');
-    var display = NetBeans.ideVersion === "7.4" || NetBeans.debuggedTab === activeTab.id ? 'none' : 'block';
+    var display = popupState.ideVersion === "7.4" || popupState.debuggedTab === activeTab.id ? 'none' : 'block';
     menu.style.display = display;
     var separator = document.getElementById('debugInNetBeansSeparator');
     if (separator) {
@@ -102,7 +98,7 @@ NetBeans_PresetMenu._registerEvents = function(activeTab) {
         that._updateSelectionMode(event.target.id !== 'selectionModeCheckBox');
     }, false);
     document.getElementById('debugInNetBeansMenu').addEventListener('click', function() {
-        that._debugInNetBeans(activeTab);
+        runAction('inspect');
     }, false);
 };
 // clean and put presets to the menu
@@ -112,7 +108,7 @@ NetBeans_PresetMenu._putPresets = function() {
     menu.innerHTML = '';
     for (var p in this._presets) {
         var preset = this._presets[p];
-        var activePreset = NetBeans_ViewPort.width == preset.width && NetBeans_ViewPort.height == preset.height;
+        var activePreset = popupState.viewport.width == preset.width && popupState.viewport.height == preset.height;
         // item
         var item = document.createElement('a');
         item.setAttribute('href', '#');
@@ -168,8 +164,7 @@ NetBeans_PresetMenu._putPresets = function() {
 };
 // show preset customizer
 NetBeans_PresetMenu._showPresetCustomizer = function() {
-    NetBeans.showPresetCustomizer();
-    this.hide();
+    chrome.runtime.openOptionsPage().then(() => this.hide());
 };
 
 NetBeans_PresetMenu._updateSelectionMode = function(switchCheckBoxValue) {
@@ -178,36 +173,18 @@ NetBeans_PresetMenu._updateSelectionMode = function(switchCheckBoxValue) {
         checkbox.checked = !checkbox.checked;
     }
     var selectionMode = checkbox.checked;
-    NetBeans.setSelectionMode(selectionMode);
-    this.hide();
+    runAction('selection', selectionMode);
 };
 
-NetBeans_PresetMenu._debugInNetBeans = function(activeTab) {
-    NetBeans.sendMessage({
-        message: 'inspect',
-        tabId: activeTab.id,
-        url: activeTab.url
-    });
-    this.hide();
-};
-
-// run!
-window.addEventListener('load', function() {
-    NetBeans.detectViewPort(function() {
-        NetBeans.getWindowInfo(function(window) {
-            var activeTab = null;
-            var i;
-            for (i=0; i<window.tabs.length; i++) {
-                var tab = window.tabs[i];
-                if (tab.active) {
-                    activeTab = tab;
-                    break;
-                }
-            }
-            NetBeans_PresetMenu.show(NetBeans_Presets.getPresets(), activeTab);
-            if (window.state === 'maximized') {
-                NetBeans_PresetMenu.setAutoPresetActive();
-            }
-        });
-    });
-}, false);
+window.addEventListener('load', async () => {
+    [activeTab] = await chrome.tabs.query({active: true, currentWindow: true});
+    if (!activeTab) {
+        return;
+    }
+    popupState = await chrome.runtime.sendMessage({action: 'popup', tabId: activeTab.id});
+    NetBeans_PresetMenu.show(popupState.presets || [], activeTab);
+    const windowInfo = await chrome.windows.get(activeTab.windowId);
+    if (windowInfo.state === 'maximized') {
+        NetBeans_PresetMenu.setAutoPresetActive();
+    }
+});

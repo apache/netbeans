@@ -18,11 +18,6 @@
  */
 
 // references from bg page
-var INFOBAR = chrome.extension.getBackgroundPage().NetBeans.INFOBAR;
-var NetBeans_Presets = chrome.extension.getBackgroundPage().NetBeans_Presets;
-var NetBeans_Preset = chrome.extension.getBackgroundPage().NetBeans_Preset;
-var NetBeans_Warnings = chrome.extension.getBackgroundPage().NetBeans_Warnings;
-
 /**
  * Preset customizer.
  */
@@ -61,9 +56,7 @@ NetBeans_PresetCustomizer._init = function() {
     if (this._rowContainer !== null) {
         return;
     }
-    if (!INFOBAR) {
-        document.getElementById('toolbarHeader').style.display = 'none';
-    }
+    document.getElementById('toolbarHeader').style.display = 'none';
     this._moreHelpButton = document.getElementById('moreHelpButton');
     this._rowContainer = document.getElementById('presetCustomizerTable').getElementsByTagName('tbody')[0];
     this._addPresetButton = document.getElementById('addPreset');
@@ -183,21 +176,6 @@ NetBeans_PresetCustomizer._putPresetsInternal = function(presets) {
         }, false);
         height.appendChild(heightInput);
         row.appendChild(height);
-        // toolbar
-        if (INFOBAR) {
-            var toolbar = document.createElement('td');
-            toolbar.setAttribute('class', 'toolbar');
-            var toolbarCheckbox = document.createElement('input');
-            toolbarCheckbox.setAttribute('type', 'checkbox');
-            if (preset.showInToolbar) {
-                toolbarCheckbox.setAttribute('checked', 'checked');
-            }
-            toolbarCheckbox.addEventListener('click', function() {
-                that._toolbarChanged(this);
-            }, false);
-            toolbar.appendChild(toolbarCheckbox);
-            row.appendChild(toolbar);
-        }
         // append row
         this._rowContainer.appendChild(row);
         preset['_row'] = row;
@@ -259,13 +237,15 @@ NetBeans_PresetCustomizer._movePreset = function(preset, shift) {
     this._presets[index + shift] = tmp;
 };
 // save presets to the central storage and redraw them
-NetBeans_PresetCustomizer._save = function() {
+NetBeans_PresetCustomizer._save = async function() {
     for (i in this._presets) {
         var preset = this._presets[i];
         delete preset['_row'];
         delete preset['_errors'];
     }
-    NetBeans_Presets.setPresets(this._presets);
+    if (!await chrome.runtime.sendMessage({action: 'savePresets', value: this._presets})) {
+        return;
+    }
     this._cleanUp();
     this._hide();
 };
@@ -283,7 +263,7 @@ NetBeans_PresetCustomizer._switchHelp = function() {
 };
 // reset warnings
 NetBeans_PresetCustomizer._resetWarnings = function() {
-    NetBeans_Warnings.reset();
+    chrome.runtime.sendMessage({action: 'resetWarnings'});
     this._resetWarningsButton.innerHTML = I18n.message('_Done');
     this._resetWarningsButton.setAttribute('disabled', 'disabled');
 };
@@ -397,10 +377,6 @@ NetBeans_PresetCustomizer._heightChanged = function(input) {
     });
 };
 // callback when preset toolbar changes
-NetBeans_PresetCustomizer._toolbarChanged = function(input) {
-    this._activePreset.showInToolbar = input.checked;
-};
-// check whether the value is not empty
 NetBeans_PresetCustomizer._validateNotEmpty = function(value) {
     return value != null && value.trim().length > 0;
 };
@@ -452,6 +428,6 @@ function nbRemoveCssClass(element, cssClass) {
 }
 
 // run!
-window.addEventListener('load', function() {
-    NetBeans_PresetCustomizer.show(NetBeans_Presets.getPresets(true));
+window.addEventListener('load', async function() {
+    NetBeans_PresetCustomizer.show(await chrome.runtime.sendMessage({action: 'presets'}));
 }, false);

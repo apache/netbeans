@@ -422,7 +422,7 @@ public final class RepositoryPreferences {
     }
 
     public static int getIndexDateCutoffFilter() {
-        return getPreferences().getInt(PROP_INDEX_DATE_CUTOFF_FILTER, 0);
+        return getPreferences().getInt(PROP_INDEX_DATE_CUTOFF_FILTER, 2);
     }
     
     public static void setIndexDateCutoffFilter(int years) {

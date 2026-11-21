@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -56,11 +58,11 @@ public class TakeHeapDumpCommand extends Command {
         return super.toString() + ", outputFile: " + outputFile; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         outputFile = in.readUTF();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeUTF(outputFile);
     }
 }

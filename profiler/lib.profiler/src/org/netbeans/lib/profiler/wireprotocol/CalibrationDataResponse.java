@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -77,7 +79,7 @@ public class CalibrationDataResponse extends Response {
         return "CalibrationDataResponse, " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         int len = in.readInt();
         methodEntryExitCallTime = new double[len];
         methodEntryExitInnerTime = new double[len];
@@ -100,7 +102,7 @@ public class CalibrationDataResponse extends Response {
         timerCountsInSecond[1] = in.readLong();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         int len = methodEntryExitCallTime.length;
         out.writeInt(len);
 

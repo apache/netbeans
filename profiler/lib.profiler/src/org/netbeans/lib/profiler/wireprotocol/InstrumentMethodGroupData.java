@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -118,7 +120,7 @@ public class InstrumentMethodGroupData {
         return ((instrMethodClasses != null) ? (instrMethodClasses.length) : 0) + " classes."; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         nClasses = in.readInt();
 
         if (nClasses == 0) {
@@ -167,7 +169,7 @@ public class InstrumentMethodGroupData {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         if (instrMethodClasses == null) {
             out.writeInt(0);
 

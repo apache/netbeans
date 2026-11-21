@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import org.netbeans.lib.profiler.global.CommonConstants;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -156,7 +158,7 @@ public class VMPropertiesResponse extends Response {
                + "\n" + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         agentVersion = in.readInt();
         jdkVersionString = in.readUTF();
         javaClassPath = in.readUTF();
@@ -173,7 +175,7 @@ public class VMPropertiesResponse extends Response {
         agentId = in.readInt();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(agentVersion);
         out.writeUTF(jdkVersionString);
         out.writeUTF(javaClassPath);

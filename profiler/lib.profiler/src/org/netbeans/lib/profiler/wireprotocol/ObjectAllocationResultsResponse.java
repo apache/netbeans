@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -61,7 +63,7 @@ public class ObjectAllocationResultsResponse extends Response {
         return "ObjectAllocationResultsResponse, entries: " + nEntries + ", " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         nEntries = in.readInt();
         results = new int[nEntries];
 
@@ -70,7 +72,7 @@ public class ObjectAllocationResultsResponse extends Response {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(nEntries);
 
         for (int i = 0; i < nEntries; i++) {

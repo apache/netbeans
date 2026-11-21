@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,7 +60,7 @@ public class GetMethodNamesForJMethodIdsCommand extends Command {
         return super.toString() + ", length: " + methodIds.length; // NOI18N  
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         int len = in.readInt();
         methodIds = new int[len];
 
@@ -67,7 +69,7 @@ public class GetMethodNamesForJMethodIdsCommand extends Command {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(methodIds.length);
 
         for (int i = 0; i < methodIds.length; i++) {

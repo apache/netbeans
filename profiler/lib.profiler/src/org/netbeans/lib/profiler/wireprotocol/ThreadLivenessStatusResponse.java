@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,13 +60,13 @@ public class ThreadLivenessStatusResponse extends Response {
         return "ThreadLivenessStatusResponse, " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         int len = in.readInt();
         status = new byte[len];
         in.readFully(status);
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(status.length);
         out.write(status);
     }

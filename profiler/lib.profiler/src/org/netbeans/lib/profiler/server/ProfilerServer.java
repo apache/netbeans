@@ -383,8 +383,8 @@ public class ProfilerServer extends Thread implements CommonConstants {
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private ObjectInputStream socketIn;
-    private ObjectOutputStream socketOut;
+    private DataInputStream socketIn;
+    private DataOutputStream socketOut;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private WireIO wireIO;
@@ -1257,8 +1257,8 @@ public class ProfilerServer extends Thread implements CommonConstants {
             createInfoFile();
             clientSocket = serverSocket.accept();
             clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-            socketIn = new ObjectInputStream(clientSocket.getInputStream());
-            socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
+            socketIn = new DataInputStream(clientSocket.getInputStream());
+            socketOut = new DataOutputStream(clientSocket.getOutputStream());
             wireIO = new WireIO(socketOut, socketIn);
             connectionOpen = true;
             System.out.println(CONNECTION_MSG);

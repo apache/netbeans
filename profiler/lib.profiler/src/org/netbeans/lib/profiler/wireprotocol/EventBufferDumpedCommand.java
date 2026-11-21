@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -85,7 +87,7 @@ public class EventBufferDumpedCommand extends Command {
         return eventBufferFileName;
     }
     
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         boolean hasBuffer;
         
         bufSize = in.readInt();
@@ -112,7 +114,7 @@ public class EventBufferDumpedCommand extends Command {
         }
     }
     
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(bufSize);
         out.writeBoolean(buffer != null);
         if (buffer != null) {

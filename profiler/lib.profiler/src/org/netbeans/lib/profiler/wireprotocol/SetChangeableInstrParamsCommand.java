@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -134,7 +136,7 @@ public class SetChangeableInstrParamsCommand extends Command {
                + ", threadsSamplingFrequency: " + threadsSamplingFrequency; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         lockContentionMonitoringEnabled = in.readBoolean();
         nProfiledThreadsLimit = in.readInt();
         stackDepthLimit = in.readInt();
@@ -148,7 +150,7 @@ public class SetChangeableInstrParamsCommand extends Command {
         threadsSamplingFrequency = in.readInt();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeBoolean(lockContentionMonitoringEnabled);
         out.writeInt(nProfiledThreadsLimit);
         out.writeInt(stackDepthLimit);

@@ -21,6 +21,7 @@ package org.netbeans.modules.web.el;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.web.el.spi.ELVariableResolver;
 import org.netbeans.modules.web.el.spi.ELVariableResolver.FieldInfo;
@@ -45,22 +46,15 @@ public final class ELVariableResolvers {
             final CompilationContext compilationContext,
             final String beanName,
             final FileObject context) {
-        return (String) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(beanName, context),
-                new CompilationCache.ValueProvider<String>() {
-
-                    @Override
-                    public String get() {
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            FieldInfo beanClass = resolver.getInjectableField(beanName, context, compilationContext.context());
-                            if (beanClass != null) {
-                                return beanClass.getEnclosingClass();
-                            }
-                        }
-                        return null;
-
-                    }
-                });
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(beanName, context), () -> {
+            for (ELVariableResolver resolver : getResolvers()) {
+                FieldInfo beanClass = resolver.getInjectableField(beanName, context, compilationContext.context());
+                if (beanClass != null) {
+                    return beanClass.getEnclosingClass();
+                }
+            }
+            return null;
+        });
     }
 
     /**
@@ -74,40 +68,28 @@ public final class ELVariableResolvers {
             final String clazz,
             final FileObject context) {
 
-        return (String) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(clazz, context),
-                new CompilationCache.ValueProvider<String>() {
-
-                    @Override
-                    public String get() {
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            String beanName = resolver.getBeanName(clazz, context, compilationContext.context());
-                            if (beanName != null) {
-                                return beanName;
-                            }
-                        }
-                        return null;
-                    }
-                });
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(clazz, context), () -> {
+            for (ELVariableResolver resolver : getResolvers()) {
+                String beanName = resolver.getBeanName(clazz, context, compilationContext.context());
+                if (beanName != null) {
+                    return beanName;
+                }
+            }
+            return null;
+        });
     }
 
     public static List<ELVariableResolver.VariableInfo> getManagedBeans(
             final CompilationContext compilationContext,
             final FileObject context) {
 
-        return (List<ELVariableResolver.VariableInfo>) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(context),
-                new CompilationCache.ValueProvider<List<ELVariableResolver.VariableInfo>>() {
-
-                    @Override
-                    public List<ELVariableResolver.VariableInfo> get() {
-                        List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            result.addAll(resolver.getManagedBeans(context, compilationContext.context()));
-                        }
-                        return result;
-                    }
-                });
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(context), () -> {
+            List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
+            for (ELVariableResolver resolver : getResolvers()) {
+                result.addAll(resolver.getManagedBeans(context, compilationContext.context()));
+            }
+            return result;
+        });
 
     }
 
@@ -116,18 +98,13 @@ public final class ELVariableResolvers {
             final Snapshot snapshot,
             final int offset) {
 
-        return (List<ELVariableResolver.VariableInfo>) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(snapshot, offset),
-                new CompilationCache.ValueProvider<List<ELVariableResolver.VariableInfo>>() {
-
-                    @Override
-                    public List<ELVariableResolver.VariableInfo> get() {
-                        List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            result.addAll(resolver.getVariables(snapshot, offset, compilationContext.context()));
-                        }
-                        return result;
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(snapshot, offset),
+                () -> {
+                    List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
+                    for (ELVariableResolver resolver : getResolvers()) {
+                        result.addAll(resolver.getVariables(snapshot, offset, compilationContext.context()));
                     }
+                    return result;
                 });
 
     }
@@ -137,19 +114,13 @@ public final class ELVariableResolvers {
             final String scope,
             final Snapshot context) {
 
-        return (List<ELVariableResolver.VariableInfo>) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(scope, context),
-                new CompilationCache.ValueProvider<List<ELVariableResolver.VariableInfo>>() {
-
-                    @Override
-                    public List<ELVariableResolver.VariableInfo> get() {
-                        List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            result.addAll(resolver.getBeansInScope(scope, context, compilationContext.context()));
-                        }
-                        return result;
-                    }
-                });
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(scope, context), () -> {
+            List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
+            for (ELVariableResolver resolver : getResolvers()) {
+                result.addAll(resolver.getBeansInScope(scope, context, compilationContext.context()));
+            }
+            return result;
+        });
 
     }
 
@@ -158,20 +129,13 @@ public final class ELVariableResolvers {
             final String name,
             final Snapshot context) {
 
-        return (List<ELVariableResolver.VariableInfo>) compilationContext.cache().getOrCache(
-                CompilationCache.createKey(name, context),
-                new CompilationCache.ValueProvider<List<ELVariableResolver.VariableInfo>>() {
-
-                    @Override
-                    public List<ELVariableResolver.VariableInfo> get() {
-                        List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
-                        for (ELVariableResolver resolver : getResolvers()) {
-                            result.addAll(resolver.getRawObjectProperties(name, context, compilationContext.context()));
-                        }
-                        return result;
-                    }
-                });
-
+        return compilationContext.cache().getOrCache(CompilationCache.createKey(name, context), () -> {
+            List<ELVariableResolver.VariableInfo> result = new ArrayList<>();
+            for (ELVariableResolver resolver : getResolvers()) {
+                result.addAll(resolver.getRawObjectProperties(name, context, compilationContext.context()));
+            }
+            return result;
+        });
 
     }
 

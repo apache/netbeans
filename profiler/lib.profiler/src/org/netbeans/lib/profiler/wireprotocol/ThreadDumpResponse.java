@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -61,7 +63,8 @@ public class ThreadDumpResponse extends Response {
         return cdThreads;
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream raw) throws IOException {
+        ObjectInputStream in = (ObjectInputStream) (Object) raw;
         jdk15 = in.readBoolean();
         long t = in.readLong();
         time = new Date(t);
@@ -76,7 +79,8 @@ public class ThreadDumpResponse extends Response {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream raw) throws IOException {
+        ObjectOutputStream out = (ObjectOutputStream) (Object) raw;
         out.writeBoolean(jdk15);
         out.writeLong(time.getTime());
         out.writeInt(cdThreads.length);

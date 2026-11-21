@@ -19,9 +19,9 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 
 /**
@@ -47,13 +47,13 @@ public class WireIO {
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private DataInputStream in;
+    private DataOutputStream out;
     private long wasAlive;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    public WireIO(ObjectOutputStream pout, ObjectInputStream pin) {
+    public WireIO(DataOutputStream pout, DataInputStream pin) {
         out = pout;
         in = pin;
     }

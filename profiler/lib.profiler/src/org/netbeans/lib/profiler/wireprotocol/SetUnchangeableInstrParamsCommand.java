@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -88,7 +90,7 @@ public class SetUnchangeableInstrParamsCommand extends Command {
                + ", codeRegionCPUResBufSize: " + codeRegionCPUResBufSize; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         remoteProfiling = in.readBoolean();
         absoluteTimerOn = in.readBoolean();
         threadCPUTimerOn = in.readBoolean();
@@ -96,7 +98,7 @@ public class SetUnchangeableInstrParamsCommand extends Command {
         codeRegionCPUResBufSize = in.readInt();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeBoolean(remoteProfiling);
         out.writeBoolean(absoluteTimerOn);
         out.writeBoolean(threadCPUTimerOn);

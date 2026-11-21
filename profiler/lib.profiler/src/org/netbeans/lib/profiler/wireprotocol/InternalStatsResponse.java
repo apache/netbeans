@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -69,7 +71,7 @@ public class InternalStatsResponse extends Response {
         return "InternalStatsResponse, " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         nTotalInstrMethods = in.readInt();
         nClassLoads = in.readInt();
         nFirstMethodInvocations = in.readInt();
@@ -88,7 +90,7 @@ public class InternalStatsResponse extends Response {
     }
 
     // Custom serialization support
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(nTotalInstrMethods);
         out.writeInt(nClassLoads);
         out.writeInt(nFirstMethodInvocations);

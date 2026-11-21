@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -59,7 +61,7 @@ public class CodeRegionCPUResultsResponse extends Response {
         return "CodeRegionCPUResultsResponse, length: " + results.length + ", " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         int len = in.readInt();
         results = new long[len];
 
@@ -68,7 +70,7 @@ public class CodeRegionCPUResultsResponse extends Response {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(results.length);
 
         for (int i = 0; i < results.length; i++) {

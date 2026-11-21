@@ -23,8 +23,8 @@ import org.netbeans.lib.profiler.tests.jfluid.CommonProfilerTestCase;
 import org.netbeans.lib.profiler.wireprotocol.Command;
 import org.netbeans.lib.profiler.wireprotocol.WireIO;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -94,8 +94,8 @@ public class CommonWireIOTestCase extends CommonProfilerTestCase {
         try {
             clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
 
-            ObjectInputStream socketIn = new ObjectInputStream(clientSocket.getInputStream());
-            ObjectOutputStream socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
+            DataInputStream socketIn = new DataInputStream(clientSocket.getInputStream());
+            DataOutputStream socketOut = new DataOutputStream(clientSocket.getOutputStream());
             WireIO wireIO = new WireIO(socketOut, socketIn);
 
             return wireIO;
@@ -111,8 +111,8 @@ public class CommonWireIOTestCase extends CommonProfilerTestCase {
             clientSocket.setSoTimeout(0);
             clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
 
-            ObjectOutputStream socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-            ObjectInputStream socketIn = new ObjectInputStream(clientSocket.getInputStream());
+            DataOutputStream socketOut = new DataOutputStream(clientSocket.getOutputStream());
+            DataInputStream socketIn = new DataInputStream(clientSocket.getInputStream());
             WireIO wireIO = new WireIO(socketOut, socketIn);
 
             return wireIO;

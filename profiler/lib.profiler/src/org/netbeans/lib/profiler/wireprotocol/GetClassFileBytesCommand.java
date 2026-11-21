@@ -18,6 +18,8 @@
  */
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -51,7 +53,7 @@ public class GetClassFileBytesCommand extends Command {
         return classes;
     }
     
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         int nClasses = in.readInt();
 
         if (nClasses == 0) {
@@ -67,7 +69,7 @@ public class GetClassFileBytesCommand extends Command {
         }
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         if (classes == null) {
             out.writeInt(0);
 

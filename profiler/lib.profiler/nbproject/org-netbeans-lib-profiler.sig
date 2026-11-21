@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.143
+#Version 1.144
 
 CLSS public abstract interface java.io.Serializable
 
@@ -102,7 +102,7 @@ meth public int getCurrentAgentId()
 meth public int getCurrentInstrType()
 meth public int getDefiningClassLoaderId(java.lang.String,int) throws org.netbeans.lib.profiler.client.ClientUtils$TargetAppOrVMTerminated
 meth public int[] getAllocatedObjectsCountResults() throws org.netbeans.lib.profiler.client.ClientUtils$TargetAppOrVMTerminated
-meth public java.io.ObjectInputStream getSocketInputStream()
+meth public java.io.DataInputStream getSocketInputStream()
 meth public java.lang.String[][] getMethodNamesForJMethodIds(int[]) throws org.netbeans.lib.profiler.client.ClientUtils$TargetAppOrVMTerminated
 meth public long getInstrProcessingTime()
 meth public org.netbeans.lib.profiler.ProfilerEngineSettings getSettings()
@@ -4375,7 +4375,7 @@ supr org.netbeans.lib.profiler.wireprotocol.Response
 hfds agentId,agentVersion,bootClassPath,canInstrumentConstructor,javaClassPath,javaCommand,javaExtDirs,jdkVersionString,jvmArguments,maxHeapSize,startupTimeInCounts,startupTimeMillis,targetMachineOSName,workingDir
 
 CLSS public org.netbeans.lib.profiler.wireprotocol.WireIO
-cons public init(java.io.ObjectOutputStream,java.io.ObjectInputStream)
+cons public init(java.io.DataOutputStream,java.io.DataInputStream)
 meth public java.lang.Object receiveCommandOrResponse() throws java.io.IOException
 meth public long wasAlive()
 meth public void sendComplexCommand(org.netbeans.lib.profiler.wireprotocol.Command) throws java.io.IOException

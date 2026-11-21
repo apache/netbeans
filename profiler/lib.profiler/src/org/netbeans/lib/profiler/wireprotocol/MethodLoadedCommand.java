@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -110,14 +112,14 @@ public class MethodLoadedCommand extends Command {
                + ", methodSignature: " + methodSignature; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         className = in.readUTF();
         classLoaderId = in.readInt();
         methodName = in.readUTF();
         methodSignature = in.readUTF();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeUTF(className);
         out.writeInt(classLoaderId);
         out.writeUTF(methodName);

@@ -34,11 +34,11 @@ import java.awt.event.HierarchyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
@@ -1434,15 +1434,15 @@ public abstract class NetBeansProfiler extends Profiler {
 
         if (state == CommonConstants.AGENT_STATE_READY_DIRECT) {
             Socket clientSocket = null;
-            ObjectOutputStream socketOut = null;
-            ObjectInputStream socketIn = null;
+            DataOutputStream socketOut = null;
+            DataInputStream socketIn = null;
 
             try {
                 clientSocket = new Socket(host, port);
                 clientSocket.setSoTimeout(100);
                 clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-                socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-                socketIn = new ObjectInputStream(clientSocket.getInputStream());
+                socketOut = new DataOutputStream(clientSocket.getOutputStream());
+                socketIn = new DataInputStream(clientSocket.getInputStream());
 
                 WireIO wio = new WireIO(socketOut, socketIn);
                 wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);
@@ -1840,15 +1840,15 @@ public abstract class NetBeansProfiler extends Profiler {
         if (port == -1) return false; // invalid port
         
         Socket clientSocket = null;
-        ObjectOutputStream socketOut = null;
-        ObjectInputStream socketIn = null;
+        DataOutputStream socketOut = null;
+        DataInputStream socketIn = null;
 
         try {
             clientSocket = new Socket(host, port);
             clientSocket.setSoTimeout(100);
             clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-            socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-            socketIn = new ObjectInputStream(clientSocket.getInputStream());
+            socketOut = new DataOutputStream(clientSocket.getOutputStream());
+            socketIn = new DataInputStream(clientSocket.getInputStream());
 
             WireIO wio = new WireIO(socketOut, socketIn);
             wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);

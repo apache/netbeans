@@ -144,9 +144,9 @@ public final class RefactoringSession {
                             ProgressProvider progressProvider = (ProgressProvider) commit;
                             progressProvider.removeProgressListener(progressListener);
                         }
-                    }
-                    if (wrapper != null) {
-                        unsetWrappers(commit, wrapper);
+                        if (wrapper != null) {
+                            unsetWrappers(commit, wrapper);
+                        }
                     }
                 }
                 if (wrapper != null) {

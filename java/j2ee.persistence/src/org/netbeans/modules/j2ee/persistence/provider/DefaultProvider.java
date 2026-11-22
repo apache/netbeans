@@ -47,7 +47,7 @@ public class DefaultProvider extends Provider{
     }
     
     @Override
-    public Map getUnresolvedVendorSpecificProperties() {
+    public Map<String, String> getUnresolvedVendorSpecificProperties() {
         return Collections.emptyMap();
     }
     

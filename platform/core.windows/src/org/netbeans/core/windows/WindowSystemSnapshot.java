@@ -159,7 +159,7 @@ public class WindowSystemSnapshot {
         }
         
         if(modeStructureSnapshot != null) {
-            return ((ModeStructureSnapshot)modeStructureSnapshot).findModeSnapshot(mode.getName());
+            return (modeStructureSnapshot).findModeSnapshot(mode.getName());
         }
         
         return null;

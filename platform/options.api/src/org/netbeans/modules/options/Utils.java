@@ -35,7 +35,7 @@ public class Utils {
     
     public static FileObject getFileObject (String name, String ext, boolean create)
     throws IOException {
-        FileObject r = (FileObject) filesCache.get (name + '.' + ext);
+        FileObject r =  filesCache.get (name + '.' + ext);
         if (r != null) return r;
         FileObject optionsFolder = FileUtil.getConfigFile("Options");
         if (optionsFolder == null) {
@@ -57,7 +57,7 @@ public class Utils {
     
     public static Enumeration getInputStreams (String name, String ext)
     throws IOException {
-        ClassLoader classLoader = (ClassLoader) Lookup.getDefault ().
+        ClassLoader classLoader =  Lookup.getDefault ().
                 lookup (ClassLoader.class);
         return classLoader.getResources ("META-INF/options/" + name + "." + ext);
     }

@@ -296,7 +296,7 @@ public abstract class DOMConvertor extends Convertor {
         java.io.Writer caw = new java.io.CharArrayWriter(1024);
         java.io.Writer w = caw;
         
-        FileObject fo = (FileObject) ctx.lookup(FileObject.class);
+        FileObject fo =  ctx.lookup(FileObject.class);
         if (fo != null) {
             w = org.netbeans.modules.settings.ContextProvider.createWriterContextProvider(caw, fo);
         }
@@ -310,7 +310,7 @@ public abstract class DOMConvertor extends Convertor {
     private static Object readFromString(Convertor c, String s, Lookup ctx) throws IOException, ClassNotFoundException {
         java.io.Reader r = new java.io.StringReader(s);
         
-        FileObject fo = (FileObject) ctx.lookup(FileObject.class);
+        FileObject fo =  ctx.lookup(FileObject.class);
         if (fo != null) {
             r = org.netbeans.modules.settings.ContextProvider.createReaderContextProvider(r, fo);
         }

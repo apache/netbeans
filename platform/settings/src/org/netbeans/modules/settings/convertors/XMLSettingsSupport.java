@@ -251,7 +251,7 @@ final class XMLSettingsSupport {
     
         /** Lazy create default NB classloader for use during deserialization. */
         private static ClassLoader getNBClassLoader() {
-            ClassLoader c = (ClassLoader) org.openide.util.Lookup.getDefault().lookup(ClassLoader.class);
+            ClassLoader c =  org.openide.util.Lookup.getDefault().lookup(ClassLoader.class);
             return c != null ? c : ClassLoader.getSystemClassLoader();
         }
         

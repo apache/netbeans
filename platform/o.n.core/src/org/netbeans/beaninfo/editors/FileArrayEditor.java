@@ -312,7 +312,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
             return;
         }
         JFileChooser chooser = (JFileChooser)e.getSource();
-        File[] f = (File[])chooser.getSelectedFiles();
+        File[] f = chooser.getSelectedFiles();
         if (f == null) {
             return;
         }

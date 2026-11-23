@@ -562,7 +562,7 @@ public abstract class TabState {
     }
     
     int[] getAlarmTabs() {
-        int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+        int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
         Arrays.sort(alarms);
         return alarms;
     }
@@ -573,7 +573,7 @@ public abstract class TabState {
         int start = evt.getIndex0();
         int end = evt.getIndex1();
         if (hasAlarmTabs()) {
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             boolean changed = false;
             for (int i=0; i < alarms.length; i++) {
                 if (alarms[i] >= start) {
@@ -589,7 +589,7 @@ public abstract class TabState {
             }
         }
         if( hasHighlightTabs() ) {
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             boolean changed = false;
             for (int i=0; i < highlights.length; i++) {
                 if (highlights[i] >= start) {
@@ -611,7 +611,7 @@ public abstract class TabState {
             int start = evt.getIndex0();
             int end = evt.getIndex1();
 
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             Arrays.sort(alarms);
 
             if (end == start) {
@@ -671,7 +671,7 @@ public abstract class TabState {
             int start = evt.getIndex0();
             int end = evt.getIndex1();
 
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             Arrays.sort(highlights);
 
             boolean changed = false;
@@ -700,7 +700,7 @@ public abstract class TabState {
     
     void indicesAdded (ComplexListDataEvent e) {
         if (hasAlarmTabs()) {
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(alarms);
 
             int[] indices = e.getIndices();
@@ -725,7 +725,7 @@ public abstract class TabState {
             }
         }
         if( hasHighlightTabs() ) {
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(highlights);
 
             int[] indices = e.getIndices();
@@ -756,7 +756,7 @@ public abstract class TabState {
             int[] indices = e.getIndices();
             java.util.Arrays.sort(indices);
 
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(alarms);
 
             if (alarms[alarms.length -1] >= indices[0]) {
@@ -803,7 +803,7 @@ public abstract class TabState {
             int[] indices = e.getIndices();
             java.util.Arrays.sort(indices);
 
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(highlights);
 
             if (highlights[highlights.length -1] >= indices[0]) {
@@ -852,7 +852,7 @@ public abstract class TabState {
                 List old = Arrays.asList(dif.getOldData());
                 List nue = Arrays.asList(dif.getNewData());
 
-                int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+                int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
 
                 boolean changed = false;
                 for (int i=0; i < alarms.length; i++) {
@@ -885,7 +885,7 @@ public abstract class TabState {
                 List old = Arrays.asList(dif.getOldData());
                 List nue = Arrays.asList(dif.getNewData());
 
-                int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+                int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
 
                 boolean changed = false;
                 for (int i=0; i < highlights.length; i++) {

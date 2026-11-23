@@ -114,7 +114,7 @@ public final class PrintAction extends IconAction {
         if (top == null) {
             return null;
         }
-        return getProviders((PrintProvider) top.getLookup().lookup(PrintProvider.class));
+        return getProviders(top.getLookup().lookup(PrintProvider.class));
     }
 
     private PrintProvider[] getComponentProviders(JComponent top) {
@@ -235,7 +235,7 @@ public final class PrintAction extends IconAction {
         if ( !(top instanceof TopComponent)) {
             return null;
         }
-        return (DataObject) ((TopComponent) top).getLookup().lookup(DataObject.class);
+        return  ((TopComponent) top).getLookup().lookup(DataObject.class);
     }
 
     private String getText(InputStream input) {
@@ -261,7 +261,7 @@ public final class PrintAction extends IconAction {
         if (node == null) {
             return null;
         }
-        return (PrintCookie) node.getCookie(PrintCookie.class);
+        return  node.getCookie(PrintCookie.class);
     }
 
     @Override

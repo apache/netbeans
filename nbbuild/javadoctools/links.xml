@@ -245,3 +245,4 @@
 <link href="${javadoc.docs.org-netbeans-api-dashboard}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-dashboard"/>
 <link href="${javadoc.docs.org-netbeans-modules-project-dependency}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-dependency"/>
 
+<link href="${javadoc.docs.org-netbeans-modules-acp-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-acp-api"/>

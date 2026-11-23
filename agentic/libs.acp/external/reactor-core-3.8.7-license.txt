@@ -3,7 +3,7 @@ Version: 3.8.7
 License: Apache-2.0
 Description: Non-blocking reactive foundation for the JVM
 Origin: https://github.com/reactor/reactor-core
-Files: reactor-core-3.8.7.jar reactive-streams-1.0.4.jar
+Files: reactor-core-3.8.7.jar
 
 
                                  Apache License

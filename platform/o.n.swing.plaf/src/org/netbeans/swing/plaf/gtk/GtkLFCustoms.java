@@ -58,7 +58,7 @@ public class GtkLFCustoms extends LFCustoms {
         
         Object bg = ThemeValue.functioning() ? ColorType.TEXT_BACKGROUND : Color.WHITE;
         Object fb = new Color (144, 144, 255);
-        Object tabBg = ThemeValue.functioning() ? new ThemeValue (Region.INTERNAL_FRAME_TITLE_PANE, ThemeValue.DARK, fb) : (Object) fb;
+        Object tabBg = ThemeValue.functioning() ? new ThemeValue (Region.INTERNAL_FRAME_TITLE_PANE, ThemeValue.DARK, fb) : fb;
         
         if (!ThemeValue.functioning()) {
             Integer i = (Integer) UIManager.get("customFontSize"); //NOI18N
@@ -87,7 +87,7 @@ public class GtkLFCustoms extends LFCustoms {
             PROPSHEET_SELECTED_SET_FOREGROUND, selFg,
             PROPSHEET_BUTTON_COLOR, selFg,
             
-            PROPSHEET_SET_BACKGROUND, ThemeValue.functioning() ? (Object) control : (Object) Color.CYAN,
+            PROPSHEET_SET_BACKGROUND, ThemeValue.functioning() ? control : (Object) Color.CYAN,
             PROPSHEET_DISABLED_FOREGROUND, new Color(161,161,146),
             "Table.selectionBackground", selBg, //NOI18N
             "Table.selectionForeground", selFg, //NOI18N

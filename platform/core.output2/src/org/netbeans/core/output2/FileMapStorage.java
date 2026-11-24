@@ -364,7 +364,7 @@ class FileMapStorage implements Storage {
         }
         int limit = Math.min(cont.limit(), byteCount);
         try {
-            return new ChildBufferResource((ByteBuffer)cont.slice().limit(limit), this.contents);
+            return new ChildBufferResource(cont.slice().limit(limit), this.contents);
         } catch (Exception e) {
             throw new IllegalStateException ("Error setting limit to " + limit //NOI18N
             + " contents size = " + cont.limit() + " requested: read " + //NOI18N

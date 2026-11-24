@@ -119,7 +119,7 @@ public class HelpAction extends AbstractAction {
     }
     
     @Override public void actionPerformed(ActionEvent ev) {
-        Help h = (Help)Lookup.getDefault().lookup(Help.class);
+        Help h = Lookup.getDefault().lookup(Help.class);
         if (h == null) {
             Toolkit.getDefaultToolkit().beep();
             return;

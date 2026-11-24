@@ -149,7 +149,7 @@ public class ModeStructureSnapshot {
         public boolean originatorEquals(ElementSnapshot o) {
             return getClass().equals(o.getClass()) // To prevent mismatch between split and mode snapshot.
                                                    // Split has now originator corresponding to first child.
-                && ((ElementSnapshot)o).originator == originator;
+                && (o).originator == originator;
         }
 
         public abstract double getResizeWeight();
@@ -204,7 +204,7 @@ public class ModeStructureSnapshot {
         }
         
         public double getChildSnapshotSplitWeight(ElementSnapshot childSnapshot) {
-            Double d = (Double)childSnapshot2splitWeight.get(childSnapshot);
+            Double d = childSnapshot2splitWeight.get(childSnapshot);
             return d == null ? -1 : d.doubleValue();
         }
         

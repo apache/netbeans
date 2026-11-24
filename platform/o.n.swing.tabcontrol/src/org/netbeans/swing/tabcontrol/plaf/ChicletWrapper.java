@@ -147,7 +147,7 @@ public class ChicletWrapper implements Runnable {
         }
         HashMap<CacheEntry,BufferedImage> newCache = new HashMap<CacheEntry,BufferedImage>( cache );
         long startTime = System.currentTimeMillis();
-        CacheEntry[] entries = (CacheEntry[]) newCache.keySet().toArray(new CacheEntry[0]);
+        CacheEntry[] entries =  newCache.keySet().toArray(new CacheEntry[0]);
         Arrays.sort (entries);
         for (int i=entries.length-1; i >= entries.length / 3; i--) {
             if (startTime - entries[i].timestamp > 240000) {

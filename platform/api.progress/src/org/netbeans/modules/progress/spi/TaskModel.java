@@ -97,7 +97,7 @@ public final class TaskModel {
         InternalHandle toSelect = null;
         synchronized (model) {
             for (int i = 0; i < model.size(); i++) {
-                InternalHandle curHandle = (InternalHandle) model.getElementAt(i);
+                InternalHandle curHandle =  model.getElementAt(i);
                 if (getSelectionRating(curHandle) >= getSelectionRating(toSelect)) {
                     toSelect = curHandle;
                 }
@@ -160,7 +160,7 @@ public final class TaskModel {
             int select = selectionModel.getMinSelectionIndex();
             if (select != -1) {
                 if (select >= 0 && select < model.size()) {
-                    return (InternalHandle) model.getElementAt(select);
+                    return  model.getElementAt(select);
                 }
             }
         }

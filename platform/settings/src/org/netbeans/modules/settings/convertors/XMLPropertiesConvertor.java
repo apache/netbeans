@@ -215,7 +215,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
             }
             instanceClass = (String) name;
         }
-        return ((ClassLoader)Lookup.getDefault().lookup(ClassLoader.class)).loadClass(instanceClass);
+        return (Lookup.getDefault().lookup(ClassLoader.class)).loadClass(instanceClass);
     }
     
     private Object readSetting(java.io.Reader input, Object inst) throws IOException {

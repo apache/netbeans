@@ -102,7 +102,7 @@ final class LocallDownloadDnD implements DropTargetListener {
             if (value instanceof String) {
                 files = new ArrayList<File>();
                 for (String v : ((String) value).split("\n")) {
-                    File f = Utilities.toFile(new URI(((String) v).trim()));
+                    File f = Utilities.toFile(new URI((v).trim()));
                     assert f.exists() : "File shall exist: " + f;
                     files.add(f);
                 }

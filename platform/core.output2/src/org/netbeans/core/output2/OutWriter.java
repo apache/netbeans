@@ -420,7 +420,7 @@ class OutWriter extends PrintWriter {
             int tabLength = 0; // last tab length
             for (int i = off; i < off + len; i++) {
                 if (charBuff.position() + 1 >= WRITE_BUFF_SIZE) {
-                    write((ByteBuffer) byteBuff.position(charBuff.position() * 2), lineCLVT, false);
+                    write(byteBuff.position(charBuff.position() * 2), lineCLVT, false);
                     written = true;
                 }
                 if (written) {
@@ -472,7 +472,7 @@ class OutWriter extends PrintWriter {
                 } else if (c == '\n') {
                     charBuff.put('\n');
                     int pos = charBuff.position() * 2;
-                    ByteBuffer bf = (ByteBuffer) byteBuff.position(pos);
+                    ByteBuffer bf =  byteBuff.position(pos);
                     write(bf, lineCLVT, true);
                     written = true;
                 } else if (c != '\r') {
@@ -485,7 +485,7 @@ class OutWriter extends PrintWriter {
                 lastChar = c;
             }
             if (!written) {
-                write((ByteBuffer) byteBuff.position(charBuff.position() * 2), lineCLVT, false);
+                write(byteBuff.position(charBuff.position() * 2), lineCLVT, false);
             }
         } catch (IOException ioe) {
             onWriteException();

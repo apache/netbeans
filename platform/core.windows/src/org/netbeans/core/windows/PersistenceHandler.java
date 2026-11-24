@@ -155,7 +155,7 @@ public final class PersistenceHandler implements PersistenceObserver {
         Map<ModeImpl, ModeConfig> mode2config = new HashMap<ModeImpl, ModeConfig>();
 
         for (int i = 0; i < wmc.modes.length; i++) {
-            ModeConfig mc = (ModeConfig) wmc.modes[i];
+            ModeConfig mc =  wmc.modes[i];
             ModeImpl mode = getModeFromConfig(mc);
 
             mode2config.put(mode, mc);
@@ -175,7 +175,7 @@ public final class PersistenceHandler implements PersistenceObserver {
         // Then fill them with TopComponents.
         for(Iterator it = mode2config.keySet().iterator(); it.hasNext(); ) {
             ModeImpl mode = (ModeImpl)it.next();
-            ModeConfig mc = (ModeConfig)mode2config.get(mode);
+            ModeConfig mc = mode2config.get(mode);
             initModeFromConfig(mode, mc, false);
             initPreviousModes(mode, mc, mode2config);
 
@@ -828,7 +828,7 @@ public final class PersistenceHandler implements PersistenceObserver {
         if(DEBUG) {
             debugLog("WMI.modeConfigRemoved mo:" + modeName); // NOI18N
         }
-        ModeImpl mode = (ModeImpl)name2mode.remove(modeName);
+        ModeImpl mode = name2mode.remove(modeName);
         if(mode != null) {
             WindowManagerImpl.getInstance().removeMode(mode);
         } else {
@@ -856,7 +856,7 @@ public final class PersistenceHandler implements PersistenceObserver {
         wm.setTopComponentDockedInMaximizedMode( tcRefConfig.tc_id, tcRefConfig.dockedInMaximizedMode );
         wm.setTopComponentSlidedInDefaultMode( tcRefConfig.tc_id, !tcRefConfig.dockedInDefaultMode );
         wm.setTopComponentMaximizedWhenSlidedIn( tcRefConfig.tc_id, tcRefConfig.slidedInMaximized );
-        ModeImpl mode = (ModeImpl) name2mode.get(modeName);
+        ModeImpl mode =  name2mode.get(modeName);
         if( null == mode ) {
             for( ModeImpl m : name2mode.values() ) {
                 if( m.getOtherNames().contains( modeName ) ) {
@@ -924,7 +924,7 @@ public final class PersistenceHandler implements PersistenceObserver {
         if(DEBUG) {
             debugLog("WMI.groupConfigRemoved group:" + groupName); // NOI18N
         }
-        TopComponentGroupImpl group = (TopComponentGroupImpl)name2group.remove(groupName);
+        TopComponentGroupImpl group = name2group.remove(groupName);
         if(group != null) {
             WindowManagerImpl.getInstance().removeTopComponentGroup(group);
         } else {
@@ -944,7 +944,7 @@ public final class PersistenceHandler implements PersistenceObserver {
             debugLog("WMI.topComponentGroupConfigAdded group:" + groupName + " tcGroup:" + tcGroupConfig.tc_id); // NOI18N
         }
 
-        TopComponentGroupImpl group = (TopComponentGroupImpl)name2group.get(groupName);
+        TopComponentGroupImpl group = name2group.get(groupName);
         if(group != null) {
             group.addUnloadedTopComponent(tcGroupConfig.tc_id);
             if(tcGroupConfig.open) {
@@ -967,7 +967,7 @@ public final class PersistenceHandler implements PersistenceObserver {
             debugLog("WMI.topComponentGroupConfigRemoved group:" + groupName + " tcGroup:" + tc_id); // NOI18N
         }
 
-        TopComponentGroupImpl group = (TopComponentGroupImpl)name2group.get(groupName);
+        TopComponentGroupImpl group = name2group.get(groupName);
         if(group != null) {
             group.removeUnloadedTopComponent(tc_id);
         }

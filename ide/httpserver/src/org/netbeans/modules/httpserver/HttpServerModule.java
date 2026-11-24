@@ -255,7 +255,7 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
         sw.setServlet(new HttpServlet() {
             @Override
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                String className = classFromPath((HttpServletRequest) request);
+                String className = classFromPath(request);
                 LOG.log(Level.FINE, "Servlet class name: {0}", className);
                 if (className != null) {
                     try {

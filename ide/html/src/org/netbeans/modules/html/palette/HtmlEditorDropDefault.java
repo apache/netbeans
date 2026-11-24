@@ -42,7 +42,7 @@ public class HtmlEditorDropDefault implements ActiveEditorDrop {
             return false;
 
         try {
-            HtmlPaletteUtilities.insert(body, (JTextComponent)targetComponent);
+            HtmlPaletteUtilities.insert(body, targetComponent);
         }
         catch (BadLocationException ble) {
             return false;

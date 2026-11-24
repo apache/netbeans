@@ -416,7 +416,7 @@ public class Feature {
                     throw new IllegalArgumentException (methodName);
                 String className = methodName.substring (0, i);
                 String methodN = methodName.substring (i + 1);
-                ClassLoader cl = (ClassLoader) Lookup.getDefault ().
+                ClassLoader cl = Lookup.getDefault ().
                     lookup (ClassLoader.class);
                 try {
                     Class cls = cl.loadClass (className);

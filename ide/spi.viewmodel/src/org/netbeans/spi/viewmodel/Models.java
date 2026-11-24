@@ -1796,7 +1796,7 @@ public final class Models {
         @Override
         public int getChildrenCount (Object node) 
         throws UnknownTypeException {
-            TreeModel model = (TreeModel) classNameToModel.get (
+            TreeModel model = classNameToModel.get (
                 node.getClass ().getName ()
             );
             if (model != null) {
@@ -1888,7 +1888,7 @@ public final class Models {
 
         @Override
         public void reorder(Object parent, int[] perm) throws UnknownTypeException {
-            TreeModel model = (TreeModel) classNameToModel.get (
+            TreeModel model = classNameToModel.get (
                 parent.getClass ().getName ()
             );
             if (model instanceof ReorderableTreeModel) {
@@ -3443,7 +3443,7 @@ public final class Models {
         public Transferable drag(Object node) throws IOException,
                                                      UnknownTypeException {
             UnknownTypeException uex = null;
-            NodeModel model = (NodeModel) classNameToModel.get (
+            NodeModel model = classNameToModel.get (
                 node.getClass ().getName ()
             );
             if (model != null) {
@@ -3526,9 +3526,7 @@ public final class Models {
         public PasteType getDropType(Object node, Transferable t, int action,
                                      int index) throws UnknownTypeException {
             UnknownTypeException uex = null;
-            NodeModel model = (NodeModel) classNameToModel.get (
-                node.getClass ().getName ()
-            );
+            NodeModel model = classNameToModel.get(node.getClass().getName());
             if (model != null) {
                 if (model instanceof DnDNodeModel) {
                     try {

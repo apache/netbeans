@@ -105,7 +105,7 @@ public class ExportPatch {
         chooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String state = (String)e.getActionCommand();
+                String state = e.getActionCommand();
                 if (state.equals(JFileChooser.APPROVE_SELECTION)) {
                     File destination = chooser.getSelectedFile();
                     String name = destination.getName();
@@ -190,7 +190,7 @@ public class ExportPatch {
     }
 
     private static void exportDiff(StreamSource base, StreamSource modified, OutputStream out, FileFilter format) throws IOException {
-        DiffProvider diff = (DiffProvider) Lookup.getDefault().lookup(DiffProvider.class);
+        DiffProvider diff = Lookup.getDefault().lookup(DiffProvider.class);
 
         Reader r1 = null;
         Reader r2 = null;

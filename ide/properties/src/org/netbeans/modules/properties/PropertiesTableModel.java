@@ -63,7 +63,7 @@ public class PropertiesTableModel extends AbstractTableModel {
         bundleListener = new TablePropertyBundleListener();
         
         structure.addPropertyBundleListener(
-            (PropertyBundleListener) WeakListeners.create(PropertyBundleListener.class, bundleListener, structure)                
+            WeakListeners.create(PropertyBundleListener.class, bundleListener, structure)
         );
 
     }
@@ -166,7 +166,7 @@ public class PropertiesTableModel extends AbstractTableModel {
         // Is key.
         if (columnIndex == 0) {
             BundleStructure bs = structure;
-            String oldValue = (String)bs.keyAt(rowIndex);
+            String oldValue = bs.keyAt(rowIndex);
             if (oldValue == null) {
                 return;
             }

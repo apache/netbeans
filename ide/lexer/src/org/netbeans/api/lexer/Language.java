@@ -523,7 +523,7 @@ public final class Language<T extends TokenId> {
                     if (i > 0) {
                         sb.append(", ");
                     }
-                    String cat = (String)cats.get(i);
+                    String cat = cats.get(i);
                     sb.append('"');
                     sb.append(cat);
                     sb.append('"');

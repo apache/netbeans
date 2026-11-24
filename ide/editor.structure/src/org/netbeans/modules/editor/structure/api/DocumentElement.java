@@ -131,7 +131,7 @@ public final class DocumentElement {
         if(children.size() == 0) {
             return null;
         } else {
-            return (DocumentElement)getChildren().get(index);
+            return getChildren().get(index);
         }
     }
     

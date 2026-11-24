@@ -502,7 +502,7 @@ implements ListModel, Runnable, javax.swing.event.ListDataListener {
         
         int outLen = e - f;
         
-        int[] newExternal = (int[])external.clone ();
+        int[] newExternal = external.clone ();
         for (int i = e; i < size; i++) {
             int v = external[i];
             newExternal[i - outLen] = v < 0 ? v : v - len;

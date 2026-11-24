@@ -96,7 +96,7 @@ public final class CustomizableSideBar {
      */
     public static void addChangeListener(String mimeType, ChangeListener l) {
         synchronized (LISTENERS){
-            WeakEventListenerList listenerList = (WeakEventListenerList)LISTENERS.get(mimeType);
+            WeakEventListenerList listenerList = LISTENERS.get(mimeType);
             if (listenerList == null) {
                 listenerList = new WeakEventListenerList();
                 LISTENERS.put(mimeType, listenerList);

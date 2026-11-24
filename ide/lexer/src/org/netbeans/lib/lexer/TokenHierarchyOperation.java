@@ -633,7 +633,7 @@ public final class TokenHierarchyOperation<I, T extends TokenId> { // "I" stands
         } else {
             int lid = LexerApiPackageAccessor.get().languageId(language);
             if (wrapTokenIdCaches == null || lid >= wrapTokenIdCaches.length) {
-                WrapTokenIdCache<?>[] n = (WrapTokenIdCache<?>[]) new WrapTokenIdCache<?>[lid + 1];
+                WrapTokenIdCache<?>[] n = new WrapTokenIdCache<?>[lid + 1];
                 if (wrapTokenIdCaches != null) {
                     System.arraycopy(wrapTokenIdCaches, 0, n, 0, wrapTokenIdCaches.length);
                 }

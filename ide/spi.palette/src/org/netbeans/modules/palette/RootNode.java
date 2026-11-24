@@ -62,7 +62,7 @@ public final class RootNode extends FilterNode {
         super( originalRoot, 
                 new Children( originalRoot, lkp ),
                 new ProxyLookup( new Lookup[] { lkp, new AbstractLookup( content ), originalRoot.getLookup() } ) );
-        DataFolder df = (DataFolder)getOriginal().getCookie( DataFolder.class );
+        DataFolder df = getOriginal().getCookie( DataFolder.class );
         if( null != df ) {
             content.add( new DataFolder.Index( df, this ) );
         }
@@ -76,7 +76,7 @@ public final class RootNode extends FilterNode {
     public NewType[] getNewTypes() {
         NewType[] res = super.getNewTypes();
         if( null == res || res.length == 0 ) {
-            DataFolder paletteFolder = (DataFolder)getCookie( DataFolder.class );
+            DataFolder paletteFolder = getCookie( DataFolder.class );
             if( null != paletteFolder )
                 res = new NewType[] { new NewCategory() };
         }
@@ -97,7 +97,7 @@ public final class RootNode extends FilterNode {
             actionList.add( new Utils.RefreshPaletteAction() );
             actions = actionList.toArray(new Action[0]);
         }
-        PaletteActions customActions = (PaletteActions)getLookup().lookup( PaletteActions.class );
+        PaletteActions customActions = getLookup().lookup( PaletteActions.class );
         if( null != customActions ) {
             return Utils.mergeActions( actions, customActions.getCustomPaletteActions() );
         }
@@ -134,7 +134,7 @@ public final class RootNode extends FilterNode {
         {
             String categoryName = input.getInputText();
             if( CategoryNode.checkCategoryName( this, categoryName, null ) ) {
-                DataFolder paletteFolder = (DataFolder)getCookie( DataFolder.class );
+                DataFolder paletteFolder = getCookie( DataFolder.class );
                 FileObject parentFolder = paletteFolder.getPrimaryFile();
                 String folderName = CategoryNode.convertCategoryToFolderName( parentFolder, categoryName, null );
                 FileObject folder = parentFolder.createFolder(folderName);
@@ -172,7 +172,7 @@ public final class RootNode extends FilterNode {
         public Children(Node original, Lookup lkp) {
             super(original);
             this.lkp = lkp;
-            filter = (PaletteFilter)lkp.lookup( PaletteFilter.class );
+            filter = lkp.lookup( PaletteFilter.class );
         }
 
         @Override

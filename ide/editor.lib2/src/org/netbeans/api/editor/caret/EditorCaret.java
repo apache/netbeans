@@ -2082,7 +2082,7 @@ public final class EditorCaret implements Caret {
                                     JScrollBar hScrollBar = ((JScrollPane) scrollPane).getHorizontalScrollBar();
                                     if (hScrollBar != null) {
                                         int hScrollBarHeight = hScrollBar.getPreferredSize().height;
-                                        Dimension extentSize = ((JViewport) viewport).getExtentSize();
+                                        Dimension extentSize = viewport.getExtentSize();
                                         // If the extent size is high enough then extend
                                         // the scroll region by extra vertical space
                                         if (extentSize.height >= caretBounds.height + hScrollBarHeight) {
@@ -2635,8 +2635,7 @@ public final class EditorCaret implements Caret {
                             // Add weak listener so that editor pane could be removed
                             // from scrollpane without being held by scrollbar
                             hScrollBar.addComponentListener(
-                                    (ComponentListener) WeakListeners.create(
-                                            ComponentListener.class, listenerImpl, hScrollBar));
+                                    WeakListeners.create(ComponentListener.class, listenerImpl, hScrollBar));
                         }
                     }
                 }

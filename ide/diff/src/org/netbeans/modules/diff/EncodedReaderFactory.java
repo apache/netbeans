@@ -164,7 +164,7 @@ public class EncodedReaderFactory {
         if (!type.equals(dobj.getPrimaryFile())) {
             return null;
         }
-        EditCookie edit = (EditCookie) dobj.getCookie(EditCookie.class);
+        EditCookie edit = dobj.getCookie(EditCookie.class);
         CloneableEditorSupport editorSupport = null;
         if (edit instanceof CloneableEditorSupport) {
             editorSupport = (CloneableEditorSupport) edit;
@@ -212,7 +212,7 @@ public class EncodedReaderFactory {
         if (!fo.equals(dobj.getPrimaryFile())) {
             return null;
         }
-        EditCookie edit = (EditCookie) dobj.getCookie(EditCookie.class);
+        EditCookie edit = dobj.getCookie(EditCookie.class);
         final CloneableEditorSupport editorSupport;
         if (edit instanceof CloneableEditorSupport) {
             editorSupport = (CloneableEditorSupport) edit;
@@ -458,8 +458,7 @@ public class EncodedReaderFactory {
     }
     
     private static String findJavaEncoding(FileObject fo) {
-        ClassLoader systemClassLoader =
-                (ClassLoader) Lookup.getDefault().lookup(ClassLoader.class);
+        ClassLoader systemClassLoader = Lookup.getDefault().lookup(ClassLoader.class);
         Method org_netbeans_modules_java_Util_getFileEncoding = null;
         try {
             Class<?> c = systemClassLoader.

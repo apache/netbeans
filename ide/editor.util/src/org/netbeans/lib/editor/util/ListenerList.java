@@ -147,7 +147,7 @@ public final class ListenerList<T extends EventListener> implements Serializable
             T l = (T)listenerOrNull;
             lList.add(l);
         }
-        this.listenersList = new ImmutableList<T>((EventListener [])lList.toArray(new EventListener[0]));
+        this.listenersList = new ImmutableList<T>(lList.toArray(new EventListener[0]));
     }
     
     public String toString() {

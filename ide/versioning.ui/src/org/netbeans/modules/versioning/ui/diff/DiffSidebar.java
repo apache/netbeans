@@ -720,12 +720,12 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
                             g.setColor(colorBorder);
                             g.drawLine(2, yCoords[0], 2, yCoords[2] - 1);
                         } else {
-                            g.fillRect(3, (int) y, BAR_WIDTH - 3, (int) height);
+                            g.fillRect(3, y, BAR_WIDTH - 3, (int) height);
                             g.setColor(colorBorder);
                             int y1 = (int) (y + height);
-                            g.drawLine(2, (int) y, 2, y1);
+                            g.drawLine(2, y, 2, y1);
                             if (ad.getSecondStart() == line) {
-                                g.drawLine(2, (int) y, BAR_WIDTH - 1, (int) y);
+                                g.drawLine(2, y, BAR_WIDTH - 1, y);
                             }
                             g.drawLine(2, y1, BAR_WIDTH - 1, y1);
                         }

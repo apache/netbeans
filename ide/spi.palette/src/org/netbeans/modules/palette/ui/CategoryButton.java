@@ -136,7 +136,7 @@ class CategoryButton extends JCheckBox implements Autoscroll {
         actionMap.put( "collapse", new ExpandAction( false ) ); //NOI18N
         actionMap.put( "expand", new ExpandAction( true ) ); //NOI18N
         actionMap.put( "popup", new PopupAction() ); //NOI18N
-        Node categoryNode = (Node)category.getLookup().lookup( Node.class );
+        Node categoryNode = category.getLookup().lookup( Node.class );
         if( null != categoryNode )
             actionMap.put( "paste", new Utils.PasteItemAction( categoryNode ) ); //NOI18N
     }

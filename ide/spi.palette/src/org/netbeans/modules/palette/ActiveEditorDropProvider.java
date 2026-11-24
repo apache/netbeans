@@ -63,7 +63,7 @@ class ActiveEditorDropProvider implements InstanceContent.Convertor<String,Activ
 
         if (instanceName != null && instanceName.trim().length() > 0) {//we should try to instantiate item drop
             try {
-                ClassLoader loader = (ClassLoader)Lookup.getDefault().lookup(ClassLoader.class);
+                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                 if (loader == null)
                     loader = getClass ().getClassLoader ();
                 Class instanceClass = loader.loadClass (instanceName);

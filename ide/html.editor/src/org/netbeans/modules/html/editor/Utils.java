@@ -76,7 +76,7 @@ public class Utils {
     public static Document getDocument(FileObject file) {
         try {
             DataObject d = DataObject.find(file);
-            EditorCookie ec = (EditorCookie) d.getLookup().lookup(EditorCookie.class);
+            EditorCookie ec = d.getLookup().lookup(EditorCookie.class);
 
             if (ec == null) {
                 return null;

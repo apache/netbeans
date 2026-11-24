@@ -471,7 +471,7 @@ public class PalettePanel extends JPanel implements Scrollable {
         if( null != getModel() ) {
             Item selItem = getModel().getSelectedItem();
             if( null != selItem ) {
-                Node selNode = (Node) selItem.getLookup().lookup( Node.class );
+                Node selNode = selItem.getLookup().lookup( Node.class );
                 if( null != selNode )
                     ctx = selNode.getHelpCtx();
             } 
@@ -485,13 +485,13 @@ public class PalettePanel extends JPanel implements Scrollable {
                     }
                 }
                 if( null != selCategory ) {
-                    Node selNode = (Node) selCategory.getCategory().getLookup().lookup( Node.class );
+                    Node selNode = selCategory.getCategory().getLookup().lookup( Node.class );
                     if( null != selNode )
                         ctx = selNode.getHelpCtx();
                 }
             }
             if( null == ctx || HelpCtx.DEFAULT_HELP.equals( ctx ) ) {
-                Node selNode = (Node) getModel().getRoot().lookup( Node.class );
+                Node selNode = getModel().getRoot().lookup( Node.class );
                 if( null != selNode )
                     ctx = selNode.getHelpCtx();
             }

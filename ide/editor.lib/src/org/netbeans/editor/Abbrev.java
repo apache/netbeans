@@ -228,7 +228,7 @@ public class Abbrev implements /* SettingsChangeListener,*/ PropertyChangeListen
     }
 
     public String getExpandString() {
-        BaseDocument doc = (BaseDocument)editorUI.getDocument();
+        BaseDocument doc = editorUI.getDocument();
         String abbrevStr = getAbbrevString();
         int abbrevStrLen = abbrevStr.length();
         Object expansion = translateAbbrev(abbrevStr);

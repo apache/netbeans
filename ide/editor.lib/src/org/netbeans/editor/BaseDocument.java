@@ -2393,7 +2393,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                             = (BaseDocument.AtomicCompoundEdit)anEdit;
                     List<UndoableEdit> anAtomicEditChildren = anAtomicEdit.getEdits();
                     for (int i = 0; i < anAtomicEditChildren.size(); i++) {
-                        UndoableEdit child = (UndoableEdit)anAtomicEditChildren.get(i);
+                        UndoableEdit child = anAtomicEditChildren.get(i);
                         if (child instanceof BaseDocumentEvent && thisMergeEdit.canMerge((BaseDocumentEvent)child)) {
                             previousEdit = anEdit;
                             return true;

@@ -162,7 +162,7 @@ public final class PaletteItemHandler extends DefaultHandler {
 
         //going from the beginning and skipping empty lines until the first nonempty line occurs
         for (int i = 0; i < firstNonEmpty; i++) {
-            String line = (String)lines.get(i);
+            String line = lines.get(i);
             if (line.trim().length() != 0)
                 firstNonEmpty = i;
         }

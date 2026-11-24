@@ -295,7 +295,7 @@ public final class HgURL {
 
         if (username != null) {
             this.username = username;
-            this.password = password == null ? null : (char[])password.clone();
+            this.password = password == null ? null : password.clone();
         } else {
             String rawUserInfo = originalUri.getRawUserInfo();
             if (rawUserInfo == null) {

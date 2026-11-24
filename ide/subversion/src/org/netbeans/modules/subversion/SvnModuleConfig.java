@@ -134,7 +134,7 @@ public class SvnModuleConfig {
     }
 
     public String getExecutableBinaryPath() {
-        return (String) getPreferences().get(KEY_EXECUTABLE_BINARY, "");        
+        return getPreferences().get(KEY_EXECUTABLE_BINARY, "");
     }
     
     public void setExecutableBinaryPath(String path) {
@@ -142,7 +142,7 @@ public class SvnModuleConfig {
     }
 
     public String getAnnotationFormat() {
-        return (String) getPreferences().get(KEY_ANNOTATION_FORMAT, getDefaultAnnotationFormat());                
+        return getPreferences().get(KEY_ANNOTATION_FORMAT, getDefaultAnnotationFormat());
     }
     
     public String getDefaultAnnotationFormat() {

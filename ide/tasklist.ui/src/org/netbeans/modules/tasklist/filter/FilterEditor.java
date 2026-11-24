@@ -436,7 +436,7 @@ private void onNewFilter(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onNe
         }
         
         public TaskFilter get(int i ) {
-            return (TaskFilter)filters.get(i);
+            return filters.get(i);
         }
         
         public boolean add(TaskFilter f) {

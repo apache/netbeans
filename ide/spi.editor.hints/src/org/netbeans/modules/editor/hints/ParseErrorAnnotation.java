@@ -150,7 +150,7 @@ public class ParseErrorAnnotation extends Annotation implements PropertyChangeLi
     synchronized void attachAnnotation(StyledDocument doc, Position lineStart) {
         if (attachedTo == null) {
             attachedTo = doc;
-            NbDocument.addAnnotation((StyledDocument) doc, lineStart, -1, this);
+            NbDocument.addAnnotation(doc, lineStart, -1, this);
         } else {
             Level toLog = Level.FINE;
             assert (toLog = Level.INFO) != null;

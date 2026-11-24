@@ -108,15 +108,15 @@ public abstract class DragAndDropHandler {
      * @return True if the drop has been successful, false otherwise.
      */
     public boolean doDrop( Lookup targetCategory, Transferable item, int dndAction, int dropIndex ) {
-        Node categoryNode = (Node)targetCategory.lookup( Node.class );
+        Node categoryNode = targetCategory.lookup( Node.class );
         try {
             //first check if we're reordering items within the same category
             if( item.isDataFlavorSupported( PaletteController.ITEM_DATA_FLAVOR ) ) {
                 Lookup itemLookup = (Lookup)item.getTransferData( PaletteController.ITEM_DATA_FLAVOR );
                 if( null != itemLookup ) {
-                    Node itemNode = (Node)itemLookup.lookup( Node.class );
+                    Node itemNode = itemLookup.lookup( Node.class );
                     if( null != itemNode ) {
-                        Index order = (Index)categoryNode.getCookie( Index.class );
+                        Index order = categoryNode.getCookie( Index.class );
                         if( null != order && order.indexOf( itemNode ) >= 0 ) {
                             //the drop item comes from the targetCategory so let's 
                             //just change the order of items
@@ -177,14 +177,14 @@ public abstract class DragAndDropHandler {
      * @return True if the move operation was successful.
      */
     private boolean moveItem( Lookup category, Lookup itemToMove, int moveToIndex ) {
-        Node categoryNode = (Node)category.lookup( Node.class );
+        Node categoryNode = category.lookup( Node.class );
         if( null == categoryNode )
             return false;
-        Node itemNode = (Node)itemToMove.lookup( Node.class );
+        Node itemNode = itemToMove.lookup( Node.class );
         if( null == itemNode )
             return false;
         
-        Index order = (Index)categoryNode.getCookie( Index.class );
+        Index order = categoryNode.getCookie( Index.class );
         if( null == order ) {
             return false;
         }
@@ -202,7 +202,7 @@ public abstract class DragAndDropHandler {
      * @return True if it is possible to reorder categories by drag and drop operations.
      */
     public boolean canReorderCategories( Lookup paletteRoot ) {
-        Node rootNode = (Node)paletteRoot.lookup( Node.class );
+        Node rootNode = paletteRoot.lookup( Node.class );
         if( null != rootNode ) {
             return null != rootNode.getCookie( Index.class );
         }
@@ -218,14 +218,14 @@ public abstract class DragAndDropHandler {
      * @return True if the move operation was successful.
      */
     public boolean moveCategory( Lookup category, int moveToIndex ) {
-        Node categoryNode = (Node)category.lookup( Node.class );
+        Node categoryNode = category.lookup( Node.class );
         if( null == categoryNode )
             return false;
         Node rootNode = categoryNode.getParentNode();
         if( null == rootNode )
             return false;
         
-        Index order = (Index)rootNode.getCookie( Index.class );
+        Index order = rootNode.getCookie( Index.class );
         if( null == order ) {
             return false;
         }

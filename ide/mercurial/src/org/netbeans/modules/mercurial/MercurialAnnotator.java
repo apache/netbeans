@@ -296,7 +296,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
                     a = ((ContextAwareAction)a).createContextAwareInstance(Lookups.fixed(files.toArray()));
                 }
                 if(a != null) actions.add(a);
-                a = (Action) Utils.getAcceleratedAction("Actions/Mercurial/org-netbeans-modules-mercurial-ui-clone-CloneExternalAction.instance");
+                a = Utils.getAcceleratedAction("Actions/Mercurial/org-netbeans-modules-mercurial-ui-clone-CloneExternalAction.instance");
                 if(a != null) actions.add(a);
             } else {
                 actions.add(SystemAction.get(StatusAction.class));
@@ -337,7 +337,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
                 actions.add(SystemActionBridge.createAction(SystemAction.get(UpdateAction.class), loc.getString("CTL_PopupMenuItem_Update"), context)); //NOI18N
                 actions.add(SystemActionBridge.createAction(SystemAction.get(RevertModificationsAction.class), loc.getString("CTL_PopupMenuItem_Revert"), context)); //NOI18N
                 actions.add(SystemActionBridge.createAction(SystemAction.get(AnnotateAction.class),
-                        ((AnnotateAction)SystemAction.get(AnnotateAction.class)).visible(nodes)
+                        SystemAction.get(AnnotateAction.class).visible(nodes)
                         ? loc.getString("CTL_PopupMenuItem_HideAnnotations") //NOI18N
                         : loc.getString("CTL_PopupMenuItem_ShowAnnotations"), context)); //NOI18N
                 actions.add(SystemActionBridge.createAction(SystemAction.get(LogAction.class), loc.getString("CTL_PopupMenuItem_Log"), context)); //NOI18N

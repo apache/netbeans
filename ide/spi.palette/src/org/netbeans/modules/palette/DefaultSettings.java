@@ -78,7 +78,7 @@ public final class DefaultSettings implements Settings, ModelListener, CategoryL
     }
     
     private String constructPrefsFileName( Model model ) {
-        DataFolder dof = (DataFolder)model.getRoot().lookup( DataFolder.class );
+        DataFolder dof = model.getRoot().lookup( DataFolder.class );
         if( null != dof ) {
             FileObject fo = dof.getPrimaryFile();
             if( null != fo ) {
@@ -191,7 +191,7 @@ public final class DefaultSettings implements Settings, ModelListener, CategoryL
     }
     
     private static Node getNode( Lookup lkp ) {
-        return (Node)lkp.lookup( Node.class );
+        return lkp.lookup( Node.class );
     }
     
     private static boolean get( Node node, String attrName, boolean defaultValue ) {
@@ -227,7 +227,7 @@ public final class DefaultSettings implements Settings, ModelListener, CategoryL
     private static Object getNodeDefaultValue( Node node, String attrName ) {
         Object res = node.getValue( attrName );
         if( null == res ) {
-            DataObject dobj = (DataObject)node.getCookie( DataObject.class );
+            DataObject dobj = node.getCookie( DataObject.class );
             if( null != dobj ) {
                 res = dobj.getPrimaryFile().getAttribute( attrName );
             }
@@ -348,15 +348,15 @@ public final class DefaultSettings implements Settings, ModelListener, CategoryL
 
     @Override
     public void reset() {
-        Node root = (Node)model.getRoot().lookup( Node.class );
+        Node root = model.getRoot().lookup( Node.class );
         clearAttributes( root );
         Category[] categories = model.getCategories();
         for( int i=0; i<categories.length; i++ ) {
-            Node cat = (Node)categories[i].getLookup().lookup( Node.class );
+            Node cat = categories[i].getLookup().lookup( Node.class );
             clearAttributes( cat );
             Item[] items = categories[i].getItems();
             for( int j=0; j<items.length; j++ ) {
-                Node it = (Node)items[j].getLookup().lookup( Node.class );
+                Node it = items[j].getLookup().lookup( Node.class );
                 clearAttributes( it );
             }
         }

@@ -47,7 +47,7 @@ public final class RegisterLSPServicesProcessor extends LayerGeneratingProcessor
         Set<? extends TypeElement> annotations, RoundEnvironment roundEnv
     ) throws LayerGenerationException {
         for (Element e : roundEnv.getElementsAnnotatedWith(RegisterLSPServices.class)) {
-            RegisterLSPServices services = (RegisterLSPServices) e.getAnnotation(RegisterLSPServices.class);
+            RegisterLSPServices services = e.getAnnotation(RegisterLSPServices.class);
             if (services == null) {
                 continue;
             }

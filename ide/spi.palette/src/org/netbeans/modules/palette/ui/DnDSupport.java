@@ -246,7 +246,7 @@ public class DnDSupport  implements DragGestureListener, DropTargetListener {
     /** Removes timer and all listeners. */
     private void removeTimer() {
         if (timer != null) {
-            ActionListener[] l = (ActionListener[]) timer.getListeners(ActionListener.class);
+            ActionListener[] l = timer.getListeners(ActionListener.class);
 
             for (int i = 0; i < l.length; i++) {
                 timer.removeActionListener(l[i]);

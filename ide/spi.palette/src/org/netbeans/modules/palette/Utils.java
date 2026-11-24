@@ -88,7 +88,7 @@ public final class Utils {
     public static boolean getBoolean( Node node, String attrName, boolean defaultValue ) {
         Object val = node.getValue( attrName );
         if( null == val ) {
-            DataObject dobj = (DataObject)node.getCookie( DataObject.class );
+            DataObject dobj = node.getCookie( DataObject.class );
             if( null != dobj ) {
                 val = dobj.getPrimaryFile().getAttribute( attrName );
             }
@@ -105,7 +105,7 @@ public final class Utils {
         if( null == retValue || HelpCtx.DEFAULT_HELP.equals( retValue ) ) {
             Object val = node.getValue( PaletteController.ATTR_HELP_ID );
             if( null == val ) {
-                DataObject dobj = (DataObject)node.getCookie( DataObject.class );
+                DataObject dobj = node.getCookie( DataObject.class );
                 if( null != dobj ) {
                     val = dobj.getPrimaryFile().getAttribute( PaletteController.ATTR_HELP_ID );
                 }
@@ -148,7 +148,7 @@ public final class Utils {
     }
     
     public static void resetPalette( final PaletteController controller, final Settings settings ) {
-        Node rootNode = (Node)controller.getRoot().lookup( Node.class );
+        Node rootNode = controller.getRoot().lookup( Node.class );
         if( null != rootNode ) {
             PaletteActions customActions = rootNode.getLookup().lookup( PaletteActions.class );
             Action resetAction = customActions.getResetAction();
@@ -173,7 +173,7 @@ public final class Utils {
                     DialogDisplayer.getDefault().notify(desc)) ) {
             
             settings.reset();
-            DataObject dob = (DataObject)rootNode.getLookup().lookup( DataObject.class );
+            DataObject dob = rootNode.getLookup().lookup( DataObject.class );
             if( null != dob ) {
                 FileObject primaryFile = dob.getPrimaryFile();
                 if( null != primaryFile && primaryFile.isFolder() ) {
@@ -245,7 +245,7 @@ public final class Utils {
         }
         
         public void actionPerformed(ActionEvent event) {
-            Index order = (Index)paletteNode.getCookie(Index.class);
+            Index order = paletteNode.getCookie(Index.class);
             if (order != null) {
                 final Node[] nodes = order.getNodes();
                 Arrays.sort( nodes, new Comparator<Node>() {
@@ -415,7 +415,7 @@ public final class Utils {
         }
         
         public void actionPerformed(ActionEvent event) {
-            Index order = (Index)categoryNode.getCookie(Index.class);
+            Index order = categoryNode.getCookie(Index.class);
             if (order != null) {
                 final Node[] nodes = order.getNodes();
                 Arrays.sort( nodes, new Comparator<Node>() {

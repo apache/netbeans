@@ -179,7 +179,7 @@ public final class PaletteItemNode extends FilterNode implements Node.Cookie {
         ExTransferable t = ExTransferable.create( super.clipboardCopy() );
         
         Lookup lookup = getLookup();
-        ActiveEditorDrop drop = (ActiveEditorDrop) lookup.lookup(ActiveEditorDrop.class);
+        ActiveEditorDrop drop = lookup.lookup(ActiveEditorDrop.class);
         ActiveEditorDropTransferable s = new ActiveEditorDropTransferable(drop);
         t.put(s);
         

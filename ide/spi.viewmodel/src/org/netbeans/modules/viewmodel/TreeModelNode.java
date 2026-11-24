@@ -718,7 +718,7 @@ public class TreeModelNode extends AbstractNode {
                         args[i] = removeHTML(name);
                     } else if (name.startsWith ("<_html>")) {
                         argsHTML[i] = '<' + name.substring(2);
-                        args[i] = removeHTML((String) argsHTML[i]);
+                        args[i] = removeHTML(argsHTML[i]);
                     } else {
                         argsHTML[i] = null;
                         args[i] = name;

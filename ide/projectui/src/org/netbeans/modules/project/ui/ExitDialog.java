@@ -209,7 +209,7 @@ public final class ExitDialog extends JPanel implements ActionListener {
         // because this will unblock the thread which called Dialog.show()
         
         for (int i = listModel.size() - 1; i >= 0; i--) {            
-            DataObject obj = (DataObject) listModel.getElementAt(i);
+            DataObject obj = listModel.getElementAt(i);
             obj.setModified(false);
         }
 

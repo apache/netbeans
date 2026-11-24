@@ -228,7 +228,7 @@ final class WrapInfo extends GapList<WrapLine> {
     }
 
     String dumpWrapLine(ParagraphView pView, int wrapLineIndex) {
-        return "Invalid wrapLine["  + wrapLineIndex + "]:\n" + toString((ParagraphView)pView); // NOI18N
+        return "Invalid wrapLine["  + wrapLineIndex + "]:\n" + toString(pView); // NOI18N
     }
 
     public String appendInfo(StringBuilder sb, ParagraphView paragraphView, int indent) { // Expected to not append append newline at end

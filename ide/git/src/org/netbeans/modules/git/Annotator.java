@@ -215,7 +215,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
             action = Utils.getAcceleratedAction(ACTIONS_PATH_PREFIX + name + ".instance");
         } else {
             // or use Actions.forID
-            action = (Action) FileUtil.getConfigObject(ACTIONS_PATH_PREFIX + name + ".instance", Action.class);
+            action = FileUtil.getConfigObject(ACTIONS_PATH_PREFIX + name + ".instance", Action.class);
         }
         if(action instanceof ContextAwareAction) {
             action = ((ContextAwareAction)action).createContextAwareInstance(Lookups.singleton(new ContextHolder(context)));

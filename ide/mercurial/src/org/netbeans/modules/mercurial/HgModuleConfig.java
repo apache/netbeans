@@ -137,7 +137,7 @@ public class HgModuleConfig {
     }
 
     public String getExecutableBinaryPath() {
-        return (String) getPreferences().get(KEY_EXECUTABLE_BINARY, ""); // NOI18N
+        return getPreferences().get(KEY_EXECUTABLE_BINARY, ""); // NOI18N
     }
     public boolean getBackupOnRevertModifications() {
         return getPreferences().getBoolean(KEY_BACKUP_ON_REVERTMODS, true);
@@ -169,7 +169,7 @@ public class HgModuleConfig {
     }
 
     public String getExportFolder() {
-        return (String) getPreferences().get(KEY_EXPORT_FOLDER, System.getProperty("user.home")); // NOI18N
+        return getPreferences().get(KEY_EXPORT_FOLDER, System.getProperty("user.home")); // NOI18N
     }
     
     public void setExportFolder(String path) {
@@ -177,7 +177,7 @@ public class HgModuleConfig {
     }
 
     public String getImportFolder() {
-        return (String) getPreferences().get(KEY_IMPORT_FOLDER, System.getProperty("user.home")); // NOI18N
+        return getPreferences().get(KEY_IMPORT_FOLDER, System.getProperty("user.home")); // NOI18N
     }
     
     public void setImportFolder(String path) {
@@ -185,7 +185,7 @@ public class HgModuleConfig {
     }
 
     public String getExportFilename() {
-        String str = (String) getPreferences().get(KEY_EXPORT_FILENAME, ""); // NOI18N
+        String str = getPreferences().get(KEY_EXPORT_FILENAME, ""); // NOI18N
         if (str.trim().length() == 0) str = DEFAULT_EXPORT_FILENAME;
         return str;
     }
@@ -419,7 +419,7 @@ public class HgModuleConfig {
     }
 
     public String getAnnotationFormat() {
-        return (String) getPreferences().get(KEY_ANNOTATION_FORMAT, getDefaultAnnotationFormat());                
+        return getPreferences().get(KEY_ANNOTATION_FORMAT, getDefaultAnnotationFormat());
     }
     
     public String getDefaultAnnotationFormat() {

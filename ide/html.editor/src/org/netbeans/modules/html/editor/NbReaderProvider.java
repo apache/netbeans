@@ -72,7 +72,7 @@ public class NbReaderProvider implements ReaderProvider {
 
     @Override
     public FileObject getSystemId(String publicId) {
-         String fileName = (String) mapping.get(publicId);
+         String fileName = mapping.get(publicId);
         if (fileName == null) {
             return null;
         }

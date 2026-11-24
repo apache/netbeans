@@ -96,7 +96,7 @@ public final class ChangeInfo {
         if (changes == null) {
             throw new ArrayIndexOutOfBoundsException ("No changes");
         }
-        return (Change) changes.get(i);
+        return changes.get(i);
     }
     
     @Override

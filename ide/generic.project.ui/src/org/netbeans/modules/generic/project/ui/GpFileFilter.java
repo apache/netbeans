@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui;
 
 import java.util.Objects;
 import java.util.logging.Level;
@@ -32,6 +32,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.queries.VisibilityQuery;
+import org.netbeans.modules.generic.project.GenericProject;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.ChangeableDataFilter;
 import org.openide.loaders.DataFilter;

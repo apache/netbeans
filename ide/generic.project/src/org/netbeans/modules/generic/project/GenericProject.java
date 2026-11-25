@@ -26,9 +26,6 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.generic.project.ui.actions.GpActionProvider;
-import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
-import org.netbeans.modules.generic.project.ui.customizer.GpCustomizerProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -117,13 +114,12 @@ public final class GenericProject implements Project {
         // mix the project's own services with the layer contributions
         // registered for this project type ("Projects/<key>/Lookup",
         // e.g. via @ProjectServiceProvider in other modules)
+        // the UI services (logical view, customizer, action provider)
+        // are contributed by the generic.project.ui module via @ProjectServiceProvider
         this.lookup = LookupProviderSupport.createCompositeLookup(Lookups.fixed(
-                new GpLogicalViewProvider(this),
                 new GpInfo(this),
                 new GpSubprojectProvider(this),
-                new GpCustomizerProvider(this),
                 new GpProjectOperations(this),
-                new GpActionProvider(this),
                 new GpAuxiliaryProperties(this),
                 this
         ), "Projects/" + PROJECT_KEY + "/Lookup"); // NOI18N
@@ -257,7 +253,7 @@ public final class GenericProject implements Project {
      * Key of the global file filter toggle in the project's private
      * preferences ({@link ProjectUtils#getPreferences}).
      */
-    static final String GLOBAL_FILE_FILTER_KEY = "useGlobalFileFilter"; // NOI18N
+    public static final String GLOBAL_FILE_FILTER_KEY = "useGlobalFileFilter"; // NOI18N
 
     /**
      * Whether the project's logical view applies the IDE's global
@@ -296,8 +292,11 @@ public final class GenericProject implements Project {
      * Key of the additional files filter pattern in the project's
      * <em>shared</em> preferences ({@link ProjectUtils#getPreferences})
      * — the pattern is project content, like a {@code .gitignore}.
+     *
+     * <p>Public so that the companion UI module's file filter can read
+     * the stored pattern directly (see {@code GLOBAL_FILE_FILTER_KEY}).
      */
-    static final String FILES_FILTER_PATTERN_KEY = "fileFilterPattern"; // NOI18N
+    public static final String FILES_FILTER_PATTERN_KEY = "fileFilterPattern"; // NOI18N
 
     /**
      * Returns the project's additional "ignored files" pattern — a

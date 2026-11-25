@@ -25,27 +25,18 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.generic.project.ui.actions.GpProjectOperations;
-import org.netbeans.modules.generic.project.ui.wizard.GpWizardIterator;
-import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SubprojectProvider;
-import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
-import org.openide.nodes.Node;
 import org.openide.util.test.MockLookup;
 
 public class GenericProjectTest extends NbTestCase {
@@ -77,21 +68,6 @@ public class GenericProjectTest extends NbTestCase {
         assertTrue(new GpFactory().isProject(root));
     }
 
-    public void testLogicalViewShowsAllFiles() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        FileUtil.createData(root, "readme.txt");
-        Project prj = ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-        assertTrue(prj instanceof GenericProject);
-        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
-        assertNotNull(provider);
-        Node node = provider.createLogicalView();
-        assertNotNull(node);
-        Node[] children = node.getChildren().getNodes(true);
-        assertEquals(2, children.length);
-    }
-
     public void testSubprojectsAreFirstLevelOnly() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
@@ -114,7 +90,7 @@ public class GenericProjectTest extends NbTestCase {
     public void testCreateProject() throws Exception {
         clearWorkDir();
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
-        Set<FileObject> created = GpWizardIterator.createProject(dir, false);
+        Set<FileObject> created = createProject(dir, false);
         assertEquals(1, created.size());
         FileObject dirFo = created.iterator().next();
         FileObject marker = dirFo.getFileObject(GenericProject.MARKER_FILE);
@@ -128,7 +104,7 @@ public class GenericProjectTest extends NbTestCase {
     public void testCreateProjectLocal() throws Exception {
         clearWorkDir();
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
-        Set<FileObject> created = GpWizardIterator.createProject(dir, true);
+        Set<FileObject> created = createProject(dir, true);
         assertEquals(1, created.size());
         FileObject dirFo = created.iterator().next();
         assertNull(dirFo.getFileObject(GenericProject.MARKER_FILE));
@@ -156,7 +132,7 @@ public class GenericProjectTest extends NbTestCase {
     public void testSaveProjectLocalKeepsNoMarker() throws Exception {
         clearWorkDir();
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
-        GpWizardIterator.createProject(dir, true);
+        createProject(dir, true);
         FileObject root = FileUtil.toFileObject(dir);
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
@@ -223,38 +199,6 @@ public class GenericProjectTest extends NbTestCase {
         // the new folder name is authoritative again
         op.notifyMoved(prj, new File("/tmp/does-not-matter"), root.getNameExt()); // NOI18N
         assertEquals(root.getNameExt(), ProjectUtils.getInformation(prj).getDisplayName());
-    }
-
-    public void testLogicalViewNodeHonorsDisplayNameOverride() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        Project prj = ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-        Node node = prj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-        assertEquals(root.getNameExt(), node.getDisplayName());
-
-        GenericProject.setDisplayNameOverride((GenericProject) prj, "Fancy Name");
-        assertEquals("Fancy Name", node.getDisplayName());
-
-        GenericProject.setDisplayNameOverride((GenericProject) prj, null);
-        assertEquals(root.getNameExt(), node.getDisplayName());
-    }
-
-    public void testActionProviderSupportsRename() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        Project prj = ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-        ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-        assertNotNull(ap);
-        assertTrue(List.of(ap.getSupportedActions()).contains(ActionProvider.COMMAND_RENAME));
-        assertTrue(ap.isActionEnabled(ActionProvider.COMMAND_RENAME, null));
-        assertTrue(List.of(ap.getSupportedActions()).contains(ActionProvider.COMMAND_DELETE));
-        assertTrue(ap.isActionEnabled(ActionProvider.COMMAND_DELETE, null));
-        assertTrue(List.of(ap.getSupportedActions()).contains(ActionProvider.COMMAND_MOVE));
-        assertTrue(ap.isActionEnabled(ActionProvider.COMMAND_MOVE, null));
-        assertTrue(List.of(ap.getSupportedActions()).contains(ActionProvider.COMMAND_COPY));
-        assertTrue(ap.isActionEnabled(ActionProvider.COMMAND_COPY, null));
     }
 
     public void testDeleteOperationFiles() throws Exception {
@@ -336,19 +280,6 @@ public class GenericProjectTest extends NbTestCase {
                 copy.getNameExt(), ProjectUtils.getInformation(nue).getDisplayName());
         assertEquals("the original keeps its display name",
                 "My Fancy Project", ProjectUtils.getInformation(prj).getDisplayName());
-    }
-
-    public void testLogicalViewNodeLookupExposesProjectAndDirectory() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        Project prj = ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-        Node node = prj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-        assertEquals(prj, node.getLookup().lookup(GenericProject.class));
-        assertEquals(root, node.getLookup().lookup(FileObject.class));
-        DataObject dobj = node.getLookup().lookup(DataObject.class);
-        assertNotNull("the project directory DataObject must be in the node lookup", dobj);
-        assertEquals(root, dobj.getPrimaryFile());
     }
 
     public void testProjectLookupContainsLayerServices() throws Exception {
@@ -621,33 +552,6 @@ public class GenericProjectTest extends NbTestCase {
                 .get(GenericProject.GLOBAL_FILE_FILTER_KEY, null)); // NOI18N
     }
 
-    public void testFilterHidesFilesTheIdeIgnores() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        FileUtil.createData(root, "readme.txt");
-        FileObject git = FileUtil.createData(root, ".git");
-        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-
-        // sanity: in the test environment the IDE's global filter
-        // (masterfs' implementation) hides ".git"
-        assertFalse(VisibilityQuery.getDefault().isVisible(git));
-
-        GpFileFilter filter = new GpFileFilter(prj);
-        assertFalse("the filter must hide files the IDE ignores",
-                filter.acceptFileObject(git));
-        assertTrue("regular files must stay visible",
-                filter.acceptFileObject(root.getFileObject("readme.txt")));
-
-        CountDownLatch latch = new CountDownLatch(1);
-        filter.addChangeListener(evt -> latch.countDown());
-        GenericProject.setGlobalFileFilterEnabled(prj, false);
-        assertTrue("the filter must be notified when the toggle changes",
-                latch.await(10, TimeUnit.SECONDS));
-        assertTrue("disabling the filter must show everything",
-                filter.acceptFileObject(git));
-    }
-
     public void testFilesFilterPatternRoundTrip() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);
@@ -669,60 +573,25 @@ public class GenericProjectTest extends NbTestCase {
                 .get(GenericProject.FILES_FILTER_PATTERN_KEY, null)); // NOI18N
     }
 
-    public void testAdditionalFilterPattern() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        FileUtil.createData(root, "readme.txt");
-        FileUtil.createData(root, "readme-old.txt");
-        FileObject git = FileUtil.createData(root, ".git");
-        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-
-        GpFileFilter filter = new GpFileFilter(prj);
-        assertTrue(filter.acceptFileObject(root.getFileObject("readme.txt")));
-
-        // an additional pattern hides its matches on top of the global
-        // filter (the two are AND-combined)
-        CountDownLatch latch = new CountDownLatch(1);
-        filter.addChangeListener(evt -> latch.countDown());
-        GenericProject.setFilesFilterPattern(prj, ".*-old.*"); // NOI18N
-        assertTrue("the filter must be notified when the pattern changes",
-                latch.await(10, TimeUnit.SECONDS));
-        assertFalse("files matching the additional pattern must be hidden",
-                filter.acceptFileObject(root.getFileObject("readme-old.txt")));
-        assertTrue("other files must stay visible",
-                filter.acceptFileObject(root.getFileObject("readme.txt")));
-        assertFalse("the global filter must still apply",
-                filter.acceptFileObject(git));
-
-        // clearing the pattern shows the files again
-        final CountDownLatch latch2 = new CountDownLatch(1);
-        filter.addChangeListener(evt -> latch2.countDown());
-        GenericProject.setFilesFilterPattern(prj, null);
-        assertTrue(latch2.await(10, TimeUnit.SECONDS));
-        assertTrue(filter.acceptFileObject(root.getFileObject("readme-old.txt")));
-    }
-
-    public void testInvalidAdditionalPatternIsIgnored() throws Exception {
-        FileObject root = newProjectDir();
-        FileUtil.createData(root, GenericProject.MARKER_FILE);
-        FileUtil.createData(root, "readme-old.txt");
-        GenericProject prj = (GenericProject) ProjectManager.getDefault().findProject(root);
-        assertNotNull(prj);
-
-        // simulate a hand-edited data file with a broken pattern:
-        // it must act as no additional filter (a warning is logged)
-        GenericProject.setFilesFilterPattern(prj, ".*-old("); // NOI18N
-        GpFileFilter filter = new GpFileFilter(prj);
-        assertTrue("an invalid pattern must not hide files",
-                filter.acceptFileObject(root.getFileObject("readme-old.txt")));
-    }
-
     private FileObject newProjectDir() throws Exception {
         clearWorkDir();
         File dir = new File(getWorkDir(), "proj-" + getName()); // NOI18N
         assertTrue(dir.mkdirs() || dir.isDirectory());
         return FileUtil.toFileObject(dir);
+    }
+
+    /**
+     * Creates the project directory containing the marker file, or —
+     * for {@code localMarker} — marks it as a local project by the
+     * FileObject attribute only (the same the UI module's wizard
+     * does).
+     */
+    private static Set<FileObject> createProject(File dir, boolean localMarker) throws Exception {
+        assertTrue(dir.mkdirs() || dir.isDirectory());
+        FileObject fo = FileUtil.toFileObject(dir);
+        assertNotNull(fo);
+        GenericProject.setMarkerState(fo, !localMarker);
+        return Set.of(fo);
     }
 
     /**

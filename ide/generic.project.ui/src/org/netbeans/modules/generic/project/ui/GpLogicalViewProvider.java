@@ -17,14 +17,17 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project;
+package org.netbeans.modules.generic.project.ui;
 
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.generic.project.GenericProject;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileObject;
@@ -52,16 +55,24 @@ import org.openide.util.lookup.InstanceContent;
  * under {@code Projects/<PROJECT_KEY>/Actions} and loaded via
  * {@link CommonProjectActions#forType}.
  */
-public record GpLogicalViewProvider(GenericProject project) implements LogicalViewProvider {
+@ProjectServiceProvider(service=LogicalViewProvider.class, projectType=GenericProject.PROJECT_KEY)
+public final class GpLogicalViewProvider implements LogicalViewProvider {
 
     private static final Logger LOG = Logger.getLogger(GpLogicalViewProvider.class.getName()); // NOI18N
+
+    private final Project project;
+
+    public GpLogicalViewProvider(Project project) {
+        this.project = project;
+    }
 
     @Override
     public Node createLogicalView() {
         FileObject dir = project.getProjectDirectory();
         Children children;
         try {
-            children = DataFolder.findFolder(dir).createNodeChildren(new GpFileFilter(project));
+            // the filter needs the project's own settings accessors
+            children = DataFolder.findFolder(dir).createNodeChildren(new GpFileFilter((GenericProject) project));
         } catch (Exception ex) {
             children = Children.LEAF;
         }
@@ -109,9 +120,9 @@ public record GpLogicalViewProvider(GenericProject project) implements LogicalVi
         // also expose the DataObject of the project directory: stock
         // actions (e.g. "New File") use it to determine the target
         // folder
-        content.add(project, new InstanceContent.Convertor<GenericProject, DataObject>() {
+        content.add(project, new InstanceContent.Convertor<Project, DataObject>() {
             @Override
-            public DataObject convert(GenericProject obj) {
+            public DataObject convert(Project obj) {
                 try {
                     FileObject fo = obj.getProjectDirectory();
                     return fo != null && fo.isValid() ? DataObject.find(fo) : null;
@@ -122,17 +133,17 @@ public record GpLogicalViewProvider(GenericProject project) implements LogicalVi
             }
 
             @Override
-            public Class<? extends DataObject> type(GenericProject obj) {
+            public Class<? extends DataObject> type(Project obj) {
                 return DataObject.class;
             }
 
             @Override
-            public String id(GenericProject obj) {
+            public String id(Project obj) {
                 return dir.getPath();
             }
 
             @Override
-            public String displayName(GenericProject obj) {
+            public String displayName(Project obj) {
                 return dir.getNameExt();
             }
         });

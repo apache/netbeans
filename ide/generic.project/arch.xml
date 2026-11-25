@@ -50,14 +50,23 @@
     -->
     <answer id="arch-overall">
         <p>
-            The module implements a project type for arbitrary directories. A directory
-            becomes a generic project when it contains the marker file (a plain
-            <code>java.util.Properties</code> file named <code>.nbgp</code> by default,
-            brandable) or when the
+            The module is the headless core of the project type for arbitrary
+            directories. A directory becomes a generic project when it contains the
+            marker file (a plain <code>java.util.Properties</code> file named
+            <code>.nbgp</code> by default, brandable) or when the
             <code>org.netbeans.modules.generic.project</code> FileObject attribute is
             set on it (a marker-less "local" project). A generic project is just its
             directory: the logical view is a plain folder tree, and move, rename, copy
             and delete operate on the directory as a whole.
+        </p>
+        <p>
+            The IDE UI (logical view, New Project wizard, project customizer, the
+            project type menu, the "Open as Generic Project" action, the file filter)
+            is provided by the companion module
+            <code>org.netbeans.modules.generic.project.ui</code>, which contributes
+            those services to each project's lookup via
+            <code>@ProjectServiceProvider</code>; see its <code>arch.xml</code> for
+            details. The core has no UI dependencies.
         </p>
         <p>
             The module exports no public Java packages; its contracts are:
@@ -69,10 +78,12 @@
                         The project type itself, discovered by <code>ProjectManager</code> via
                         the <code>ProjectFactory</code> registered in the global lookup. The
                         contract is the marker file/attribute detection and the auxiliary data
-                        files (see <code>format-types</code>). The per-project services
-                        (logical view, project information, operations, customizer) are
-                        published in the project's lookup and can be extended by other modules
-                        via <code>@ProjectServiceProvider</code>.
+                        files (see <code>format-types</code>). The core publishes the headless
+                        per-project services (project information, subproject provider,
+                        project operations, auxiliary properties) in the project's lookup;
+                        the UI module adds the logical view, customizer and action provider.
+                        Both can be extended by other modules via
+                        <code>@ProjectServiceProvider</code>.
                     </p>
                 </api>
             </li>
@@ -96,10 +107,13 @@
     -->
     <answer id="arch-quality">
         <p>
-            Unit tests (<code>GenericProjectTest</code>, 37 tests) cover project
-            detection (marker file vs. attribute), marker state changes, the two-file
-            auxiliary storage (shared vs. private data, marker toggling, external
-            marker deletion), display name handling and the file filter behavior.
+            Unit tests (<code>GenericProjectTest</code>) cover project detection
+            (marker file vs. attribute), marker state changes, the two-file auxiliary
+            storage (shared vs. private data, marker toggling, external marker
+            deletion), display name handling, the move/rename/copy/delete operations
+            and the <code>@ProjectServiceProvider</code> lookup mechanism. The
+            companion UI module's <code>GpProjectUiTest</code> covers the logical
+            view, the action provider and the file filter behavior.
         </p>
     </answer>
 
@@ -579,8 +593,10 @@
     -->
     <answer id="exec-introspection">
         <p>
-            Only <code>instanceof GenericProject</code> guards on the module's own
-            project class (in the customizer and the file filter).
+            Only the <code>instanceof GenericProject</code> guard in the
+            <code>ProjectFactory</code>'s save path (a deleted project must not be
+            resurrected). The UI module additionally guards on the project class in
+            its customizer and file filter.
         </p>
     </answer>
 
@@ -856,11 +872,12 @@
                 <code>ProjectManager</code>.
             </li>
             <li>
-                Each project's lookup publishes the project's services (logical view
-                provider, project information, subproject provider, customizer provider,
-                project operations, action provider, auxiliary properties), so that other
+                Each project's lookup publishes the headless per-project services
+                (project information, subproject provider, project operations,
+                auxiliary properties) plus the project instance itself, so that other
                 modules can find and extend them via
-                <code>@ProjectServiceProvider</code>.
+                <code>@ProjectServiceProvider</code> (the UI module contributes the
+                logical view, customizer and action provider this way).
             </li>
         </ul>
     </answer>
@@ -968,10 +985,9 @@
     -->
     <answer id="perf-menus">
         <p>
-            The layer registers static shadows of the standard project actions in the
-            project type menu (no dynamic enablement logic). The single context action
-            ("Open as Generic Project") has a cheap enablement check (the folder is a
-            local directory and not already a project).
+            No - the module is headless. (The UI module registers the project type
+            menu and the "Open as Generic Project" context action; see its
+            <code>arch.xml</code>.)
         </p>
     </answer>
 
@@ -1082,10 +1098,11 @@
     -->
     <answer id="resources-file">
         <p>
-            Limited: <code>java.io.File</code> appears in the wizard and the "open as
-            generic project" action, where a directory chosen in a Swing file chooser
-            is converted to a <code>FileObject</code>; all persistent state is accessed
-            through <code>FileObject</code>.
+            Limited: <code>java.io.File</code> appears only in the signatures of the
+            project operations SPIs implemented (<code>MoveOrRenameOperationImplementation</code>,
+            <code>CopyOperationImplementation</code>, which are defined with
+            <code>File</code> parameters); no direct file I/O is done, all persistent
+            state is accessed through <code>FileObject</code>.
         </p>
     </answer>
 
@@ -1108,24 +1125,11 @@
     -->
     <answer id="resources-layer">
         <p>
-            Yes:
-        </p>
-        <ul>
-            <li>
-                <code>Templates/Project/Generic</code> - the category folder in the New
-                Project wizard.
-            </li>
-            <li>
-                <code>Projects/org-netbeans-modules-generic-project/Actions</code> - the
-                project type menu: shadows of the standard project actions (new
-                file/project, open subprojects, close, rename, move, copy, delete, find,
-                the shared <code>Projects/Actions</code> folder, customize).
-            </li>
-        </ul>
-        <p>
-            In addition, the annotation-generated layer registers the New Project
-            wizard action, the "Open as Generic Project" context action and the
-            <code>ProjectFactory</code> service.
+            No hand-written layer: the annotation-generated layer only registers the
+            <code>ProjectFactory</code> service in the global lookup. (The UI module
+            provides the layer content: the New Project template category and entry,
+            the project type menu, the "Open as Generic Project" context action and
+            the per-project-type lookup contributions; see its <code>arch.xml</code>.)
         </p>
     </answer>
 
@@ -1196,10 +1200,8 @@
     -->
     <answer id="resources-read">
         <p>
-            Yes: the layer shadows instances of the standard project actions provided
-            by <code>projectuiapi</code> (new file/project, close, rename, move, copy,
-            delete, find, customize) and the shared <code>Projects/Actions</code>
-            folder; they are consumed by the project menu.
+            No. (The UI module shadows the standard project actions; see its
+            <code>arch.xml</code>.)
         </p>
     </answer>
 

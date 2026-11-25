@@ -20,7 +20,10 @@
 package org.netbeans.modules.generic.project.ui.customizer;
 
 import java.awt.Dialog;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.generic.project.GenericProject;
+import org.netbeans.spi.project.ProjectServiceProvider;
+import org.netbeans.spi.project.ui.CustomizerProvider;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.HelpCtx;
@@ -28,11 +31,16 @@ import org.openide.util.HelpCtx;
 /**
  * Shows the project properties (customizer) window for a generic project.
  */
+// Registered under both service names: the project tree's Properties action
+// looks up the base CustomizerProvider, while some consumers use
+// CustomizerProvider2. The lazy project lookup (LazyLookup) only matches the
+// exact service names declared here, not subtypes.
+@ProjectServiceProvider(service={CustomizerProvider2.class, CustomizerProvider.class}, projectType=GenericProject.PROJECT_KEY)
 public final class GpCustomizerProvider implements CustomizerProvider2 {
 
-    private final GenericProject prj;
+    private final Project prj;
 
-    public GpCustomizerProvider(GenericProject prj) {
+    public GpCustomizerProvider(Project prj) {
         this.prj = prj;
     }
 

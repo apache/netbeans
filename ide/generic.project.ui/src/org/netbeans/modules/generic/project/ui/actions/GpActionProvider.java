@@ -19,8 +19,10 @@
 
 package org.netbeans.modules.generic.project.ui.actions;
 
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.generic.project.GenericProject;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.util.Lookup;
@@ -33,14 +35,15 @@ import org.openide.util.Lookup;
  *
  * <p>The operations are delegated to the default implementations,
  * which show the standard confirmation dialogs and update the
- * project through the {@link GpProjectOperations} registered in
- * the lookup.
+ * project through the {@link org.netbeans.modules.generic.project.GpProjectOperations}
+ * registered in the lookup.
  */
+@ProjectServiceProvider(service=ActionProvider.class, projectType=GenericProject.PROJECT_KEY)
 public final class GpActionProvider implements ActionProvider {
 
-    private final GenericProject prj;
+    private final Project prj;
 
-    public GpActionProvider(GenericProject prj) {
+    public GpActionProvider(Project prj) {
         this.prj = prj;
     }
 

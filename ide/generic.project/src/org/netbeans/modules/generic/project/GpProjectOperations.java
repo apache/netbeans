@@ -17,9 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.generic.project.ui.actions;
-
-import org.netbeans.modules.generic.project.GenericProject;
+package org.netbeans.modules.generic.project;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+    question-version="1.29"
+    author="yourname@netbeans.org"
+>
+
+  &api-questions;
+
+
+    <answer id="arch-overall">
+        <p>
+            The module is the IDE UI companion of the
+            <code>org.netbeans.modules.generic.project</code> headless core: it
+            provides everything user-visible for the generic project type — the
+            logical view (a plain folder tree of the project directory, subject to
+            the IDE's global file filter and the project's additional filter
+            pattern), the New Project wizard, the project customizer (general and
+            files categories), the project type menu and the "Open as Generic
+            Project" context action.
+        </p>
+        <p>
+            The module exports no public Java packages. It contributes all its
+            per-project services to the project type's lookup via
+            <code>@ProjectServiceProvider</code> (so they appear in the lookup of
+            every generic project, alongside the core's headless services) and the
+            rest via layer/annotation registration:
+        </p>
+        <ul>
+            <li>
+                <api group="java" name="GenericProjectTypeUI" type="export" category="devel">
+                    <p>
+                        The UI for the project type <code>genericproject</code>:
+                        <code>LogicalViewProvider</code>, <code>CustomizerProvider2</code>
+                        and <code>ActionProvider</code> in the project lookup, the
+                        <code>Templates/Project/Generic</code> wizard entry, the
+                        <code>Projects/org-netbeans-modules-generic-project/Actions</code>
+                        menu, the <code>Loaders/folder/any</code> context action and the
+                        customizer category providers. Other modules may add further
+                        contributions to the same lookup (e.g. customizer categories via
+                        <code>ProjectCustomizer.CompositeCategoryProvider.Registration</code>).
+                    </p>
+                </api>
+            </li>
+        </ul>
+    </answer>
+
+
+    <answer id="arch-quality">
+        <p>
+            Unit tests (<code>GpProjectUiTest</code>) cover the logical view (all
+            files shown, the node's display name honoring the project display name
+            override, the node lookup exposing the project and its directory
+            <code>DataObject</code>), the <code>ActionProvider</code> (rename,
+            delete, move, copy commands) and the file filter (IDE-ignored files
+            hidden, the global filter toggle, the additional pattern, invalid
+            patterns ignored). The headless behavior is covered by the core
+            module's <code>GenericProjectTest</code>.
+        </p>
+    </answer>
+
+
+    <answer id="arch-time">
+        <p>
+            N/A - the module is already implemented.
+        </p>
+    </answer>
+
+
+    <answer id="arch-usecases">
+        <usecase id="create-project" name="Create a generic project via the New Project wizard">
+            <p>
+                A user chooses New Project, picks the "Generic" category, enters a
+                name and location (optionally without a marker file in the
+                working tree). The wizard creates the directory and the marker
+                state in the headless core (<code>GenericProject.setMarkerState</code>)
+                and the new project opens with a folder tree.
+            </p>
+        </usecase>
+        <usecase id="open-as-project" name="Open an existing folder as generic project">
+            <p>
+                A user right-clicks a non-project local folder (Favorites, files
+                view, ...) and chooses "Open as Generic Project"; the action marks
+                the folder via the core and opens it in the project tabs.
+            </p>
+        </usecase>
+        <usecase id="customize-project" name="Change the project's settings">
+            <p>
+                A user opens the project properties (the standard "Customize"
+                project menu entry, provided by the project type menu) and adjusts
+                the display name (general category) or the file filter settings
+                (files category: the global "ignored files" filter toggle and the
+                additional pattern).
+            </p>
+        </usecase>
+    </answer>
+
+
+    <answer id="arch-what">
+        <p>
+            The UI for the "generic project" project type (headless core:
+            <code>org.netbeans.modules.generic.project</code>): the logical view of
+            the project directory, the New Project wizard, the project customizer,
+            the project type menu and the "Open as Generic Project" context action.
+        </p>
+    </answer>
+
+
+    <answer id="arch-where">
+        <defaultanswer generate='here' />
+    </answer>
+
+
+    <answer id="compat-deprecation">
+        <p>
+            N/A - the module is new and does not deprecate anything.
+        </p>
+    </answer>
+
+
+    <answer id="compat-i18n">
+        <p>
+            Yes. All user-visible strings are in the module's
+            <code>NbBundle</code>s (<code>@NbBundle.Messages</code>).
+        </p>
+    </answer>
+
+
+    <answer id="compat-standards">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="compat-version">
+        <p>
+            The module is new and not yet released, so there is no legacy data to
+            read. The module stores no data of its own; all persistent state lives
+            in the core module's auxiliary data files (see the core's
+            <code>format-types</code>).
+        </p>
+    </answer>
+
+
+    <answer id="dep-jre">
+        <p>
+            21
+        </p>
+    </answer>
+
+
+    <answer id="dep-jrejdk">
+        <p>
+            JRE
+        </p>
+    </answer>
+
+
+    <answer id="dep-nb">
+        <defaultanswer generate='here' />
+    </answer>
+
+
+    <answer id="dep-non-nb">
+        <p>
+            None.
+        </p>
+    </answer>
+
+
+    <answer id="dep-platform">
+        <p>
+            No specific platform requirements.
+        </p>
+    </answer>
+
+
+    <answer id="deploy-dependencies">
+        <p>
+            None - a regular module dependency is sufficient.
+        </p>
+    </answer>
+
+
+    <answer id="deploy-jar">
+        <p>
+            JAR only.
+        </p>
+    </answer>
+
+
+    <answer id="deploy-nbm">
+        <p>
+            Yes.
+        </p>
+    </answer>
+
+
+    <answer id="deploy-packages">
+        <p>
+            Yes - the module has no public packages.
+        </p>
+    </answer>
+
+
+    <answer id="deploy-shared">
+        <p>
+            Anywhere.
+        </p>
+    </answer>
+
+
+    <answer id="exec-ant-tasks">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-classloader">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-component">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-introspection">
+        <p>
+            Only <code>instanceof GenericProject</code> guards on the core's project
+            class (in the customizer panels and the file filter, to read the
+            project's settings).
+        </p>
+    </answer>
+
+
+    <answer id="exec-privateaccess">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-process">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-property">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-reflection">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="exec-threading">
+        <p>
+            Standard Swing rules: the wizard, the customizer dialogs and the
+            "Open as Generic Project" action run on the EDT (the action's
+            <code>performAction</code> does its work directly, it is cheap). The
+            logical view children are built lazily by the explorer on demand. The
+            file filter reads project preferences and registers a property change
+            listener; its state is only mutated from the EDT (settings changes) and
+            read by the data filter, which tolerates the standard visibility of
+            <code>Properties</code>.
+        </p>
+    </answer>
+
+
+    <answer id="format-clipboard">
+        <p>
+            None.
+        </p>
+    </answer>
+
+
+    <answer id="format-dnd">
+        <p>
+            None.
+        </p>
+    </answer>
+
+
+    <answer id="format-types">
+        <p>
+            None - the module reads and writes no data files of its own; all
+            persistent state is stored by the core module (see its
+            <code>format-types</code>).
+        </p>
+    </answer>
+
+
+    <answer id="lookup-lookup">
+        <p>
+            Yes. The module looks up per-project services provided by the core and
+            by other modules (the project itself,
+            <code>ProjectInformation</code>, auxiliary properties) and global
+            services (<code>VisibilityQuery</code>, <code>OpenProjects</code>,
+            <code>ProjectManager</code>).
+        </p>
+    </answer>
+
+
+    <answer id="lookup-register">
+        <p>
+            Yes:
+        </p>
+        <ul>
+            <li>
+                <code>@ProjectServiceProvider</code> contributes the
+                <code>LogicalViewProvider</code>, <code>CustomizerProvider2</code>
+                and <code>ActionProvider</code> to the project type's lookup
+                (generated entries under
+                <code>Projects/org-netbeans-modules-generic-project/Lookup</code>).
+            </li>
+            <li>
+                <code>@TemplateRegistration</code> registers the New Project wizard
+                (category <code>Templates/Project/Generic</code>).
+            </li>
+            <li>
+                <code>@ActionRegistration</code> registers the "Open as Generic
+                Project" action in <code>Loaders/folder/any/Actions</code>.
+            </li>
+            <li>
+                <code>ProjectCustomizer.CompositeCategoryProvider.Registration</code>
+                registers the customizer's category providers under
+                <code>Projects/org-netbeans-modules-generic-project/Customizer</code>.
+            </li>
+            <li>
+                The hand-written layer provides the
+                <code>Templates/Project/Generic</code> category folder and the
+                <code>Projects/org-netbeans-modules-generic-project/Actions</code>
+                project type menu (shadows of the standard project actions).
+            </li>
+        </ul>
+    </answer>
+
+
+    <answer id="lookup-remove">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="perf-exit">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="perf-huge_dialogs">
+        <p>
+            No - the wizard has two small panels and the customizer two small
+            categories.
+        </p>
+    </answer>
+
+
+    <answer id="perf-limit">
+        <p>
+            No hard limits.
+        </p>
+    </answer>
+
+
+    <answer id="perf-mem">
+        <p>
+            Negligible: per open project one file filter with a couple of compiled
+            patterns.
+        </p>
+    </answer>
+
+
+    <answer id="perf-menus">
+        <p>
+            The layer registers static shadows of the standard project actions in
+            the project type menu (no dynamic enablement logic). The single context
+            action ("Open as Generic Project") has a cheap enablement check (the
+            folder is a local directory and not already a project).
+        </p>
+    </answer>
+
+
+    <answer id="perf-progress">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="perf-scale">
+        <p>
+            Number and depth of folders in the logical view (a plain directory
+            tree, built lazily); no project-wide scanning is done. The file filter
+            runs one <code>VisibilityQuery</code> check plus at most one pattern
+            match per child.
+        </p>
+    </answer>
+
+
+    <answer id="perf-spi">
+        <p>
+            Contributions are limited to lookup services (e.g. customizer
+            categories) and layer entries; they only add to the lookup/menu size.
+        </p>
+    </answer>
+
+
+    <answer id="perf-startup">
+        <p>
+            No - the module is lazy and nothing runs until the user touches the
+            generic project UI.
+        </p>
+    </answer>
+
+
+    <answer id="perf-wakeup">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="resources-file">
+        <p>
+            Limited: <code>java.io.File</code> appears in the wizard and the "open
+            as generic project" action, where a directory chosen in a Swing file
+            chooser is converted to a <code>FileObject</code>; all persistent state
+            is accessed through <code>FileObject</code>.
+        </p>
+    </answer>
+
+
+    <answer id="resources-layer">
+        <p>
+            Yes:
+        </p>
+        <ul>
+            <li>
+                <code>Templates/Project/Generic</code> - the category folder in the New
+                Project wizard.
+            </li>
+            <li>
+                <code>Projects/org-netbeans-modules-generic-project/Actions</code> - the
+                project type menu: shadows of the standard project actions (new
+                file/project, open subprojects, close, rename, move, copy, delete, find,
+                the shared <code>Projects/Actions</code> folder, customize).
+            </li>
+        </ul>
+        <p>
+            In addition, the annotation-generated layer registers the New Project
+            wizard template, the "Open as Generic Project" context action, the
+            <code>@ProjectServiceProvider</code> lookup entries and the customizer
+            category providers.
+        </p>
+    </answer>
+
+
+    <answer id="resources-mask">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="resources-preferences">
+        <p>
+            No module-level preferences node; the project settings are read and
+            written through the core's project preferences API
+            (<code>ProjectUtils.getPreferences</code>).
+        </p>
+    </answer>
+
+
+    <answer id="resources-read">
+        <p>
+            Yes: the layer shadows instances of the standard project actions
+            provided by <code>projectui</code> (new file/project, close, rename,
+            move, copy, delete, find, customize) and the shared
+            <code>Projects/Actions</code> folder; they are consumed by the project
+            menu. (The originals are referenced by their layer paths, as all
+            project types do; no compile-time dependency on the providing module
+            is declared.)
+        </p>
+    </answer>
+
+
+    <answer id="security-grant">
+        <p>
+            No.
+        </p>
+    </answer>
+
+
+    <answer id="security-policy">
+        <p>
+            No.
+        </p>
+    </answer>
+
+</api-answers>

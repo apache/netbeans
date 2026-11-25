@@ -44,7 +44,7 @@ public class GpGeneralPanel extends JPanel {
         "LBL_Location=Location:",
         "LBL_MarkerFile=Marker file in project directory",
         "TT_MarkerFile=<html>"
-                + "<p>When unchecked, the <b>.nbgp</b> marker file is <b>removed</b> from the project directory.</p>"
+                + "<p>When unchecked, the <b>.nbgp.properties</b> marker file is <b>removed</b> from the project directory.</p>"
                 + "<p>The project becomes a <b>local</b> (private) project.</p></html>",
     })
     @SuppressWarnings("unchecked")

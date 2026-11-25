@@ -53,7 +53,7 @@
             The module is the headless core of the project type for arbitrary
             directories. A directory becomes a generic project when it contains the
             marker file (a plain <code>java.util.Properties</code> file named
-            <code>.nbgp</code> by default, brandable) or when the
+            <code>.nbgp.properties</code> by default, brandable) or when the
             <code>org.netbeans.modules.generic.project</code> FileObject attribute is
             set on it (a marker-less "local" project). A generic project is just its
             directory: the logical view is a plain folder tree, and move, rename, copy
@@ -171,7 +171,7 @@
         <usecase id="share-project" name="Share a generic project with a team">
             <p>
                 With the marker file enabled (the default), the shared settings
-                (display name, file filter pattern) live in the <code>.nbgp</code> marker
+                (display name, file filter pattern) live in the <code>.nbgp.properties</code> marker
                 file in the working tree and are versioned along with the project; team
                 members checking out the folder get the project and its settings.
             </p>
@@ -785,7 +785,7 @@
         </p>
         <ul>
             <li>
-                <api group="java.io.File" name=".nbgp" type="export" category="private">
+                <api group="java.io.File" name=".nbgp.properties" type="export" category="private">
                     <p>
                         The shared auxiliary data. For a marker project this is the marker file
                         in the project directory (its presence makes the directory a project,
@@ -796,7 +796,7 @@
                 </api>
             </li>
             <li>
-                <api group="java.io.File" name=".nbgp.private" type="export" category="private">
+                <api group="java.io.File" name=".nbgp.properties.private" type="export" category="private">
                     <p>
                         The private auxiliary data, always in the user configuration (never in
                         the working tree), in the

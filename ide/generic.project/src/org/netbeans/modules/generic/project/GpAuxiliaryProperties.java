@@ -35,7 +35,7 @@ import org.openide.util.NbBundle.Messages;
 /**
  * The {@link AuxiliaryProperties} of a generic project, stored in
  * {@link Properties} file(s) per project (name brandable via the
- * module bundle, defaults to {@code .nbgp}).
+ * module bundle, defaults to {@code .nbgp.properties}).
  *
  * <p>Shared and private settings are kept in separate files:
  *
@@ -87,11 +87,13 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
 
     /**
      * The name of the shared auxiliary data file, brandable via the
-     * module bundle, defaults to {@code .nbgp}: identical to the name
-     * of the marker file ({@link GenericProject#MARKER_FILE}).
+     * module bundle, defaults to {@code .nbgp.properties} (the
+     * {@code .properties} suffix, so that tools recognize the file
+     * type): identical to the name of the marker file
+     * ({@link GenericProject#MARKER_FILE}).
      */
     @Messages({
-        "LBL_aux_data_file_name=.nbgp",
+        "LBL_aux_data_file_name=.nbgp.properties",
     })
     static String dataFileName() {
         return Bundle.LBL_aux_data_file_name();

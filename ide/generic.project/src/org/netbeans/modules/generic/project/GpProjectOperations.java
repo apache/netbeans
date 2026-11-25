@@ -79,7 +79,7 @@ public final class GpProjectOperations implements MoveOrRenameOperationImplement
                 collectDataFiles(child, result);
                 result.add(child);
             } else if (dir.equals(prj.getProjectDirectory())
-                    && GenericProject.MARKER_FILE.equals(child.getName())) {
+                    && GenericProject.MARKER_FILE.equals(child.getNameExt())) {
                 // the marker file is metadata, not data: the stock
                 // flow deletes it unconditionally
             } else {

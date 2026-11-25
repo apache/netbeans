@@ -55,7 +55,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL_BrowseDialogTitle=Select Project Location",
     "LBL_LocalMarker=Keep repository &clean (store marker locally)",
     "TT_LocalMarker=<html>"
-            + "<p>The project marker is stored in the <b>IDE's user directory</b> instead of the .nbgp file in the project folder.</p><br>"
+            + "<p>The project marker is stored in the <b>IDE's user directory</b> instead of the .nbgp.properties file in the project folder.</p><br>"
             + "<p>The project is then only recognized by this IDE installation at this location.</p></html>",
     "MSG_DefaultProjectName=MyGenericProject",
     "ERR_InvalidName=Project Name is not a valid folder name.",

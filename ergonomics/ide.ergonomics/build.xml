@@ -75,6 +75,7 @@
         >
             <exclude name="harness"/>
             <exclude name="ide"/>
+            <exclude name="agentic"/>
             <exclude name="platform"/>
             <exclude name="ergonomics"/>
             <exclude name="extra"/>

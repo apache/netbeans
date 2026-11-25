@@ -21,6 +21,8 @@ package org.netbeans.modules.generic.project;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.List;
@@ -398,6 +400,35 @@ public class GenericProjectTest extends NbTestCase {
         assertEquals("Second Name", GenericProject.getDisplayNameOverride(nue));
     }
 
+    public void testDataFileIsStableAcrossSaves() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+
+        GenericProject.setDisplayNameOverride((GenericProject) prj, "First Name");
+        ProjectUtils.getPreferences(prj, GenericProject.class, true).flush();
+
+        // no header comment and no timestamp line may be written to
+        // the data file (java.util.Properties would write both)
+        FileObject marker = root.getFileObject(GenericProject.MARKER_FILE);
+        for (String line : readContent(marker).lines().toList()) {
+            assertFalse("no comment line may be written to the data file: " + line, line.startsWith("#")); // NOI18N
+        }
+
+        // simulate a hand edit: add a comment the IDE does not know
+        // about; a fresh instance (fresh cache) re-reads the file and
+        // the comment must survive the next save
+        writeContent(marker, "# added by hand\n" + readContent(marker)); // NOI18N
+        GenericProject nue = new GenericProject(root);
+        GenericProject.setDisplayNameOverride(nue, "Second Name");
+        ProjectUtils.getPreferences(nue, GenericProject.class, true).flush();
+
+        String saved = readContent(marker);
+        assertTrue("a comment added by hand must survive a save", saved.contains("# added by hand")); // NOI18N
+        assertEquals("Second Name", GenericProject.getDisplayNameOverride(nue));
+    }
+
     public void testLocalProjectStoresAuxDataInUserConfig() throws Exception {
         FileObject root = newProjectDir();
         root.setAttribute(GenericProject.MARKER_ATTRIBUTE, Boolean.TRUE);
@@ -612,6 +643,18 @@ public class GenericProjectTest extends NbTestCase {
             props.load(is);
         }
         return props;
+    }
+
+    private static String readContent(FileObject file) throws Exception {
+        try (InputStream is = file.getInputStream()) {
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private static void writeContent(FileObject file, String content) throws Exception {
+        try (OutputStream os = file.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
     }
 
     public interface TestMarker {

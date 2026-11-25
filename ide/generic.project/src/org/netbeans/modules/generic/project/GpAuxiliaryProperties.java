@@ -24,17 +24,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.EditableProperties;
 import org.openide.util.NbBundle.Messages;
 
 /**
  * The {@link AuxiliaryProperties} of a generic project, stored in
- * {@link Properties} file(s) per project (name brandable via the
+ * {@link EditableProperties} per project (name brandable via the
  * module bundle, defaults to {@code .nbgp.properties}).
  *
  * <p>Shared and private settings are kept in separate files:
@@ -65,8 +65,9 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
     private static final Logger LOG = Logger.getLogger(GpAuxiliaryProperties.class.getName());
 
     private final GenericProject prj;
-    private final Properties sharedData = new Properties();
-    private final Properties privateData = new Properties();
+    // EditableProperties keeps files stable; new properties are appended
+    private final EditableProperties sharedData = new EditableProperties(false);
+    private final EditableProperties privateData = new EditableProperties(false);
     private boolean loaded;
     private boolean sharedLoadedInProject;
 
@@ -129,7 +130,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         synchronized (this) {
             ensureLoaded();
             String storedKey = keyPrefix(shared) + key;
-            Properties store = storeOf(shared);
+            EditableProperties store = storeOf(shared);
             if (value == null) {
                 store.remove(storedKey);
             } else {
@@ -145,7 +146,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         synchronized (this) {
             ensureLoaded();
             String prefix = keyPrefix(shared);
-            for (String stored : storeOf(shared).stringPropertyNames()) {
+            for (String stored : storeOf(shared).keySet()) {
                 if (stored.startsWith(prefix)) {
                     keys.add(stored.substring(prefix.length()));
                 }
@@ -154,7 +155,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         return keys;
     }
 
-    private Properties storeOf(boolean shared) {
+    private EditableProperties storeOf(boolean shared) {
         return shared ? sharedData : privateData;
     }
 
@@ -239,7 +240,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         }
     }
 
-    private void readFileInto(FileObject file, Properties into) {
+    private void readFileInto(FileObject file, EditableProperties into) {
         try (InputStream is = file.getInputStream()) {
             into.load(is);
         } catch (IOException ex) {
@@ -265,8 +266,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
                 }
                 dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
             }
-            return storeInto(dir, dataFileName(), sharedData,
-                    "Auxiliary configuration of " + prj.getProjectDirectory().getPath());
+            return storeInto(dir, dataFileName(), sharedData);
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot save auxiliary data of " + prj, ex);
             return false;
@@ -286,8 +286,7 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         }
         try {
             FileObject dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
-            return storeInto(dir, privateDataFileName(), privateData,
-                    "Auxiliary configuration (private) of " + prj.getProjectDirectory().getPath());
+            return storeInto(dir, privateDataFileName(), privateData);
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot save private auxiliary data of " + prj, ex);
             return false;
@@ -298,13 +297,13 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
      * Writes the given data to the named file in the directory,
      * creating it if necessary.
      */
-    private boolean storeInto(FileObject dir, String fileName, Properties data, String header) throws IOException {
+    private boolean storeInto(FileObject dir, String fileName, EditableProperties data) throws IOException {
         FileObject file = dir.getFileObject(fileName);
         if (file == null) {
             file = dir.createData(fileName);
         }
         try (OutputStream os = file.getOutputStream()) {
-            data.store(os, header);
+            data.store(os);
         }
         return true;
     }

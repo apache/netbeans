@@ -91,7 +91,7 @@ public class DynamicVerifyTest extends NbTestCase {
             gui(false).
             clusters("ergonomics.*").
             clusters("^(?!(mobility)).*$").
-            enableModules("ide[0-9]*", ".*").
+            enableModules("(ide|agentic)[0-9]*", ".*").
             honorAutoloadEager(true)
         );
 

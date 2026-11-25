@@ -65,7 +65,7 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
             gui(false).
             clusters("ergonomics.*").
             clusters("(?!extra).*").
-            enableModules("ide[0-9]*", ".*").
+            enableModules("(ide|agentic)[0-9]*", ".*").
             enableClasspathModules(false).
             honorAutoloadEager(true);
         
@@ -80,6 +80,7 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
             base.reuseUserDir(true).addTest("testEnabledWindows").suite()
         );
         suite.addTest(new CachingPreventsLoadingOfModuleManifestsTest("testDontLoadManifests"));
+        suite.addTest(new CachingPreventsLoadingOfModuleManifestsTest("testCaptureAgenticManifestLoad"));
         
         return suite;
     }
@@ -103,6 +104,7 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
         String p = System.getProperty("manifestParsing");
         assertNotNull("Parsing of manifests during first run is natural", p);
         System.getProperties().remove("manifestParsing");
+        System.getProperties().remove("agenticDataInitialized");
         System.setProperty("no.stacks", "false");
         System.setProperty("counting.off", "false");
     }
@@ -115,6 +117,27 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
         String p = System.getProperty("manifestParsing");
         if (p != null) {
             fail("No manifest parsing should happen:\n" + p);
+        }
+        String dirs = System.getProperty("netbeans.dirs", "");
+        boolean agenticPresent = Arrays.stream(dirs.split(File.pathSeparator))
+                .anyMatch(dir -> new File(dir).getName().matches("agentic[0-9]*"));
+        if (agenticPresent) {
+            assertNotNull("Agentic module data was initialized during the second startup",
+                    System.getProperty("agenticDataInitialized"));
+        }
+    }
+
+    public void testCaptureAgenticManifestLoad() {
+        LogRecord record = new LogRecord(Level.FINE, "loading manifest of {0}");
+        record.setParameters(new Object[]{new File("agentic/modules/test.jar")});
+        System.getProperties().remove("manifestParsing");
+        CaptureLog capture = new CaptureLog();
+        try {
+            capture.publish(record);
+            assertNotNull("Agentic manifest loads must be detected", System.getProperty("manifestParsing"));
+        } finally {
+            Logger.getLogger("org.netbeans.core.modules").removeHandler(capture);
+            System.getProperties().remove("manifestParsing");
         }
     }
 
@@ -145,7 +168,10 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
                 return;
             }
             final String m = record.getMessage();
-            if (m != null && m.startsWith("Initialize data")) {
+            if (m == null || !(m.startsWith("Initialize data") || m.startsWith("loading manifest of"))) {
+                return;
+            }
+            {
                 Object[] params = record.getParameters();
                 assertNotNull("There are parameters", params);
                 assertEquals("There is just one parameter: " + Arrays.toString(params), 1, params.length);
@@ -153,10 +179,19 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
                     // fixed modules are OK
                     return;
                 }
-                if (isPlatformOrIde((File)params[0])) {
+                File module = (File) params[0];
+                boolean agentic = module.getParentFile() != null
+                        && module.getParentFile().getParentFile() != null
+                        && module.getParentFile().getParentFile().getName().matches("agentic[0-9]*");
+                if (agentic && m.startsWith("Initialize data")) {
+                    System.setProperty("agenticDataInitialized", "true");
+                    // Enabled agentic modules initialize data at startup; this may use the cache.
                     return;
                 }
-                
+                if ((!agentic && m.startsWith("loading manifest of")) || isPlatformOrIde(module)) {
+                    return;
+                }
+
                 String prev = System.getProperty("manifestParsing");
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);

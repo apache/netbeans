@@ -40,8 +40,7 @@
             logical view (a plain folder tree of the project directory, subject to
             the IDE's global file filter and the project's additional filter
             pattern), the New Project wizard, the project customizer (general and
-            files categories), the project type menu and the "Open as Generic
-            Project" context action.
+            files categories) and the project type menu.
         </p>
         <p>
             The module exports no public Java packages. It contributes all its
@@ -124,8 +123,8 @@
         <p>
             The UI for the "generic project" project type (headless core:
             <code>org.netbeans.modules.generic.project</code>): the logical view of
-            the project directory, the New Project wizard, the project customizer,
-            the project type menu and the "Open as Generic Project" context action.
+            the project directory, the New Project wizard, the project customizer and
+            the project type menu.
         </p>
     </answer>
 
@@ -295,9 +294,8 @@
 
     <answer id="exec-threading">
         <p>
-            Standard Swing rules: the wizard, the customizer dialogs and the
-            "Open as Generic Project" action run on the EDT (the action's
-            <code>performAction</code> does its work directly, it is cheap). The
+            Standard Swing rules: the wizard and the customizer dialogs run on the
+            EDT. The
             logical view children are built lazily by the explorer on demand. The
             file filter reads project preferences and registers a property change
             listener; its state is only mutated from the EDT (settings changes) and
@@ -358,10 +356,6 @@
                 (category <code>Templates/Project/Generic</code>).
             </li>
             <li>
-                <code>@ActionRegistration</code> registers the "Open as Generic
-                Project" action in <code>Loaders/folder/any/Actions</code>.
-            </li>
-            <li>
                 <code>ProjectCustomizer.CompositeCategoryProvider.Registration</code>
                 registers the customizer's category providers under
                 <code>Projects/org-netbeans-modules-generic-project/Customizer</code>.
@@ -416,9 +410,7 @@
     <answer id="perf-menus">
         <p>
             The layer registers static shadows of the standard project actions in
-            the project type menu (no dynamic enablement logic). The single context
-            action ("Open as Generic Project") has a cheap enablement check (the
-            folder is a local directory and not already a project).
+            the project type menu (no dynamic enablement logic).
         </p>
     </answer>
 
@@ -479,21 +471,31 @@
         </p>
         <ul>
             <li>
-                <code>Templates/Project/Generic</code> - the category folder in the New
-                Project wizard.
+                <api group="layer" name="GpWizardCategory" type="export" category="private">
+                    <p>
+                        <code>Templates/Project/Generic</code> - the category folder in
+                        the New Project wizard.
+                    </p>
+                </api>
             </li>
             <li>
-                <code>Projects/org-netbeans-modules-generic-project/Actions</code> - the
-                project type menu: shadows of the standard project actions (new
-                file/project, open subprojects, close, rename, move, copy, delete, find,
-                the shared <code>Projects/Actions</code> folder, customize).
+                <api group="layer" name="GpProjectTypeMenu" type="export" category="private">
+                    <p>
+                        <code>Projects/org-netbeans-modules-generic-project/Actions</code>
+                        - the project type menu: shadows of the standard project actions
+                        (new file/project, open subprojects, close, rename, move, copy,
+                        delete, find, the shared <code>Projects/Actions</code> folder,
+                        customize). The shared <code>Projects/Actions</code> folder is
+                        the generic extension point for project menu items that apply to
+                        all project types.
+                    </p>
+                </api>
             </li>
         </ul>
         <p>
             In addition, the annotation-generated layer registers the New Project
-            wizard template, the "Open as Generic Project" context action, the
-            <code>@ProjectServiceProvider</code> lookup entries and the customizer
-            category providers.
+            wizard template, the <code>@ProjectServiceProvider</code> lookup entries
+            and the customizer category providers.
         </p>
     </answer>
 

@@ -61,8 +61,7 @@
         </p>
         <p>
             The IDE UI (logical view, New Project wizard, project customizer, the
-            project type menu, the "Open as Generic Project" action, the file filter)
-            is provided by the companion module
+            project type menu, the file filter) is provided by the companion module
             <code>org.netbeans.modules.generic.project.ui</code>, which contributes
             those services to each project's lookup via
             <code>@ProjectServiceProvider</code>; see its <code>arch.xml</code> for
@@ -805,14 +804,29 @@
                     </p>
                 </api>
             </li>
+            <li>
+                <api group="property" name="org.netbeans.modules.generic.project" type="export" category="private">
+                    <p>
+                        The <code>FileObject</code> attribute (value
+                        <code>Boolean.TRUE</code>) that marks a directory as a
+                        marker-less ("local") generic project. It is stored in the user
+                        configuration local filesystem, so it never reaches the working
+                        tree. It is mutually exclusive with the marker file: setting the
+                        attribute deletes the marker file and creating the marker file
+                        clears the attribute (<code>GenericProject.setMarkerState</code>).
+                    </p>
+                </api>
+            </li>
+            <li>
+                <api group="branding" name="LBL_aux_data_file_name" type="export" category="private">
+                    <p>
+                        The marker file name is brandable via the module bundle key
+                        <code>LBL_aux_data_file_name</code>; the private file name is
+                        derived by appending <code>.private</code>.
+                    </p>
+                </api>
+            </li>
         </ul>
-        <p>
-            The marker file name is brandable (module bundle key
-            <code>LBL_aux_data_file_name</code>); the private file name is derived by
-            appending <code>.private</code>. The marker-less variant of the project is
-            detected by the
-            <code>org.netbeans.modules.generic.project</code> FileObject attribute.
-        </p>
     </answer>
 
 
@@ -872,14 +886,41 @@
                 <code>ProjectManager</code>.
             </li>
             <li>
-                Each project's lookup publishes the headless per-project services
-                (project information, subproject provider, project operations,
-                auxiliary properties) plus the project instance itself, so that other
-                modules can find and extend them via
-                <code>@ProjectServiceProvider</code> (the UI module contributes the
-                logical view, customizer and action provider this way).
+                <api group="lookup" name="GpProjectLookup" type="export" category="private">
+                    <p>
+                        The lookup of every generic project, composed via
+                        <code>LookupProviderSupport.createCompositeLookup</code> from the
+                        core's fixed services and the layer folder
+                        <code>Projects/org-netbeans-modules-generic-project/Lookup</code>
+                        (the conventional <code>Projects/&lt;type&gt;/Lookup</code>
+                        pattern). The core's services take precedence for the types it
+                        provides; the folder entries are visible for all other types.
+                        Other modules register their per-project services by adding
+                        <code>LookupProvider</code> entries to that folder - in practice
+                        via <code>@ProjectServiceProvider(projectType =
+                        "org-netbeans-modules-generic-project")</code> or
+                        <code>LookupProvider.Registration</code> - and the platform finds
+                        them through the project's lookup without any dependency on this
+                        module.
+                    </p>
+                </api>
             </li>
         </ul>
+        <p>
+            The core's fixed services are one
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/ProjectInformation.html"><code>ProjectInformation</code></a>,
+            one
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/SubprojectProvider.html"><code>SubprojectProvider</code></a>,
+            the project operations (<code>MoveOrRenameOperationImplementation</code>,
+            <code>CopyOperationImplementation</code>,
+            <code>DeleteOperationImplementation</code>), one
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/AuxiliaryProperties.html"><code>AuxiliaryProperties</code></a>
+            and the <code>Project</code> instance itself. Modules registering into the
+            folder typically provide the UI services (
+            <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/LogicalViewProvider.html"><code>LogicalViewProvider</code></a>,
+            <code>ActionProvider</code>, <code>CustomizerProvider2</code>) and
+            customizer category providers (the UI module contributes them this way).
+        </p>
     </answer>
 
 
@@ -986,8 +1027,7 @@
     <answer id="perf-menus">
         <p>
             No - the module is headless. (The UI module registers the project type
-            menu and the "Open as Generic Project" context action; see its
-            <code>arch.xml</code>.)
+            menu; see its <code>arch.xml</code>.)
         </p>
     </answer>
 
@@ -1126,10 +1166,16 @@
     <answer id="resources-layer">
         <p>
             No hand-written layer: the annotation-generated layer only registers the
-            <code>ProjectFactory</code> service in the global lookup. (The UI module
-            provides the layer content: the New Project template category and entry,
-            the project type menu, the "Open as Generic Project" context action and
-            the per-project-type lookup contributions; see its <code>arch.xml</code>.)
+            <code>ProjectFactory</code> service in the global lookup. The per-project
+            lookup folder <code>Projects/org-netbeans-modules-generic-project/Lookup</code>
+            is likewise not created by this module; it is composed from
+            <code>LookupProvider</code> entries contributed by other modules (see
+            <code>lookup-register</code>).
+        </p>
+        <p>
+            (The UI module provides the layer content: the New Project template
+            category and entry, the project type menu and the per-project-type lookup
+            contributions; see its <code>arch.xml</code>.)
         </p>
     </answer>
 

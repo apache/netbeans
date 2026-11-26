@@ -160,7 +160,8 @@
         <p>
             The module is new and not yet released, so there is no legacy data to
             read. The module stores no data of its own; all persistent state lives
-            in the core module's auxiliary data files (see the core's
+            in the core module's auxiliary data storage (the marker file or the
+            auxiliary configuration fragment, see the core's
             <code>format-types</code>).
         </p>
     </answer>

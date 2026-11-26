@@ -107,10 +107,11 @@
     <answer id="arch-quality">
         <p>
             Unit tests (<code>GenericProjectTest</code>) cover project detection
-            (marker file vs. attribute), marker state changes, the two-file auxiliary
-            storage (shared vs. private data, marker toggling, external marker
-            deletion), display name handling, the move/rename/copy/delete operations
-            and the <code>@ProjectServiceProvider</code> lookup mechanism. The
+            (marker file vs. attribute), marker state changes, the auxiliary data
+            storage (marker file vs. auxiliary configuration fragment, shared vs.
+            private data, marker toggling, external marker deletion), display name
+            handling, the move/rename/copy/delete operations and the
+            <code>@ProjectServiceProvider</code> lookup mechanism. The
             companion UI module's <code>GpProjectUiTest</code> covers the logical
             view, the action provider and the file filter behavior.
         </p>
@@ -179,8 +180,10 @@
             <p>
                 The marker file can be disabled in the project customizer; the project
                 then exists via the FileObject attribute only and all settings (shared
-                and private) are stored in the user configuration, so nothing is written
-                into the folder.
+                and private) are stored in the project's private auxiliary
+                configuration (a FileObject attribute on the project directory,
+                physically in the user <code>var/attributes.xml</code>), so nothing
+                is written into the folder.
             </p>
         </usecase>
     </answer>
@@ -777,30 +780,45 @@
     -->
     <answer id="format-types">
         <p>
-            The module reads and writes plain <code>java.util.Properties</code> files
-            with keys of the form
-            <code>&lt;shared|private&gt;.&lt;code-name-base&gt;.&lt;key&gt;</code> (as
-            used by <code>AuxiliaryConfigBasedPreferencesProvider</code>):
+            The module reads and writes the auxiliary settings (keys of the form
+            <code>&lt;shared|private&gt;.&lt;code-name-base&gt;.&lt;key&gt;</code>, as
+            used by <code>AuxiliaryConfigBasedPreferencesProvider</code>) into two
+            locations, chosen by the project's nature:
         </p>
         <ul>
             <li>
                 <api group="java.io.File" name=".nbgp.properties" type="export" category="private">
                     <p>
-                        The shared auxiliary data. For a marker project this is the marker file
-                        in the project directory (its presence makes the directory a project,
-                        and the file is versioned along with the project); for a marker-less
-                        local project the same-named file lives in the user configuration
-                        (<code>Projects/&lt;folder-name&gt;-&lt;8 hex path hash&gt;/</code>).
+                        The marker file and, at the same time, the shared data file of a
+                        marker project: a plain <code>java.util.Properties</code> file in
+                        the project directory (its presence makes the directory a project,
+                        and the file is versioned along with the project). It holds the
+                        <code>shared.*</code> keys only, and it never exists for a
+                        marker-less local project.
                     </p>
                 </api>
             </li>
             <li>
-                <api group="java.io.File" name=".nbgp.properties.private" type="export" category="private">
+                <api group="property" name="AuxiliaryConfiguration.generic-project" type="export" category="private">
                     <p>
-                        The private auxiliary data, always in the user configuration (never in
-                        the working tree), in the
-                        <code>Projects/&lt;folder-name&gt;-&lt;8 hex path hash&gt;/</code>
-                        folder.
+                        The auxiliary configuration fragment — a
+                        <code>properties</code> root element in the
+                        <code>http://www.netbeans.org/ns/generic-project/1</code>
+                        namespace with one <code>property</code> child per key — stored
+                        in the project's <em>private</em> auxiliary configuration: a
+                        <code>FileObject</code> attribute on the project directory,
+                        physically in the user <code>var/attributes.xml</code>. This is
+                        the same mechanism and storage as the per-project data of the
+                        other project types. It holds the <code>private.*</code> keys of
+                        every project and, for a marker-less local project, the
+                        <code>shared.*</code> keys as well, so nothing is ever written
+                        into the working tree of a local project. A
+                        <code>shared.*</code> key lives in exactly one of the two
+                        locations at any time — in the marker file of a marker
+                        project, in this fragment of a local project — and is moved
+                        between them when the marker state changes. The fragment is removed
+                        once it becomes empty, so a never-customized local project
+                        carries no auxiliary configuration of its own.
                     </p>
                 </api>
             </li>
@@ -820,9 +838,8 @@
             <li>
                 <api group="branding" name="LBL_aux_data_file_name" type="export" category="private">
                     <p>
-                        The marker file name is brandable via the module bundle key
-                        <code>LBL_aux_data_file_name</code>; the private file name is
-                        derived by appending <code>.private</code>.
+                        The marker (data) file name is brandable via the module bundle
+                        key <code>LBL_aux_data_file_name</code>.
                     </p>
                 </api>
             </li>

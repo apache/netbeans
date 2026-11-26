@@ -24,66 +24,99 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.EditableProperties;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
+import org.openide.xml.XMLUtil;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
- * The {@link AuxiliaryProperties} of a generic project, stored in
- * {@link EditableProperties} per project (name brandable via the
- * module bundle, defaults to {@code .nbgp.properties}).
+ * The {@link AuxiliaryProperties} of a generic project.
  *
- * <p>Shared and private settings are kept in separate files:
+ * <p>Shared and private settings are stored according to the project's
+ * nature:
  *
  * <ul>
- * <li>the <em>shared</em> settings live in the data file whose
- *     location depends on the project's nature: for a project with
- *     the marker file the marker
- *     ({@link GenericProject#MARKER_FILE}) <em>is</em> the data file,
- *     so the data is versioned along with the project; for a local
- *     (marker-less) project it lives in the user configuration
- *     (see {@link #dataFolder});</li>
- * <li>the <em>private</em> settings always live in the user
- *     configuration (see {@link #privateDataFileName}), even for
- *     marker projects, so that nothing private is ever written into
- *     the working tree.</li>
+ * <li>the <em>shared</em> settings of a project with the marker file
+ *     live in the marker file ({@link GenericProject#MARKER_FILE}),
+ *     which <em>is</em> the data file, so the data is versioned along
+ *     with the project;</li>
+ * <li>everything else — the <em>shared</em> settings of a local
+ *     (marker-less) project and, always, the <em>private</em>
+ *     settings — lives in the project's <em>private</em> auxiliary
+ *     configuration (a {@code FileObject} attribute on the project
+ *     directory, see
+ *     {@link AuxiliaryConfiguration#putConfigurationFragment}): the
+ *     same mechanism and storage (the user's {@code var/attributes.xml}
+ *     in the running IDE) as the per-project data of the other
+ *     project types, and nothing is ever written into the working
+ *     tree of a local project.</li>
  * </ul>
  *
- * <p>The location of the shared file is re-evaluated on every access:
- * if the marker file is created or deleted while the project is open,
- * the shared data is moved to the new location on the next access
- * (the file at the old one is removed); if it is deleted while no
- * instance of the project is open, the shared data is lost with it.
- * Private data is not affected by the marker state.
+ * <p>The storage location of the shared data is re-evaluated on every
+ * access: if the marker file is created or deleted while the project
+ * is open, the shared data is moved to the new location on the next
+ * access; if it is deleted while no instance of the project is open,
+ * the shared data is lost with it. Private data is not affected by
+ * the marker state.
  */
 final class GpAuxiliaryProperties implements AuxiliaryProperties {
 
     private static final Logger LOG = Logger.getLogger(GpAuxiliaryProperties.class.getName());
 
+    /**
+     * Namespace of the auxiliary configuration fragment holding the
+     * auxiliary data of a local project (the shared settings) and,
+     * for every project, the private settings.
+     */
+    static final String NAMESPACE = "http://www.netbeans.org/ns/generic-project/1"; // NOI18N
+
+    /**
+     * Name of the root element of the auxiliary configuration
+     * fragment, one {@code <property name=... value=.../>} child per
+     * stored setting.
+     */
+    static final String ROOT = "properties"; // NOI18N
+
+    private static final String EL_PROPERTY = "property"; // NOI18N
+    private static final String ATTR_NAME = "name"; // NOI18N
+    private static final String ATTR_VALUE = "value"; // NOI18N
+
+    private static final String SHARED_PREFIX = "shared."; // NOI18N
+    private static final String PRIVATE_PREFIX = "private."; // NOI18N
+
     private final GenericProject prj;
-    // EditableProperties keeps files stable; new properties are appended
-    private final EditableProperties sharedData = new EditableProperties(false);
-    private final EditableProperties privateData = new EditableProperties(false);
+    private final AuxiliaryConfiguration auxConfig;
+
+    // marker projects: EditableProperties keeps files stable, new properties are appended
+    private final EditableProperties markerData = new EditableProperties(false);
+
+    // The data stored in the auxiliary configuration fragment:
+    // always the private settings, plus - for a local (marker-less)
+    // project the shared settings as well, so each setting lives in exactly one
+    // of the two storage locations (here, or in the marker file) at any time.
+    // Kept sorted for stable output
+    private final TreeMap<String, String> fragmentData = new TreeMap<>();
+
     private boolean loaded;
-    private boolean sharedLoadedInProject;
+    private boolean hasMarkerAtLoad;
 
     GpAuxiliaryProperties(GenericProject prj) {
         this.prj = prj;
-    }
-
-    /**
-     * The path of the folder in the user configuration that holds
-     * the user-local auxiliary data of a project with the given
-     * directory: the shared data of a local project and, always, the
-     * private data.
-     */
-    static String dataFolder(FileObject projectDirectory) {
-        return "Projects/" + projectDirectory.getNameExt() // NOI18N
-                + "-%08x".formatted(projectDirectory.getPath().hashCode()); // NOI18N
+        this.auxConfig = ProjectUtils.getAuxiliaryConfiguration(prj);
     }
 
     /**
@@ -100,12 +133,66 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         return Bundle.LBL_aux_data_file_name();
     }
 
-    /**
-     * The name of the file holding the private auxiliary settings,
-     * derived from the (brandable) shared data file name.
-     */
-    static String privateDataFileName() {
-        return dataFileName() + ".private";  // NOI18N
+    @Override
+    public String get(String key, boolean shared) {
+        synchronized (this) {
+            ensureLoaded();
+            if (shared && hasMarkerAtLoad) {
+                return markerData.getProperty(SHARED_PREFIX + key);
+            } else {
+                return fragmentData.get(prefixOf(shared) + key);
+            }
+        }
+    }
+
+    @Override
+    public void put(String key, String value, boolean shared) {
+        synchronized (this) {
+            ensureLoaded();
+            String storedKey = prefixOf(shared) + key;
+            if (shared && hasMarkerAtLoad) {
+                if (value == null) {
+                    markerData.remove(storedKey);
+                } else {
+                    markerData.setProperty(storedKey, value);
+                }
+                saveMarker();
+            } else {
+                if (value == null) {
+                    fragmentData.remove(storedKey);
+                } else {
+                    fragmentData.put(storedKey, value);
+                }
+                saveFragment();
+            }
+        }
+    }
+
+    @Override
+    public Iterable<String> listKeys(boolean shared) {
+        List<String> keys = new ArrayList<>();
+        synchronized (this) {
+            ensureLoaded();
+            String prefix = prefixOf(shared);
+            if (shared && hasMarkerAtLoad) {
+                for (String stored : markerData.keySet()) {
+                    if (stored.startsWith(prefix)) {
+                        keys.add(stored.substring(prefix.length()));
+                    }
+                }
+            } else {
+                for (String stored : fragmentData.keySet()) {
+                    if (stored.startsWith(prefix)) {
+                        keys.add(stored.substring(prefix.length()));
+                    }
+                }
+            }
+        }
+        return keys;
+    }
+
+    private static String prefixOf(boolean shared) {
+        return shared ? SHARED_PREFIX : PRIVATE_PREFIX;
     }
 
     /**
@@ -117,195 +204,143 @@ final class GpAuxiliaryProperties implements AuxiliaryProperties {
         return GenericProject.hasMarker(prj.getProjectDirectory());
     }
 
-    @Override
-    public String get(String key, boolean shared) {
-        synchronized (this) {
-            ensureLoaded();
-            return storeOf(shared).getProperty(keyPrefix(shared) + key);
-        }
-    }
-
-    @Override
-    public void put(String key, String value, boolean shared) {
-        synchronized (this) {
-            ensureLoaded();
-            String storedKey = keyPrefix(shared) + key;
-            EditableProperties store = storeOf(shared);
-            if (value == null) {
-                store.remove(storedKey);
-            } else {
-                store.setProperty(storedKey, value);
-            }
-            save(shared);
-        }
-    }
-
-    @Override
-    public Iterable<String> listKeys(boolean shared) {
-        List<String> keys = new ArrayList<>();
-        synchronized (this) {
-            ensureLoaded();
-            String prefix = keyPrefix(shared);
-            for (String stored : storeOf(shared).keySet()) {
-                if (stored.startsWith(prefix)) {
-                    keys.add(stored.substring(prefix.length()));
-                }
-            }
-        }
-        return keys;
-    }
-
-    private EditableProperties storeOf(boolean shared) {
-        return shared ? sharedData : privateData;
-    }
-
-    private boolean save(boolean shared) {
-        return shared ? saveShared() : savePrivate();
-    }
-
-    private static String keyPrefix(boolean shared) {
-        return shared ? "shared." : "private."; // NOI18N
-    }
-
-    private static String dataFileName(boolean shared) {
-        return shared ? dataFileName() : privateDataFileName();
-    }
-
-    /**
-     * Resolves the data file of the given channel at the location it
-     * has when the shared data is (or is not) stored in the project
-     * directory, returning {@code null} if the file does not exist.
-     * The location of the private file does not depend on the marker
-     * state.
-     *
-     * @param inProject whether to resolve the shared data file in the
-     *        project directory (or in the user configuration)
-     * @param shared whether to resolve the shared or the private data
-     *        file
-     */
-    private FileObject locateFile(boolean inProject, boolean shared) {
-        if (shared && inProject) {
-            return prj.getProjectDirectory().getFileObject(dataFileName());
-        }
-        FileObject root = FileUtil.getConfigRoot();
-        if (root != null) {
-            FileObject dir = root.getFileObject(dataFolder(prj.getProjectDirectory()));
-            if (dir != null) {
-                return dir.getFileObject(dataFileName(shared));
-            }
-        }
-        return null;
-    }
-
     /**
      * Loads the data if necessary.
      *
      * <p>If the marker state has changed since the data was last
      * loaded (the marker file was created or deleted), the cached
-     * shared data is moved to the new location and the file at the
-     * old one is removed; the private data is not affected.
+     * shared data is moved to the new storage location and, in the
+     * other direction, the old location is left without the shared
+     * data; the private data is not affected.
      */
     private void ensureLoaded() {
         boolean hasMarker = hasMarker();
-        if (loaded && sharedLoadedInProject == hasMarker) {
+        if (loaded && hasMarkerAtLoad == hasMarker) {
             return;
         }
         if (!loaded) {
-            loaded = true;
-            sharedLoadedInProject = hasMarker;
-            FileObject privateFile = locateFile(false, false);
-            if (privateFile != null) {
-                readFileInto(privateFile, privateData);
-            }
-            FileObject sharedFile = locateFile(hasMarker, true);
-            if (sharedFile != null) {
-                readFileInto(sharedFile, sharedData);
-            }
-            return;
-        }
-        // the marker state has changed since the last access: move the
-        // shared data to the new location and remove the file at the
-        // old one
-        boolean old = sharedLoadedInProject;
-        sharedLoadedInProject = hasMarker;
-        if (saveShared()) {
-            FileObject oldFile = locateFile(old, true);
-            if (oldFile != null) {
-                try {
-                    oldFile.delete();
-                } catch (IOException ex) {
-                    LOG.log(Level.FINE, "Cannot remove old auxiliary data file of " + prj, ex);
+            loadMarkerData();
+            loadFragmentData();
+        } else if (hasMarker) {
+            // local -> marker: move the shared data from the
+            // auxiliary configuration fragment to the (re)created marker file
+            loadFragmentData(); // re-read, another instance may have written
+            markerData.clear();
+            for (String key : new ArrayList<>(fragmentData.keySet())) {
+                if (key.startsWith(SHARED_PREFIX)) {
+                    markerData.setProperty(key, fragmentData.get(key));
                 }
             }
+            fragmentData.keySet().removeIf(key -> key.startsWith(SHARED_PREFIX));
+            postMigration(this::saveFragmentAndMarker);
+        } else {
+            // marker -> local: move the shared data from the (in-memory
+            // copy of the) marker file to the auxiliary configuration
+            // fragment; the marker file itself is removed by whatever
+            // changed the marker state
+            loadFragmentData(); // re-read, another instance may have written
+            for (String key : new ArrayList<>(markerData.keySet())) {
+                if (key.startsWith(SHARED_PREFIX)) {
+                    fragmentData.put(key, markerData.getProperty(key));
+                }
+            }
+            markerData.clear();
+            postMigration(this::saveFragment);
         }
-    }
-
-    private void readFileInto(FileObject file, EditableProperties into) {
-        try (InputStream is = file.getInputStream()) {
-            into.load(is);
-        } catch (IOException ex) {
-            LOG.log(Level.WARNING, "Cannot read auxiliary data file of " + prj + ": " + file, ex);
-        }
+        hasMarkerAtLoad = hasMarker;
+        loaded = true;
     }
 
     /**
-     * Saves the shared data to its current location.
+     * Persists the data after the storage-location migration in
+     * {@link #ensureLoaded()}.
      *
-     * @return whether the data has been written
+     * <p>The migration is triggered by an auxiliary property access,
+     * which is usually a read performed under the project's read
+     * access: the write lock is not available there and must not be
+     * upgraded from the read (it would deadlock when another thread
+     * reads concurrently). The persistence is therefore posted with
+     * {@link Mutex#postWriteRequest}, which runs it immediately if
+     * the current thread already holds the write access, or as soon
+     * as the current thread leaves its read access. The in-memory
+     * data is already up to date, so the access that triggered the
+     * migration still sees the migrated values.
      */
-    private boolean saveShared() {
-        try {
-            FileObject dir;
-            if (hasMarker()) {
-                dir = prj.getProjectDirectory();
-            } else {
-                FileObject root = FileUtil.getConfigRoot();
-                if (root == null) {
-                    LOG.log(Level.WARNING, "No user configuration available, cannot save auxiliary data of {0}", prj);
-                    return false;
-                }
-                dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
+    private void postMigration(Runnable persist) {
+        ProjectManager.mutex(false, prj).postWriteRequest(persist);
+    }
+
+    private void loadMarkerData() {
+        FileObject file = prj.getProjectDirectory().getFileObject(GenericProject.MARKER_FILE);
+        if (file != null) {
+            try (InputStream is = file.getInputStream()) {
+                markerData.load(is);
+            } catch (IOException ex) {
+                LOG.log(Level.WARNING, "Cannot read auxiliary data file of " + prj + ": " + file, ex);
             }
-            return storeInto(dir, dataFileName(), sharedData);
+        }
+    }
+
+    private synchronized void saveMarker() {
+        FileObject dir = prj.getProjectDirectory();
+        try {
+            FileObject file = dir.getFileObject(GenericProject.MARKER_FILE);
+            if (file == null) {
+                file = dir.createData(GenericProject.MARKER_FILE);
+            }
+            try (OutputStream os = file.getOutputStream()) {
+                markerData.store(os);
+            }
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot save auxiliary data of " + prj, ex);
-            return false;
         }
     }
 
-    /**
-     * Saves the private data to the user configuration.
-     *
-     * @return whether the data has been written
-     */
-    private boolean savePrivate() {
-        FileObject root = FileUtil.getConfigRoot();
-        if (root == null) {
-            LOG.log(Level.WARNING, "No user configuration available, cannot save private auxiliary data of {0}", prj);
-            return false;
+    private void loadFragmentData() {
+        fragmentData.clear();
+        Element el = auxConfig.getConfigurationFragment(ROOT, NAMESPACE, false);
+        if (el != null) {
+            NodeList nl = el.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node node = nl.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE
+                        && NAMESPACE.equals(node.getNamespaceURI())
+                        && EL_PROPERTY.equals(node.getLocalName())) {
+                    Element property = (Element) node;
+                    String name = property.getAttribute(ATTR_NAME);
+                    if (!name.isEmpty()) {
+                        fragmentData.put(name, property.getAttribute(ATTR_VALUE));
+                    }
+                }
+            }
+        }
+    }
+
+    private synchronized void saveFragmentAndMarker() {
+        saveFragment();
+        saveMarker();
+    }
+
+    private synchronized void saveFragment() {
+        if (fragmentData.isEmpty()) {
+            // keep an uncustomized (local) project free of any
+            // auxiliary configuration of its own
+            auxConfig.removeConfigurationFragment(ROOT, NAMESPACE, false);
+            return;
         }
         try {
-            FileObject dir = FileUtil.createFolder(root, dataFolder(prj.getProjectDirectory()));
-            return storeInto(dir, privateDataFileName(), privateData);
-        } catch (IOException ex) {
-            LOG.log(Level.WARNING, "Cannot save private auxiliary data of " + prj, ex);
-            return false;
+            Document doc = XMLUtil.createDocument(ROOT, NAMESPACE, null, null);
+            Element el = doc.getDocumentElement();
+            for (Map.Entry<String, String> e : fragmentData.entrySet()) {
+                Element property = doc.createElementNS(NAMESPACE, EL_PROPERTY);
+                property.setAttribute(ATTR_NAME, e.getKey());
+                property.setAttribute(ATTR_VALUE, e.getValue());
+                el.appendChild(property);
+            }
+            auxConfig.putConfigurationFragment(el, false);
+        } catch (DOMException ex) {
+            LOG.log(Level.WARNING, "Cannot save auxiliary data of " + prj, ex);
         }
-    }
-
-    /**
-     * Writes the given data to the named file in the directory,
-     * creating it if necessary.
-     */
-    private boolean storeInto(FileObject dir, String fileName, EditableProperties data) throws IOException {
-        FileObject file = dir.getFileObject(fileName);
-        if (file == null) {
-            file = dir.createData(fileName);
-        }
-        try (OutputStream os = file.getOutputStream()) {
-            data.store(os);
-        }
-        return true;
     }
 
 }

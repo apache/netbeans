@@ -41,11 +41,9 @@ import org.openide.util.lookup.Lookups;
  * {@link #isGlobalFileFilterEnabled}) and the project's own
  * additional pattern (see {@link #getFilesFilterPattern}).
  *
- * <p>The marker file doubles as the project's auxiliary data file
- * (see {@link GpAuxiliaryProperties}): it marks the directory as a
- * project and stores what {@link ProjectUtils#getPreferences}
- * persists (e.g. the display name override). For local (marker-less)
- * projects the same data lives in the user configuration.
+ * <p>The marker file doubles as the project's shared auxiliary data
+ * file; see {@link GpAuxiliaryProperties} for how the project's shared
+ * and private settings are stored.
  */
 public final class GenericProject implements Project {
 
@@ -53,7 +51,7 @@ public final class GenericProject implements Project {
      * Name of the marker file: identical to the auxiliary data file
      * ({@link GpAuxiliaryProperties#dataFileName}), which thus has a
      * dual role — it both marks the directory as a project and
-     * stores the project's auxiliary data.
+     * stores the project's shared auxiliary data.
      */
     public static final String MARKER_FILE = GpAuxiliaryProperties.dataFileName();
 
@@ -199,10 +197,9 @@ public final class GenericProject implements Project {
 
     /**
      * Key of the display name override in the project's <em>shared</em>
-     * preferences ({@link ProjectUtils#getPreferences}): the name is
-     * project content, so for a marker project it is versioned along
-     * with the project and for a local project it lives in the user
-     * configuration.
+     * preferences ({@link ProjectUtils#getPreferences}); the name is
+     * project content, see {@link GpAuxiliaryProperties} for how
+     * shared settings are stored.
      */
     static final String DISPLAY_NAME_KEY = "displayName"; // NOI18N
 
@@ -271,7 +268,7 @@ public final class GenericProject implements Project {
     /**
      * Stores the state of the global file filter toggle. The enabled
      * state is the default, so it is stored by removing the key and a
-     * project with no other overrides keeps an empty data file.
+     * project with no other overrides keeps no stored data.
      */
     public static void setGlobalFileFilterEnabled(GenericProject prj, boolean enabled) {
         if (isGlobalFileFilterEnabled(prj) == enabled) {
@@ -291,10 +288,13 @@ public final class GenericProject implements Project {
     /**
      * Key of the additional files filter pattern in the project's
      * <em>shared</em> preferences ({@link ProjectUtils#getPreferences})
-     * — the pattern is project content, like a {@code .gitignore}.
+     * — the pattern is project content, like a {@code .gitignore};
+     * see {@link GpAuxiliaryProperties} for how shared settings are
+     * stored.
      *
      * <p>Public so that the companion UI module's file filter can read
-     * the stored pattern directly (see {@code GLOBAL_FILE_FILTER_KEY}).
+     * the stored pattern directly (along with
+     * {@link #GLOBAL_FILE_FILTER_KEY}).
      */
     public static final String FILES_FILTER_PATTERN_KEY = "fileFilterPattern"; // NOI18N
 

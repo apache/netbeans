@@ -46,6 +46,10 @@ public class JavaRefactoringToolProviderTest extends NbTestCase {
             assertEquals(text.indexOf("value"), JavaRefactoringToolProvider.SourcePosition.from(
                     Map.of("offset", text.indexOf("value"))).toOffset(text));
         }
+        assertEquals(3, JavaRefactoringToolProvider.SourcePosition.from(
+                Map.of("line", 1, "column", 4)).toOffset("abc\n"));
+        assertEquals(4, JavaRefactoringToolProvider.SourcePosition.from(
+                Map.of("line", 2, "column", 1)).toOffset("abc\n"));
         assertInvalidPosition(Map.of("line", 0, "column", 1), "class A {}");
         assertInvalidPosition(Map.of("line", 2, "column", 1), "class A {}");
         assertInvalidPosition(Map.of("line", 1, "column", 12), "class A {}");
@@ -96,8 +100,20 @@ public class JavaRefactoringToolProviderTest extends NbTestCase {
     public void testSchemasAcceptLineColumnOrOffset() {
         for (var tool : new JavaRefactoringToolProvider().getTools()) {
             Map<String, Object> schema = tool.inputSchema();
-            assertEquals(List.of(Map.of("required", List.of("offset")),
-                    Map.of("required", List.of("line", "column"))), schema.get("oneOf"));
+            assertEquals("object", schema.get("type"));
+            assertFalse(schema.containsKey("oneOf"));
+            assertFalse(schema.containsKey("anyOf"));
+            assertFalse(schema.containsKey("allOf"));
+            @SuppressWarnings("unchecked")
+            Map<String, Object> properties = (Map<String, Object>) schema.get("properties");
+            assertTrue(properties.containsKey("line"));
+            assertTrue(properties.containsKey("column"));
+            assertTrue(properties.containsKey("offset"));
+            @SuppressWarnings("unchecked")
+            List<String> required = (List<String>) schema.get("required");
+            assertFalse(required.contains("offset"));
+            assertFalse(required.contains("line"));
+            assertFalse(required.contains("column"));
         }
     }
 }

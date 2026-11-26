@@ -52,7 +52,8 @@ public final class EditorToolProvider implements McpToolProvider {
 
         tools.add(new McpToolDefinition(
                 "get_current_file_context",
-                "Returns the current file path, cursor position, and any text selection from the active editor tab. "
+                "Returns the current file path, cursor offset, 1-based line and UTF-16 column, "
+                + "and any text selection from the active editor tab. "
                 + "Call when you see phrases like 'this file', 'highlighted text', 'selected text', 'selected code', "
                 + "'current file', 'current line' or similar phrases indicating current editing context.",
                 Map.of("type", "object", "properties", Map.of())
@@ -121,7 +122,12 @@ public final class EditorToolProvider implements McpToolProvider {
             ctx.put("filePath", file.getAbsolutePath());
             ctx.put("fileName", fo.getNameExt());
             ctx.put("mimeType", fo.getMIMEType());
-            ctx.put("cursorPosition", pane.getCaretPosition());
+            int caret = pane.getCaretPosition();
+            javax.swing.text.Element lines = doc.getDefaultRootElement();
+            int line = lines.getElementIndex(caret);
+            ctx.put("cursorPosition", caret);
+            ctx.put("line", line + 1);
+            ctx.put("column", caret - lines.getElement(line).getStartOffset() + 1);
             ctx.put("documentLength", doc.getLength());
             String selectedText = pane.getSelectedText();
             if (selectedText != null && !selectedText.isEmpty()) {

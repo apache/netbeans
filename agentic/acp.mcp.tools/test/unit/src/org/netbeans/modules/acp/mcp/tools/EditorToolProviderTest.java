@@ -128,6 +128,17 @@ public class EditorToolProviderTest extends NbTestCase {
             assertEquals("ok", result.get("status"));
             assertEquals(inside.toString(), result.get("filePath"));
             assertEquals("selected", result.get("selectedText"));
+            assertEquals(1, result.get("line"));
+            assertEquals(9, result.get("column"));
+
+            SwingUtilities.invokeAndWait(() -> {
+                pane.setText("first\n\tsecond");
+                pane.setCaretPosition(8);
+            });
+            result = provider.executeTool("get_current_file_context", Map.of());
+            assertEquals(2, result.get("line"));
+            assertEquals(3, result.get("column"));
+            assertEquals(8, result.get("cursorPosition"));
 
             SwingUtilities.invokeAndWait(() -> {
                 try {

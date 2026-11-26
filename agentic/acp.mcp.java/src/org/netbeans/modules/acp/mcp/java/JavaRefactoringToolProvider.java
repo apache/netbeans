@@ -76,19 +76,17 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                                 "filePath", Map.of("type", "string",
                                         "description", "Absolute path to the Java source file"),
                                 "line", Map.of("type", "integer", "minimum", 1,
-                                        "description", "1-based source line containing the symbol"),
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
                                 "column", Map.of("type", "integer", "minimum", 1,
                                         "description", "1-based UTF-16 column within the line; tabs count as one character"),
                                 "offset", Map.of("type", "integer", "minimum", 0,
-                                        "description", "UTF-16 offset of the symbol in the editor source (0-based)"),
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
                                 "newName", Map.of("type", "string",
                                         "description", "New name for the symbol"),
                                 "searchInComments", Map.of("type", "boolean",
                                         "description", "Also rename occurrences in comments and strings (default false)")
                         ),
-                        "required", List.of("filePath", "newName"),
-                        "oneOf", List.of(Map.of("required", List.of("offset")),
-                                Map.of("required", List.of("line", "column")))
+                        "required", List.of("filePath", "newName")
                 )
         ));
 
@@ -102,17 +100,15 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                                 "filePath", Map.of("type", "string",
                                         "description", "Absolute path to the Java source file"),
                                 "line", Map.of("type", "integer", "minimum", 1,
-                                        "description", "1-based source line containing the symbol"),
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
                                 "column", Map.of("type", "integer", "minimum", 1,
                                         "description", "1-based UTF-16 column within the line; tabs count as one character"),
                                 "offset", Map.of("type", "integer", "minimum", 0,
-                                        "description", "UTF-16 offset of the symbol in the editor source (0-based)"),
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
                                 "searchInComments", Map.of("type", "boolean",
                                         "description", "Also search in comments and strings (default false)")
                         ),
-                        "required", List.of("filePath"),
-                        "oneOf", List.of(Map.of("required", List.of("offset")),
-                                Map.of("required", List.of("line", "column")))
+                        "required", List.of("filePath")
                 )
         ));
 
@@ -126,15 +122,13 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                                 "filePath", Map.of("type", "string",
                                         "description", "Absolute path to the Java source file"),
                                 "line", Map.of("type", "integer", "minimum", 1,
-                                        "description", "1-based source line containing the symbol"),
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
                                 "column", Map.of("type", "integer", "minimum", 1,
                                         "description", "1-based UTF-16 column within the line; tabs count as one character"),
                                 "offset", Map.of("type", "integer", "minimum", 0,
-                                        "description", "UTF-16 offset of the symbol in the editor source (0-based)")
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column")
                         ),
-                        "required", List.of("filePath"),
-                        "oneOf", List.of(Map.of("required", List.of("offset")),
-                                Map.of("required", List.of("line", "column")))
+                        "required", List.of("filePath")
                 )
         ));
 
@@ -148,19 +142,17 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                                 "filePath", Map.of("type", "string",
                                         "description", "Absolute path to the Java source file"),
                                 "line", Map.of("type", "integer", "minimum", 1,
-                                        "description", "1-based source line containing the symbol"),
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
                                 "column", Map.of("type", "integer", "minimum", 1,
                                         "description", "1-based UTF-16 column within the line; tabs count as one character"),
                                 "offset", Map.of("type", "integer", "minimum", 0,
-                                        "description", "UTF-16 offset of the field in the editor source (0-based)"),
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
                                 "getterName", Map.of("type", "string",
                                         "description", "Custom getter name (default: auto-generated from field name)"),
                                 "setterName", Map.of("type", "string",
                                         "description", "Custom setter name (optional, auto-generated only for non-final fields)")
                         ),
-                        "required", List.of("filePath"),
-                        "oneOf", List.of(Map.of("required", List.of("offset")),
-                                Map.of("required", List.of("line", "column")))
+                        "required", List.of("filePath")
                 )
         ));
 
@@ -472,7 +464,7 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                 end--;
             }
             long result = (long) start + column - 1;
-            if (result >= end) {
+            if (result > end) {
                 throw new InvalidPositionException("column is outside the source line");
             }
             return (int) result;

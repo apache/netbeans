@@ -31,6 +31,7 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.loaders.DataFolder;
@@ -153,7 +154,32 @@ public final class GpLogicalViewProvider implements LogicalViewProvider {
 
     @Override
     public Node findPath(Node root, Object target) {
-        return target instanceof FileObject fo && fo.equals(project.getProjectDirectory()) ? root : null;
+        if (!(target instanceof FileObject fo)) {
+            return null;
+        }
+        FileObject dir = project.getProjectDirectory();
+        return dir.equals(fo) || FileUtil.isParentOf(dir, fo) ? findDataNode(root, fo) : null;
+    }
+
+    /**
+     * Finds the node of the given file in the logical view: the node
+     * with the {@link DataObject} of that file in its lookup
+     * ({@link DataNode}s created by
+     * {@link DataFolder#createNodeChildren} qualify), searching
+     * depth-first.
+     */
+    private static Node findDataNode(Node node, FileObject target) {
+        DataObject dobj = node.getLookup().lookup(DataObject.class);
+        if (dobj != null && dobj.getPrimaryFile().equals(target)) {
+            return node;
+        }
+        for (Node child : node.getChildren().getNodes(true)) {
+            Node found = findDataNode(child, target);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
     }
 
 }

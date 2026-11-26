@@ -98,6 +98,67 @@ public class GpProjectUiTest extends NbTestCase {
         assertEquals(root, dobj.getPrimaryFile());
     }
 
+    public void testFindPathReturnsNodeForProjectFile() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject file = FileUtil.createData(root, "readme.txt"); // NOI18N
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
+        Node node = provider.createLogicalView();
+        Node found = provider.findPath(node, file);
+        assertNotNull("the node of a project file must be found", found);
+        assertEquals(file, found.getLookup().lookup(DataObject.class).getPrimaryFile());
+    }
+
+    public void testFindPathReturnsNodeForNestedFile() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject file = FileUtil.createData(FileUtil.createFolder(root, "src"), "Main.java"); // NOI18N
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
+        Node node = provider.createLogicalView();
+        Node found = provider.findPath(node, file);
+        assertNotNull("the node of a nested file must be found", found);
+        assertEquals(file, found.getLookup().lookup(DataObject.class).getPrimaryFile());
+    }
+
+    public void testFindPathReturnsRootForProjectDirectory() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
+        Node node = provider.createLogicalView();
+        assertSame(node, provider.findPath(node, root));
+    }
+
+    public void testFindPathReturnsNullForForeignOrOtherTarget() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject foreign = FileUtil.createData(FileUtil.toFileObject(getWorkDir()), "outside.txt"); // NOI18N
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
+        Node node = provider.createLogicalView();
+        assertNull(provider.findPath(node, foreign));
+        assertNull(provider.findPath(node, "not a file object")); // NOI18N
+    }
+
+    public void testFindPathReturnsNullForFilteredFile() throws Exception {
+        FileObject root = newProjectDir();
+        FileUtil.createData(root, GenericProject.MARKER_FILE);
+        FileObject file = FileUtil.createData(root, "generated.tmp"); // NOI18N
+        Project prj = ProjectManager.getDefault().findProject(root);
+        assertNotNull(prj);
+        GenericProject.setFilesFilterPattern((GenericProject) prj, ".tmp"); // NOI18N
+        LogicalViewProvider provider = prj.getLookup().lookup(LogicalViewProvider.class);
+        Node node = provider.createLogicalView();
+        assertNull("a file hidden by the project filter must not be findable",
+                provider.findPath(node, file));
+    }
+
     public void testActionProviderSupportsRename() throws Exception {
         FileObject root = newProjectDir();
         FileUtil.createData(root, GenericProject.MARKER_FILE);

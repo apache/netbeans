@@ -361,6 +361,10 @@ public class JavaCompletionTask18FeaturesTest extends CompletionTestBase {
                 "diamond1.pass", "1.8");
     }
 
+    public void testMethodReferenceAsFieldInit() throws Exception {
+        performTest("MethodReferenceAsFieldInit", 939, "te", "methodReferenceAsFieldInit.pass", "1.8");
+    }
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }

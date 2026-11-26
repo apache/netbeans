@@ -599,29 +599,14 @@ abstract class BaseTask extends UserTask {
             String initText = controller.getText().substring(initPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(tree));
             if (initText.length() > 0) {
                 final SourcePositions[] sp = new SourcePositions[1];
-                final ExpressionTree init = tu.parseVariableInitializer(initText, sp);
-                final ExpressionStatementTree fake = new ExpressionStatementTree() {
-                    @Override
-                    public Object accept(TreeVisitor v, Object p) {
-                        return v.visitExpressionStatement(this, p);
-                    }
-
-                    @Override
-                    public ExpressionTree getExpression() {
-                        return init;
-                    }
-
-                    @Override
-                    public Tree.Kind getKind() {
-                        return Tree.Kind.EXPRESSION_STATEMENT;
-                    }
-                };
-                sourcePositions = new SourcePositionsImpl(fake, sourcePositions, sp[0], initPos, upToOffset ? offset : -1);
-                path = tu.pathFor(new TreePath(pPath, fake), offset, sourcePositions);
-                if (upToOffset && sp[0].getEndPosition(init) + initPos > offset) {
-                    scope = tu.reattributeTreeTo(init, scope, path.getLeaf());
+                final AssignmentTree assign = (AssignmentTree) tu.parseExpression(((VariableTree) parent).getName() + " = " + initText, sp);
+                int compensationOffset = (int) (-sp[0].getStartPosition(assign.getExpression()));
+                sourcePositions = new SourcePositionsImpl(assign, sourcePositions, sp[0], initPos, upToOffset ? offset : -1, compensationOffset);
+                path = tu.pathFor(new TreePath(pPath, assign), offset, sourcePositions);
+                if (upToOffset && sp[0].getEndPosition(assign.getExpression()) + initPos > offset) {
+                    scope = tu.reattributeTreeTo(assign, scope, path.getLeaf());
                 } else {
-                    tu.reattributeTree(init, scope);
+                    tu.reattributeTree(assign, scope);
                 }
             }
             return new Env(offset, prefix, controller, path, sourcePositions, scope);
@@ -704,15 +689,21 @@ abstract class BaseTask extends UserTask {
         private final SourcePositions modified;
         private final int startOffset;
         private final int endOffset;
+        private final int compensationOffset; //an offset that is added to all offsets under root
 
         private boolean found;
 
         private SourcePositionsImpl(Tree root, SourcePositions original, SourcePositions modified, int startOffset, int endOffset) {
+            this(root, original, modified, startOffset, endOffset, 0);
+        }
+
+        private SourcePositionsImpl(Tree root, SourcePositions original, SourcePositions modified, int startOffset, int endOffset, int compensationOffset) {
             this.root = root;
             this.original = original;
             this.modified = modified;
             this.startOffset = startOffset;
             this.endOffset = endOffset;
+            this.compensationOffset = compensationOffset;
         }
 
         @Override
@@ -722,7 +713,7 @@ abstract class BaseTask extends UserTask {
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getStartPosition(tree) + startOffset : original.getStartPosition(tree);
+            return found ? modified.getStartPosition(tree) + compensationOffset + startOffset : original.getStartPosition(tree);
         }
 
         @Override
@@ -732,7 +723,7 @@ abstract class BaseTask extends UserTask {
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getEndPosition(tree) + startOffset : original.getEndPosition(tree);
+            return found ? modified.getEndPosition(tree) + compensationOffset + startOffset : original.getEndPosition(tree);
         }
 
         @Override

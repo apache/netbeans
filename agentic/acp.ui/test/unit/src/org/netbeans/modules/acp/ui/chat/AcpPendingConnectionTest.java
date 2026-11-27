@@ -21,24 +21,22 @@ package org.netbeans.modules.acp.ui.chat;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
-import java.awt.Dialog;
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
 import junit.framework.TestCase;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
-import org.netbeans.modules.acp.api.AcpAgentManager;
+import org.netbeans.modules.acp.api.AcpConnection;
 import org.netbeans.modules.acp.api.AcpConnectionManager;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.netbeans.modules.acp.api.AcpSessionListener;
+import org.openide.util.RequestProcessor;
 import org.openide.util.test.MockLookup;
 
 public class AcpPendingConnectionTest extends TestCase {
@@ -47,64 +45,175 @@ public class AcpPendingConnectionTest extends TestCase {
         Path directory = Files.createTempDirectory("acp-pending-test");
         Path started = directory.resolve("started");
         Path proceed = directory.resolve("proceed");
-        String name = "pending-" + UUID.randomUUID();
+        AcpAgentDescriptor descriptor = testAgent(started, proceed);
         AcpConnectionManager connections = new AcpConnectionManager();
-        MockLookup.setInstances(connections, new DialogDisplayer() {
-            @Override
-            public Object notify(NotifyDescriptor descriptor) {
-                return NotifyDescriptor.YES_OPTION;
-            }
+        MockLookup.setInstances(connections);
+        CountDownLatch settled = new CountDownLatch(1);
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        AcpChatSession session = new AcpChatSession();
+        try {
+            SwingUtilities.invokeAndWait(() -> session.connect(descriptor, AcpPendingConnectionTest::listener,
+                    () -> error.set(new AssertionError("Removed agent became active")), error::set, settled::countDown));
+            await(() -> Files.exists(started), "Agent did not start its handshake");
+            SwingUtilities.invokeAndWait(() -> assertTrue(session.invalidateConnectionAttempt(descriptor.getName())));
+            Files.createFile(proceed);
+            assertTrue("Connection attempt did not settle", settled.await(15, TimeUnit.SECONDS));
+            assertNull(error.get());
+            SwingUtilities.invokeAndWait(() -> assertNull(session.connection()));
+            assertTrue(connections.getActiveConnections().stream().noneMatch(AcpConnection::isConnected));
+        } finally {
+            Files.writeString(proceed, "release");
+            connections.disconnect(descriptor);
+            MockLookup.setInstances();
+            Files.deleteIfExists(started);
+            Files.deleteIfExists(proceed);
+            Files.deleteIfExists(directory);
+        }
+    }
 
-            @Override
-            public Dialog createDialog(DialogDescriptor descriptor) {
-                throw new UnsupportedOperationException();
+    public void testSessionUpdatesReplayAfterPresentationAndOnlyForTheSelectedSession() throws Exception {
+        Path directory = Files.createTempDirectory("acp-session-test");
+        Path started = directory.resolve("started");
+        Path proceed = Files.createFile(directory.resolve("proceed"));
+        AcpAgentDescriptor descriptor = testAgent(started, proceed);
+        AcpConnectionManager connections = new AcpConnectionManager();
+        MockLookup.setInstances(connections);
+        CountDownLatch settled = new CountDownLatch(1);
+        CountDownLatch closed = new CountDownLatch(1);
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        AcpChatSession session = new AcpChatSession();
+        try {
+            SwingUtilities.invokeAndWait(() -> session.connect(descriptor, AcpPendingConnectionTest::listener,
+                    () -> {}, error::set, settled::countDown));
+            assertTrue(settled.await(15, TimeUnit.SECONDS));
+            assertNull(error.get());
+            List<String> events = new ArrayList<>();
+            SwingUtilities.invokeAndWait(() -> {
+                AcpChatSession.Transition transition = session.beginTransition("chosen");
+                session.dispatch(session.connection(), "other", () -> events.add("wrong session"));
+                session.dispatch(session.connection(), "chosen", () -> events.add("replayed"));
+                SwingUtilities.invokeLater(() -> {
+                    session.finishTransition(transition, "chosen", "project", () -> events.add("ready"));
+                    session.dispatch(session.connection(), "chosen", () -> events.add("live"));
+                });
+            });
+            SwingUtilities.invokeAndWait(() -> {});
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(List.of("ready", "replayed", "live"), events);
+                assertTrue(session.canSend());
+                assertEquals("project", session.beginPrompt());
+                assertTrue(session.canCancel());
+                session.beginCancellation();
+                assertFalse(session.canCancel());
+                session.promptFinished();
+                assertFalse(session.canSend());
+                session.finishCancellation();
+                assertTrue(session.canSend());
+                session.disconnect(closed::countDown);
+            });
+            assertTrue(closed.await(15, TimeUnit.SECONDS));
+        } finally {
+            connections.disconnect(descriptor);
+            MockLookup.setInstances();
+            Files.deleteIfExists(started);
+            Files.deleteIfExists(proceed);
+            Files.deleteIfExists(directory);
+        }
+    }
+
+    public void testBlockedPromptLeavesRequestAndControlWorkersAvailable() throws Exception {
+        Path directory = Files.createTempDirectory("acp-blocked-prompt-test");
+        Path started = directory.resolve("started");
+        Path proceed = Files.createFile(directory.resolve("proceed"));
+        Path promptStarted = directory.resolve("prompt-started");
+        Path cancelled = directory.resolve("cancelled");
+        Path release = directory.resolve("release");
+        AcpAgentDescriptor descriptor = testAgent(started, proceed);
+        AcpConnectionManager connections = new AcpConnectionManager();
+        MockLookup.setInstances(connections);
+        RequestProcessor requests = new RequestProcessor("Test ACP requests", 1);
+        RequestProcessor prompts = new RequestProcessor("Test ACP prompts", 1);
+        RequestProcessor control = new RequestProcessor("Test ACP control", 1);
+        AcpChatSession session = new AcpChatSession(requests, prompts, control);
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        CountDownLatch connected = new CountDownLatch(1);
+        CountDownLatch ready = new CountDownLatch(1);
+        CountDownLatch closed = new CountDownLatch(1);
+        try {
+            SwingUtilities.invokeAndWait(() -> session.connect(descriptor, AcpPendingConnectionTest::listener,
+                    () -> {}, error::set, connected::countDown));
+            assertTrue(connected.await(15, TimeUnit.SECONDS));
+            assertNull(error.get());
+
+            SwingUtilities.invokeAndWait(() -> {
+                AcpChatSession.Transition transition = session.beginTransition(null);
+                session.createSession(transition, directory.toAbsolutePath().toString(), List.of(), () -> null,
+                        opened -> session.finishTransition(transition, opened.id(), null, ready::countDown),
+                        ready::countDown, ex -> {
+                            error.set(ex);
+                            ready.countDown();
+                        });
+            });
+            assertTrue(ready.await(15, TimeUnit.SECONDS));
+            assertNull(error.get());
+            SwingUtilities.invokeAndWait(() -> {
+                assertTrue(session.canSend());
+                session.sendPrompt("block", "", () -> {}, error::set);
+            });
+            await(() -> Files.exists(promptStarted), "Agent did not start the blocking prompt");
+
+            // A connection or session request can still use the request worker.
+            CountDownLatch requestRan = new CountDownLatch(1);
+            CountDownLatch releaseWorker = new CountDownLatch(1);
+            requests.execute(() -> {
+                requestRan.countDown();
+                try {
+                    releaseWorker.await(15, TimeUnit.SECONDS);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            try {
+                assertTrue("The prompt blocked the request worker", requestRan.await(5, TimeUnit.SECONDS));
+                SwingUtilities.invokeAndWait(() -> session.cancelPrompt(() -> {}));
+                await(() -> Files.exists(cancelled), "Cancellation waited for a busy worker");
+                SwingUtilities.invokeAndWait(() -> session.disconnect(closed::countDown));
+                assertTrue("Close waited for a busy worker", closed.await(10, TimeUnit.SECONDS));
+            } finally {
+                releaseWorker.countDown();
             }
-        });
-        AcpAgentDescriptor descriptor = new AcpAgentDescriptor.Builder(name, AcpAgentDescriptor.TransportType.STDIO)
+        } finally {
+            Files.writeString(release, "release");
+            connections.disconnect(descriptor);
+            MockLookup.setInstances();
+            requests.shutdownNow();
+            prompts.shutdownNow();
+            control.shutdownNow();
+            Files.deleteIfExists(started);
+            Files.deleteIfExists(proceed);
+            Files.deleteIfExists(promptStarted);
+            Files.deleteIfExists(cancelled);
+            Files.deleteIfExists(release);
+            Files.deleteIfExists(directory);
+        }
+    }
+
+    public void testErrorMessageFallsBackToCauseAndLocalizedDefault() {
+        assertEquals("Transport closed", AcpChatSession.errorMessage(
+                new IOException(" ", new IOException("Transport closed"))));
+        assertEquals(Bundle.MSG_AgentOperationFailed(), AcpChatSession.errorMessage(new IOException()));
+    }
+
+    private static AcpSessionListener listener(AcpConnection connection) {
+        return new AcpSessionListener() { };
+    }
+
+    private static AcpAgentDescriptor testAgent(Path started, Path proceed) {
+        return new AcpAgentDescriptor.Builder("test-agent", AcpAgentDescriptor.TransportType.STDIO)
                 .command(List.of(Path.of(System.getProperty("java.home"), "bin", "java").toString(),
                         "-cp", System.getProperty("java.class.path"), DelayedAgent.class.getName(),
                         started.toString(), proceed.toString()))
                 .build();
-        AcpAgentManager manager = AcpAgentManager.getDefault();
-        AcpChatTopComponent[] chat = new AcpChatTopComponent[1];
-        try {
-            manager.addAgent(descriptor);
-            SwingUtilities.invokeAndWait(() -> {
-                chat[0] = new AcpChatTopComponent();
-                JComboBox<?> selector = field(chat[0], "agentSelector", JComboBox.class);
-                selector.setSelectedItem(name);
-                field(chat[0], "connectButton", JButton.class).doClick();
-            });
-            await(() -> Files.exists(started), "Agent did not start its handshake");
-            SwingUtilities.invokeAndWait(() -> {
-                try {
-                    var remove = AcpChatTopComponent.class.getDeclaredMethod("removeSelectedAgent");
-                    remove.setAccessible(true);
-                    remove.invoke(chat[0]);
-                } catch (ReflectiveOperationException ex) {
-                    throw new AssertionError(ex);
-                }
-            });
-            assertFalse(manager.getAgents().stream().anyMatch(agent -> name.equals(agent.getName())));
-            Files.createFile(proceed);
-            await(() -> {
-                boolean[] ready = new boolean[1];
-                try {
-                    SwingUtilities.invokeAndWait(() -> ready[0] =
-                            field(chat[0], "connectButton", JButton.class).isEnabled());
-                } catch (Exception ex) {
-                    throw new AssertionError(ex);
-                }
-                return ready[0];
-            }, "Connection attempt did not finish");
-            SwingUtilities.invokeAndWait(() -> assertNull(field(chat[0], "currentConnection", Object.class)));
-            assertTrue(connections.getActiveConnections().stream().noneMatch(connection -> connection.isConnected()));
-        } finally {
-            Files.writeString(proceed, "release");
-            connections.disconnect(descriptor);
-            manager.removeAgent(name);
-            MockLookup.setInstances();
-        }
     }
 
     private static void await(BooleanSupplier condition, String message) throws Exception {
@@ -113,16 +222,6 @@ public class AcpPendingConnectionTest extends TestCase {
             Thread.sleep(20);
         }
         assertTrue(message, condition.getAsBoolean());
-    }
-
-    private static <T> T field(Object object, String name, Class<T> type) {
-        try {
-            Field field = object.getClass().getDeclaredField(name);
-            field.setAccessible(true);
-            return type.cast(field.get(object));
-        } catch (ReflectiveOperationException ex) {
-            throw new AssertionError(ex);
-        }
     }
 
     public static final class DelayedAgent {
@@ -140,7 +239,25 @@ public class AcpPendingConnectionTest extends TestCase {
                         return AcpSchema.InitializeResponse.ok();
                     })
                     .newSessionHandler(request -> AcpSchema.NewSessionResponse.withGeneratedId())
-                    .promptHandler((request, context) -> AcpSchema.PromptResponse.endTurn())
+                    .promptHandler((request, context) -> {
+                        if ("block".equals(request.text())) {
+                            Path directory = Path.of(args[0]).getParent();
+                            context.onCancel(() -> {
+                                try {
+                                    Files.createFile(directory.resolve("cancelled"));
+                                } catch (IOException ex) {
+                                    throw new IllegalStateException(ex);
+                                }
+                            });
+                            try {
+                                Files.createFile(directory.resolve("prompt-started"));
+                                await(() -> Files.exists(directory.resolve("release")), "Test did not release the prompt");
+                            } catch (Exception ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
+                        return AcpSchema.PromptResponse.endTurn();
+                    })
                     .build()) {
                 agent.run();
             }

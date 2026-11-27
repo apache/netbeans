@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.acp.ui.chat;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.TransferHandler;
 import org.openide.filesystems.FileObject;
@@ -82,8 +84,8 @@ final class AcpFileDropHandler extends TransferHandler {
     }
 
     @Override
-    public void exportToClipboard(javax.swing.JComponent comp,
-            java.awt.datatransfer.Clipboard clip, int action)
+    public void exportToClipboard(JComponent comp,
+            Clipboard clip, int action)
             throws IllegalStateException {
         if (originalHandler != null) {
             originalHandler.exportToClipboard(comp, clip, action);

@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.openide.cookies.LineCookie;
 import org.openide.cookies.OpenCookie;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -55,7 +56,7 @@ public final class AcpLocationNavigator {
                 // best-effort resolution: try relative to the current directory
                 file = file.getAbsoluteFile();
             }
-            org.openide.filesystems.FileObject fo =
+            FileObject fo =
                     FileUtil.toFileObject(FileUtil.normalizeFile(file));
             if (fo == null) {
                 LOG.log(Level.WARNING, "navigateTo: file not found: {0}", path);
@@ -67,9 +68,13 @@ public final class AcpLocationNavigator {
                     LineCookie lc = dob.getLookup().lookup(LineCookie.class);
                     if (lc != null) {
                         // LineCookie uses 0-based line indices
-                        Line line = lc.getLineSet().getCurrent(lineNumber - 1);
-                        line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS);
-                        return;
+                        try {
+                            Line line = lc.getLineSet().getCurrent(lineNumber - 1);
+                            line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS);
+                            return;
+                        } catch (IndexOutOfBoundsException ex) {
+                            LOG.log(Level.FINE, "Line {0} is no longer in {1}", new Object[]{lineNumber, path});
+                        }
                     }
                 }
                 OpenCookie open = dob.getLookup().lookup(OpenCookie.class);
@@ -95,8 +100,15 @@ public final class AcpLocationNavigator {
      * @param url the raw hyperlink description starting with {@code acp-nav:}
      */
     public static void handleNavUrl(String url) {
+        Location location = parseNavUrl(url);
+        if (location != null) {
+            navigateTo(location.path(), location.lineNumber());
+        }
+    }
+
+    static Location parseNavUrl(String url) {
         if (url == null || !url.startsWith("acp-nav:")) { // NOI18N
-            return;
+            return null;
         }
         String rest = url.substring("acp-nav:".length()); // NOI18N
         Integer lineNumber = null;
@@ -115,6 +127,8 @@ public final class AcpLocationNavigator {
                 // no line number — treat the whole thing as the path
             }
         }
-        navigateTo(path, lineNumber);
+        return path.isEmpty() ? null : new Location(path, lineNumber);
     }
+
+    record Location(String path, Integer lineNumber) { }
 }

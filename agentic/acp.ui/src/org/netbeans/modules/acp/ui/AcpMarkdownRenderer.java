@@ -37,7 +37,8 @@ public final class AcpMarkdownRenderer {
                 TablesExtension.create(),
                 TaskListExtension.create()));
         options.set(HtmlRenderer.SOFT_BREAK, "<br/>\n");
-        options.set(HtmlRenderer.ESCAPE_HTML, false);
+        options.set(HtmlRenderer.ESCAPE_HTML, true);
+        options.set(HtmlRenderer.SUPPRESSED_LINKS, "(?i)(?:javascript|acp-diff|acp-nav):.*");
         PARSER = Parser.builder(options).build();
         RENDERER = HtmlRenderer.builder(options).build();
     }
@@ -47,7 +48,7 @@ public final class AcpMarkdownRenderer {
 
     /**
      * Converts markdown text to an HTML fragment suitable for embedding
-     * in the chat display. Returns the raw HTML without surrounding tags.
+     * in the chat display. Raw HTML in the Markdown is escaped.
      */
     public static String renderToHtml(String markdown) {
         if (markdown == null || markdown.isEmpty()) {

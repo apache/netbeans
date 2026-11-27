@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -159,7 +160,7 @@ public final class AcpPermissionDialog {
             for (int i = 0; i < buttons.length; i++) {
                 AcpSchema.PermissionOption option = options.get(i);
                 buttons[i].addItemListener(event -> {
-                    if (event.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                    if (event.getStateChange() == ItemEvent.SELECTED) {
                         boolean canRemember = toolIdentifier != null && isAllowOption(option);
                         rememberCb.setEnabled(canRemember);
                         if (!canRemember) {

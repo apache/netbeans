@@ -19,10 +19,13 @@
 package org.netbeans.modules.acp.ui.chat;
 
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -39,12 +42,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Lookup;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -216,8 +221,8 @@ final class AcpFileMentionSupport {
 
         try {
             int caretPos = inputArea.getCaretPosition();
-            @SuppressWarnings("deprecation")
-            java.awt.Rectangle rect = inputArea.modelToView(caretPos);
+            Rectangle2D caret = inputArea.modelToView2D(caretPos);
+            Rectangle rect = caret == null ? null : caret.getBounds();
             if (rect != null) {
                 Point p = new Point(rect.x, rect.y);
                 popup.show(inputArea, p.x, p.y - popup.getPreferredSize().height);
@@ -279,7 +284,7 @@ final class AcpFileMentionSupport {
     }
 
     private static String readFileContent(String path) {
-        FileObject fo = FileUtil.toFileObject(new java.io.File(path));
+        FileObject fo = FileUtil.toFileObject(new File(path));
         if (fo == null || !fo.isData()) {
             return null;
         }
@@ -296,7 +301,7 @@ final class AcpFileMentionSupport {
 
         for (JTextComponent comp : EditorRegistry.componentList()) {
             Object sdp = comp.getDocument().getProperty(
-                    javax.swing.text.Document.StreamDescriptionProperty);
+                    Document.StreamDescriptionProperty);
             if (sdp instanceof DataObject dataObj) {
                 FileObject fo = dataObj.getPrimaryFile();
                 entries.add(new FileEntry(fo.getNameExt(), fo.getPath()));
@@ -306,7 +311,7 @@ final class AcpFileMentionSupport {
         for (Mode mode : WindowManager.getDefault().getModes()) {
             for (TopComponent tc : mode.getTopComponents()) {
                 if (tc.isOpened()) {
-                    org.openide.util.Lookup lkp = tc.getLookup();
+                    Lookup lkp = tc.getLookup();
                     DataObject dobj = lkp.lookup(DataObject.class);
                     if (dobj != null) {
                         FileObject fo = dobj.getPrimaryFile();

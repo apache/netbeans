@@ -19,12 +19,14 @@
 package org.netbeans.modules.acp.ui.options;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -174,11 +176,11 @@ final class AcpOptionsPanel extends JPanel {
         removeButton.setEnabled(hasSelection);
     }
 
-    private static final class AgentListCellRenderer extends javax.swing.DefaultListCellRenderer {
+    private static final class AgentListCellRenderer extends DefaultListCellRenderer {
 
         @Override
-        public java.awt.Component getListCellRendererComponent(
-                javax.swing.JList<?> list, Object value, int index,
+        public Component getListCellRendererComponent(
+                JList<?> list, Object value, int index,
                 boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof AcpAgentDescriptor agent) {

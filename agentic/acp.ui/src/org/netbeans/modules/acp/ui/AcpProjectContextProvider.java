@@ -18,10 +18,10 @@
  */
 package org.netbeans.modules.acp.ui;
 
+import java.util.Arrays;
+import java.util.List;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.openide.filesystems.FileObject;
 
@@ -33,38 +33,50 @@ public final class AcpProjectContextProvider {
     private AcpProjectContextProvider() {
     }
 
-    public static String gatherProjectContext(Project project) {
-        return project != null ? buildContext(project) : null;
+    public static ProjectContext gatherProjectContext(Project project) {
+        if (project == null) {
+            return null;
+        }
+        FileObject directory = project.getProjectDirectory();
+        String projectName = ProjectUtils.getInformation(project).getDisplayName();
+        String buildSystem = detectBuildSystem(directory);
+        List<SourceRoot> sourceRoots = Arrays.stream(ProjectUtils.getSources(project).getSourceGroups(Sources.TYPE_GENERIC))
+                .map(group -> new SourceRoot(group.getRootFolder().getPath(), group.getDisplayName()))
+                .toList();
+        return new ProjectContext(projectName, directory.getPath(), buildSystem, sourceRoots, keyFiles(directory));
     }
 
-    private static String buildContext(Project project) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("## Project Context\n\n");
+    public record SourceRoot(String path, String name) {
 
-        ProjectInformation info = ProjectUtils.getInformation(project);
-        sb.append("- **Project name**: ").append(info.getDisplayName()).append('\n');
+        public String description() {
+            return path + " (" + name + ")";
+        }
+    }
 
-        FileObject projectDir = project.getProjectDirectory();
-        sb.append("- **Project directory**: ").append(projectDir.getPath()).append('\n');
+    public record ProjectContext(String name, String directory, String buildSystem,
+            List<SourceRoot> sourceRoots, List<String> keyFiles) {
 
-        String buildSystem = detectBuildSystem(projectDir);
-        if (buildSystem != null) {
-            sb.append("- **Build system**: ").append(buildSystem).append('\n');
+        public ProjectContext {
+            sourceRoots = List.copyOf(sourceRoots);
+            keyFiles = List.copyOf(keyFiles);
         }
 
-        Sources sources = ProjectUtils.getSources(project);
-        SourceGroup[] sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);
-        if (sourceGroups.length > 0) {
-            sb.append("- **Source roots**:\n");
-            for (SourceGroup sg : sourceGroups) {
-                sb.append("  - `").append(sg.getRootFolder().getPath())
-                  .append("` (").append(sg.getDisplayName()).append(")\n");
+        public String promptText() {
+            StringBuilder text = new StringBuilder("## Project Context\n\n");
+            text.append("- **Project name**: ").append(name).append('\n');
+            text.append("- **Project directory**: ").append(directory).append('\n');
+            if (buildSystem != null) {
+                text.append("- **Build system**: ").append(buildSystem).append('\n');
             }
+            if (!sourceRoots.isEmpty()) {
+                text.append("- **Source roots**:\n");
+                for (SourceRoot root : sourceRoots) {
+                    text.append("  - `").append(root.path()).append("` (").append(root.name()).append(")\n");
+                }
+            }
+            String files = keyFiles.isEmpty() ? "(none detected)" : "`" + String.join("`, `", keyFiles) + "`";
+            return text.append("- **Key files present**: ").append(files).append('\n').toString();
         }
-
-        appendFileStructureHints(sb, projectDir);
-
-        return sb.toString();
     }
 
     private static String detectBuildSystem(FileObject projectDir) {
@@ -81,26 +93,11 @@ public final class AcpProjectContextProvider {
         return null;
     }
 
-    private static void appendFileStructureHints(StringBuilder sb, FileObject projectDir) {
-        sb.append("- **Key files present**: ");
-        boolean first = true;
-        String[] interesting = {
-            "pom.xml", "build.xml", "build.gradle", "build.gradle.kts",
-            "README.md", "README.txt", ".gitignore", "Dockerfile",
-            "docker-compose.yml", "Makefile", "package.json", "tsconfig.json"
-        };
-        for (String name : interesting) {
-            if (projectDir.getFileObject(name) != null) {
-                if (!first) {
-                    sb.append(", ");
-                }
-                sb.append('`').append(name).append('`');
-                first = false;
-            }
-        }
-        if (first) {
-            sb.append("(none detected)");
-        }
-        sb.append('\n');
+    private static List<String> keyFiles(FileObject projectDir) {
+        return List.of("pom.xml", "build.xml", "build.gradle", "build.gradle.kts",
+                "README.md", "README.txt", ".gitignore", "Dockerfile", "docker-compose.yml",
+                "Makefile", "package.json", "tsconfig.json").stream()
+                .filter(name -> projectDir.getFileObject(name) != null)
+                .toList();
     }
 }

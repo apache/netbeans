@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.acp.ui;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -69,8 +70,8 @@ public final class AcpDiffViewer {
 
                 TopComponent tc = new TopComponent() {
                     {
-                        setLayout(new java.awt.BorderLayout());
-                        add(diffComponent, java.awt.BorderLayout.CENTER);
+                        setLayout(new BorderLayout());
+                        add(diffComponent, BorderLayout.CENTER);
                         setDisplayName(Bundle.TTL_DiffTab(extractFileName(fileName)));
                     }
                 };

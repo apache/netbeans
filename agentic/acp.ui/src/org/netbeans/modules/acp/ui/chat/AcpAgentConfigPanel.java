@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.acp.ui.chat;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -41,13 +43,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import org.netbeans.modules.acp.api.AcpAgentDescriptor.TransportType;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpConnection;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
-import org.netbeans.modules.acp.api.AcpAgentDescriptor.TransportType;
 import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
 import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
@@ -56,6 +58,7 @@ import org.openide.util.NbBundle;
     "LBL_Command=Command:",
     "LBL_Url=URL:",
     "LBL_WorkingDir=Working Directory:",
+    "MSG_InvalidWorkingDir=Select an existing directory using an absolute path.",
     "LBL_EnvVars=Environment Variables:",
     "LBL_EnvVarsHint=(one KEY=VALUE per line; values are passed literally)",
     "MSG_InvalidEnvironment=Environment variables must use KEY=VALUE, one per line.",
@@ -240,7 +243,7 @@ public final class AcpAgentConfigPanel extends JPanel {
         for (Map.Entry<String, List<McpToolProvider.McpToolDefinition>> group
                 : toolsByProvider.entrySet()) {
             JLabel groupLabel = new JLabel(group.getKey());
-            groupLabel.setFont(groupLabel.getFont().deriveFont(java.awt.Font.BOLD));
+            groupLabel.setFont(groupLabel.getFont().deriveFont(Font.BOLD));
             groupLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 2, 0));
             toolsPanel.add(groupLabel);
             for (McpToolProvider.McpToolDefinition tool : group.getValue()) {
@@ -256,7 +259,7 @@ public final class AcpAgentConfigPanel extends JPanel {
             }
         }
         JScrollPane toolsScroll = new JScrollPane(toolsPanel);
-        toolsScroll.setPreferredSize(new java.awt.Dimension(0, 120));
+        toolsScroll.setPreferredSize(new Dimension(0, 120));
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
@@ -332,7 +335,13 @@ public final class AcpAgentConfigPanel extends JPanel {
             builder.command(Arrays.asList(cmd.split("\\s+")));
             String workDir = workingDirField.getText().trim();
             if (!workDir.isEmpty()) {
-                builder.workingDirectory(workDir);
+                File directory = new File(workDir);
+                if (!directory.isAbsolute() || !directory.isDirectory()) {
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
+                            Bundle.MSG_InvalidWorkingDir(), NotifyDescriptor.ERROR_MESSAGE));
+                    return null;
+                }
+                builder.workingDirectory(directory.getAbsolutePath());
             }
         } else {
             String url = urlField.getText().trim();

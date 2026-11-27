@@ -19,21 +19,17 @@
 package org.netbeans.modules.acp.ui.chat;
 
 import com.agentclientprotocol.sdk.error.AcpCapabilityException;
-import com.agentclientprotocol.sdk.error.AcpErrorCodes;
-import com.agentclientprotocol.sdk.spec.AcpError;
-import com.agentclientprotocol.sdk.spec.AcpSchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateTerminalRequest;
-import org.netbeans.modules.acp.ui.HtmlUtils;
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -42,39 +38,29 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.acp.api.AcpCommand;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentManager;
+import org.netbeans.modules.acp.api.AcpCommand;
 import org.netbeans.modules.acp.api.AcpConnection;
-import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpModeInfo;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionInfo;
@@ -83,19 +69,19 @@ import org.netbeans.modules.acp.api.AcpToolCall;
 import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
 import org.netbeans.modules.acp.mcp.spi.McpToolRegistry;
 import org.netbeans.modules.acp.ui.AcpContextReceiver;
-import org.netbeans.modules.acp.ui.AcpDiffViewer;
-import org.netbeans.modules.acp.ui.AcpLocationNavigator;
-import org.netbeans.modules.acp.ui.AcpMarkdownRenderer;
 import org.netbeans.modules.acp.ui.AcpPermissionDialog;
 import org.netbeans.modules.acp.ui.AcpProjectContextProvider;
+import org.netbeans.modules.acp.ui.AcpProjectContextProvider.ProjectContext;
+import org.netbeans.modules.acp.ui.AcpProjectContextProvider.SourceRoot;
+import org.netbeans.modules.acp.ui.HtmlUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 import org.openide.windows.TopComponent;
 
 @TopComponent.Description(
@@ -124,31 +110,17 @@ import org.openide.windows.TopComponent;
     "STS_Connecting=Connecting...",
     "STS_Connected=Connected",
     "STS_CreatingSession=Creating session...",
+    "TTL_SessionDirectory=Choose the Agent Session Directory",
     "STS_Ready=Ready",
     "STS_Thinking=Thinking...",
     "STS_Cancelled=Cancelled",
     "STS_Error=Error",
-    "TTL_Authentication=Agent Authentication",
-    "MSG_Authentication=Select an authentication method for {0}.",
-    "MSG_AuthenticationFailed=Authentication failed: {0}",
-    "MSG_AuthenticationUnavailable=The agent requires authentication but did not offer a supported sign-in method. Sign in using the agent's own tools or check its configured credentials, then try again.",
     "STS_ErrorDetail=Error: {0}",
     "STS_Tokens=Tokens: {0} / {1}",
     "MSG_ErrorCreatingSession=Error creating session: {0}",
     "MSG_PromptCancelled=Prompt cancelled.",
-    "LBL_FileCreated=Created",
-    "LBL_FileModified=Modified",
-    "LBL_Completed=completed",
-    "LBL_ViewFullDiff=View Full Diff",
-    "LBL_You=You:",
-    "LBL_AgentSays=Agent:",
-    "LBL_Plan=Plan:",
     "BTN_Sessions=Sessions",
-    "TTL_SessionBrowser=Past Sessions",
-    "LBL_SessionEntry={0} — {1}",
     "LBL_NoSessions=No past sessions found.",
-    "BTN_ResumeSession=Resume",
-    "BTN_DeleteSession=Delete",
     "STS_ResumingSession=Resuming session...",
     "MSG_SessionResumed=Session resumed.",
     "MSG_SessionDeleted=Session deleted.",
@@ -156,24 +128,17 @@ import org.openide.windows.TopComponent;
     "LBL_AgentImage=[Image]",
     "BTN_Mode=Mode: {0}",
     "LBL_NoModes=No modes available.",
-    "TTL_Elicitation=Agent Input Request",
     "TTL_TerminalExecution=Allow Local Command?",
     "MSG_TerminalExecution=Agent {0} requests to run this command on your machine. Allow this command once?",
     "LBL_TerminalDirectory=Working directory: {0}",
-    "LBL_TerminalEnvironment=Environment overrides: {0}",
-    "BTN_Accept=Accept",
-    "BTN_Decline=Decline"
+    "LBL_TerminalEnvironment=Environment overrides: {0}"
 })
 public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
     private static final Logger LOG = Logger.getLogger(AcpChatTopComponent.class.getName());
-    private static final RequestProcessor RP = new RequestProcessor("ACP-Agent-RP", 2);
-    private static final int DISPLAY_DELAY_MS = 50;
-    private static final int RENDER_DELAY_MS = 200;
-    private static final int SESSION_BROWSER_WIDTH = 450;
-    private static final int SESSION_BROWSER_HEIGHT = 250;
 
-    private final JEditorPane chatPane;
+    private final AcpChatSession session = new AcpChatSession();
+    private final ChatRenderer chat = new ChatRenderer();
     private final JTextArea inputArea;
     private final JButton sendButton;
     private final JButton cancelButton;
@@ -184,33 +149,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final JButton sessionsButton;
     private final JComboBox<String> agentSelector;
     private final JLabel statusLabel;
-    private final StringBuilder chatHtml = new StringBuilder();
-    private int renderedLength;
-    private final StringBuilder currentMessageBuffer = new StringBuilder();
-    private final StringBuilder currentThoughtBuffer = new StringBuilder();
-    private boolean promptInProgress;
-    private boolean cancellationRequested;
-    private boolean inAgentMessage;
-    private int agentMsgDivEndPos = -1;
-    private final Timer renderTimer;
-    private final Timer displayTimer;
-
-    private final Map<String, AcpToolCall.DiffContent> diffStore = new HashMap<>();
-    private int diffCounter;
     private final AcpFileMentionSupport mentionSupport;
     private List<AcpCommand> currentCommands = List.of();
     private String commandPrefix = "/"; // NOI18N
     private String currentModeId;
     private JButton modeButton;
     private Set<String> currentEnabledTools;
-    private String currentWorkingDir;
-    private AcpConnection currentConnection;
-    private AcpSessionListener currentListener;
-    private long connectionGeneration;
-    private String pendingAgentName;
-    private String currentSessionId;
-    private SessionTransition sessionTransition;
-    private String pendingProjectContext;
+    private String selectedSessionDirectory;
     private long lastUsedTokens;
     private long lastTotalTokens;
     private JPopupMenu slashPopup;
@@ -219,45 +164,37 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         return new AcpSessionListener() {
             @Override
             public void onAgentMessage(String sessionId, String text) {
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    currentMessageBuffer.append(text);
-                    renderTimer.restart();
-                });
+                session.dispatch(connection, sessionId, () -> chat.appendAgentChunk(text));
             }
 
             @Override
             public void onAgentThought(String sessionId, String text) {
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    currentThoughtBuffer.append(text);
-                    renderTimer.restart();
-                });
+                session.dispatch(connection, sessionId, () -> chat.appendThoughtChunk(text));
             }
 
             @Override
             public void onToolCall(String sessionId, AcpToolCall toolCall) {
-                dispatchSessionEvent(connection, sessionId, () -> appendToolCall(toolCall));
+                session.dispatch(connection, sessionId, () -> chat.appendToolCall(toolCall));
             }
 
             @Override
             public void onToolCallUpdate(String sessionId, AcpToolCall toolCall) {
-                dispatchSessionEvent(connection, sessionId, () -> appendToolCallUpdate(toolCall));
+                session.dispatch(connection, sessionId, () -> chat.appendToolCall(toolCall));
             }
 
             @Override
             public void onPlanUpdate(String sessionId, List<AcpPlanEntry> entries) {
-                dispatchSessionEvent(connection, sessionId, () -> appendPlan(entries));
+                session.dispatch(connection, sessionId, () -> chat.appendPlan(entries));
             }
 
             @Override
             public void onPromptComplete(String sessionId, String stopReason) {
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    flushMessageBuffers();
-                    inAgentMessage = false;
-                    agentMsgDivEndPos = -1;
-                    promptInProgress = false;
+                session.dispatch(connection, sessionId, () -> {
+                    chat.finishAgentMessage();
+                    session.promptFinished();
                     updateInputState();
                     if ("cancelled".equals(stopReason)) { // NOI18N
-                        appendSystemMessage("<i>" + Bundle.MSG_PromptCancelled() + "</i>");
+                        chat.appendSystemMessage("<i>" + Bundle.MSG_PromptCancelled() + "</i>");
                         statusLabel.setText(Bundle.STS_Cancelled());
                     } else if (lastTotalTokens > 0) {
                         statusLabel.setText(Bundle.STS_Tokens(lastUsedTokens, lastTotalTokens));
@@ -269,7 +206,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
             @Override
             public void onUsageUpdate(String sessionId, long usedTokens, long totalTokens) {
-                dispatchSessionEvent(connection, sessionId, () -> {
+                session.dispatch(connection, sessionId, () -> {
                     lastUsedTokens = usedTokens;
                     lastTotalTokens = totalTokens;
                     statusLabel.setText(Bundle.STS_Tokens(usedTokens, totalTokens));
@@ -278,7 +215,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
             @Override
             public void onAvailableCommands(String sessionId, List<AcpCommand> commands) {
-                dispatchSessionEvent(connection, sessionId, () -> {
+                session.dispatch(connection, sessionId, () -> {
                     currentCommands = commands;
                     commandsButton.setText(Bundle.BTN_Commands(commands.size()));
                     commandsButton.setEnabled(!commands.isEmpty());
@@ -286,41 +223,20 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             }
 
             @Override
-            public void onSessionInfo(String sessionId, String title, String updatedAt) {
-                if (title == null || title.isBlank()) {
+            public void onAgentImage(String sessionId, String data, String mimeType) {
+                ImageIcon image;
+                try {
+                    image = AcpChatImage.decode(data, mimeType);
+                } catch (IOException | RuntimeException ex) {
+                    LOG.log(Level.FINE, "Could not decode ACP image", ex); // NOI18N
                     return;
                 }
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    String projectName = HtmlUtils.extractProjectName(title);
-                    if (projectName != null && !projectName.isEmpty()) {
-                        String projectDir = HtmlUtils.extractProjectDirectory(title);
-                        List<String> sourceRoots = HtmlUtils.extractSourceRoots(title);
-                        String workDir = projectDir != null ? projectDir
-                                : currentWorkingDir != null ? currentWorkingDir : "";
-                        String roots = sourceRoots.isEmpty() ? "" : "\n  " + String.join("\n  ", sourceRoots);
-                        setToolTipText(Bundle.HINT_SessionContext(
-                                connection.getDescriptor().getName(), projectName, workDir, roots));
-                    }
-                });
-            }
-
-            @Override
-            public void onAgentImage(String sessionId, String data, String mimeType) {
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    chatHtml.append("<div class='agent-msg'>")
-                            .append("<img src='data:").append(mimeType != null ? mimeType : "image/png")
-                            .append(";base64,").append(data)
-                            .append("' style='max-width:400px; max-height:300px;' />")
-                            .append("</div>");
-                    inAgentMessage = false;
-                    agentMsgDivEndPos = -1;
-                    updateChatDisplay();
-                });
+                session.dispatch(connection, sessionId, () -> chat.appendImage(image));
             }
 
             @Override
             public void onModeUpdate(String sessionId, String newModeId) {
-                dispatchSessionEvent(connection, sessionId, () -> {
+                session.dispatch(connection, sessionId, () -> {
                     currentModeId = newModeId;
                     if (modeButton != null) {
                         modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(newModeId)));
@@ -331,63 +247,9 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             @Override
             public void onFileWritten(String sessionId, String path,
                     String oldContent, String newContent) {
-                AcpToolCall.DiffContent diff = new AcpToolCall.DiffContent(
-                        path,
-                        oldContent != null ? oldContent : "",
-                        newContent != null ? newContent : "");
-                dispatchSessionEvent(connection, sessionId, () -> {
-                    String diffId = "diff-" + (diffCounter++);
-                    diffStore.put(diffId, diff);
-                    String fileName = path;
-                    int sep = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
-                    if (sep >= 0) {
-                        fileName = path.substring(sep + 1);
-                    }
-                    String label = oldContent == null ? Bundle.LBL_FileCreated() : Bundle.LBL_FileModified();
-                    chatHtml.append("<div class='tool-call'>")
-                            .append("&#x270F; <b>").append(label).append(": ")
-                            .append(HtmlUtils.escapeHtml(fileName)).append("</b>")
-                            .append(" <span class='tc-status-completed'>&#x2705; ")
-                            .append(Bundle.LBL_Completed()).append("</span>")
-                            .append("<br/><a class='tc-location' href='acp-nav:")
-                            .append(path).append("'>")
-                            .append(HtmlUtils.escapeHtml(path)).append("</a>");
-                    appendDiffPreview(diff);
-                    chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
-                            .append(diffId).append("'>").append(Bundle.LBL_ViewFullDiff()).append("</a>")
-                            .append("</div>");
-                    updateChatDisplay();
-                });
+                session.dispatch(connection, sessionId, () -> chat.appendFileChange(path, oldContent, newContent));
             }
         };
-    }
-
-    private void dispatchSessionEvent(AcpConnection connection, String sessionId, Runnable event) {
-        SwingUtilities.invokeLater(() -> {
-            if (connection != currentConnection || sessionId == null) {
-                return;
-            }
-            if (sessionTransition != null) {
-                sessionTransition.addUpdate(sessionId, currentSessionId, event);
-            } else if (sessionId.equals(currentSessionId)) {
-                event.run();
-            }
-        });
-    }
-
-    private static final class SessionTransition {
-        final String expectedId;
-        final Map<String, List<Runnable>> updates = new HashMap<>();
-
-        SessionTransition(String expectedId) {
-            this.expectedId = expectedId;
-        }
-
-        void addUpdate(String sessionId, String activeId, Runnable event) {
-            if (expectedId != null ? expectedId.equals(sessionId) : !sessionId.equals(activeId)) {
-                updates.computeIfAbsent(sessionId, id -> new ArrayList<>()).add(event);
-            }
-        }
     }
 
     public AcpChatTopComponent() {
@@ -446,80 +308,6 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         toolbar.add(statusLabel);
         add(toolbar, BorderLayout.NORTH);
 
-        HTMLEditorKit kit = new HTMLEditorKit() {
-            @Override
-            public void install(JEditorPane c) {
-                super.install(c);
-                for (java.awt.event.MouseMotionListener mml : c.getMouseMotionListeners()) {
-                    if (mml instanceof LinkController) {
-                        final java.awt.event.MouseMotionListener delegate = mml;
-                        c.removeMouseMotionListener(mml);
-                        c.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-                            @Override
-                            public void mouseMoved(java.awt.event.MouseEvent e) {
-                                try { delegate.mouseMoved(e); } catch (ArrayIndexOutOfBoundsException ignored) {}
-                            }
-                            @Override
-                            public void mouseDragged(java.awt.event.MouseEvent e) {
-                                try { delegate.mouseDragged(e); } catch (ArrayIndexOutOfBoundsException ignored) {}
-                            }
-                        });
-                        break;
-                    }
-                }
-            }
-        };
-        StyleSheet styleSheet = kit.getStyleSheet();
-        styleSheet.addRule("body { font-family: sans-serif; font-size: 12px; margin: 8px; }");
-        styleSheet.addRule(".user-msg { background-color: #BBDEFB; padding: 8px; margin: 6px 40px 6px 0; border-left: 4px solid #1976D2; }");
-        styleSheet.addRule(".agent-msg { background-color: #E8E8E8; padding: 8px; margin: 6px 0 6px 40px; border-left: 4px solid #616161; }");
-        styleSheet.addRule(".system-msg { background-color: #FFF9C4; padding: 6px; margin: 4px 0; border-left: 4px solid #F9A825; }");
-        styleSheet.addRule(".thought { color: #666; font-style: italic; padding: 4px 8px; margin: 2px 0 2px 40px; background-color: #F5F5F5; }");
-        styleSheet.addRule(".tool-call { background-color: #FFF3E0; padding: 6px; margin: 4px 0 4px 40px; border-left: 4px solid #FF9800; }");
-        styleSheet.addRule(".plan { background-color: #E8F5E9; padding: 6px; margin: 4px 0 4px 40px; border-left: 4px solid #4CAF50; }");
-        styleSheet.addRule(".user-label { color: #1565C0; font-weight: bold; }");
-        styleSheet.addRule(".agent-label { color: #424242; font-weight: bold; }");
-        styleSheet.addRule(".diff-add { color: #2E7D32; }");
-        styleSheet.addRule(".diff-del { color: #C62828; }");
-        styleSheet.addRule(".diff-link { color: #1565C0; }");
-        styleSheet.addRule(".tc-kind { color: #E65100; font-weight: bold; }");
-        styleSheet.addRule(".tc-status-completed { color: #2E7D32; }");
-        styleSheet.addRule(".tc-status-failed { color: #C62828; }");
-        styleSheet.addRule(".tc-status-progress { color: #F57F17; }");
-        styleSheet.addRule(".tc-location { color: #5C6BC0; font-size: 11px; }");
-        styleSheet.addRule("pre { background-color: #263238; color: #EEFFFF; padding: 8px; overflow-x: auto; }");
-        styleSheet.addRule("code { font-family: monospace; }");
-        styleSheet.addRule("h1 { font-size: 16px; margin: 8px 0 4px; }");
-        styleSheet.addRule("h2 { font-size: 14px; margin: 6px 0 4px; }");
-        styleSheet.addRule("h3 { font-size: 13px; margin: 4px 0 2px; }");
-        styleSheet.addRule("table { border-collapse: collapse; margin: 4px 0; }");
-        styleSheet.addRule("th, td { border: 1px solid #ccc; padding: 4px 8px; }");
-        styleSheet.addRule("th { background-color: #f0f0f0; font-weight: bold; }");
-        styleSheet.addRule("blockquote { border-left: 3px solid #ccc; padding-left: 8px; color: #666; margin: 4px 0; }");
-        styleSheet.addRule("ul, ol { margin: 4px 0 4px 20px; }");
-
-        chatPane = new JEditorPane();
-        chatPane.setEditorKit(kit);
-        chatPane.setEditable(false);
-        chatPane.setContentType("text/html");
-        chatPane.setText("<html><body></body></html>");
-        chatPane.addHyperlinkListener(e -> {
-            if (e.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
-                String url = e.getDescription();
-                if (url != null && url.startsWith("acp-diff:")) {
-                    String diffId = url.substring("acp-diff:".length());
-                    AcpToolCall.DiffContent diff = diffStore.get(diffId);
-                    if (diff != null) {
-                        AcpDiffViewer.showDiff(diff);
-                    }
-                } else if (url != null && url.startsWith("acp-nav:")) {
-                    AcpLocationNavigator.handleNavUrl(url);
-                }
-            }
-        });
-        JScrollPane chatScroll = new JScrollPane(chatPane);
-        chatScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
         inputArea = new JTextArea(3, 40);
         inputArea.setLineWrap(true);
         inputArea.setWrapStyleWord(true);
@@ -551,29 +339,24 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         buttonPanel.add(sendButton);
         inputPanel.add(buttonPanel, BorderLayout.EAST);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, chatScroll, inputPanel);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, chat, inputPanel);
         splitPane.setResizeWeight(0.85);
         splitPane.setDividerSize(4);
         add(splitPane, BorderLayout.CENTER);
 
-        renderTimer = new Timer(RENDER_DELAY_MS, e -> flushMessageBuffers());
-        renderTimer.setRepeats(false);
-        displayTimer = new Timer(DISPLAY_DELAY_MS, e -> renderChatDisplay());
-        displayTimer.setRepeats(false);
-
         mentionSupport = new AcpFileMentionSupport(inputArea);
         inputArea.setTransferHandler(new AcpFileDropHandler(inputArea, mentionSupport));
-        inputArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        inputArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 checkSlashCommand();
             }
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 checkSlashCommand();
             }
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
             }
         });
         refreshAgentList();
@@ -586,8 +369,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     @Override
     public void componentClosed() {
-        ++connectionGeneration;
-        pendingAgentName = null;
+        session.invalidateConnectionAttempt();
         disconnect();
     }
 
@@ -652,12 +434,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 NbBundle.getMessage(AcpChatTopComponent.class, "TTL_RemoveAgent"),
                 NotifyDescriptor.YES_NO_OPTION);
         if (DialogDisplayer.getDefault().notify(confirm) == NotifyDescriptor.YES_OPTION) {
-            if (agentName.equals(pendingAgentName)) {
-                ++connectionGeneration;
-                pendingAgentName = null;
+            if (session.invalidateConnectionAttempt(agentName)) {
                 statusLabel.setText(Bundle.STS_Disconnected());
             }
-            if (currentConnection != null && currentConnection.getDescriptor().getName().equals(agentName)) {
+            if (session.connection() != null && session.connection().getDescriptor().getName().equals(agentName)) {
                 disconnect();
             }
             AcpAgentManager.getDefault().removeAgent(agentName);
@@ -674,29 +454,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void disconnect() {
-        AcpConnection connection = currentConnection;
+        AcpConnection connection = session.connection();
         if (connection == null) {
             return;
         }
-        connection.removeSessionListener(currentListener);
-        connection.setPermissionHandler(null);
-        connection.setElicitationHandler(null);
-        connection.setTerminalAuthorizer(null);
-        currentConnection = null;
-        currentListener = null;
-        sessionTransition = null;
-        currentSessionId = null;
-        pendingProjectContext = null;
-        promptInProgress = false;
-        cancellationRequested = false;
-        renderTimer.stop();
-        displayTimer.stop();
-        currentMessageBuffer.setLength(0);
-        currentThoughtBuffer.setLength(0);
+        session.disconnect(() -> connectButton.setEnabled(true));
+        chat.disconnect();
         currentEnabledTools = null;
         toolsButton.setText(Bundle.BTN_Tools(0, 0));
         toolsButton.setEnabled(false);
-        currentWorkingDir = null;
+        selectedSessionDirectory = null;
         commandPrefix = "/"; // NOI18N
         resetSessionControls();
         setDisplayName(NbBundle.getMessage(AcpChatTopComponent.class, "CTL_AcpChatTopComponent"));
@@ -705,96 +472,56 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         connectButton.setEnabled(false);
         statusLabel.setText(Bundle.STS_Disconnected());
         updateInputState();
-        RP.post(() -> {
-            try {
-                connection.close();
-            } finally {
-                SwingUtilities.invokeLater(() -> connectButton.setEnabled(true));
-            }
-        });
     }
 
     private void toggleConnection() {
-        if (currentConnection != null) {
+        if (session.connection() != null) {
             disconnect();
-        } else {
-            String agentName = (String) agentSelector.getSelectedItem();
-            if (agentName == null) {
-                return;
-            }
-            AcpAgentDescriptor descriptor = AcpAgentManager.getDefault().getAgents().stream()
-                    .filter(a -> a.getName().equals(agentName))
-                    .findFirst()
-                    .orElse(null);
-            if (descriptor == null) {
-                return;
-            }
-            statusLabel.setText(Bundle.STS_Connecting());
-            connectButton.setEnabled(false);
-            String fallbackDir = getMainProjectDirectory();
-            long generation = ++connectionGeneration;
-            pendingAgentName = agentName;
-            RP.post(() -> {
-                try {
-                    AcpConnection connection = AcpConnectionManager.getDefault().connect(descriptor);
-                    AcpSessionListener listener = createSessionListener(connection);
-                    Set<String> enabledSet = descriptor.getEnabledTools();
-                    String workDir = descriptor.getWorkingDirectory() != null
-                            ? descriptor.getWorkingDirectory()
-                            : fallbackDir != null ? fallbackDir : "";
-                    String agentPrefix = descriptor.getCommandPrefix();
-                    SwingUtilities.invokeLater(() -> {
-                        if (generation != connectionGeneration) {
-                            RP.post(() -> {
-                                try {
-                                    connection.close();
-                                } finally {
-                                    SwingUtilities.invokeLater(() -> connectButton.setEnabled(true));
-                                }
-                            });
-                            return;
-                        }
-                        pendingAgentName = null;
-                        connection.addSessionListener(listener);
-                        connection.setPermissionHandler(req -> {
-                            AcpPermissionDialog.PermissionResult pr =
-                                    AcpPermissionDialog.showPermissionRequest(req);
-                            if (pr.allowToolForSession() != null) {
-                                connection.allowToolForSession(req.sessionId(), pr.allowToolForSession());
-                            }
-                            return pr.response();
-                        });
-                        connection.setElicitationHandler(this::handleElicitation);
-                        connection.setTerminalAuthorizer(request -> confirmTerminal(connection, request));
-                        currentListener = listener;
-                        currentConnection = connection;
-                        currentEnabledTools = enabledSet;
-                        currentWorkingDir = workDir;
-                        commandPrefix = agentPrefix;
-                        setDisplayName(Bundle.LBL_TabTitle(agentName));
-                        setToolTipText(Bundle.HINT_ConnectedAgent(agentName, workDir));
-                        connectButton.setText(Bundle.BTN_Disconnect());
-                        connectButton.setEnabled(true);
-                        statusLabel.setText(Bundle.STS_Connected());
-                        updateInputState();
-                    });
-                } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> {
-                        if (generation == connectionGeneration) {
-                            pendingAgentName = null;
-                        }
-                        statusLabel.setText(generation == connectionGeneration
-                                ? Bundle.STS_ErrorDetail(ex.getMessage()) : Bundle.STS_Disconnected());
-                        connectButton.setEnabled(true);
-                    });
-                }
-            });
+            return;
         }
+        String agentName = (String) agentSelector.getSelectedItem();
+        if (agentName == null) {
+            return;
+        }
+        AcpAgentDescriptor descriptor = AcpAgentManager.getDefault().getAgents().stream()
+                .filter(agent -> agentName.equals(agent.getName()))
+                .findFirst().orElse(null);
+        if (descriptor == null) {
+            return;
+        }
+        statusLabel.setText(Bundle.STS_Connecting());
+        connectButton.setEnabled(false);
+        String fallbackDir = getMainProjectDirectory();
+        session.connect(descriptor, this::configureConnection, () -> {
+            currentEnabledTools = descriptor.getEnabledTools();
+            String workingDirectory = descriptor.getWorkingDirectory() != null
+                    ? descriptor.getWorkingDirectory() : fallbackDir != null ? fallbackDir : "";
+            commandPrefix = descriptor.getCommandPrefix();
+            setDisplayName(Bundle.LBL_TabTitle(agentName));
+            setToolTipText(Bundle.HINT_ConnectedAgent(agentName, workingDirectory));
+            connectButton.setText(Bundle.BTN_Disconnect());
+            statusLabel.setText(Bundle.STS_Connected());
+            updateInputState();
+        }, ex -> statusLabel.setText(Bundle.STS_ErrorDetail(AcpChatSession.errorMessage(ex))),
+                () -> connectButton.setEnabled(true));
+    }
+
+    private AcpSessionListener configureConnection(AcpConnection connection) {
+        connection.setPermissionHandler(request -> {
+            AcpPermissionDialog.PermissionResult result = AcpPermissionDialog.showPermissionRequest(request);
+            if (result.allowToolForSession() != null) {
+                connection.allowToolForSession(request.sessionId(), result.allowToolForSession());
+            }
+            return result.response();
+        });
+        connection.setElicitationHandler(AcpElicitationDialog::show);
+        connection.setTerminalAuthorizer(request -> confirmTerminal(connection, request));
+        return createSessionListener(connection);
     }
 
     private boolean confirmTerminal(AcpConnection connection, CreateTerminalRequest request) {
         return Mutex.EVENT.readAccess(() -> {
-            if (!isCurrentSession(connection, request.sessionId())) {
+            if (!session.isCurrent(connection, request.sessionId())) {
                 return false;
             }
             StringBuilder details = new StringBuilder(String.valueOf(request.command()));
@@ -819,124 +546,39 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     NotifyDescriptor.WARNING_MESSAGE);
             dialog.setValue(NotifyDescriptor.CANCEL_OPTION);
             return DialogDisplayer.getDefault().notify(dialog) == NotifyDescriptor.OK_OPTION
-                    && isCurrentSession(connection, request.sessionId());
+                    && session.isCurrent(connection, request.sessionId());
         });
-    }
-
-    private boolean isCurrentSession(AcpConnection connection, String sessionId) {
-        return connection == currentConnection && sessionId != null
-                && sessionId.equals(currentSessionId) && sessionTransition == null;
     }
 
     private void startNewSession() {
-        AcpConnection connection = currentConnection;
-        if (connection == null || !connection.isConnected() || sessionTransition != null || promptInProgress || cancellationRequested) {
+        AcpConnection connection = session.connection();
+        if (!session.isIdle()) {
             return;
         }
-        SessionTransition transition = new SessionTransition(null);
-        sessionTransition = transition;
+        Project project = getContextProject();
+        String mainDir = chooseSessionDirectory(connection, project);
+        if (mainDir == null || connection != session.connection()) {
+            return;
+        }
+        AcpChatSession.Transition transition = session.beginTransition(null);
         statusLabel.setText(Bundle.STS_CreatingSession());
         updateInputState();
-        Project project = getContextProject();
-        String mainDir = project != null ? project.getProjectDirectory().getPath() : null;
         List<String> openDirs = getOpenProjectDirectories();
-        RP.post(() -> {
-            try {
-                String projectContext = collectProjectContext(project);
-                String sessionId;
-                try {
-                    sessionId = connection.newSession(mainDir, openDirs);
-                } catch (IOException ex) {
-                    if (!isAuthenticationRequired(ex)) {
-                        throw ex;
-                    }
-                    String methodId = chooseAuthenticationMethod(connection, transition);
-                    if (methodId == null) {
-                        SwingUtilities.invokeLater(() -> {
-                            if (connection == currentConnection && transition == sessionTransition) {
-                                sessionTransition = null;
-                                statusLabel.setText(Bundle.STS_Connected());
-                                updateInputState();
-                            }
-                        });
-                        return;
-                    }
-                    try {
-                        connection.authenticate(methodId);
-                    } catch (IOException authFailure) {
-                        Throwable cause = authFailure.getCause() != null ? authFailure.getCause() : authFailure;
-                        throw new IOException(Bundle.MSG_AuthenticationFailed(cause.getMessage()), authFailure);
-                    }
-                    sessionId = connection.newSession(mainDir, openDirs);
-                }
-                String createdSession = sessionId;
-                SwingUtilities.invokeLater(() -> finishSession(connection, transition, createdSession, projectContext));
-            } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Failed to create new session", ex);
-                SwingUtilities.invokeLater(() -> {
-                    if (connection == currentConnection && transition == sessionTransition) {
-                        sessionTransition = null;
-                        appendSystemMessage(Bundle.MSG_ErrorCreatingSession(
-                                HtmlUtils.escapeHtml(String.valueOf(ex.getMessage()))));
-                        statusLabel.setText(Bundle.STS_Error());
-                        updateInputState();
-                    }
+        session.createSession(transition, mainDir, openDirs, () -> collectProjectContext(project),
+                opened -> finishSession(connection, transition, opened.id(), mainDir, opened.projectContext()),
+                () -> {
+                    statusLabel.setText(Bundle.STS_Connected());
+                    updateInputState();
+                }, ex -> {
+                    LOG.log(Level.WARNING, "Failed to create new session", ex);
+                    chat.appendSystemMessage(Bundle.MSG_ErrorCreatingSession(
+                            HtmlUtils.escapeHtml(AcpChatSession.errorMessage(ex))));
+                    statusLabel.setText(Bundle.STS_Error());
+                    updateInputState();
                 });
-            }
-        });
     }
 
-    private static boolean isAuthenticationRequired(Throwable failure) {
-        for (Throwable cause = failure; cause != null; cause = cause.getCause()) {
-            if (cause instanceof AcpError error && error.getCode() == AcpErrorCodes.AUTHENTICATION_REQUIRED) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String chooseAuthenticationMethod(AcpConnection connection, SessionTransition transition) {
-        List<AcpSchema.AuthMethod> methods = connection.getAuthenticationMethods().stream()
-                .filter(method -> method instanceof AcpSchema.AuthMethodAgent)
-                .toList();
-        return Mutex.EVENT.readAccess(() -> {
-            if (connection != currentConnection || transition != sessionTransition) {
-                return null;
-            }
-            if (methods.isEmpty()) {
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
-                        Bundle.MSG_AuthenticationUnavailable(), NotifyDescriptor.WARNING_MESSAGE));
-                return null;
-            }
-            JComboBox<String> choices = new JComboBox<>(methods.stream()
-                    .map(method -> method.name() != null ? method.name() : method.id())
-                    .toArray(String[]::new));
-            JPanel panel = new JPanel(new BorderLayout(0, 6));
-            panel.add(new JLabel(Bundle.MSG_Authentication(connection.getDescriptor().getName())), BorderLayout.NORTH);
-            panel.add(choices, BorderLayout.CENTER);
-            JTextArea description = new JTextArea(3, 45);
-            description.setEditable(false);
-            description.setLineWrap(true);
-            description.setWrapStyleWord(true);
-            description.setOpaque(false);
-            Runnable updateDescription = () -> {
-                String text = methods.get(choices.getSelectedIndex()).description();
-                description.setText(text != null ? text : "");
-            };
-            choices.addActionListener(event -> updateDescription.run());
-            updateDescription.run();
-            panel.add(description, BorderLayout.SOUTH);
-            NotifyDescriptor.Confirmation dialog = new NotifyDescriptor.Confirmation(panel,
-                    Bundle.TTL_Authentication(), NotifyDescriptor.OK_CANCEL_OPTION);
-            if (DialogDisplayer.getDefault().notify(dialog) != NotifyDescriptor.OK_OPTION
-                    || connection != currentConnection || transition != sessionTransition) {
-                return null;
-            }
-            return methods.get(choices.getSelectedIndex()).id();
-        });
-    }
-
-    private static String collectProjectContext(Project project) {
+    private static ProjectContext collectProjectContext(Project project) {
         try {
             return AcpProjectContextProvider.gatherProjectContext(project);
         } catch (RuntimeException ex) {
@@ -945,40 +587,35 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         }
     }
 
-    private void finishSession(AcpConnection connection, SessionTransition transition,
-            String sessionId, String projectContext) {
-        if (connection != currentConnection || transition != sessionTransition) {
-            return;
-        }
-        sessionTransition = null;
-        if (currentSessionId != null && !currentSessionId.equals(sessionId)) {
-            inputArea.setText("");
-        }
-        currentSessionId = sessionId;
-        pendingProjectContext = projectContext;
-        renderTimer.stop();
-        displayTimer.stop();
-        currentMessageBuffer.setLength(0);
-        currentThoughtBuffer.setLength(0);
-        inAgentMessage = false;
-        agentMsgDivEndPos = -1;
-        diffStore.clear();
-        chatHtml.setLength(0);
-        renderedLength = 0;
-        chatPane.setText("<html><body></body></html>");
-        resetSessionControls();
-        updateToolsButton(countTools(currentEnabledTools));
-        List<AcpModeInfo> modes = connection.getAvailableModes();
-        modeButton.setEnabled(!modes.isEmpty());
-        currentModeId = connection.getCurrentModeId();
-        if (currentModeId != null) {
-            modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(currentModeId)));
-        }
-        statusLabel.setText(Bundle.STS_Ready());
-        if (transition.expectedId != null) {
-            appendSystemMessage(Bundle.MSG_SessionResumed());
-        }
-        transition.updates.getOrDefault(sessionId, List.of()).forEach(Runnable::run);
+    private void finishSession(AcpConnection connection, AcpChatSession.Transition transition,
+            String sessionId, String workingDirectory, ProjectContext projectContext) {
+        String previousId = session.sessionId();
+        String promptContext = projectContext == null || transition.isResume() ? null : projectContext.promptText();
+        session.finishTransition(transition, sessionId, promptContext, () -> {
+            if (previousId != null && !previousId.equals(sessionId)) {
+                inputArea.setText("");
+            }
+            String agentName = connection.getDescriptor().getName();
+            if (projectContext == null) {
+                setToolTipText(Bundle.HINT_ConnectedAgent(agentName, workingDirectory));
+            } else {
+                List<String> roots = projectContext.sourceRoots().stream().map(SourceRoot::description).toList();
+                setToolTipText(Bundle.HINT_SessionContext(agentName, projectContext.name(), workingDirectory,
+                        roots.isEmpty() ? "" : "\n  " + String.join("\n  ", roots)));
+            }
+            chat.clear();
+            resetSessionControls();
+            updateToolsButton(countTools(currentEnabledTools));
+            modeButton.setEnabled(!connection.getAvailableModes().isEmpty());
+            currentModeId = connection.getCurrentModeId();
+            if (currentModeId != null) {
+                modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(currentModeId)));
+            }
+            statusLabel.setText(Bundle.STS_Ready());
+            if (transition.isResume()) {
+                chat.appendSystemMessage(Bundle.MSG_SessionResumed());
+            }
+        });
         updateInputState();
     }
 
@@ -995,85 +632,37 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private void sendMessage() {
         String text = inputArea.getText().trim();
-        AcpConnection connection = currentConnection;
-        String sessionId = currentSessionId;
-        if (text.isEmpty() || connection == null || sessionId == null
-                || sessionTransition != null || promptInProgress || cancellationRequested) {
+        if (text.isEmpty() || !session.canSend()) {
             return;
         }
-        List<AcpFileMentionSupport.FileAttachment> files = mentionSupport.consumeAttachedFiles();
-        String context = pendingProjectContext;
-        String projectContext = context != null ? context + "\n\n" : "";
-        String fullPrompt = projectContext + mentionSupport.buildAttachmentContext(files) + text;
-        pendingProjectContext = null;
-        appendUserMessage(text);
-        inputArea.setText("");
-        promptInProgress = true;
-        updateInputState();
-        statusLabel.setText(Bundle.STS_Thinking());
-
-        RP.post(() -> {
-            try {
-                connection.sendPrompt(sessionId, fullPrompt);
-            } catch (Exception ex) {
-                SwingUtilities.invokeLater(() -> {
-                    if (isCurrentSession(connection, sessionId)) {
-                        appendSystemMessage(Bundle.STS_ErrorDetail(HtmlUtils.escapeHtml(ex.getMessage())));
-                        pendingProjectContext = context;
-                        promptInProgress = false;
-                        updateInputState();
-                        statusLabel.setText(Bundle.STS_Error());
-                    }
-                });
-            }
+        String attachments = mentionSupport.buildAttachmentContext(mentionSupport.consumeAttachedFiles());
+        session.sendPrompt(text, attachments, () -> {
+            chat.finishAgentMessage();
+            chat.appendUserMessage(text);
+            inputArea.setText("");
+            updateInputState();
+            statusLabel.setText(Bundle.STS_Thinking());
+        }, ex -> {
+            chat.finishAgentMessage();
+            chat.appendSystemMessage(Bundle.STS_ErrorDetail(HtmlUtils.escapeHtml(AcpChatSession.errorMessage(ex))));
+            updateInputState();
+            statusLabel.setText(Bundle.STS_Error());
         });
     }
 
     private void cancelPrompt() {
-        AcpConnection connection = currentConnection;
-        String sessionId = currentSessionId;
-        if (connection == null || sessionId == null || !promptInProgress || cancellationRequested) {
-            return;
+        if (session.canCancel()) {
+            session.cancelPrompt(this::updateInputState);
         }
-        cancellationRequested = true;
-        updateInputState();
-        RP.post(() -> {
-            try {
-                connection.cancel(sessionId);
-            } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Failed to cancel prompt", ex);
-            } finally {
-                SwingUtilities.invokeLater(() -> {
-                    if (isCurrentSession(connection, sessionId)) {
-                        cancellationRequested = false;
-                        updateInputState();
-                    }
-                });
-            }
-        });
     }
 
     private void updateInputState() {
-        boolean connected = currentConnection != null && currentConnection.isConnected();
-        boolean idle = connected && sessionTransition == null && !promptInProgress && !cancellationRequested;
-        boolean hasSession = connected && currentSessionId != null;
-        sendButton.setEnabled(idle && hasSession);
-        inputArea.setEnabled(idle && hasSession);
-        cancelButton.setEnabled(promptInProgress && hasSession && !cancellationRequested);
-        newSessionButton.setEnabled(idle && !hasSession);
+        boolean idle = session.isIdle();
+        sendButton.setEnabled(session.canSend());
+        inputArea.setEnabled(session.canSend());
+        cancelButton.setEnabled(session.canCancel());
+        newSessionButton.setEnabled(idle && session.sessionId() == null);
         sessionsButton.setEnabled(idle);
-    }
-
-    private void appendUserMessage(String text) {
-        chatHtml.append("<div class='user-msg'><span class='user-label'>").append(Bundle.LBL_You()).append("</span><br/>")
-                .append(HtmlUtils.escapeHtml(text).replace("\n", "<br/>"))
-                .append("</div>");
-        updateChatDisplay();
-    }
-
-    private void appendSystemMessage(String html) {
-        chatHtml.append("<div class='system-msg'>").append(html).append("</div>");
-        updateChatDisplay();
     }
 
     private record ToolCounts(int enabled, int total) { }
@@ -1093,7 +682,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private void showToolsPopup() {
         McpToolRegistry registry = McpToolRegistry.getInstance();
-        Map<String, java.util.List<McpToolProvider.McpToolDefinition>> toolsByProvider =
+        Map<String, List<McpToolProvider.McpToolDefinition>> toolsByProvider =
                 registry.getToolsByProvider();
         if (toolsByProvider.isEmpty()) {
             return;
@@ -1101,7 +690,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         Set<String> enabledSet = currentEnabledTools;
         JPopupMenu popup = new JPopupMenu();
         boolean first = true;
-        for (Map.Entry<String, java.util.List<McpToolProvider.McpToolDefinition>> group
+        for (Map.Entry<String, List<McpToolProvider.McpToolDefinition>> group
                 : toolsByProvider.entrySet()) {
             if (!first) {
                 popup.addSeparator();
@@ -1170,8 +759,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         if (modeId == null) {
             return "default";
         }
-        if (currentConnection != null) {
-            for (AcpModeInfo mode : currentConnection.getAvailableModes()) {
+        if (session.connection() != null) {
+            for (AcpModeInfo mode : session.connection().getAvailableModes()) {
                 if (modeId.equals(mode.id()) && mode.name() != null) {
                     return mode.name();
                 }
@@ -1185,9 +774,9 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void showModePopup() {
-        AcpConnection connection = currentConnection;
-        String sessionId = currentSessionId;
-        if (connection == null || !connection.isConnected() || sessionId == null || sessionTransition != null) {
+        AcpConnection connection = session.connection();
+        String sessionId = session.sessionId();
+        if (connection == null || !connection.isConnected() || !session.isCurrent(connection, sessionId)) {
             return;
         }
         List<AcpModeInfo> modes = connection.getAvailableModes();
@@ -1205,14 +794,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     + "</html>";
             JMenuItem item = new JMenuItem(label);
             item.addActionListener(ev -> {
-                if (isCurrentSession(connection, sessionId)) {
-                    RP.post(() -> {
-                        try {
-                            connection.setSessionMode(sessionId, mode.id());
-                        } catch (Exception ex) {
-                            LOG.log(Level.WARNING, "Failed to set mode", ex);
-                        }
-                    });
+                if (session.isCurrent(connection, sessionId)) {
+                    session.setMode(mode.id());
                 }
             });
             popup.add(item);
@@ -1264,10 +847,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             }
             slashPopup = popup;
             try {
-                java.awt.Rectangle caret = inputArea.modelToView(
-                        inputArea.getCaretPosition());
+                Rectangle2D caret = inputArea.modelToView2D(inputArea.getCaretPosition());
                 if (caret != null) {
-                    popup.show(inputArea, caret.x, caret.y + caret.height);
+                    Rectangle bounds = caret.getBounds();
+                    popup.show(inputArea, bounds.x, bounds.y + bounds.height);
                 } else {
                     popup.show(inputArea, 0, inputArea.getHeight());
                 }
@@ -1286,525 +869,108 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void showSessionBrowser() {
-        AcpConnection connection = currentConnection;
-        if (connection == null || !connection.isConnected() || promptInProgress || cancellationRequested || sessionTransition != null) {
+        AcpConnection connection = session.connection();
+        if (!session.isIdle()) {
             return;
         }
-        String mainDir = getMainProjectDirectory();
-        RP.post(() -> {
-            List<AcpSessionInfo> sessions;
-            try {
-                sessions = connection.listSessions(mainDir);
-            } catch (IOException ex) {
-                handleSessionListError(ex);
+        Project project = getContextProject();
+        String mainDir = chooseSessionDirectory(connection, project);
+        if (mainDir == null || connection != session.connection()) {
+            return;
+        }
+        session.listSessions(mainDir, sessions -> {
+            if (sessions.isEmpty()) {
+                chat.appendSystemMessage(Bundle.LBL_NoSessions());
                 return;
             }
-            SwingUtilities.invokeLater(() -> {
-                if (connection != currentConnection || promptInProgress || cancellationRequested || sessionTransition != null) {
-                    return;
-                }
-                if (sessions.isEmpty()) {
-                    appendSystemMessage(Bundle.LBL_NoSessions());
-                    return;
-                }
-                showSessionBrowserDialog(sessions, connection);
-            });
-        });
+            AcpSessionBrowser.show(sessions, connection,
+                    info -> onResumeSession(info, connection, mainDir, project),
+                    (info, deleted) -> onDeleteSession(info, connection, deleted));
+        }, this::handleSessionListError);
     }
 
     private void handleSessionListError(IOException ex) {
         Throwable cause = ex.getCause();
         if (cause instanceof AcpCapabilityException) {
-            SwingUtilities.invokeLater(() ->
-                    appendSystemMessage(Bundle.MSG_NoSessionCapability()));
+            chat.appendSystemMessage(Bundle.MSG_NoSessionCapability());
         } else {
             LOG.log(Level.WARNING, "Failed to list sessions", ex);
-            SwingUtilities.invokeLater(() ->
-                    appendSystemMessage(Bundle.STS_ErrorDetail(
-                            HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())))));
+            chat.appendSystemMessage(Bundle.STS_ErrorDetail(HtmlUtils.escapeHtml(AcpChatSession.errorMessage(ex))));
         }
     }
 
-    private void showSessionBrowserDialog(List<AcpSessionInfo> sessions, AcpConnection connection) {
-        DefaultListModel<AcpSessionInfo> listModel = new DefaultListModel<>();
-        JList<AcpSessionInfo> sessionList = buildSessionList(sessions, listModel,
-                connection.getDescriptor().getName());
-
-        JPanel browserPanel = new JPanel(new BorderLayout(4, 4));
-        browserPanel.setPreferredSize(new Dimension(SESSION_BROWSER_WIDTH, SESSION_BROWSER_HEIGHT));
-        browserPanel.add(new JScrollPane(sessionList), BorderLayout.CENTER);
-
-        JButton resumeBtn = new JButton(Bundle.BTN_ResumeSession());
-        resumeBtn.setEnabled(connection.supportsResumeSession());
-        JButton deleteBtn = new JButton(Bundle.BTN_DeleteSession());
-        deleteBtn.setEnabled(connection.supportsDeleteSession());
-        JPanel buttonRow = new JPanel();
-        buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
-        buttonRow.add(resumeBtn);
-        buttonRow.add(Box.createHorizontalStrut(8));
-        buttonRow.add(deleteBtn);
-        browserPanel.add(buttonRow, BorderLayout.SOUTH);
-
-        DialogDescriptor dd = new DialogDescriptor(browserPanel, Bundle.TTL_SessionBrowser(),
-                true, new Object[]{NotifyDescriptor.CANCEL_OPTION}, NotifyDescriptor.CANCEL_OPTION,
-                DialogDescriptor.DEFAULT_ALIGN, null, null);
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
-
-        resumeBtn.addActionListener(ev -> {
-            AcpSessionInfo selected = sessionList.getSelectedValue();
-            if (selected != null) {
-                dialog.dispose();
-                onResumeSession(selected, connection);
-            }
-        });
-
-        deleteBtn.addActionListener(ev -> {
-            AcpSessionInfo selected = sessionList.getSelectedValue();
-            if (selected != null) {
-                onDeleteSession(selected, listModel, connection, dialog);
-            }
-        });
-
-        dialog.setVisible(true);
-    }
-
-    private JList<AcpSessionInfo> buildSessionList(List<AcpSessionInfo> sessions,
-            DefaultListModel<AcpSessionInfo> listModel, String agentName) {
-        for (AcpSessionInfo si : sessions) {
-            listModel.addElement(si);
-        }
-        JList<AcpSessionInfo> sessionList = new JList<>(listModel);
-        sessionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        sessionList.setCellRenderer(new SessionListCellRenderer(agentName));
-        sessionList.setSelectedIndex(0);
-        return sessionList;
-    }
-
-    private void onResumeSession(AcpSessionInfo session, AcpConnection connection) {
-        if (connection != currentConnection || sessionTransition != null || promptInProgress || cancellationRequested) {
+    private void onResumeSession(AcpSessionInfo info, AcpConnection connection, String mainDir, Project project) {
+        if (connection != session.connection() || !session.isIdle()) {
             return;
         }
-        SessionTransition transition = new SessionTransition(session.sessionId());
-        sessionTransition = transition;
+        AcpChatSession.Transition transition = session.beginTransition(info.sessionId());
         statusLabel.setText(Bundle.STS_ResumingSession());
         updateInputState();
-        String mainDir = getMainProjectDirectory();
         List<String> openDirs = getOpenProjectDirectories();
-        RP.post(() -> {
-            try {
-                String sessionId = connection.resumeSession(session.sessionId(), mainDir, openDirs);
-                SwingUtilities.invokeLater(() -> finishSession(connection, transition, sessionId, null));
-            } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Failed to resume session", ex);
-                SwingUtilities.invokeLater(() -> {
-                    if (connection == currentConnection && transition == sessionTransition) {
-                        sessionTransition = null;
-                        statusLabel.setText(Bundle.STS_Error());
-                        updateInputState();
-                        DialogDisplayer.getDefault().notifyLater(
-                                new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
-                    }
-                });
-            }
-        });
-    }
-
-    private void onDeleteSession(AcpSessionInfo session,
-            DefaultListModel<AcpSessionInfo> listModel,
-            AcpConnection connection, Dialog dialog) {
-        if (connection != currentConnection || promptInProgress || cancellationRequested || sessionTransition != null) {
-            return;
-        }
-        RP.post(() -> {
-            try {
-                connection.deleteSession(session.sessionId());
-                SwingUtilities.invokeLater(() -> {
-                    listModel.removeElement(session);
-                    if (listModel.isEmpty()) {
-                        dialog.dispose();
-                    }
-                    if (connection == currentConnection) {
-                        if (session.sessionId().equals(currentSessionId)) {
-                            currentSessionId = null;
-                            pendingProjectContext = null;
-                            inputArea.setText("");
-                            resetSessionControls();
-                            updateInputState();
-                        }
-                        appendSystemMessage(Bundle.MSG_SessionDeleted());
-                    }
-                });
-            } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Failed to delete session", ex);
-                SwingUtilities.invokeLater(() -> {
+        session.resumeSession(transition, mainDir, openDirs, () -> collectProjectContext(project),
+                opened -> finishSession(connection, transition, opened.id(), mainDir, opened.projectContext()),
+                ex -> {
+                    LOG.log(Level.WARNING, "Failed to resume session", ex);
                     statusLabel.setText(Bundle.STS_Error());
+                    updateInputState();
                     DialogDisplayer.getDefault().notifyLater(
-                            new NotifyDescriptor.Message(ex.getMessage(),
-                                    NotifyDescriptor.ERROR_MESSAGE));
+                            new NotifyDescriptor.Message(AcpChatSession.errorMessage(ex), NotifyDescriptor.ERROR_MESSAGE));
                 });
-            }
-        });
     }
 
-    private static final class SessionListCellRenderer extends DefaultListCellRenderer {
-
-        private final String agentName;
-
-        SessionListCellRenderer(String agentName) {
-            this.agentName = agentName;
-        }
-
-        private static final java.time.format.DateTimeFormatter DISPLAY_FORMAT =
-                java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm");
-
-        @Override
-        public Component getListCellRendererComponent(
-                JList<?> list, Object value, int index,
-                boolean isSelected, boolean cellHasFocus) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value instanceof AcpSessionInfo si) {
-                String title = si.title() != null && !si.title().isBlank() ? si.title() : si.sessionId();
-                String label = Bundle.LBL_SessionEntry(agentName, title);
-                if (si.updatedAt() != null) {
-                    label += "  (" + formatDate(si.updatedAt()) + ")";
-                }
-                setText(label);
-            }
-            return this;
-        }
-
-        private static String formatDate(String iso) {
-            try {
-                return java.time.ZonedDateTime.parse(iso)
-                        .withZoneSameInstant(java.time.ZoneId.systemDefault())
-                        .format(DISPLAY_FORMAT);
-            } catch (java.time.format.DateTimeParseException ex) {
-                try {
-                    return java.time.LocalDateTime.parse(iso).format(DISPLAY_FORMAT);
-                } catch (java.time.format.DateTimeParseException ex2) {
-                    return iso;
-                }
-            }
-        }
-    }
-
-    private void flushMessageBuffers() {
-        String thought = currentThoughtBuffer.toString();
-        String message = currentMessageBuffer.toString();
-        currentThoughtBuffer.setLength(0);
-        currentMessageBuffer.setLength(0);
-        boolean changed = false;
-        if (!thought.isEmpty()) {
-            chatHtml.append("<div class='thought'>")
-                    .append(HtmlUtils.escapeHtml(thought))
-                    .append("</div>");
-            changed = true;
-        }
-        if (!message.isEmpty()) {
-            String rendered = AcpMarkdownRenderer.renderToHtml(message);
-            if (inAgentMessage && agentMsgDivEndPos >= 0
-                    && chatHtml.length() == agentMsgDivEndPos + "</div>".length()) {
-                chatHtml.setLength(agentMsgDivEndPos);
-                chatHtml.append(rendered).append("</div>");
-                renderedLength = 0;
-            } else {
-                chatHtml.append("<div class='agent-msg'><span class='agent-label'>")
-                        .append(Bundle.LBL_AgentSays()).append("</span><br/>")
-                        .append(rendered).append("</div>");
-                inAgentMessage = true;
-            }
-            agentMsgDivEndPos = chatHtml.length() - "</div>".length();
-            changed = true;
-        }
-        if (changed) {
-            updateChatDisplay();
-        }
-    }
-
-    private void appendToolCall(AcpToolCall toolCall) {
-        flushMessageBuffers();
-        inAgentMessage = false;
-        agentMsgDivEndPos = -1;
-        renderToolCallCard(toolCall);
-    }
-
-    private void appendToolCallUpdate(AcpToolCall toolCall) {
-        flushMessageBuffers();
-        inAgentMessage = false;
-        agentMsgDivEndPos = -1;
-        renderToolCallCard(toolCall);
-    }
-
-    private void renderToolCallCard(AcpToolCall toolCall) {
-        String kindIcon = switch (toolCall.getKind()) {
-            case "read" -> "&#x1F4C4;";
-            case "edit", "write" -> "&#x270F;";
-            case "execute" -> "&#x2699;";
-            case "search" -> "&#x1F50D;";
-            case "think" -> "&#x1F4AD;";
-            case "delete" -> "&#x1F5D1;";
-            case "fetch" -> "&#x1F310;";
-            default -> "&#x1F527;";
-        };
-        String statusClass = switch (toolCall.getStatus()) {
-            case AcpToolCall.STATUS_COMPLETED -> "tc-status-completed";
-            case AcpToolCall.STATUS_FAILED -> "tc-status-failed";
-            default -> "tc-status-progress";
-        };
-        String statusIcon = switch (toolCall.getStatus()) {
-            case AcpToolCall.STATUS_COMPLETED -> "&#x2705;";
-            case AcpToolCall.STATUS_FAILED -> "&#x274C;";
-            case AcpToolCall.STATUS_IN_PROGRESS -> "&#x23F3;";
-            default -> "&#x25CB;";
-        };
-
-        chatHtml.append("<div class='tool-call'>")
-                .append(kindIcon).append(" <b>").append(HtmlUtils.escapeHtml(toolCall.getTitle())).append("</b>")
-                .append(" <span class='tc-kind'>[").append(HtmlUtils.escapeHtml(toolCall.getKind())).append("]</span>")
-                .append(" ").append(statusIcon)
-                .append(" <span class='").append(statusClass).append("'>")
-                .append(HtmlUtils.escapeHtml(toolCall.getStatus())).append("</span>");
-
-        if (toolCall.getName() != null && !toolCall.getName().equals(toolCall.getTitle())) {
-            chatHtml.append("<br/><i>").append(HtmlUtils.escapeHtml(toolCall.getName())).append("</i>");
-        }
-
-        if (!toolCall.getLocations().isEmpty()) {
-            chatHtml.append("<br/>");
-            for (AcpToolCall.Location loc : toolCall.getLocations()) {
-                String navUrl = "acp-nav:" + loc.path()
-                        + (loc.line() != null ? ":" + loc.line() : "");
-                String display = HtmlUtils.escapeHtml(loc.path())
-                        + (loc.line() != null ? ":" + loc.line() : "");
-                chatHtml.append("<a class='tc-location' href='")
-                        .append(navUrl).append("'>")
-                        .append(display)
-                        .append("</a> ");
-            }
-        }
-
-        if (!toolCall.getDiffs().isEmpty()) {
-            for (AcpToolCall.DiffContent diff : toolCall.getDiffs()) {
-                String diffId = "diff-" + (diffCounter++);
-                diffStore.put(diffId, diff);
-
-                chatHtml.append("<br/>");
-                if (diff.path() != null) {
-                    chatHtml.append("<b>").append(HtmlUtils.escapeHtml(diff.path())).append("</b><br/>");
-                }
-                appendDiffPreview(diff);
-                chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
-                        .append(diffId).append("'>").append(Bundle.LBL_ViewFullDiff()).append("</a>");
-            }
-        }
-
-        if (toolCall.getTextContent() != null && !toolCall.getTextContent().isEmpty()) {
-            String preview = toolCall.getTextContent();
-            if (preview.length() > 200) {
-                preview = preview.substring(0, 200) + "...";
-            }
-            chatHtml.append("<br/><code>").append(HtmlUtils.escapeHtml(preview)).append("</code>");
-        }
-
-        chatHtml.append("</div>");
-        updateChatDisplay();
-    }
-
-    private void appendDiffPreview(AcpToolCall.DiffContent diff) {
-        String[] oldLines = diff.oldText() != null ? diff.oldText().split("\n", -1) : new String[0];
-        String[] newLines = diff.newText() != null ? diff.newText().split("\n", -1) : new String[0];
-
-        int previewLines = 0;
-        int maxPreview = 5;
-
-        for (String line : oldLines) {
-            if (previewLines >= maxPreview) {
-                chatHtml.append("<span class='diff-del'>...</span><br/>");
-                break;
-            }
-            chatHtml.append("<span class='diff-del'>- ")
-                    .append(HtmlUtils.escapeHtml(line)).append("</span><br/>");
-            previewLines++;
-        }
-        previewLines = 0;
-        for (String line : newLines) {
-            if (previewLines >= maxPreview) {
-                chatHtml.append("<span class='diff-add'>...</span><br/>");
-                break;
-            }
-            chatHtml.append("<span class='diff-add'>+ ")
-                    .append(HtmlUtils.escapeHtml(line)).append("</span><br/>");
-            previewLines++;
-        }
-    }
-
-    private void appendPlan(List<AcpPlanEntry> entries) {
-        chatHtml.append("<div class='plan'><b>").append(Bundle.LBL_Plan()).append("</b><ul>");
-        for (AcpPlanEntry entry : entries) {
-            String icon = switch (entry.status()) {
-                case "completed" -> "&#x2705;";
-                case "in_progress" -> "&#x23F3;";
-                default -> "&#x25CB;";
-            };
-            chatHtml.append("<li>").append(icon).append(" ")
-                    .append(HtmlUtils.escapeHtml(entry.content()))
-                    .append("</li>");
-        }
-        chatHtml.append("</ul></div>");
-        updateChatDisplay();
-    }
-
-    // Coalesces bursts of updates into a single re-render.
-    private void updateChatDisplay() {
-        if (!displayTimer.isRunning()) {
-            displayTimer.start();
-        }
-    }
-
-    private void renderChatDisplay() {
-        if (renderedLength > chatHtml.length()) {
-            renderedLength = 0;
-        }
-        String fragment = chatHtml.substring(renderedLength);
-        if (fragment.isEmpty()) {
+    private void onDeleteSession(AcpSessionInfo info, AcpConnection connection, Runnable deleted) {
+        if (connection != session.connection() || !session.isIdle()) {
             return;
         }
-        // Only the newly appended HTML is parsed, instead of the whole document.
-        boolean inserted = false;
-        if (renderedLength > 0 && chatPane.getDocument() instanceof HTMLDocument) {
-            HTMLDocument doc = (HTMLDocument) chatPane.getDocument();
-            try {
-                Element body = doc.getDefaultRootElement().getElement(1);
-                doc.insertBeforeEnd(body, fragment);
-                inserted = true;
-            } catch (BadLocationException | IOException | RuntimeException ex) {
-                inserted = false;
+        session.deleteSession(info.sessionId(), wasActive -> {
+            deleted.run();
+            if (wasActive) {
+                inputArea.setText("");
+                resetSessionControls();
+                updateInputState();
             }
-        }
-        if (!inserted) {
-            chatPane.setText("<html><body>" + chatHtml + "</body></html>");
-        }
-        renderedLength = chatHtml.length();
-        SwingUtilities.invokeLater(() -> {
-            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(
-                    JScrollPane.class, chatPane);
-            if (scrollPane != null) {
-                JScrollBar vertical = scrollPane.getVerticalScrollBar();
-                vertical.setValue(vertical.getMaximum());
-            }
+            chat.appendSystemMessage(Bundle.MSG_SessionDeleted());
+        }, ex -> {
+            LOG.log(Level.WARNING, "Failed to delete session", ex);
+            statusLabel.setText(Bundle.STS_Error());
+            DialogDisplayer.getDefault().notifyLater(
+                    new NotifyDescriptor.Message(AcpChatSession.errorMessage(ex), NotifyDescriptor.ERROR_MESSAGE));
         });
-    }
-
-    private com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse handleElicitation(
-            com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationRequest request) {
-        java.util.concurrent.atomic.AtomicReference<com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse> result =
-                new java.util.concurrent.atomic.AtomicReference<>();
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                JPanel formPanel = new JPanel();
-                formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-                formPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-
-                if (request.message() != null && !request.message().isEmpty()) {
-                    JLabel msgLabel = new JLabel("<html><p style='width:350px'>"
-                            + HtmlUtils.escapeHtml(request.message()) + "</p></html>");
-                    formPanel.add(msgLabel);
-                    formPanel.add(Box.createVerticalStrut(8));
-                }
-
-                Map<String, javax.swing.JComponent> fieldComponents = new java.util.LinkedHashMap<>();
-                com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationSchema schema = request.requestedSchema();
-                if (schema != null && schema.properties() != null) {
-                    for (Map.Entry<String, com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema> entry
-                            : schema.properties().entrySet()) {
-                        String fieldName = entry.getKey();
-                        com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema prop = entry.getValue();
-
-                        if (prop instanceof com.agentclientprotocol.sdk.spec.AcpSchema.StringPropertySchema sp) {
-                            String label = sp.title() != null ? sp.title() : fieldName;
-                            formPanel.add(new JLabel(label + ":"));
-                            if (sp.enumValues() != null && !sp.enumValues().isEmpty()) {
-                                JComboBox<String> combo = new JComboBox<>(sp.enumValues().toArray(new String[0]));
-                                if (sp.defaultValue() != null) {
-                                    combo.setSelectedItem(sp.defaultValue());
-                                }
-                                fieldComponents.put(fieldName, combo);
-                                formPanel.add(combo);
-                            } else if (sp.oneOf() != null && !sp.oneOf().isEmpty()) {
-                                List<String> values = new ArrayList<>();
-                                for (com.agentclientprotocol.sdk.spec.AcpSchema.EnumOption eo : sp.oneOf()) {
-                                    values.add(eo.constValue());
-                                }
-                                JComboBox<String> combo = new JComboBox<>(values.toArray(new String[0]));
-                                if (sp.defaultValue() != null) {
-                                    combo.setSelectedItem(sp.defaultValue());
-                                }
-                                fieldComponents.put(fieldName, combo);
-                                formPanel.add(combo);
-                            } else {
-                                JTextField tf = new JTextField(25);
-                                if (sp.defaultValue() != null) {
-                                    tf.setText(sp.defaultValue());
-                                }
-                                fieldComponents.put(fieldName, tf);
-                                formPanel.add(tf);
-                            }
-                        } else if (prop instanceof com.agentclientprotocol.sdk.spec.AcpSchema.BooleanPropertySchema bp) {
-                            String label = bp.title() != null ? bp.title() : fieldName;
-                            JCheckBox cb = new JCheckBox(label);
-                            if (bp.defaultValue() != null) {
-                                cb.setSelected(bp.defaultValue());
-                            }
-                            fieldComponents.put(fieldName, cb);
-                            formPanel.add(cb);
-                        } else {
-                            formPanel.add(new JLabel(fieldName + ":"));
-                            JTextField tf = new JTextField(25);
-                            fieldComponents.put(fieldName, tf);
-                            formPanel.add(tf);
-                        }
-                        formPanel.add(Box.createVerticalStrut(4));
-                    }
-                }
-
-                String title = schema != null && schema.title() != null
-                        ? schema.title() : Bundle.TTL_Elicitation();
-                Object[] options = {Bundle.BTN_Accept(), Bundle.BTN_Decline()};
-                DialogDescriptor dd = new DialogDescriptor(
-                        new JScrollPane(formPanel), title,
-                        true, options, Bundle.BTN_Accept(),
-                        DialogDescriptor.DEFAULT_ALIGN, null, null);
-                Object chosen = DialogDisplayer.getDefault().notify(dd);
-
-                if (Bundle.BTN_Accept().equals(chosen)) {
-                    Map<String, Object> content = new java.util.LinkedHashMap<>();
-                    for (Map.Entry<String, javax.swing.JComponent> fe : fieldComponents.entrySet()) {
-                        javax.swing.JComponent comp = fe.getValue();
-                        if (comp instanceof JTextField tf) {
-                            content.put(fe.getKey(), tf.getText());
-                        } else if (comp instanceof JComboBox<?> cb) {
-                            content.put(fe.getKey(), cb.getSelectedItem());
-                        } else if (comp instanceof JCheckBox chk) {
-                            content.put(fe.getKey(), chk.isSelected());
-                        }
-                    }
-                    result.set(com.agentclientprotocol.sdk.spec.AcpSchema
-                            .CreateElicitationResponse.accept(content));
-                } else {
-                    result.set(com.agentclientprotocol.sdk.spec.AcpSchema
-                            .CreateElicitationResponse.decline());
-                }
-            });
-        } catch (Exception ex) {
-            LOG.log(Level.WARNING, "Elicitation dialog error", ex);
-            result.set(com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse.decline());
-        }
-        return result.get();
     }
 
     private static String getMainProjectDirectory() {
         Project project = getContextProject();
-        return project != null ? project.getProjectDirectory().getPath() : null;
+        return project == null ? null : getLocalProjectDirectory(project);
+    }
+
+    private String chooseSessionDirectory(AcpConnection connection, Project project) {
+        String projectPath = project == null ? null : getLocalProjectDirectory(project);
+        if (projectPath != null) {
+            return projectPath;
+        }
+        String configured = connection.getDescriptor().getWorkingDirectory();
+        for (String candidate : new String[]{selectedSessionDirectory, configured}) {
+            if (candidate != null) {
+                File directory = new File(candidate);
+                if (directory.isAbsolute() && directory.isDirectory()) {
+                    return directory.getAbsolutePath();
+                }
+            }
+        }
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(Bundle.TTL_SessionDirectory());
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION
+                && session.connection() == connection && chooser.getSelectedFile().isDirectory()) {
+            selectedSessionDirectory = chooser.getSelectedFile().getAbsolutePath();
+            return selectedSessionDirectory;
+        }
+        return null;
+    }
+
+    private static String getLocalProjectDirectory(Project project) {
+        File directory = FileUtil.toFile(project.getProjectDirectory());
+        return directory == null ? null : directory.getAbsolutePath();
     }
 
     private static Project getContextProject() {
@@ -1820,7 +986,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         Project[] openProjects = OpenProjects.getDefault().getOpenProjects();
         List<String> dirs = new ArrayList<>();
         for (Project p : openProjects) {
-            dirs.add(p.getProjectDirectory().getPath());
+            String directory = getLocalProjectDirectory(p);
+            if (directory != null) {
+                dirs.add(directory);
+            }
         }
         return dirs;
     }

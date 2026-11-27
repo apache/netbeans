@@ -85,7 +85,7 @@ is the proper place.
     <changes>
         <change id="directory-project-provider">
             <api name="general"/>
-            <summary>Added <code>DirectoryProjectProvider</code> SPI</summary>
+            <summary>Added <code>DirectoryProjectProvider</code> SPI and <code>ProjectManager.findOrCreateDirProject</code></summary>
             <version major="1" minor="107"/>
             <date day="29" month="10" year="2026"/>
             <author login="mbien"/>
@@ -94,9 +94,12 @@ is the proper place.
                 <p>
                     <code><a href="@TOP@/org/netbeans/spi/project/DirectoryProjectProvider.html">DirectoryProjectProvider</a></code> is a new
                     service that lets a project type promote a plain directory into a project of its own, in a non-intrusive way.
+                    <code><a href="@TOP@/org/netbeans/api/project/ProjectManager.html">ProjectManager.findOrCreateDirProject</a></code>
+                    finds the project for a directory and, when there is none, asks the registered providers to create one.
                 </p>
             </description>
             <class package="org.netbeans.spi.project" name="DirectoryProjectProvider"/>
+            <class package="org.netbeans.api.project" name="ProjectManager"/>
         </change>
         <change id="run-test-in-parallel-action">
             <api name="general"/>

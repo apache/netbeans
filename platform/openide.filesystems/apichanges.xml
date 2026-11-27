@@ -19,12 +19,42 @@
     under the License.
 
 -->
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 <apichanges>
     <apidefs>
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="fileobject.outputstream.contract">
+            <api name="filesystems"/>
+            <summary>FileObject output streams truncate on open and reject writes after close</summary>
+            <version major="9" minor="50"/>
+            <date day="1" month="12" year="2026"/>
+            <author login="jtulach"/>
+            <compatibility modification="yes" source="compatible" binary="compatible" semantic="incompatible"/>
+            <description>
+                Both <a href="@TOP@/org/openide/filesystems/FileObject.html#getOutputStream()">FileObject.getOutputStream()</a>
+                and <a href="@TOP@/org/openide/filesystems/FileObject.html#getOutputStream(org.openide.filesystems.FileLock)">getOutputStream(FileLock)</a>
+                truncate the file when the stream is opened, and writing to the stream after
+                it is closed throws <code>IOException</code>. Implementations of
+                <code>FileObject</code> must satisfy these requirements.
+            </description>
+            <class name="FileObject" package="org.openide.filesystems"/>
+        </change>
+        <change id="path4all.file.objects">
+            <api name="filesystems"/>
+            <summary>FileUtil.toPath works for every file object</summary>
+            <version major="9" minor="50"/>
+            <date day="1" month="12" year="2026"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <a href="@TOP@/org/openide/filesystems/FileUtil.html#toPath(org.openide.filesystems.FileObject)">FileUtil.toPath</a>
+                now returns a non-<code>null</code> <code>Path</code> instance
+                for all file objects, even for virtual ones.
+            </description>
+            <class name="FileUtil" package="org.openide.filesystems"/>
+        </change>
         <change id="fileutil.copyposixperms">
             <api name="filesystems"/>
             <summary>FileObject copy preserves source posix permissions.</summary>

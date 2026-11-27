@@ -39,6 +39,7 @@ public class LocalFileSystemTest extends FileSystemFactoryHid {
         suite.addTestSuite(URLMapperTestHidden.class);        
         suite.addTestSuite(URLMapperTestInternalHidden.class);                        
         suite.addTestSuite(FileUtilTestHidden.class);                        
+        suite.addTestSuite(PathTestHid.class);
         suite.addTestSuite(FileUtilJavaIOFileHidden.class);                        
 
         return new LocalFileSystemTest(suite);

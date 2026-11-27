@@ -20,6 +20,7 @@
 package org.openide.filesystems;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -95,10 +96,10 @@ import org.openide.util.NbCollections;
  * be able to mask files not provided by their immediate siblings, but by cousins. For this reason, nested
  * subclasses may call {@link #setPropagateMasks} to make the mask files propagate up one or more nesting levels
  * and thus remain potent against cousin delegates.
- * 
- * <p>To support rollback, two pseudo-attribute is defined <b>since 8.5</b>: <b>{@code revealEntries}</b> typed 
- * as <code>Map&lt;String, FileObject &amp; Callable></code>. The attribute is available on a folder, and contains information 
- * on child FileObjects, which have been overriden or masked by the writable layer of the MFS. Map is keyed by 
+ *
+ * <p>To support rollback, two pseudo-attribute is defined <b>since 8.5</b>: <b>{@code revealEntries}</b> typed
+ * as <code>Map&lt;String, FileObject &amp; Callable></code>. The attribute is available on a folder, and contains information
+ * on child FileObjects, which have been overriden or masked by the writable layer of the MFS. Map is keyed by
  * child name, the value is a FileObject that allows access to the masked child attributes and/or content.
  * <p>
  * The returned FileObjects do not leak its neighbours from the lower layers. The parent, children or siblings are
@@ -243,19 +244,19 @@ public class MultiFileSystem extends FileSystem {
         synchronized (MultiFileSystem.class) {
             if (root != null) {
                 retval = root;
-            }            
+            }
         }
-        
+
         if (retval == null) {
             retval = new MultiFileObject(this);
         }
-        
+
         synchronized (MultiFileSystem.class) {
             if (root == null) {
                 root = retval;
-            }            
+            }
         }
-                
+
         return root;
     }
 
@@ -597,5 +598,18 @@ public class MultiFileSystem extends FileSystem {
             return true;
         }
         return tmp.contains(name);
+    }
+
+    /**
+     * Always use {@link #toVirtualPath} as the multi filesystem mixes
+     * different levels and needs to keep the "virtualized abstraction" to
+     * merge them properly.
+     *
+     * @param fo
+     * @return
+     */
+    @Override
+    Path toPath(FileObject fo) {
+        return toVirtualPath(fo);
     }
 }

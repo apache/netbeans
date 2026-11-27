@@ -329,7 +329,7 @@ final class StreamPool extends Object {
     private static final class NotifyOutputStream extends FilterOutputStream {
         private static final OutputStream emptyOs = new ByteArrayOutputStream();
         private Exception ex;
-        private boolean closed = false;
+        private volatile boolean closed = false;
         AbstractFolder fo;
 
         /** defines if should be fired fileChanged event after close of stream */
@@ -350,11 +350,22 @@ final class StreamPool extends Object {
             out = os;
         }
 
+        @Override
+        public void write(int b) throws IOException {
+            if (closed) {
+                throw new IOException("Stream is closed"); // NOI18N
+            }
+            out.write(b);
+        }
+
         /** Faster implementation of writing than is implemented in
          * the filter output stream.
          */
         @Override
         public void write(byte[] b, int off, int len) throws IOException {
+            if (closed) {
+                throw new IOException("Stream is closed"); // NOI18N
+            }
             out.write(b, off, len);
         }
 

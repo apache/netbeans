@@ -42,6 +42,7 @@ public class JarFileSystemTest extends FileSystemFactoryHid {
         suite.addTestSuite(RepositoryTestHid.class);                
         suite.addTestSuite(FileSystemTestHid.class);        
         suite.addTestSuite(FileObjectTestHid.class);
+        suite.addTestSuite(PathTestHid.class);
         /*failing tests*/
         suite.addTestSuite(URLMapperTestHidden.class);
         suite.addTestSuite(URLMapperTestInternalHidden.class);

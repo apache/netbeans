@@ -769,9 +769,11 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     }
 
     /** Get output stream.
+    * Writing to the stream after it has been closed throws an {@link IOException}.
     * @param lock the lock that belongs to this file (obtained by a call to
     *   {@link #lock})
-    * @return output stream to overwrite the contents of this file
+    * @return output stream to overwrite the contents of this file, truncated
+    *         when the stream is opened
     * @exception IOException if an error occures (the file is invalid, etc.)
     */
     public abstract OutputStream getOutputStream(FileLock lock)
@@ -781,8 +783,10 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * when this file object is {@linkplain #isValid() invalid} - since
      * version 9.23 it tries to recreate the parent hierarchy
      * and really open the stream.
+     * Writing to the stream after it has been closed throws an {@link IOException}.
      *
-     * @return output stream to overwrite the contents of this file
+     * @return output stream to overwrite the contents of this file, truncated
+     *         when the stream is opened
      * @throws IOException if an error occurs
      * @throws FileAlreadyLockedException if the file is already locked
      * @since 6.6

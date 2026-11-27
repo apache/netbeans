@@ -22,6 +22,8 @@ package org.openide.filesystems;
 import java.io.File;
 import java.io.InputStream;
 import java.io.SyncFailedException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
 
 public class LocalFileSystemTestHid extends TestBaseHid {
     private static String[] resources = new String [] {
@@ -36,6 +38,20 @@ public class LocalFileSystemTestHid extends TestBaseHid {
 
     protected String[] getResources (String testName) {
         return resources;
+    }
+
+    public void testSetPathLastModifiedUpdatesFileObject() throws Exception {
+        FileObject file = testedFS.findResource("A/C/A");
+        assertNotNull(file);
+        java.nio.file.Path path = FileUtil.toPath(file);
+        assertNotNull(path);
+
+        FileTime modified = FileTime.fromMillis(file.lastModified().getTime() + 10000);
+        Files.setAttribute(path, "basic:lastModifiedTime", modified);
+        file.refresh();
+
+        assertEquals(modified.toMillis(), file.lastModified().getTime());
+        assertEquals(modified, Files.getLastModifiedTime(path));
     }
 
     /** We delete a folder and then listen on changes fired on one of its children. */

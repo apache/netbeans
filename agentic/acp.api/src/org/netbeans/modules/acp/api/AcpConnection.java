@@ -42,7 +42,10 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.SessionInfoUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.UsageUpdate;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import org.openide.filesystems.FileUtil;
 import java.util.ArrayList;
@@ -154,8 +157,10 @@ public final class AcpConnection {
             }
 
             spec.sessionUpdateHandler(this::handleSessionUpdate);
-            spec.readTextFileHandler(this::handleReadTextFile);
-            spec.writeTextFileHandler(this::handleWriteTextFile);
+            if (AcpWorkspaceFiles.isSupported()) {
+                spec.readTextFileHandler(this::handleReadTextFile);
+                spec.writeTextFileHandler(this::handleWriteTextFile);
+            }
             spec.requestPermissionHandler(this::handleRequestPermission);
             spec.createTerminalHandler(this::createAuthorizedTerminal);
             spec.terminalOutputHandler(terminalHandler::handleTerminalOutput);
@@ -389,10 +394,10 @@ public final class AcpConnection {
         Object request = new Object();
         try {
             List<AcpSchema.McpServer> effectiveMcpServers = registerMcpServers(sessionClient, request, mcpServers);
-            String effectiveDir = workingDirectory;
-            if (effectiveDir == null || effectiveDir.isBlank()) {
-                effectiveDir = descriptor.getWorkingDirectory();
-            }
+            String effectiveDir = sessionWorkingDirectory(workingDirectory);
+            List<Path> primaryDirectory = trustedDirectory(effectiveDir);
+            List<Path> directories = additionalDirs == null || additionalDirs.isEmpty()
+                    ? primaryDirectory : trustedDirectories(primaryDirectory, additionalDirs);
             LOG.log(Level.INFO, "Agent {0} session creation: additional directories supported={1}, requested={2}", // NOI18N
                     new Object[]{descriptor.getName(), sessionClient.getAgentCapabilities().supportsAdditionalDirectories(),
                         additionalDirs != null ? additionalDirs.size() : 0});
@@ -411,6 +416,7 @@ public final class AcpConnection {
                     }
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
+                    directories = primaryDirectory;
                     newResp = sessionClient.newSession(
                             basicSessionRequest(effectiveDir, effectiveMcpServers));
                 }
@@ -420,9 +426,9 @@ public final class AcpConnection {
             }
             String sessionId = newResp.sessionId();
             completeSession(sessionClient, request, sessionId,
-                    buildTrustedDirectories(effectiveDir, additionalDirs), newResp.modes());
+                    directories, newResp.modes());
             return sessionId;
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             throw new IOException("Failed to create new session", ex); // NOI18N
         } finally {
             releaseMcpTokens(request);
@@ -486,10 +492,10 @@ public final class AcpConnection {
         AcpSyncClient sessionClient = requireClient();
         Object request = new Object();
         try {
-            String effectiveDir = workingDirectory;
-            if (effectiveDir == null || effectiveDir.isBlank()) {
-                effectiveDir = descriptor.getWorkingDirectory();
-            }
+            String effectiveDir = sessionWorkingDirectory(workingDirectory);
+            List<Path> primaryDirectory = trustedDirectory(effectiveDir);
+            List<Path> directories = additionalDirs == null || additionalDirs.isEmpty()
+                    ? primaryDirectory : trustedDirectories(primaryDirectory, additionalDirs);
 
             LOG.log(Level.INFO, "Agent {0} session resume: additional directories supported={1}, requested={2}", // NOI18N
                     new Object[]{descriptor.getName(), sessionClient.getAgentCapabilities().supportsAdditionalDirectories(),
@@ -512,6 +518,7 @@ public final class AcpConnection {
                     }
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories on resume, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
+                    directories = primaryDirectory;
                     resumeResp = sessionClient.resumeSession(new AcpSchema.ResumeSessionRequest(
                             sessionId, effectiveDir, mcpServers));
                 }
@@ -520,7 +527,7 @@ public final class AcpConnection {
                         sessionId, effectiveDir, mcpServers));
             }
             completeSession(sessionClient, request, sessionId,
-                    buildTrustedDirectories(effectiveDir, additionalDirs), resumeResp.modes());
+                    directories, resumeResp.modes());
             return sessionId;
         } catch (RuntimeException ex) {
             throw new IOException("Failed to resume session", ex); // NOI18N
@@ -786,7 +793,7 @@ public final class AcpConnection {
             }
             AcpToolCall toolCall = buildToolCall(tc.toolCallId(), tc.title(), tc.name(),
                     tc.kind(), tc.status(), tc.content(), tc.locations());
-            snapshotFilesForToolCall(tc.toolCallId(), tc.kind(), tc.locations());
+            snapshotFilesForToolCall(sessionId, tc.toolCallId(), tc.kind(), tc.locations());
             notifyListeners(l -> l.onToolCall(sessionId, toolCall));
         } else if (update instanceof ToolCallUpdateNotification tcu) {
             LOG.log(Level.FINE, "ToolCallUpdate: id={0}, name={1}, title={2}, kind={3}, status={4}, "
@@ -809,7 +816,7 @@ public final class AcpConnection {
             }
             if (!fileSnapshots.containsKey(tcu.toolCallId())) {
                 LOG.log(Level.FINE, "  No snapshot yet for {0}, attempting late snapshot", tcu.toolCallId());
-                snapshotFilesForToolCall(tcu.toolCallId(), tcu.kind(), tcu.locations());
+                snapshotFilesForToolCall(sessionId, tcu.toolCallId(), tcu.kind(), tcu.locations());
             }
             AcpToolCall toolCall = buildToolCall(tcu.toolCallId(), tcu.title(), tcu.name(),
                     tcu.kind(), tcu.status(), tcu.content(), tcu.locations());
@@ -924,7 +931,7 @@ public final class AcpConnection {
                 || kind == null;
     }
 
-    private void snapshotFilesForToolCall(String toolCallId,
+    private void snapshotFilesForToolCall(String sessionId, String toolCallId,
             AcpSchema.ToolKind kind,
             List<AcpSchema.ToolCallLocation> locations) {
         if (!isWriteKind(kind)) {
@@ -939,17 +946,11 @@ public final class AcpConnection {
         for (AcpSchema.ToolCallLocation loc : locations) {
             if (loc.path() != null) {
                 try {
-                    Path p = Path.of(loc.path());
-                    if (Files.exists(p) && Files.isRegularFile(p)) {
-                        String content = Files.readString(p);
-                        snapshots.put(loc.path(), content);
-                        LOG.log(Level.FINE, "  snapshot captured: {0} ({1} chars)",
-                                new Object[]{loc.path(), content.length()});
-                    } else {
-                        LOG.log(Level.FINE, "  snapshot: file not found or not regular: {0}", loc.path());
-                    }
-                } catch (IOException ex) {
-                    LOG.log(Level.WARNING, "Could not snapshot file: " + loc.path(), ex); // NOI18N
+                    Path file = resolveWorkspaceFile(sessionId, loc.path(), false);
+                    String content = AcpWorkspaceFiles.read(file, 1, null);
+                    snapshots.put(loc.path(), content);
+                } catch (IOException | InvalidPathException ex) {
+                    LOG.log(Level.FINE, "Could not snapshot file: " + loc.path(), ex); // NOI18N
                 }
             }
         }
@@ -991,113 +992,75 @@ public final class AcpConnection {
             }
             String oldContent = snapshots != null ? snapshots.get(loc.path()) : null;
             try {
-                Path p = Path.of(loc.path());
-                if (Files.exists(p) && Files.isRegularFile(p)) {
-                    String newContent = Files.readString(p);
-                    boolean changed = !Objects.equals(oldContent, newContent);
-                    LOG.log(Level.FINE, "  emitDiffs: path={0}, hasOld={1}, newLen={2}, changed={3}",
-                            new Object[]{loc.path(), oldContent != null, newContent.length(), changed});
-                    if (changed) {
-                        String path = loc.path();
-                        notifyListeners(l -> l.onFileWritten(sessionId, path, oldContent, newContent));
-                        LOG.log(Level.FINE, "  emitDiffs: fired onFileWritten for {0}", path);
-                    }
-                } else {
-                    LOG.log(Level.FINE, "  emitDiffs: file not found or not regular: {0}", loc.path());
+                Path file = resolveWorkspaceFile(sessionId, loc.path(), false);
+                String newContent = AcpWorkspaceFiles.read(file, 1, null);
+                if (!Objects.equals(oldContent, newContent)) {
+                    String path = loc.path();
+                    notifyListeners(l -> l.onFileWritten(sessionId, path, oldContent, newContent));
                 }
-            } catch (IOException ex) {
-                LOG.log(Level.WARNING, "Could not read file for diff: " + loc.path(), ex); // NOI18N
+            } catch (IOException | InvalidPathException ex) {
+                LOG.log(Level.FINE, "Could not read file for diff: " + loc.path(), ex); // NOI18N
             }
         }
     }
 
-    private boolean isPathTrusted(String sessionId, Path path) {
-        Path normalized = resolveReal(path);
-        List<Path> trusted = trustedDirectories.get(sessionId);
-        if (trusted == null || trusted.isEmpty()) {
-            LOG.log(Level.WARNING, "No trusted directories for session {0}, denying access", sessionId); // NOI18N
-            return false;
-        }
-        for (Path dir : trusted) {
-            if (normalized.startsWith(dir)) {
-                return true;
-            }
-        }
-        LOG.log(Level.WARNING, "Path {0} is outside trusted directories: {1}", // NOI18N
-                new Object[]{normalized, trusted});
-        return false;
-    }
-
-    /** Resolves symlinks of the deepest existing ancestor, then re-appends the non-existing remainder. */
-    private List<Path> buildTrustedDirectories(String effectiveDir,
-            List<String> additionalDirs) {
-        List<Path> trusted = new ArrayList<>();
-        if (effectiveDir != null) {
-            trusted.add(Path.of(effectiveDir).toAbsolutePath().normalize());
-        }
-        String descriptorDir = descriptor.getWorkingDirectory();
-        if (descriptorDir != null && !descriptorDir.isBlank()) {
-            Path dp = Path.of(descriptorDir).toAbsolutePath().normalize();
-            if (!trusted.contains(dp)) {
-                trusted.add(dp);
-            }
-        }
-        if (additionalDirs != null) {
-            for (String dir : additionalDirs) {
-                Path dp = Path.of(dir).toAbsolutePath().normalize();
-                if (!trusted.contains(dp)) {
-                    trusted.add(dp);
-                }
-            }
-        }
-        List<Path> resolved = new ArrayList<>();
-        for (Path t : trusted) {
-            Path r = resolveReal(t);
-            if (!resolved.contains(r)) {
-                resolved.add(r);
-            }
-        }
-        return List.copyOf(resolved);
-    }
-
-    private static Path resolveReal(Path path) {
-        Path abs = path.toAbsolutePath().normalize();
-        Path existing = abs;
-        while (existing != null && !Files.exists(existing)) {
-            existing = existing.getParent();
-        }
-        if (existing == null) {
-            return abs;
-        }
+    private String sessionWorkingDirectory(String requested) throws IOException {
+        String directory = requested == null || requested.isBlank() ? descriptor.getWorkingDirectory() : requested;
         try {
-            Path real = existing.toRealPath();
-            return real.resolve(existing.relativize(abs)).normalize();
-        } catch (IOException ex) {
-            LOG.log(Level.FINE, "Could not resolve real path of: " + abs, ex); // NOI18N
-            return abs;
+            if (directory != null && !directory.isBlank() && Path.of(directory).isAbsolute()) {
+                return directory;
+            }
+        } catch (InvalidPathException ex) {
+            throw new IOException("Invalid session working directory", ex); // NOI18N
         }
+        throw new IOException("An absolute session working directory is required"); // NOI18N
+    }
+
+    private static List<Path> trustedDirectories(List<Path> primaryDirectory, List<String> additionalDirs) {
+        Set<Path> roots = new LinkedHashSet<>(primaryDirectory);
+        for (String directory : additionalDirs) {
+            roots.addAll(trustedDirectory(directory));
+        }
+        return List.copyOf(roots);
+    }
+
+    private static List<Path> trustedDirectory(String directory) {
+        try {
+            if (directory != null) {
+                Path path = Path.of(directory);
+                if (path.isAbsolute()) {
+                    Path real = path.toRealPath();
+                    if (Files.isDirectory(real)) {
+                        return List.of(real);
+                    }
+                }
+            }
+        } catch (IOException | InvalidPathException ex) {
+            LOG.log(Level.FINE, "Could not resolve session directory: " + directory, ex); // NOI18N
+        }
+        return List.of();
+    }
+
+    private Path resolveWorkspaceFile(String sessionId, String path, boolean allowNewFile) throws IOException {
+        List<Path> roots = sessionId == null ? null : trustedDirectories.get(sessionId);
+        if (roots == null || roots.isEmpty() || path == null || path.isBlank()) {
+            throw new AccessDeniedException(String.valueOf(path));
+        }
+        return AcpWorkspaceFiles.resolve(roots, Path.of(path), allowNewFile);
     }
 
     private AcpSchema.ReadTextFileResponse handleReadTextFile(AcpSchema.ReadTextFileRequest request) {
-        Path filePath = Path.of(request.path());
-        if (!isPathTrusted(request.sessionId(), filePath)) {
-            LOG.log(Level.WARNING, "Agent read blocked outside trusted directory: {0}", request.path()); // NOI18N
-            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS,
-                    "Read blocked: path is outside the trusted directories: " + request.path()); // NOI18N
+        Integer line = request.line();
+        Integer limit = request.limit();
+        if ((line != null && line < 1) || (limit != null && limit < 1)) {
+            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS, "Line and limit must be positive");
         }
         try {
-            Integer line = request.line();
-            Integer limit = request.limit();
-            if ((line != null && line < 1) || (limit != null && limit < 1)) {
-                throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS, "Line and limit must be positive");
-            }
-            String content;
-            if (line == null && limit == null) {
-                content = Files.readString(filePath);
-            } else {
-                content = readFileRange(filePath, line != null ? line : 1, limit);
-            }
-            return new AcpSchema.ReadTextFileResponse(content);
+            Path file = resolveWorkspaceFile(request.sessionId(), request.path(), false);
+            return new AcpSchema.ReadTextFileResponse(AcpWorkspaceFiles.read(file, line == null ? 1 : line, limit));
+        } catch (AccessDeniedException | NoSuchFileException | InvalidPathException ex) {
+            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS,
+                    "Read blocked: " + ex.getMessage()); // NOI18N
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Failed to read file requested by agent: " + request.path(), ex); // NOI18N
             throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR,
@@ -1105,67 +1068,25 @@ public final class AcpConnection {
         }
     }
 
-    static String readFileRange(Path path, int start, Integer limit) throws IOException {
-        StringBuilder result = new StringBuilder();
-        try (java.io.Reader reader = Files.newBufferedReader(path)) {
-            int current = 1;
-            int ch;
-            while ((ch = reader.read()) != -1) {
-                if (current >= start && (limit == null || (long) current - start < limit)) {
-                    result.append((char) ch);
-                }
-                if (ch == '\n') {
-                    current++;
-                    if (limit != null && (long) current - start >= limit) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result.toString();
-    }
-
     private AcpSchema.WriteTextFileResponse handleWriteTextFile(AcpSchema.WriteTextFileRequest request) {
-        LOG.log(Level.FINE, "writeTextFileHandler called: path={0}", request.path());
-        Path filePath = Path.of(request.path());
-        String sessionId = request.sessionId();
-        String writtenPath = request.path();
-        if (!isPathTrusted(sessionId, filePath)) {
-            LOG.log(Level.WARNING, "Agent write blocked outside trusted directory: {0}", request.path()); // NOI18N
-            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS,
-                    "Write blocked: path is outside the trusted directories: " + request.path()); // NOI18N
-        }
-        String oldContent = null;
         try {
-            if (Files.exists(filePath)) {
-                oldContent = Files.readString(filePath);
+            Path file = resolveWorkspaceFile(request.sessionId(), request.path(), true);
+            String previous = AcpWorkspaceFiles.write(file, request.content());
+            // Notify the NetBeans VFS so open editors pick up the change.
+            org.openide.filesystems.FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(file.toFile()));
+            if (fo != null) {
+                fo.refresh();
             }
+            notifyListeners(l -> l.onFileWritten(request.sessionId(), request.path(), previous, request.content()));
+            return new AcpSchema.WriteTextFileResponse();
+        } catch (AccessDeniedException | NoSuchFileException | InvalidPathException ex) {
+            throw new AcpProtocolException(AcpErrorCodes.INVALID_PARAMS,
+                    "Write blocked: " + ex.getMessage()); // NOI18N
         } catch (IOException ex) {
-            LOG.log(Level.FINE, "Could not read existing content for: " + request.path(), ex); // NOI18N
+            LOG.log(Level.WARNING, "Failed to write file requested by agent: " + request.path(), ex); // NOI18N
+            throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR,
+                    "Failed to write file: " + request.path()); // NOI18N
         }
-        String prevContent = oldContent;
-        String newContent = request.content();
-        {
-            try {
-                Path parent = filePath.getParent();
-                if (parent != null && !Files.exists(parent)) {
-                    Files.createDirectories(parent);
-                }
-                Files.writeString(filePath, request.content());
-                // Notify the NetBeans VFS so open editors pick up the change.
-                org.openide.filesystems.FileObject fo = FileUtil.toFileObject(
-                        FileUtil.normalizeFile(filePath.toFile()));
-                if (fo != null) {
-                    fo.refresh();
-                }
-            } catch (IOException ex) {
-                LOG.log(Level.WARNING, "Failed to write file requested by agent: " + request.path(), ex); // NOI18N
-                throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR,
-                        "Failed to write file: " + request.path()); // NOI18N
-            }
-        }
-        notifyListeners(l -> l.onFileWritten(sessionId, writtenPath, prevContent, newContent));
-        return new AcpSchema.WriteTextFileResponse();
     }
 
     private AcpSchema.RequestPermissionResponse handleRequestPermission(
@@ -1247,7 +1168,9 @@ public final class AcpConnection {
         }
         String sessionId = request.sessionId();
         for (AcpSchema.ToolCallLocation loc : locations) {
-            if (loc.path() == null || !isPathTrusted(sessionId, Path.of(loc.path()))) {
+            try {
+                resolveWorkspaceFile(sessionId, loc.path(), false);
+            } catch (IOException | InvalidPathException ex) {
                 return false;
             }
         }

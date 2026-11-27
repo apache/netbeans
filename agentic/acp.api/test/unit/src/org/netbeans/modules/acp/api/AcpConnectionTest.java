@@ -24,8 +24,12 @@ import com.agentclientprotocol.sdk.error.AcpErrorCodes;
 import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.SecureDirectoryStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.acp.spi.AcpMcpServerProvider;
@@ -175,6 +179,14 @@ public class AcpConnectionTest extends NbTestCase {
         AcpConnection connection = new AcpConnection(descriptor);
         try {
             connection.connect();
+            for (String invalid : Arrays.asList(null, "relative")) {
+                try {
+                    connection.newSession(invalid);
+                    fail("Session creation requires an absolute working directory");
+                } catch (IOException expected) {
+                    assertEquals("An absolute session working directory is required", expected.getMessage());
+                }
+            }
             assertEquals("login", connection.getAuthenticationMethods().get(0).id());
             String cwd = Path.of(getWorkDir().getAbsolutePath(), "auth").toString();
             try {
@@ -224,7 +236,14 @@ public class AcpConnectionTest extends NbTestCase {
                         }
                         return AcpSchema.NewSessionResponse.withGeneratedId();
                     })
-                    .promptHandler((request, context) -> AcpSchema.PromptResponse.endTurn())
+                    .promptHandler((request, context) -> {
+                        String prompt = request.text();
+                        if (prompt != null && prompt.startsWith("roundtrip:")) {
+                            String path = prompt.substring("roundtrip:".length());
+                            context.writeFile(path, context.readFile(path) + " from the client");
+                        }
+                        return AcpSchema.PromptResponse.endTurn();
+                    })
                     .deleteSessionHandler(request -> new AcpSchema.DeleteSessionResponse())
                     .build()) {
                 agent.run();
@@ -321,12 +340,51 @@ public class AcpConnectionTest extends NbTestCase {
                 List.of(() -> List.of(first), () -> List.of(second)), null));
     }
 
-    public void testReadFileRange() throws Exception {
+    public void testWorkspaceFileAccess() throws Exception {
         clearWorkDir();
-        java.nio.file.Path file = getWorkDir().toPath().resolve("lines.txt");
-        java.nio.file.Files.writeString(file, "one\r\ntwo\nthree");
-        assertEquals("two\n", AcpConnection.readFileRange(file, 2, 1));
-        assertEquals("two\nthree", AcpConnection.readFileRange(file, 2, null));
-        assertEquals("", AcpConnection.readFileRange(file, 5, 1));
+        Path root = getWorkDir().toPath().toRealPath();
+        Path workspace = Files.createDirectory(root.resolve("workspace"));
+        Path lines = Files.writeString(workspace.resolve("lines.txt"), "one\r\ntwo\nthree");
+        Path resolved = AcpWorkspaceFiles.resolve(List.of(workspace), lines, false);
+        Path outside = Files.writeString(root.resolve("outside.txt"), "outside");
+        try {
+            AcpWorkspaceFiles.resolve(List.of(workspace), outside, false);
+            fail("Only session directories are authorized");
+        } catch (AccessDeniedException expected) {
+            assertEquals(outside.toString(), expected.getFile());
+        }
+        try (var directory = Files.newDirectoryStream(root)) {
+            if (!(directory instanceof SecureDirectoryStream<?>)) {
+                try {
+                    AcpWorkspaceFiles.read(resolved, 1, null);
+                    fail("The provider cannot securely open the file");
+                } catch (AccessDeniedException expected) {
+                    assertTrue(expected.getReason().contains("secure directory access"));
+                }
+                return;
+            }
+        }
+        assertEquals("two\n", AcpWorkspaceFiles.read(resolved, 2, 1));
+        assertEquals("two\nthree", AcpWorkspaceFiles.read(resolved, 2, null));
+        assertEquals("", AcpWorkspaceFiles.read(resolved, 5, 1));
+        Path newFile = workspace.resolve("new.txt");
+        Path destination = AcpWorkspaceFiles.resolve(List.of(workspace), newFile, true);
+        assertNull(AcpWorkspaceFiles.write(destination, "first"));
+        assertEquals("first", AcpWorkspaceFiles.write(destination, "second"));
+        assertEquals("second", Files.readString(newFile));
+
+        String java = Path.of(System.getProperty("java.home"), "bin", "java").toString();
+        var descriptor = new AcpAgentDescriptor.Builder("workspace-test", AcpAgentDescriptor.TransportType.STDIO)
+                .command(List.of(java, "-cp", System.getProperty("java.class.path"), TestAgent.class.getName()))
+                .build();
+        AcpConnection connection = new AcpConnection(descriptor);
+        try {
+            connection.connect();
+            String session = connection.newSession(workspace.toString());
+            connection.sendPrompt(session, "roundtrip:" + newFile);
+            assertEquals("second from the client", Files.readString(newFile));
+        } finally {
+            connection.close();
+        }
     }
 }

@@ -160,7 +160,10 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.modules.acp.mcp.java</friend>
+                <package>org.netbeans.modules.acp.mcp.tools.refactoring</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

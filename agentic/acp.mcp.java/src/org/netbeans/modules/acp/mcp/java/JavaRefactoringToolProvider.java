@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
 import org.netbeans.modules.acp.mcp.spi.ProjectPathGuard;
 import org.netbeans.modules.acp.mcp.spi.ToolResult;
+import org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -51,6 +52,9 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
+
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.collectProblems;
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.hasFatalProblem;
 
 @ServiceProvider(service = McpToolProvider.class)
 public final class JavaRefactoringToolProvider implements McpToolProvider {
@@ -212,7 +216,7 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         refactoring.setNewName(newName);
         refactoring.setSearchInComments(searchComments);
 
-        return executeRefactoring(refactoring, "Rename to " + newName);
+        return RefactoringExecution.execute(refactoring, "Rename to " + newName);
     }
 
     private Map<String, Object> doFindSymbolUsages(Map<String, Object> args) throws Exception {
@@ -231,13 +235,13 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         query.putValue(WhereUsedQuery.FIND_REFERENCES, true);
 
         Problem preCheck = query.preCheck();
-        if (preCheck != null && preCheck.isFatal()) {
+        if (hasFatalProblem(preCheck)) {
             return ToolResult.error("Pre-check failed: " + collectProblems(preCheck));
         }
 
         RefactoringSession session = RefactoringSession.create("Find Symbol Usages");
         Problem prepare = query.prepare(session);
-        if (prepare != null && prepare.isFatal()) {
+        if (hasFatalProblem(prepare)) {
             return ToolResult.error("Prepare failed: " + collectProblems(prepare));
         }
 
@@ -319,7 +323,7 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         }
 
         InlineRefactoring refactoring = new InlineRefactoring(handleHolder[0], typeHolder[0]);
-        return executeRefactoring(refactoring, "Inline");
+        return RefactoringExecution.execute(refactoring, "Inline");
     }
 
     private Map<String, Object> doEncapsulateField(Map<String, Object> args) throws Exception {
@@ -380,7 +384,7 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         refactoring.setFieldModifiers(EnumSet.of(Modifier.PRIVATE));
         refactoring.setAlwaysUseAccessors(true);
 
-        return executeRefactoring(refactoring, "Encapsulate " + fieldName);
+        return RefactoringExecution.execute(refactoring, "Encapsulate " + fieldName);
     }
 
     private TreePathHandle resolveHandle(String filePath, SourcePosition position) throws IOException {
@@ -490,65 +494,6 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         return null;
     }
 
-    private Map<String, Object> executeRefactoring(
-            org.netbeans.modules.refactoring.api.AbstractRefactoring refactoring,
-            String description) throws Exception {
-
-        Problem preCheck = refactoring.preCheck();
-        String preCheckMsg = collectProblems(preCheck);
-        if (preCheck != null && preCheck.isFatal()) {
-            return ToolResult.error("Pre-check failed: " + preCheckMsg);
-        }
-
-        Problem paramCheck = refactoring.checkParameters();
-        String paramCheckMsg = collectProblems(paramCheck);
-        if (paramCheck != null && paramCheck.isFatal()) {
-            return ToolResult.error("Parameter check failed: " + paramCheckMsg);
-        }
-
-        RefactoringSession session = RefactoringSession.create(description);
-        Problem prepare = refactoring.prepare(session);
-        String prepareMsg = collectProblems(prepare);
-        if (prepare != null && prepare.isFatal()) {
-            return ToolResult.error("Prepare failed: " + prepareMsg);
-        }
-
-        Collection<RefactoringElement> elements = session.getRefactoringElements();
-        List<String> affectedFiles = new ArrayList<>();
-        for (RefactoringElement elem : elements) {
-            FileObject parent = elem.getParentFile();
-            if (parent != null) {
-                File f = FileUtil.toFile(parent);
-                String path = f != null ? f.getAbsolutePath() : parent.getPath();
-                if (!affectedFiles.contains(path)) {
-                    affectedFiles.add(path);
-                }
-            }
-        }
-
-        Problem result = session.doRefactoring(true);
-        if (result != null && result.isFatal()) {
-            return ToolResult.error("Refactoring failed: " + collectProblems(result));
-        }
-
-        Map<String, Object> out = ToolResult.ok("affectedFiles", affectedFiles,
-                "affectedCount", affectedFiles.size());
-        List<String> warnings = new ArrayList<>();
-        if (preCheckMsg != null) {
-            warnings.add(preCheckMsg);
-        }
-        if (paramCheckMsg != null) {
-            warnings.add(paramCheckMsg);
-        }
-        if (prepareMsg != null) {
-            warnings.add(prepareMsg);
-        }
-        if (!warnings.isEmpty()) {
-            out.put("warnings", warnings);
-        }
-        return out;
-    }
-
     private static FileObject resolveJavaFile(String filePath) {
         if (filePath == null || filePath.isBlank()) {
             return null;
@@ -563,22 +508,4 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
         return FileUtil.toFileObject(FileUtil.normalizeFile(file));
     }
 
-    private static String collectProblems(Problem problem) {
-        if (problem == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        Problem p = problem;
-        while (p != null) {
-            if (sb.length() > 0) {
-                sb.append("; ");
-            }
-            if (p.isFatal()) {
-                sb.append("[FATAL] ");
-            }
-            sb.append(p.getMessage());
-            p = p.getNext();
-        }
-        return sb.toString();
-    }
 }

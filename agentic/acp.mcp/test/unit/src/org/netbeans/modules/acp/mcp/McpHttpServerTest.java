@@ -51,7 +51,8 @@ public class McpHttpServerTest extends NbTestCase {
         @Override
         public Map<String, Object> executeTool(String name, Map<String, Object> args) throws Exception {
             return switch (name) {
-                case "error_tool" -> Map.of("status", "error", "text", "tool failed");
+                case "error_tool" -> Map.of("status", "error", "message", "Git exited with code 128",
+                        "exitCode", 128, "output", "fatal: ambiguous argument 'missing-revision'\n");
                 case "throw_tool" -> throw new Exception("provider failed");
                 default -> Map.of("text", "value=" + args.get("value"));
             };
@@ -207,7 +208,9 @@ public class McpHttpServerTest extends NbTestCase {
         assertEquals("value=hello", success.path("content").get(0).path("text").asText());
         JsonNode failure = rpc(token, "tools/call", "{\"name\":\"error_tool\"}").path("result");
         assertTrue(failure.path("isError").asBoolean());
-        assertEquals("tool failed", failure.path("content").get(0).path("text").asText());
+        JsonNode diagnostics = JSON.readTree(failure.path("content").get(0).path("text").asText());
+        assertEquals(128, diagnostics.path("exitCode").asInt());
+        assertEquals("fatal: ambiguous argument 'missing-revision'\n", diagnostics.path("output").asText());
         JsonNode exception = rpc(token, "tools/call", "{\"name\":\"throw_tool\"}").path("result");
         assertTrue(exception.path("isError").asBoolean());
         assertTrue(exception.path("content").get(0).path("text").asText().contains("provider failed"));

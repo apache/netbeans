@@ -311,6 +311,13 @@ public final class GitToolProvider implements McpToolProvider {
             Thread.currentThread().interrupt();
             throw ex;
         }
-        return ToolResult.ok("output", output.toString(), "exitCode", proc.exitValue());
+        int exitCode = proc.exitValue();
+        if (exitCode == 0) {
+            return ToolResult.ok("output", output.toString(), "exitCode", exitCode);
+        }
+        Map<String, Object> error = ToolResult.error("Git exited with code " + exitCode);
+        error.put("output", output.toString());
+        error.put("exitCode", exitCode);
+        return error;
     }
 }

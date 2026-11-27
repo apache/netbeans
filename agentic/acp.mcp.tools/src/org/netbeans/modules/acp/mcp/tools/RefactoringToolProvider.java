@@ -36,7 +36,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
 import org.netbeans.modules.acp.mcp.spi.ProjectPathGuard;
 import org.netbeans.modules.acp.mcp.spi.ToolResult;
-import org.netbeans.modules.refactoring.api.AbstractRefactoring;
+import org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution;
 import org.netbeans.modules.refactoring.api.SingleCopyRefactoring;
 import org.netbeans.modules.refactoring.api.MoveRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -50,6 +50,10 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
+
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.collectProblems;
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.collectWarnings;
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.hasFatalProblem;
 
 @ServiceProvider(service = McpToolProvider.class)
 public final class RefactoringToolProvider implements McpToolProvider {
@@ -198,7 +202,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         refactoring.setNewName(newName);
         refactoring.setSearchInComments(searchComments);
 
-        return executeRefactoring(refactoring,
+        return RefactoringExecution.execute(refactoring,
                 "Rename " + fo.getNameExt() + " to " + newName);
     }
 
@@ -235,7 +239,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         MoveRefactoring refactoring = new MoveRefactoring(lkp);
         refactoring.setTarget(Lookups.singleton(targetUrl));
 
-        return executeRefactoring(refactoring, "Move " + fo.getNameExt());
+        return RefactoringExecution.execute(refactoring, "Move " + fo.getNameExt());
     }
 
     private Map<String, Object> doSafeDelete(Map<String, Object> args) throws Exception {
@@ -260,13 +264,13 @@ public final class RefactoringToolProvider implements McpToolProvider {
 
         Problem preCheck = refactoring.preCheck();
         String preCheckMsg = collectProblems(preCheck);
-        if (preCheck != null && preCheck.isFatal()) {
+        if (hasFatalProblem(preCheck)) {
             return ToolResult.error("Pre-check failed: " + preCheckMsg);
         }
 
         Problem paramCheck = refactoring.checkParameters();
         String paramCheckMsg = collectProblems(paramCheck);
-        if (paramCheck != null && paramCheck.isFatal()) {
+        if (hasFatalProblem(paramCheck)) {
             return ToolResult.error("Parameter check failed: " + paramCheckMsg);
         }
 
@@ -313,7 +317,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
         }
 
         Problem result = session.doRefactoring(true);
-        if (result != null && result.isFatal()) {
+        if (hasFatalProblem(result)) {
             return ToolResult.error("Refactoring failed: " + collectProblems(result));
         }
 
@@ -349,7 +353,7 @@ public final class RefactoringToolProvider implements McpToolProvider {
 
             Problem preCheck = query.preCheck();
             String preCheckMsg = collectProblems(preCheck);
-            if (preCheck != null && preCheck.isFatal()) {
+            if (hasFatalProblem(preCheck)) {
                 return ToolResult.error("Pre-check failed: " + preCheckMsg);
             }
 
@@ -464,87 +468,18 @@ public final class RefactoringToolProvider implements McpToolProvider {
         refactoring.setNewName(newName);
         refactoring.setTarget(Lookups.singleton(targetUrl));
 
-        RefactoringResult rr = runRefactoring(refactoring,
+        RefactoringExecution.Result rr = RefactoringExecution.run(refactoring,
                 "Copy " + fo.getNameExt() + " as " + newName);
-        if (rr.error != null) {
-            return rr.error;
+        if (rr.error() != null) {
+            return rr.error();
         }
 
         String newFilePath = new File(target, newName + "." + fo.getExt()).getAbsolutePath();
         Map<String, Object> out = ToolResult.ok("newFile", newFilePath);
-        if (!rr.warnings.isEmpty()) {
-            out.put("warnings", rr.warnings);
+        if (!rr.warnings().isEmpty()) {
+            out.put("warnings", rr.warnings());
         }
         return out;
-    }
-
-    /**
-     * Executes a refactoring through the standard preCheck/paramCheck/prepare/doRefactoring
-     * pipeline and returns affected files with any non-fatal warnings.
-     */
-    private static Map<String, Object> executeRefactoring(AbstractRefactoring refactoring,
-            String sessionName) throws Exception {
-        RefactoringResult rr = runRefactoring(refactoring, sessionName);
-        if (rr.error != null) {
-            return rr.error;
-        }
-
-        Map<String, Object> out = ToolResult.ok("affectedFiles", rr.affectedFiles,
-                "affectedCount", rr.affectedFiles.size());
-        if (!rr.warnings.isEmpty()) {
-            out.put("warnings", rr.warnings);
-        }
-        return out;
-    }
-
-    private static RefactoringResult runRefactoring(AbstractRefactoring refactoring,
-            String sessionName) throws Exception {
-        Problem preCheck = refactoring.preCheck();
-        String preCheckMsg = collectProblems(preCheck);
-        if (preCheck != null && preCheck.isFatal()) {
-            return RefactoringResult.fail("Pre-check failed: " + preCheckMsg);
-        }
-
-        Problem paramCheck = refactoring.checkParameters();
-        String paramCheckMsg = collectProblems(paramCheck);
-        if (paramCheck != null && paramCheck.isFatal()) {
-            return RefactoringResult.fail("Parameter check failed: " + paramCheckMsg);
-        }
-
-        RefactoringSession session = RefactoringSession.create(sessionName);
-        Problem prepare = refactoring.prepare(session);
-        String prepareMsg = collectProblems(prepare);
-        if (prepare != null && prepare.isFatal()) {
-            return RefactoringResult.fail("Prepare failed: " + prepareMsg);
-        }
-
-        Collection<RefactoringElement> elements = session.getRefactoringElements();
-        List<String> affectedFiles = collectAffectedFiles(elements);
-
-        Problem result = session.doRefactoring(true);
-        if (result != null && result.isFatal()) {
-            return RefactoringResult.fail("Refactoring failed: " + collectProblems(result));
-        }
-
-        return new RefactoringResult(null, affectedFiles,
-                collectWarnings(preCheckMsg, paramCheckMsg, prepareMsg));
-    }
-
-    private static final class RefactoringResult {
-        final Map<String, Object> error;
-        final List<String> affectedFiles;
-        final List<String> warnings;
-
-        RefactoringResult(Map<String, Object> error, List<String> affectedFiles,
-                List<String> warnings) {
-            this.error = error;
-            this.affectedFiles = affectedFiles;
-            this.warnings = warnings;
-        }
-
-        static RefactoringResult fail(String message) {
-            return new RefactoringResult(ToolResult.error(message), List.of(), List.of());
-        }
     }
 
     private static String requireString(Map<String, Object> args, String key) {
@@ -560,53 +495,4 @@ public final class RefactoringToolProvider implements McpToolProvider {
         return FileUtil.toFileObject(FileUtil.normalizeFile(file));
     }
 
-    private static boolean hasFatalProblem(Problem problem) {
-        for (Problem current = problem; current != null; current = current.getNext()) {
-            if (current.isFatal()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static String collectProblems(Problem problem) {
-        if (problem == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        Problem p = problem;
-        while (p != null) {
-            if (sb.length() > 0) {
-                sb.append("; ");
-            }
-            if (p.isFatal()) {
-                sb.append("[FATAL] ");
-            }
-            sb.append(p.getMessage());
-            p = p.getNext();
-        }
-        return sb.toString();
-    }
-
-    private static List<String> collectAffectedFiles(Collection<RefactoringElement> elements) {
-        LinkedHashSet<String> seen = new LinkedHashSet<>();
-        for (RefactoringElement elem : elements) {
-            FileObject parent = elem.getParentFile();
-            if (parent != null) {
-                File f = FileUtil.toFile(parent);
-                seen.add(f != null ? f.getAbsolutePath() : parent.getPath());
-            }
-        }
-        return new ArrayList<>(seen);
-    }
-
-    private static List<String> collectWarnings(String... messages) {
-        List<String> warnings = new ArrayList<>();
-        for (String msg : messages) {
-            if (msg != null) {
-                warnings.add(msg);
-            }
-        }
-        return warnings;
-    }
 }

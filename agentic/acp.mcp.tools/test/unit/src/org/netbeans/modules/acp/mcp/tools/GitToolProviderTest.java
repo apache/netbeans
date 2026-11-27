@@ -119,7 +119,7 @@ public class GitToolProviderTest extends NbTestCase {
         assertEquals("error", result.get("status"));
     }
 
-    public void testGitDiffRejectsOptionLikeRevision() throws Exception {
+    public void testGitDiffReportsInvalidRevisions() throws Exception {
         clearWorkDir();
         Path repo = getWorkDir().toPath();
         runGit(repo, "init");
@@ -150,6 +150,11 @@ public class GitToolProviderTest extends NbTestCase {
                     Map.of("repoDir", repo.toString(), "target", "HEAD"));
             assertEquals("ok", valid.get("status"));
             assertEquals(0, ((Number) valid.get("exitCode")).intValue());
+            Map<String, Object> unknown = provider.executeTool("git_diff",
+                    Map.of("repoDir", repo.toString(), "target", "missing-revision"));
+            assertEquals("error", unknown.get("status"));
+            assertTrue(((Number) unknown.get("exitCode")).intValue() != 0);
+            assertFalse(((String) unknown.get("output")).isBlank());
         } finally {
             projects.close(new Project[]{project});
         }

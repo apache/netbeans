@@ -25,7 +25,9 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.queries.SharabilityQuery;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -116,7 +118,7 @@ public final class GenericProject implements Project {
         // are contributed by the generic.project.ui module via @ProjectServiceProvider
         this.lookup = LookupProviderSupport.createCompositeLookup(Lookups.fixed(
                 new GpInfo(this),
-                new GpSubprojectProvider(this),
+                new GpProjectContainerProvider(this),
                 new GpProjectOperations(this),
                 new GpAuxiliaryProperties(this),
                 this
@@ -193,6 +195,41 @@ public final class GenericProject implements Project {
                 marker.delete();
             }
         }
+    }
+
+    /**
+     * Promotes the given directory to a local (attribute-based)
+     * generic project and returns its canonical project instance.
+     *
+     * <p>If the directory already is a project (of any type), the
+     * existing project is returned without modification. A directory
+     * that the {@code SharabilityQuery} marks as {@code NOT_SHARABLE}
+     * is never promoted; {@code null} is returned in that case.
+     *
+     * @param dir the directory to promote (never {@code null})
+     * @return the project for the directory, or {@code null} if the
+     *         directory cannot be promoted
+     * @throws IOException if the recognition attribute could not be set
+     */
+    public static Project promoteToProject(FileObject dir) throws IOException {
+        Project prj = ProjectManager.getDefault().findProject(dir);
+        if (prj != null) {
+            // the directory is already a project (of any type):
+            // idempotent, nothing to do
+            return prj;
+        }
+        if (SharabilityQuery.getSharability(dir) == SharabilityQuery.Sharability.NOT_SHARABLE) {
+            // the flip side of the NOT_SHARABLE check in the container
+            // provider (which is about reading projects out of a
+            // non-sharable directory): a per-user promotion must not
+            // touch a directory that is not meant to be shared
+            return null;
+        }
+        setMarkerState(dir, false);
+        // drop the negative cache entry the lookup above stored for a
+        // directory that was not a project yet
+        ProjectManager.getDefault().clearNonProjectCache();
+        return ProjectManager.getDefault().findProject(dir);
     }
 
     /**

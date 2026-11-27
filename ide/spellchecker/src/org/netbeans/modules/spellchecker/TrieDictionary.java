@@ -77,16 +77,14 @@ public class TrieDictionary implements Dictionary {
         this.array = null;
 
         FileInputStream ins = new FileInputStream(data);
-        FileChannel channel = ins.getChannel();
-        
-        try {
+        try (FileChannel channel = ins.getChannel()) {
             this.buffer = channel.map(MapMode.READ_ONLY, 0, channel.size());
         } finally {
-            channel.close();
             ins.close();
         }
     }
 
+    @Override
     public ValidityType validateWord(CharSequence word) {
         String wordString = word.toString();
         ValidityType type = validateWordImpl(wordString.toLowerCase());
@@ -119,8 +117,9 @@ public class TrieDictionary implements Dictionary {
         return ValidityType.PREFIX_OF_VALID;
     }
 
+    @Override
     public List<String> findValidWordsForPrefix(CharSequence word) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         int node = findNode(word, 0, 4);
         
         if (node == (-1))
@@ -129,6 +128,7 @@ public class TrieDictionary implements Dictionary {
         return findValidWordsForPrefix(new StringBuffer(word), node, result);
     }
 
+    @Override
     public List<String> findProposals(CharSequence pattern) {
         ListProposalAcceptor result = new ListProposalAcceptor();
         
@@ -307,7 +307,7 @@ public class TrieDictionary implements Dictionary {
     }
     
     private static void constructTrie(ByteArray array, List<URL> sources) throws IOException {
-        SortedSet<CharSequence> data = new TreeSet<CharSequence>();
+        SortedSet<CharSequence> data = new TreeSet<>();
 
         for (URL u : sources) {
             FileObject f = URLMapper.findFileObject(u);
@@ -335,7 +335,7 @@ public class TrieDictionary implements Dictionary {
     }
 
     private static int encodeOneLayer(ByteArray array, int currentPointer, int currentChar, SortedSet<? extends CharSequence> data) throws IOException {
-        Map<Character, SortedSet<CharSequence>> char2Words = new TreeMap<Character, SortedSet<CharSequence>>();
+        Map<Character, SortedSet<CharSequence>> char2Words = new TreeMap<>();
         boolean representsFullWord = !data.isEmpty() && data.first().length() <= currentChar;
         Iterator<? extends CharSequence> dataIt = data.iterator();
 
@@ -349,7 +349,7 @@ public class TrieDictionary implements Dictionary {
             SortedSet<CharSequence> words = char2Words.get(c);
 
             if (words == null) {
-                char2Words.put(c, words = new TreeSet<CharSequence>());
+                char2Words.put(c, words = new TreeSet<>());
             }
 
             words.add(word);
@@ -386,8 +386,8 @@ public class TrieDictionary implements Dictionary {
     private static final class FutureDictionary implements Dictionary, Runnable {
         private final File trie;
         private final List<URL> sources;
-        private final AtomicReference<Dictionary> delegate = new AtomicReference<Dictionary>();
-        private final AtomicReference<Task> workingTask = new AtomicReference<Task>();
+        private final AtomicReference<Dictionary> delegate = new AtomicReference<>();
+        private final AtomicReference<Task> workingTask = new AtomicReference<>();
         private final AtomicBoolean wasBroken = new AtomicBoolean();
 
         public FutureDictionary(File trie, List<URL> sources) throws IOException {
@@ -396,6 +396,7 @@ public class TrieDictionary implements Dictionary {
             workingTask.set(WORKER.post(this));
         }
         
+        @Override
         public ValidityType validateWord(CharSequence word) {
             waitDictionaryConstructed();
 
@@ -412,6 +413,7 @@ public class TrieDictionary implements Dictionary {
             return ValidityType.VALID;
         }
 
+        @Override
         public List<String> findValidWordsForPrefix(CharSequence word) {
             waitDictionaryConstructed();
 
@@ -428,6 +430,7 @@ public class TrieDictionary implements Dictionary {
             return Collections.emptyList();
         }
 
+        @Override
         public List<String> findProposals(CharSequence word) {
             waitDictionaryConstructed();
 
@@ -464,6 +467,7 @@ public class TrieDictionary implements Dictionary {
             }
         }
 
+        @Override
         public void run() {
             trie.getParentFile().mkdirs();
             
@@ -474,9 +478,7 @@ public class TrieDictionary implements Dictionary {
                     d.verifyDictionary();
                     delegate.set(d);
                     return ;//valid
-                } catch (IOException ex) {
-                    LOG.log(Level.INFO, "Dictionary file failed validation, attempting to rebuild", ex);
-                } catch (IndexOutOfBoundsException ex) {
+                } catch (IOException | IndexOutOfBoundsException ex) {
                     LOG.log(Level.INFO, "Dictionary file failed validation, attempting to rebuild", ex);
                 }
             }

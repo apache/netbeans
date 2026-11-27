@@ -53,13 +53,15 @@ public class OpenProjectListSettings {
     private static final String OPEN_PROJECTS_ICONS = "openProjectsIcons"; //NOI18N - List of icons
     private static final String OPEN_SUBPROJECTS = "openSubprojects"; //NOI18N - boolean
     private static final String TRUST_AND_PRIME = "trustAndPrime"; //NOI18N - boolean
+    private static final String OPEN_AS_PROJECT = "openAsProject"; //NOI18N - boolean
     private static final String PROP_PROJECTS_FOLDER = "projectsFolder"; //NOI18N - String
     private static final String RECENT_PROJECTS_URLS = "recentProjectsURLs"; //NOI18N List of URLs
     private static final String RECENT_TEMPLATES = "recentTemplates"; // NOI18N -List of Strings
     
     public static final String PROP_CREATED_PROJECTS_FOLDER = "createdProjectsFolderInWizard"; // NOI18N
-    
-    private OpenProjectListSettings() {
+
+    /** used from tests */
+    OpenProjectListSettings() {
     }
     
     public static OpenProjectListSettings getInstance() {
@@ -266,6 +268,14 @@ public class OpenProjectListSettings {
 
     public void setTrustAndPrime( boolean openSubprojects ) {
         getPreferences().putBoolean(TRUST_AND_PRIME, openSubprojects);
+    }
+
+    public boolean isOpenAsProject() {
+        return getPreferences().getBoolean(OPEN_AS_PROJECT, false);
+    }
+
+    void setOpenAsProject(boolean openAsProject) {
+        getPreferences().putBoolean(OPEN_AS_PROJECT, openAsProject);
     }
 
     public URL getMainProjectURL() {

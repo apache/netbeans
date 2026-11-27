@@ -1267,13 +1267,17 @@ public final class OpenProjectList {
     }
         
     // Used from OpenProjectAction
-    public static Project fileToProject( File projectDir ) {
+    public static Project fileToProject(File projectDir, boolean openAsProject) {
         
         try {
             
             FileObject fo = FileUtil.toFileObject(projectDir);
             if (fo != null && /* #60518 */ fo.isFolder()) {
-                return ProjectManager.getDefault().findProject(fo);
+                Project prj = ProjectManager.getDefault().findProject(fo);
+                if (prj == null && openAsProject) {
+                    prj = ProjectManager.getDefault().findOrCreateDirProject(fo);
+                }
+                return prj;
             } else {
                 return null;
             }

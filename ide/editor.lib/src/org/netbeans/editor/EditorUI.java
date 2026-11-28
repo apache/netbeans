@@ -1322,8 +1322,8 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
             return scrollRectToVisibleImpl(r, SCROLL_SMALLEST, bounds); // recall
         }
         
-        int viewWidth = (int)((TextUI)component.getUI()).getRootView(component).getPreferredSpan(View.X_AXIS);
-        int viewHeight = (int)((TextUI)component.getUI()).getRootView(component).getPreferredSpan(View.Y_AXIS);
+        int viewWidth  = (int)component.getUI().getRootView(component).getPreferredSpan(View.X_AXIS);
+        int viewHeight = (int)component.getUI().getRootView(component).getPreferredSpan(View.Y_AXIS);
         
         // r must be within virtualSize's width
         if (r.x + r.width > viewWidth) {

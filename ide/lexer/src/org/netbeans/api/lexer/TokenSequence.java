@@ -347,8 +347,7 @@ public final class TokenSequence<T extends TokenId> {
                 JoinTokenList<ET> jtl;
                 EmbeddedJoinInfo<ET> joinInfo = etl.joinInfo();
                 if (joined && (joinInfo != null) && (jtl = joinInfo.joinTokenList) != null) {
-                    @SuppressWarnings("unchecked")
-                    JoinTokenList<ET> joinTokenList = (JoinTokenList<ET>) jtl;
+                    JoinTokenList<ET> joinTokenList = jtl;
                     tse = new TokenSequence<ET>(joinTokenList);
                     // Position to this etl's index
                     jtl.setActiveTokenListIndex(joinInfo.tokenListIndex());

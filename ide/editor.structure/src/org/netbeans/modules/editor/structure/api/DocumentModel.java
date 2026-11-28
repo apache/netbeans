@@ -998,7 +998,7 @@ public final class DocumentModel {
             //notify model listeners
             fireDocumentModelEvent(de, ELEMENT_CHANGED);
             //notify element listeners
-            ((DocumentElement)de).contentChanged();
+            de.contentChanged();
         }
         
         private void updateDEAttrs(DocumentElement de, Map<String, String> attrs) {
@@ -1008,11 +1008,11 @@ public final class DocumentModel {
             //notify model listeners
             fireDocumentModelEvent(de, ELEMENT_ATTRS_CHANGED);
             //notify element listeners
-            ((DocumentElement)de).attributesChanged();
+            de.attributesChanged();
         }
         
         private void fireElementAddedEvent(DocumentElement de) {
-            DocumentElement parent = (DocumentElement)de.getParentElement();
+            DocumentElement parent = de.getParentElement();
             /* events firing:
              * If the added element has a children, we have to fire remove event
              * to their previous parents (it is the added element's parent)

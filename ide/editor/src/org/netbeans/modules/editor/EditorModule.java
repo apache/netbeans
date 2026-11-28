@@ -199,7 +199,7 @@ public class EditorModule extends ModuleInstall {
              return;
          }
          
-        final ExClipboard clipboard = (ExClipboard) Lookup.getDefault().lookup(ExClipboard.class);
+        final ExClipboard clipboard = Lookup.getDefault().lookup(ExClipboard.class);
         if (clipboard != null) {
             clipboard.addClipboardListener(ClipboardHistory.getInstance());
         }
@@ -308,7 +308,7 @@ public class EditorModule extends ModuleInstall {
                     if (arr == null)
                         continue;
                     for (int i=0; i<arr.length; i++) {
-                        EditorCookie ec = (EditorCookie)arr[i].getCookie(EditorCookie.class);
+                        EditorCookie ec = arr[i].getCookie(EditorCookie.class);
                         if (ec == null)
                             continue;
                         JEditorPane[] pane = ec.getOpenedPanes();
@@ -494,7 +494,7 @@ public class EditorModule extends ModuleInstall {
             if (!MimePath.validate(mimeType)) // #146276 - exclude invalid mime paths
                 return null;
             Lookup lookup = MimeLookup.getLookup(MimePath.parse(mimeType));
-            EditorKit kit = (EditorKit) lookup.lookup(EditorKit.class);
+            EditorKit kit = lookup.lookup(EditorKit.class);
             return kit == null ? null : (EditorKit) kit.clone();
         }
     }

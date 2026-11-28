@@ -76,7 +76,7 @@ public class HtmlPaletteActions extends PaletteActions {
                 
         public void actionPerformed(ActionEvent e) {
       
-            ActiveEditorDrop drop = (ActiveEditorDrop) item.lookup(ActiveEditorDrop.class);
+            ActiveEditorDrop drop = item.lookup(ActiveEditorDrop.class);
             JTextComponent target = Utilities.getFocusedComponent();
             if (target == null) {
                 String msg = NbBundle.getMessage(HtmlPaletteActions.class, "MSG_ErrorNoFocusedDocument"); //NOI18N

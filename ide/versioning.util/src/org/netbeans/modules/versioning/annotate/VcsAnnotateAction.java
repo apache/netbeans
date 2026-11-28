@@ -117,7 +117,7 @@ public class VcsAnnotateAction extends AbstractAction {
     private EditorCookie activatedEditorCookie() {
         if (nodes != null && nodes.size() == 1) {
             Node node = nodes.iterator().next();
-            return (EditorCookie) node.getCookie(EditorCookie.class);
+            return node.getCookie(EditorCookie.class);
         }
         return null;
     }

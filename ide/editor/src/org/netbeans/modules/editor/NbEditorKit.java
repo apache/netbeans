@@ -256,7 +256,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                 "Warning: KitClass "+this.getClass().getName()+" doesn't override the method getContentType."); //NOI18N
         }
         return (contentTypeTable.containsKey(this.getClass().getName())) ? 
-            (String)contentTypeTable.get(this.getClass().getName()) : super.getContentType(); //NOI18N
+            contentTypeTable.get(this.getClass().getName()) : super.getContentType(); //NOI18N
     }
 
     private static ResourceBundle getBundleFromName (String name) {
@@ -547,7 +547,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     // Try to load the action class
                     Class saClass = null;
                     try {
-                        ClassLoader loader = (ClassLoader)Lookup.getDefault().lookup(ClassLoader.class);
+                        ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                         saClass = Class.forName(actionName, false, loader);
                     } catch (Throwable t) {
                     }
@@ -572,8 +572,8 @@ public class NbEditorKit extends ExtKit implements Callable {
         protected void initActionInstance(Action action) {
             // issue #69688
             if (contextLookup == null && (editorKit instanceof NbEditorKit) &&
-                    ((NbEditorKit)editorKit).systemAction2editorAction.containsKey(action.getClass().getName())){
-                initActionByName((String) ((NbEditorKit)editorKit).systemAction2editorAction.get(action.getClass().getName()));
+                    editorKit.systemAction2editorAction.containsKey(action.getClass().getName())){
+                initActionByName((String)editorKit.systemAction2editorAction.get(action.getClass().getName()));
                 return;
             }
 

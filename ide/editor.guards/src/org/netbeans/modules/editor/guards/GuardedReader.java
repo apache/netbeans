@@ -137,7 +137,7 @@ final class GuardedReader extends Reader {
         int copy = 0;
 
         for (int i = 0; i < listsize; i++) {
-            char[] tmp2 = (char[]) buffs.get(i);
+            char[] tmp2 = buffs.get(i);
             System.arraycopy(tmp2, 0, readBuff, copy, 2048);
             copy += 2048;
         }

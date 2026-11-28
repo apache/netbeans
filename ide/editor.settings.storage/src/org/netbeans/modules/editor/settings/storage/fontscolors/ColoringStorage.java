@@ -597,14 +597,14 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     }
     
     private static String colorToString (Color color) {
-	if (colorToName.containsKey (color))
-	    return (String) colorToName.get (color);
-	return Integer.toHexString (color.getRGB ());
+	if (colorToName.containsKey(color))
+	    return colorToName.get(color);
+	return Integer.toHexString(color.getRGB());
     }
     
     private static Color stringToColor (String color) throws Exception {
-	if (nameToColor.containsKey (color))
-	    return (Color) nameToColor.get (color);
+	if (nameToColor.containsKey(color))
+	    return nameToColor.get(color);
         try {
             return new Color ((int) Long.parseLong (color, 16), (color.length() != 6)); // formats: #AARRGGBB or #RRGGBB (Alpha is defaulted to 255)
         } catch (NumberFormatException ex) {

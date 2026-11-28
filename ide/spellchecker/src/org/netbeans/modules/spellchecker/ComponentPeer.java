@@ -733,7 +733,7 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
                     int[] xArray = new int[waveLength + 1];
                     int[] yArray = new int[waveLength + 1];
 
-                    int yBase = (int) (start.y + start.height - 2);
+                    int yBase = (start.y + start.height - 2);
                     for (int i = 0; i <= waveLength; i++) {
                         xArray[i] = start.x + i;
                         yArray[i] = yBase + wf[xArray[i] % 4];

@@ -80,24 +80,24 @@ public class OpenTaskAction extends AbstractAction {
             return;
         }
 
-        LineCookie lineCookie = (LineCookie)dataObject.getCookie( LineCookie.class );
+        LineCookie lineCookie = dataObject.getCookie( LineCookie.class );
         if( null != lineCookie && openAt( lineCookie, line ) ) {
             return;
         }
 
-        EditCookie editCookie = (EditCookie)dataObject.getCookie( EditCookie.class );
+        EditCookie editCookie = dataObject.getCookie( EditCookie.class );
         if( null != editCookie ) {
             editCookie.edit();
             return;
         }
 
-        OpenCookie openCookie = (OpenCookie)dataObject.getCookie( OpenCookie.class );
+        OpenCookie openCookie = dataObject.getCookie( OpenCookie.class );
         if( null != openCookie ) {
             openCookie.open();
             return;
         }
 
-        ViewCookie viewCookie = (ViewCookie)dataObject.getCookie( ViewCookie.class );
+        ViewCookie viewCookie = dataObject.getCookie( ViewCookie.class );
         if( null != viewCookie ) {
             viewCookie.view();
             return;

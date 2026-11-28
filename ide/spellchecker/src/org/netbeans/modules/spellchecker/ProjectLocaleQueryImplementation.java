@@ -39,7 +39,7 @@ public class ProjectLocaleQueryImplementation implements LocaleQueryImplementati
         Project p = FileOwnerQuery.getOwner(file);
         
         if (p != null) {
-            LocaleQueryImplementation i = (LocaleQueryImplementation) p.getLookup().lookup(LocaleQueryImplementation.class);
+            LocaleQueryImplementation i = p.getLookup().lookup(LocaleQueryImplementation.class);
             
             if (i != null) {
                 return i.findLocale(file);

@@ -258,10 +258,10 @@ public class DiffPresenter extends javax.swing.JPanel {
 
     /** Set the diff provider and update the view. */
     public void setProvider(DiffProvider p) {
-        this.defaultProvider = (DiffProvider) p;
+        this.defaultProvider = p;
 
         if (added) {
-            asyncDiff((DiffProvider) p, defaultVisualizer);
+            asyncDiff(p, defaultVisualizer);
             setDefaultDiffService(p, "Services/DiffProviders"); // NOI18N
         }
     }
@@ -272,10 +272,10 @@ public class DiffPresenter extends javax.swing.JPanel {
 
     /** Set the diff visualizer and update the view. */
     public void setVisualizer(DiffVisualizer v) {
-        this.defaultVisualizer = (DiffVisualizer) v;
+        this.defaultVisualizer = v;
 
         if (added) {
-            asyncDiff(defaultProvider, (DiffVisualizer) v);
+            asyncDiff(defaultProvider, v);
             setDefaultDiffService(v, "Services/DiffVisualizers"); // NOI18N
         }
     }

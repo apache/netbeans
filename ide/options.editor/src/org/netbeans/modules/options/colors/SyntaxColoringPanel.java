@@ -417,7 +417,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
             String currentCategory = (String) evt.getNewValue();
             List<AttributeSet> categories = getCategories(currentProfile, currentLanguage);
             if (currentLanguage.equals(ColorModel.ALL_LANGUAGES)) {
-                String converted = (String) convertALC.get(currentCategory);
+                String converted = convertALC.get(currentCategory);
                 if (converted != null) {
                     currentCategory = converted;
                 }
@@ -982,7 +982,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private AttributeSet getCurrentCategory () {
         int i = lCategories.getSelectedIndex ();
         List<AttributeSet> c = getCategories(currentProfile, currentLanguage);
-        return i >= 0 && i < c.size() ? (AttributeSet) c.get(i) : null;
+        return i >= 0 && i < c.size() ? c.get(i) : null;
     }
     
     private void replaceCurrrentCategory (AttributeSet newValues) {

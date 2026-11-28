@@ -332,12 +332,12 @@ public class FileInformation extends FileNodeInformation {
 
     @Override
     public String annotateNameHtml(String name) {
-        return ((Annotator) Git.getInstance().getVCSAnnotator()).annotateNameHtml(name, this, null);
+        return Git.getInstance().getVCSAnnotator().annotateNameHtml(name, this, null);
     }
 
     @Override
     public Color getAnnotatedColor () {
-        return ((Annotator) Git.getInstance().getVCSAnnotator()).getAnnotatedColor(this);
+        return Git.getInstance().getVCSAnnotator().getAnnotatedColor(this);
     }
 
     @Override

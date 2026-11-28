@@ -189,7 +189,7 @@ public abstract class LibrarySupport {
                     Handler handler = new Handler ();
                     reader.setEntityResolver (handler);
                     reader.setContentHandler (handler);
-                    ClassLoader loader = (ClassLoader) Lookup.getDefault ().
+                    ClassLoader loader = Lookup.getDefault ().
                         lookup (ClassLoader.class);
                     InputStream is = loader.getResourceAsStream (resourceName);
                     try {

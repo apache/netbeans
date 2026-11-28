@@ -476,7 +476,7 @@ public final class DebuggerManager implements ContextProvider {
      */
     public Session[] getSessions () {
         synchronized (sessions) {
-            return (Session[]) sessions.toArray(new Session[0]);
+            return sessions.toArray(new Session[0]);
         }
     }
 
@@ -575,7 +575,7 @@ public final class DebuggerManager implements ContextProvider {
      */
     public Breakpoint[] getBreakpoints () {
         initBreakpoints ();
-        return (Breakpoint[]) breakpoints.toArray(new Breakpoint[0]);
+        return breakpoints.toArray(new Breakpoint[0]);
     }
     
     private void moduleUnloaded(ClassLoader cl) {
@@ -668,7 +668,7 @@ public final class DebuggerManager implements ContextProvider {
     */
     public Watch[] getWatches () {
         initWatches ();
-        return (Watch[]) watches.toArray(new Watch[0]);
+        return watches.toArray(new Watch[0]);
     }
 
     /**

@@ -526,7 +526,7 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
         @Override
         protected KeyStroke getDefaultAccelerator(){
             Lookup ml = MimeLookup.getLookup(MimePath.EMPTY); //NOI18N
-            KeyBindingSettings kbs = (KeyBindingSettings) ml.lookup(KeyBindingSettings.class);
+            KeyBindingSettings kbs = ml.lookup(KeyBindingSettings.class);
             if (kbs != null){
                 List lst = kbs.getKeyBindings();
                 if (lst != null){

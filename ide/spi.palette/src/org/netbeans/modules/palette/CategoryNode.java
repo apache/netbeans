@@ -67,7 +67,7 @@ class CategoryNode extends FilterNode {
                new Children( originalNode, lkp ),
                new ProxyLookup( new Lookup[] { lkp, new AbstractLookup(content), originalNode.getLookup() } ) );
         
-        DataFolder folder = (DataFolder)originalNode.getCookie( DataFolder.class );
+        DataFolder folder = originalNode.getCookie( DataFolder.class );
         if( null != folder ) {
             content.add( new DataFolder.Index( folder, this ) );
             FileObject fob = folder.getPrimaryFile();
@@ -84,7 +84,7 @@ class CategoryNode extends FilterNode {
     public String getDisplayName() {
 
         String retValue = null;
-        DataFolder folder = (DataFolder)getCookie( DataFolder.class );
+        DataFolder folder = getCookie( DataFolder.class );
         if( null != folder ) {
             FileObject fob = folder.getPrimaryFile();
             Object catName = fob.getAttribute( CAT_NAME );
@@ -96,7 +96,7 @@ class CategoryNode extends FilterNode {
         }
         // XXX poor impl; should not depend on org.openide.loaders.Bundle#FMT_shadowName:
         if( null != retValue && retValue.indexOf("\u2192") > 0 ) {
-            DataShadow shadow = (DataShadow)getCookie( DataShadow.class );
+            DataShadow shadow = getCookie( DataShadow.class );
             if( null != shadow ) {
                 DataObject dobj = shadow.getOriginal();
                 if( null != dobj ) {
@@ -113,7 +113,7 @@ class CategoryNode extends FilterNode {
     @Override
     public void setDisplayName( String displayName ) {
         try {
-            DataFolder folder = (DataFolder)getCookie( DataFolder.class );
+            DataFolder folder = getCookie( DataFolder.class );
             if( null != folder ) {
                 FileObject fo = folder.getPrimaryFile();
                 fo.setAttribute( CAT_NAME, displayName );
@@ -156,7 +156,7 @@ class CategoryNode extends FilterNode {
             actionList.add( new Utils.RefreshPaletteAction() );
             actions = actionList.toArray(new Action[0]);
         }
-        PaletteActions customActions = (PaletteActions)getParentNode().getLookup().lookup( PaletteActions.class );
+        PaletteActions customActions = getParentNode().getLookup().lookup( PaletteActions.class );
         if( null != customActions ) {
             return Utils.mergeActions( actions, customActions.getCustomCategoryActions( getLookup() ) );
         }
@@ -186,7 +186,7 @@ class CategoryNode extends FilterNode {
         public Children(Node original, Lookup lkp) {
             super(original);
             this.lkp = lkp;
-            this.filter = (PaletteFilter)lkp.lookup( PaletteFilter.class );
+            this.filter = lkp.lookup( PaletteFilter.class );
         }
 
         @Override

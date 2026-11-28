@@ -505,7 +505,7 @@ public class HtmlDataObject extends MultiDataObject implements CookieSet.Factory
                     encoder.encode(remainder, out, true);
                 }
                 else {
-                    CharBuffer empty = (CharBuffer) CharBuffer.allocate(0).flip();
+                    CharBuffer empty = CharBuffer.allocate(0).flip();
                     encoder.encode(empty, out, true);
                 }
                 res = encoder.flush(out);
@@ -636,7 +636,7 @@ public class HtmlDataObject extends MultiDataObject implements CookieSet.Factory
                     decoder.decode(remainder, out, true);
                 }
                 else {
-                    ByteBuffer empty = (ByteBuffer) ByteBuffer.allocate(0).flip();
+                    ByteBuffer empty = ByteBuffer.allocate(0).flip();
                     decoder.decode(empty, out, true);
                 }
                 res = decoder.flush(out);

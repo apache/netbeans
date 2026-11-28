@@ -583,7 +583,7 @@ public class Patch extends Reader {
                 } while (true);
                 Difference diff = null;
                 if (diffs.size() > 0) {
-                    Difference previousDiff = (Difference) diffs.get(diffs.size() - 1);
+                    Difference previousDiff = diffs.get(diffs.size() - 1);
                     if (Difference.DELETE == previousDiff.getType() && previousDiff.getFirstEnd() == (pos1 - 1)) {
                         diff = new Difference(Difference.CHANGE,
                             previousDiff.getFirstStart(), previousDiff.getFirstEnd(),
@@ -612,7 +612,7 @@ public class Patch extends Reader {
                 } while (true);
                 Difference diff = null;
                 if (diffs.size() > 0) {
-                    Difference previousDiff = (Difference) diffs.get(diffs.size() - 1);
+                    Difference previousDiff = diffs.get(diffs.size() - 1);
                     if (Difference.ADD == previousDiff.getType() && previousDiff.getSecondEnd() == (pos2 - 1)) {
                         diff = new Difference(Difference.CHANGE, begin, pos1 - 1,
                             previousDiff.getFirstStart(), previousDiff.getFirstEnd(),

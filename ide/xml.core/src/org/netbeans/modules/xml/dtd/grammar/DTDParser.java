@@ -193,7 +193,7 @@ public class DTDParser {
         }
         
         public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException {
-            Set set = (Set) attrs.get(eName);
+            Set set = attrs.get(eName);
             if (set == null) {
                 set = new TreeSet();
                 attrs.put(eName, set);

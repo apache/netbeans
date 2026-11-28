@@ -244,7 +244,7 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider {
     private FileObject getSelectedFileObject() {
         Node selection[] = getExplorerManager().getSelectedNodes();
         if (selection != null && selection.length > 0) {
-            DataObject dobj = (DataObject) selection[0].getLookup().lookup(DataObject.class);
+            DataObject dobj = selection[0].getLookup().lookup(DataObject.class);
             return dobj.getPrimaryFile();
         }
         return null;

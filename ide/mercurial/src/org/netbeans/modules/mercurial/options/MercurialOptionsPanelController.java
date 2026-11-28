@@ -283,7 +283,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
         
         if(DialogDescriptor.OK_OPTION.equals(dialogDescriptor.getValue())) {
             
-            Object[] selection = (Object[])labelsPanel.labelsList.getSelectedValues();
+            Object[] selection = labelsPanel.labelsList.getSelectedValues();
             
             String variable = ""; // NOI18N
             for (int i = 0; i < selection.length; i++) {

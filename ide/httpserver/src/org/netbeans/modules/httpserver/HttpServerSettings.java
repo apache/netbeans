@@ -291,7 +291,7 @@ public final class HttpServerSettings {
             if (accessAllowedNow(addr, requestPath))
                 return true;
 
-            askThread = (Thread) whoAsking.get(addr);
+            askThread = whoAsking.get(addr);
             if (askThread == null) {
                 askThread = Thread.currentThread();
                 whoAsking.put(addr, askThread);

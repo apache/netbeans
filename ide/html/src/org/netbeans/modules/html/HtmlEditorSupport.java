@@ -352,7 +352,7 @@ public final class HtmlEditorSupport extends DataEditorSupport implements OpenCo
          */
         @Override
         public CloneableOpenSupport findCloneableOpenSupport() {
-            return (HtmlEditorSupport) getDataObject().getCookie(HtmlEditorSupport.class);
+            return getDataObject().getCookie(HtmlEditorSupport.class);
         }
     } // End of nested Environment class.
 

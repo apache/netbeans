@@ -1364,7 +1364,7 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
             DataOutputStream dos = null;
             try {
                 dos = getOutputStream(storeFile, false);
-                StoreDataFile data = (StoreDataFile) value;
+                StoreDataFile data = value;
                 dos.writeBoolean(data.isFile);
                 dos.writeInt(data.getStatus());
                 dos.writeLong(data.getLastModified());

@@ -96,7 +96,7 @@ public class DefaultDiff extends Diff implements Serializable {
             MIMEType, showDiffSelector, false, r1, r2);
         // I need to know the initial differences to know whether the files actually
         // differ or not.
-        DiffProvider provider = (DiffProvider) Lookup.getDefault().lookup(DiffProvider.class);
+        DiffProvider provider = Lookup.getDefault().lookup(DiffProvider.class);
         try {
             Difference[] diffs = provider.computeDiff(diffInfo.createFirstReader(), diffInfo.createSecondReader());
             diffInfo.setInitialDiffs(diffs);
@@ -105,10 +105,8 @@ public class DefaultDiff extends Diff implements Serializable {
         TopComponent tp = new DiffTopComponent(diffPanel);
         diffInfo.setPresentingComponent(tp);
         diffPanel.setProvider(provider);
-        diffPanel.setVisualizer((DiffVisualizer) Lookup.getDefault().lookup(DiffVisualizer.class));
+        diffPanel.setVisualizer(Lookup.getDefault().lookup(DiffVisualizer.class));
         return tp;
-        //if (!initPanel()) return null;
-        //return tp;
     }
 
     public DiffView createDiff(StreamSource s1, StreamSource s2) throws IOException {

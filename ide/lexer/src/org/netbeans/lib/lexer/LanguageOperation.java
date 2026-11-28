@@ -87,7 +87,7 @@ public final class LanguageOperation<T extends TokenId> implements PropertyChang
         if (!existingLanguagePaths.contains(lp)) {
             newLanguagePaths.add(lp);
         }
-        Language<T> language = (Language<T>)LexerUtilsConstants.<T>innerLanguage(lp);
+        Language<T> language = LexerUtilsConstants.<T>innerLanguage(lp);
         if (!exploredLanguages.contains(language)) {
             exploredLanguages.add(language);
             Set<T> ids = language.tokenIds();

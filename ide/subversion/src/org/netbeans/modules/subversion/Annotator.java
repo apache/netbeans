@@ -461,7 +461,7 @@ public class Annotator {
                 actions.add(new UpdateMenu(destination, context));
                 actions.add(SystemActionBridge.createAction(SystemAction.get(RevertModificationsAction.class), loc.getString("CTL_PopupMenuItem_GetClean"), context));
                 actions.add(SystemActionBridge.createAction(SystemAction.get(BlameAction.class),
-                        ((BlameAction)SystemAction.get(BlameAction.class)).visible(nodes)
+                        SystemAction.get(BlameAction.class).visible(nodes)
                         ? loc.getString("CTL_PopupMenuItem_HideAnnotations")
                         : loc.getString("CTL_PopupMenuItem_ShowAnnotations"), context));
                 actions.add(SystemActionBridge.createAction(SystemAction.get(SearchHistoryAction.class), loc.getString("CTL_PopupMenuItem_SearchHistory"), context));

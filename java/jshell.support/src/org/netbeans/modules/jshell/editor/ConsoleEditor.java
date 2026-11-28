@@ -142,10 +142,10 @@ public class ConsoleEditor extends CloneableEditor {
         removeProgressIndicator();
         super.componentClosed();
         pane = null;
-        if (cloneableEditorSupport().getOpenedPanes() == null && session != null) {
+        if (cloneableEditorSupport().getOpenedPanes() == null && env != null) {
             try {
                 // terminate the JShell
-                session.getEnv().shutdown();
+                env.shutdown();
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }

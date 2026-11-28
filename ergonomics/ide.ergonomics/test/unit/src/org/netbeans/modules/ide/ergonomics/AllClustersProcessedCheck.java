@@ -50,7 +50,7 @@ public class AllClustersProcessedCheck extends NbTestCase {
             if (n.equals("harness")) {
                 continue;
             }
-            if (n.equals("ide")) {
+            if (n.equals("ide") || n.equals("agentic")) {
                 continue;
             }
             if (n.equals("extide")) {

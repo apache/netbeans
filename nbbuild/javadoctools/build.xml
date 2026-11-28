@@ -32,7 +32,11 @@
     <import file="../default.xml"/>
 
     <target name="build-javadoc" depends="-jdk-init,-load-build-properties,init-tasks,set-buildnumber" description="Builds Javadoc documentation for modules; on branches pass e.g. -Djavadoc.web.root=http://bits.netbeans.org/6.7/javadoc">
-        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.javadoc.all}"/>
+        <!-- Include the agentic API documentation even when building the release configuration. -->
+        <condition property="javadoc.clusters.list" value="${nb.clusters.list}" else="${nb.clusters.list},nb.cluster.agentic">
+            <contains string=",${nb.clusters.list}," substring=",nb.cluster.agentic,"/>
+        </condition>
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${javadoc.clusters.list}" modules="${config.javadoc.all}"/>
         <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
 
         <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>

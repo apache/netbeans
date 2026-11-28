@@ -224,7 +224,8 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
     }
 
     private boolean isIDECluster(ModuleInfo mi) {
-        return FeatureManager.isModuleFrom(mi, "ide"); // NOI18N
+        return FeatureManager.isModuleFrom(mi, "ide") // NOI18N
+                || FeatureManager.isModuleFrom(mi, "agentic"); // NOI18N
     }
     private boolean isPlatformCluster(ModuleInfo mi) {
         if ("org.netbeans.modules.ide.branding.kit".equals(mi.getCodeName())) { // NOI18N

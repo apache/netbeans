@@ -244,3 +244,4 @@
 <!-- deprecated not linked-->
 <!-- replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/ -->
 <!-- unsorted filter --><replacefilter token="@org-netbeans-modules-project-dependency@" value="${javadoc.docs.org-netbeans-modules-project-dependency}"/>
+<replacefilter token="@org-netbeans-modules-acp-api@" value="${javadoc.docs.org-netbeans-modules-acp-api}"/>

@@ -1,0 +1,511 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.acp.mcp.java;
+
+import com.sun.source.util.TreePath;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.modules.acp.mcp.spi.McpToolProvider;
+import org.netbeans.modules.acp.mcp.spi.ProjectPathGuard;
+import org.netbeans.modules.acp.mcp.spi.ToolResult;
+import org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution;
+import org.netbeans.modules.refactoring.api.Problem;
+import org.netbeans.modules.refactoring.api.RefactoringElement;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
+import org.netbeans.modules.refactoring.api.RenameRefactoring;
+import org.netbeans.modules.refactoring.api.WhereUsedQuery;
+import org.netbeans.modules.refactoring.java.api.EncapsulateFieldRefactoring;
+import org.netbeans.modules.refactoring.java.api.InlineRefactoring;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
+
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.collectProblems;
+import static org.netbeans.modules.acp.mcp.tools.refactoring.RefactoringExecution.hasFatalProblem;
+
+@ServiceProvider(service = McpToolProvider.class)
+public final class JavaRefactoringToolProvider implements McpToolProvider {
+
+    private static final Logger LOG = Logger.getLogger(JavaRefactoringToolProvider.class.getName());
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
+
+    @Override
+    public List<McpToolDefinition> getTools() {
+        List<McpToolDefinition> tools = new ArrayList<>();
+
+        tools.add(new McpToolDefinition(
+                "rename_symbol",
+                "Rename a Java symbol (class, method, field, variable, parameter) at a given position in a source file. "
+                + "Updates all references across the project.",
+                Map.of(
+                        "type", "object",
+                        "properties", Map.of(
+                                "filePath", Map.of("type", "string",
+                                        "description", "Absolute path to the Java source file"),
+                                "line", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
+                                "column", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based UTF-16 column within the line; tabs count as one character"),
+                                "offset", Map.of("type", "integer", "minimum", 0,
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
+                                "newName", Map.of("type", "string",
+                                        "description", "New name for the symbol"),
+                                "searchInComments", Map.of("type", "boolean",
+                                        "description", "Also rename occurrences in comments and strings (default false)")
+                        ),
+                        "required", List.of("filePath", "newName")
+                )
+        ));
+
+        tools.add(new McpToolDefinition(
+                "find_symbol_usages",
+                "Find all usages of a Java symbol (class, method, field, variable) at a given position. "
+                + "Returns file paths, line content, and position for each usage.",
+                Map.of(
+                        "type", "object",
+                        "properties", Map.of(
+                                "filePath", Map.of("type", "string",
+                                        "description", "Absolute path to the Java source file"),
+                                "line", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
+                                "column", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based UTF-16 column within the line; tabs count as one character"),
+                                "offset", Map.of("type", "integer", "minimum", 0,
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
+                                "searchInComments", Map.of("type", "boolean",
+                                        "description", "Also search in comments and strings (default false)")
+                        ),
+                        "required", List.of("filePath")
+                )
+        ));
+
+        tools.add(new McpToolDefinition(
+                "inline_symbol",
+                "Inline a Java variable, method, or constant at the given position. "
+                + "Replaces all references with the element's value or body.",
+                Map.of(
+                        "type", "object",
+                        "properties", Map.of(
+                                "filePath", Map.of("type", "string",
+                                        "description", "Absolute path to the Java source file"),
+                                "line", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
+                                "column", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based UTF-16 column within the line; tabs count as one character"),
+                                "offset", Map.of("type", "integer", "minimum", 0,
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column")
+                        ),
+                        "required", List.of("filePath")
+                )
+        ));
+
+        tools.add(new McpToolDefinition(
+                "encapsulate_field",
+                "Encapsulate a Java field by generating getter and setter methods, and replacing "
+                + "all direct field accesses with accessor calls.",
+                Map.of(
+                        "type", "object",
+                        "properties", Map.of(
+                                "filePath", Map.of("type", "string",
+                                        "description", "Absolute path to the Java source file"),
+                                "line", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based source line containing the symbol; supply line and column together or use offset"),
+                                "column", Map.of("type", "integer", "minimum", 1,
+                                        "description", "1-based UTF-16 column within the line; tabs count as one character"),
+                                "offset", Map.of("type", "integer", "minimum", 0,
+                                        "description", "0-based UTF-16 offset in the editor source; supply either offset or line and column"),
+                                "getterName", Map.of("type", "string",
+                                        "description", "Custom getter name (default: auto-generated from field name)"),
+                                "setterName", Map.of("type", "string",
+                                        "description", "Custom setter name (optional, auto-generated only for non-final fields)")
+                        ),
+                        "required", List.of("filePath")
+                )
+        ));
+
+        return tools;
+    }
+
+    @Override
+    public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
+        LOG.log(Level.FINE, "Executing Java refactoring tool: {0}", name);
+        if (!Set.of("rename_symbol", "find_symbol_usages", "inline_symbol", "encapsulate_field").contains(name)) {
+            throw new IllegalArgumentException("Unknown tool: " + name);
+        }
+        Object pathArgument = arguments.get("filePath");
+        if (!(pathArgument instanceof String filePath) || filePath.isBlank()) {
+            return ToolResult.error("filePath is required");
+        }
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath);
+        if (guardError != null) {
+            return guardError;
+        }
+        Map<String, Object> result;
+        try {
+            result = switch (name) {
+                case "rename_symbol" -> doRenameSymbol(arguments);
+                case "find_symbol_usages" -> doFindSymbolUsages(arguments);
+                case "inline_symbol" -> doInlineSymbol(arguments);
+                case "encapsulate_field" -> doEncapsulateField(arguments);
+                default -> throw new IllegalArgumentException("Unknown tool: " + name);
+            };
+        } catch (InvalidPositionException ex) {
+            return ToolResult.error(ex.getMessage());
+        }
+        if ("error".equals(result.get("status"))) {
+            LOG.log(Level.WARNING, "Java refactoring tool {0} failed: {1}", new Object[]{name, result.get("message")});
+        } else {
+            LOG.log(Level.FINE, "Java refactoring tool {0} succeeded", name);
+        }
+        return result;
+    }
+
+    private Map<String, Object> doRenameSymbol(Map<String, Object> args) throws Exception {
+        String filePath = (String) args.get("filePath");
+        String newName = (String) args.get("newName");
+        SourcePosition position = SourcePosition.from(args);
+        if (newName == null || newName.isBlank()) {
+            return ToolResult.error("newName is required");
+        }
+
+        TreePathHandle handle = resolveHandle(filePath, position);
+        if (handle == null) {
+            return ToolResult.error("No Java element found at the requested position");
+        }
+
+        boolean searchComments = Boolean.TRUE.equals(args.get("searchInComments"));
+
+        RenameRefactoring refactoring = new RenameRefactoring(Lookups.singleton(handle));
+        refactoring.setNewName(newName);
+        refactoring.setSearchInComments(searchComments);
+
+        return RefactoringExecution.execute(refactoring, "Rename to " + newName);
+    }
+
+    private Map<String, Object> doFindSymbolUsages(Map<String, Object> args) throws Exception {
+        String filePath = (String) args.get("filePath");
+        SourcePosition position = SourcePosition.from(args);
+
+        TreePathHandle handle = resolveHandle(filePath, position);
+        if (handle == null) {
+            return ToolResult.error("No Java element found at the requested position");
+        }
+
+        boolean searchComments = Boolean.TRUE.equals(args.get("searchInComments"));
+
+        WhereUsedQuery query = new WhereUsedQuery(Lookups.singleton(handle));
+        query.putValue(WhereUsedQuery.SEARCH_IN_COMMENTS, searchComments);
+        query.putValue(WhereUsedQuery.FIND_REFERENCES, true);
+
+        Problem preCheck = query.preCheck();
+        if (hasFatalProblem(preCheck)) {
+            return ToolResult.error("Pre-check failed: " + collectProblems(preCheck));
+        }
+
+        RefactoringSession session = RefactoringSession.create("Find Symbol Usages");
+        Problem prepare = query.prepare(session);
+        if (hasFatalProblem(prepare)) {
+            return ToolResult.error("Prepare failed: " + collectProblems(prepare));
+        }
+
+        Collection<RefactoringElement> elements = session.getRefactoringElements();
+        List<Map<String, Object>> usages = new ArrayList<>();
+        for (RefactoringElement elem : elements) {
+            Map<String, Object> usage = new LinkedHashMap<>();
+            FileObject parent = elem.getParentFile();
+            if (parent != null) {
+                File f = FileUtil.toFile(parent);
+                usage.put("file", f != null ? f.getAbsolutePath() : parent.getPath());
+            }
+            usage.put("text", elem.getText());
+            usage.put("displayText", elem.getDisplayText().replaceAll("<[^>]+>", ""));
+            if (elem.getPosition() != null) {
+                try {
+                    usage.put("startOffset", elem.getPosition().getBegin().getOffset());
+                    usage.put("endOffset", elem.getPosition().getEnd().getOffset());
+                } catch (Exception ex) {
+                    LOG.log(Level.FINE, "Could not get position bounds", ex);
+                }
+            }
+            usages.add(usage);
+        }
+
+        return ToolResult.ok("usages", usages, "usageCount", usages.size());
+    }
+
+    private Map<String, Object> doInlineSymbol(Map<String, Object> args) throws Exception {
+        String filePath = (String) args.get("filePath");
+        SourcePosition position = SourcePosition.from(args);
+
+        FileObject fo = resolveJavaFile(filePath);
+        if (fo == null) {
+            return ToolResult.error("Java file not found: " + filePath);
+        }
+
+        TreePathHandle[] handleHolder = new TreePathHandle[1];
+        InlineRefactoring.Type[] typeHolder = new InlineRefactoring.Type[1];
+
+        JavaSource js = JavaSource.forFileObject(fo);
+        if (js == null) {
+            return ToolResult.error("Cannot create JavaSource for: " + filePath);
+        }
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController cc) throws Exception {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                TreePath path = cc.getTreeUtilities().pathFor(position.toOffset(cc.getText()));
+                path = resolveToElement(cc, path);
+                if (path == null) {
+                    return;
+                }
+                Element el = cc.getTrees().getElement(path);
+                if (el == null) {
+                    return;
+                }
+                handleHolder[0] = TreePathHandle.create(path, cc);
+                typeHolder[0] = switch (el.getKind()) {
+                    case METHOD, CONSTRUCTOR -> InlineRefactoring.Type.METHOD;
+                    case LOCAL_VARIABLE -> InlineRefactoring.Type.TEMP;
+                    case FIELD -> {
+                        Set<Modifier> mods = el.getModifiers();
+                        yield (mods.contains(Modifier.STATIC) && mods.contains(Modifier.FINAL))
+                                ? InlineRefactoring.Type.CONSTANT
+                                : InlineRefactoring.Type.UNSUPPORTED;
+                    }
+                    default -> InlineRefactoring.Type.UNSUPPORTED;
+                };
+            }
+        }, true);
+
+        if (handleHolder[0] == null) {
+            return ToolResult.error("No Java element found at the requested position");
+        }
+        if (typeHolder[0] == InlineRefactoring.Type.UNSUPPORTED) {
+            return ToolResult.error("Element at the requested position cannot be inlined");
+        }
+
+        InlineRefactoring refactoring = new InlineRefactoring(handleHolder[0], typeHolder[0]);
+        return RefactoringExecution.execute(refactoring, "Inline");
+    }
+
+    private Map<String, Object> doEncapsulateField(Map<String, Object> args) throws Exception {
+        String filePath = (String) args.get("filePath");
+        SourcePosition position = SourcePosition.from(args);
+
+        FileObject fo = resolveJavaFile(filePath);
+        if (fo == null) {
+            return ToolResult.error("Java file not found: " + filePath);
+        }
+
+        TreePathHandle[] handleHolder = new TreePathHandle[1];
+        String[] fieldNameHolder = new String[1];
+        boolean[] finalField = new boolean[1];
+
+        JavaSource js = JavaSource.forFileObject(fo);
+        if (js == null) {
+            return ToolResult.error("Cannot create JavaSource for: " + filePath);
+        }
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController cc) throws Exception {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                TreePath path = cc.getTreeUtilities().pathFor(position.toOffset(cc.getText()));
+                path = resolveToElement(cc, path);
+                if (path == null) {
+                    return;
+                }
+                Element el = cc.getTrees().getElement(path);
+                if (el != null && el.getKind() == ElementKind.FIELD) {
+                    handleHolder[0] = TreePathHandle.create(path, cc);
+                    fieldNameHolder[0] = el.getSimpleName().toString();
+                    finalField[0] = el.getModifiers().contains(Modifier.FINAL);
+                }
+            }
+        }, true);
+
+        if (handleHolder[0] == null) {
+            return ToolResult.error("No field found at the requested position");
+        }
+
+        String fieldName = fieldNameHolder[0];
+        EncapsulateFieldRefactoring refactoring = new EncapsulateFieldRefactoring(handleHolder[0]);
+
+        String getterName = (String) args.get("getterName");
+        String setterName = (String) args.get("setterName");
+        if (getterName == null || getterName.isBlank()) {
+            getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        }
+        if (setterName == null || setterName.isBlank()) {
+            setterName = finalField[0] ? null
+                    : "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        }
+        refactoring.setGetterName(getterName);
+        refactoring.setSetterName(setterName);
+        refactoring.setMethodModifiers(EnumSet.of(Modifier.PUBLIC));
+        refactoring.setFieldModifiers(EnumSet.of(Modifier.PRIVATE));
+        refactoring.setAlwaysUseAccessors(true);
+
+        return RefactoringExecution.execute(refactoring, "Encapsulate " + fieldName);
+    }
+
+    private TreePathHandle resolveHandle(String filePath, SourcePosition position) throws IOException {
+        FileObject fo = resolveJavaFile(filePath);
+        if (fo == null) {
+            return null;
+        }
+
+        JavaSource js = JavaSource.forFileObject(fo);
+        if (js == null) {
+            return null;
+        }
+
+        TreePathHandle[] result = new TreePathHandle[1];
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController cc) throws Exception {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                TreePath path = cc.getTreeUtilities().pathFor(position.toOffset(cc.getText()));
+                path = resolveToElement(cc, path);
+                if (path != null) {
+                    result[0] = TreePathHandle.create(path, cc);
+                }
+            }
+        }, true);
+
+        return result[0];
+    }
+
+    private static final class InvalidPositionException extends IllegalArgumentException {
+        InvalidPositionException(String message) {
+            super(message);
+        }
+    }
+
+    record SourcePosition(Integer offset, Integer line, Integer column) {
+        static SourcePosition from(Map<String, Object> args) {
+            boolean hasOffset = args.containsKey("offset");
+            boolean hasLine = args.containsKey("line");
+            boolean hasColumn = args.containsKey("column");
+            if (hasOffset == (hasLine || hasColumn) || hasLine != hasColumn) {
+                throw new InvalidPositionException("Provide either offset or both line and column");
+            }
+            if (hasOffset) {
+                return new SourcePosition(integer(args.get("offset"), "offset", 0), null, null);
+            }
+            return new SourcePosition(null, integer(args.get("line"), "line", 1),
+                    integer(args.get("column"), "column", 1));
+        }
+
+        private static int integer(Object value, String name, int minimum) {
+            if (!(value instanceof Number number)
+                    || !Double.isFinite(number.doubleValue())
+                    || number.doubleValue() != number.longValue()
+                    || number.longValue() < minimum || number.longValue() > Integer.MAX_VALUE) {
+                throw new InvalidPositionException(name + " must be an integer of at least " + minimum);
+            }
+            return number.intValue();
+        }
+
+        int toOffset(String text) {
+            if (offset != null) {
+                if (offset > text.length()) {
+                    throw new InvalidPositionException("offset is outside the source file");
+                }
+                return offset;
+            }
+            int start = 0;
+            for (int currentLine = 1; currentLine < line; currentLine++) {
+                int newline = text.indexOf('\n', start);
+                if (newline < 0) {
+                    throw new InvalidPositionException("line is outside the source file");
+                }
+                start = newline + 1;
+            }
+            int end = text.indexOf('\n', start);
+            if (end < 0) {
+                end = text.length();
+            }
+            if (end > start && text.charAt(end - 1) == '\r') {
+                end--;
+            }
+            long result = (long) start + column - 1;
+            if (result > end) {
+                throw new InvalidPositionException("column is outside the source line");
+            }
+            return (int) result;
+        }
+    }
+
+    private static TreePath resolveToElement(CompilationController cc, TreePath path) {
+        while (path != null) {
+            Element el = cc.getTrees().getElement(path);
+            if (el != null) {
+                ElementKind kind = el.getKind();
+                if (kind == ElementKind.CLASS || kind == ElementKind.INTERFACE
+                        || kind == ElementKind.ENUM || kind == ElementKind.RECORD
+                        || kind == ElementKind.METHOD || kind == ElementKind.CONSTRUCTOR
+                        || kind == ElementKind.FIELD || kind == ElementKind.ENUM_CONSTANT
+                        || kind == ElementKind.LOCAL_VARIABLE || kind == ElementKind.PARAMETER
+                        || kind == ElementKind.ANNOTATION_TYPE) {
+                    return path;
+                }
+            }
+            path = path.getParentPath();
+        }
+        return null;
+    }
+
+    private static FileObject resolveJavaFile(String filePath) {
+        if (filePath == null || filePath.isBlank()) {
+            return null;
+        }
+        if (!ProjectPathGuard.isInOpenProject(filePath)) {
+            return null;
+        }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return null;
+        }
+        return FileUtil.toFileObject(FileUtil.normalizeFile(file));
+    }
+
+}

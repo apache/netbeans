@@ -284,7 +284,7 @@ public final class RemotePlatformProvider implements Lookup.Provider, InstanceCo
         }
     }
 
-    private static void updateBuildProperties(@NonNull final RemotePlatform platform)  throws IOException {
+    static void updateBuildProperties(@NonNull final RemotePlatform platform)  throws IOException {
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
                 @Override

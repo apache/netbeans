@@ -129,7 +129,11 @@ public class PullBranchesStep extends AbstractWizardPanel implements WizardDescr
     }
 
     public void fillRemoteBranches (final Map<String, GitBranch> branches) {
-        fillRemoteBranches(Collections.<String,GitBranch>emptyMap(), Collections.<String,GitBranch>emptyMap());
+        fillRemoteBranches(branches, null);
+    }
+
+    public void fillRemoteBranches (final Map<String, GitBranch> branches, final GitBranch branchToSelect) {
+        fillRemoteBranchesInternal(Collections.<String,GitBranch>emptyMap(), Collections.<String,GitBranch>emptyMap(), null);
         new GitProgressSupport.NoOutputLogging() {
             @Override
             protected void perform () {
@@ -140,14 +144,14 @@ public class PullBranchesStep extends AbstractWizardPanel implements WizardDescr
                 EventQueue.invokeLater(new Runnable () {
                     @Override
                     public void run () {
-                        fillRemoteBranches(branches, localBranches);
+                        fillRemoteBranchesInternal(branches, localBranches, branchToSelect);
                     }
                 });
             }
         }.start(Git.getInstance().getRequestProcessor(repository), repository, NbBundle.getMessage(PullBranchesStep.class, "MSG_FetchBranchesPanel.loadingLocalBranches")); //NOI18N
     }
 
-    private void fillRemoteBranches (Map<String, GitBranch> branches, Map<String, GitBranch> localBranches) {
+    private void fillRemoteBranchesInternal (Map<String, GitBranch> branches, Map<String, GitBranch> localBranches, GitBranch branchToSelect) {
         List<BranchMapping> l = new ArrayList<BranchMapping>(branches.size());
         Set<String> displayedBranches = new HashSet<String>(localBranches.size());
         for (GitBranch branch : localBranches.values()) {
@@ -163,9 +167,14 @@ public class PullBranchesStep extends AbstractWizardPanel implements WizardDescr
             GitBranch localBranch = localBranches.get(branchName);
             boolean preselected = localBranch != null && (!localBranch.getId().equals(branch.getId()) // is a modification
                     // or is the tracked branch - should be offered primarily
-                    || currentBranch != null 
-                    && currentBranch.getTrackedBranch() != null 
+                    || currentBranch != null
+                    && currentBranch.getTrackedBranch() != null
                     && currentBranch.getTrackedBranch().getName().equals(localBranch.getName()));
+
+            if (branchToSelect != null && branch.getName().equals(branchToSelect.getName())) {
+                preselected = true;
+            }
+
             l.add(new BranchMapping(branch.getName(), branch.getId(), localBranch, remote, preselected));
         }
         for (GitBranch branch : localBranches.values()) {

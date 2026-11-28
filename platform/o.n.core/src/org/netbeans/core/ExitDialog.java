@@ -39,6 +39,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import org.netbeans.api.actions.Savable;
 import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.nodes.Node;
@@ -53,6 +54,7 @@ import org.openide.util.NbBundle;
  */
 
 public class ExitDialog extends JPanel implements java.awt.event.ActionListener {
+    private static final String CONFIRM_EXIT_PREFERENCE = "confirmExit"; // NOI18N
     private static final boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID());
 
     private static Object[] exitOptions;
@@ -197,6 +199,16 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
         return innerShowDialog();
     }
 
+    public static boolean isExitConfirmationEnabled() {
+        return org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .getBoolean(CONFIRM_EXIT_PREFERENCE, true);
+    }
+
+    public static void setExitConfirmationEnabled(boolean enabled) {
+        org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .putBoolean(CONFIRM_EXIT_PREFERENCE, enabled);
+    }
+
     /**
      * Opens the ExitDialog.
      */
@@ -252,8 +264,65 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
             return result;
 
         }
-        else
-            return true;
+
+        else {
+            if (!isExitConfirmationEnabled()) {
+                return true;
+            }
+            ResourceBundle bundle = NbBundle.getBundle(ExitDialog.class);
+
+            final JButton exitButton = new JButton();
+            final JButton cancelButton = new JButton();
+            Mnemonics.setLocalizedText(exitButton, bundle.getString("CTL_ExitConfirmationExit"));
+            Mnemonics.setLocalizedText(cancelButton, bundle.getString("CTL_ExitConfirmationCancel"));
+
+            JPanel buttonRow = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 6, 0));
+            buttonRow.add(exitButton);
+            buttonRow.add(cancelButton);
+
+            JLabel message = new JLabel(bundle.getString("MSG_ExitConfirmation"),
+                    UIManager.getIcon("OptionPane.questionIcon"), JLabel.LEADING);
+            message.setIconTextGap(12);
+
+            JPanel body = new JPanel(new java.awt.BorderLayout(0, 12));
+            body.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
+            body.add(message, java.awt.BorderLayout.CENTER);
+            body.add(buttonRow, java.awt.BorderLayout.SOUTH);
+
+            DialogDescriptor descriptor = new DialogDescriptor(
+                    body,
+                    bundle.getString("TTL_ExitConfirmation"),
+                    true,
+                    new Object[0],                  // no standard buttons, we have our own
+                    null,
+                    DialogDescriptor.BOTTOM_ALIGN,
+                    null,
+                    (java.awt.event.ActionListener) null);
+
+            final java.awt.Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+            dialog.setMinimumSize(new Dimension(225, dialog.getHeight()));
+            final boolean[] exit = { false };
+            exitButton.addActionListener(e -> { exit[0] = true; dialog.setVisible(false); });
+            cancelButton.addActionListener(e -> dialog.setVisible(false));
+
+            javax.swing.JRootPane rootPane = ((javax.swing.JDialog) dialog).getRootPane();
+            rootPane.setDefaultButton(exitButton);   // Enter = Exit
+            rootPane.registerKeyboardAction(         // Esc = Cancel
+                    e -> dialog.setVisible(false),
+                    javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
+                    javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowOpened(java.awt.event.WindowEvent e) {
+                    SwingUtilities.invokeLater(exitButton::requestFocusInWindow);
+                }
+            });
+            dialog.setVisible(true);   // blocks (modal)
+            dialog.dispose();
+
+            return exit[0];
+        }
     }
 
     /** Renderer used in list box of exit dialog

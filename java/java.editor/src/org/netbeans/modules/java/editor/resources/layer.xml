@@ -411,7 +411,15 @@
                         <folder name="BracesMatchers">
                             <file name="org-netbeans-modules-editor-java-JavaBracesMatcher.shadow">
                                 <attr name="originalFile" stringvalue="Editors/text/x-java/BracesMatchers/org-netbeans-modules-editor-java-JavaBracesMatcher.instance"/>
-                                <attr name="position" intvalue="300"/>
+                                <attr name="position" intvalue="100"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="x-java-character">
+                        <folder name="BracesMatchers">
+                            <file name="org-netbeans-modules-editor-java-JavaBracesMatcher.shadow">
+                                <attr name="originalFile" stringvalue="Editors/text/x-java/BracesMatchers/org-netbeans-modules-editor-java-JavaBracesMatcher.instance"/>
+                                <attr name="position" intvalue="100"/>
                             </file>
                         </folder>
                     </folder>

@@ -26,14 +26,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import org.netbeans.api.annotations.common.NonNull;
@@ -96,7 +93,12 @@ abstract class ProjectsRootKeys {
         Comparator<PrjInfo> byProjectDisplayName = (i1, i2) -> {
             String n1 = ProjectUtils.getInformation(i1.project()).getDisplayName();
             String n2 = ProjectUtils.getInformation(i2.project()).getDisplayName();
-            return n1.compareTo(n2);
+            int diff = n1.compareTo(n2);
+            if (diff != 0) {
+                return diff;
+            } else {
+                return OpenProjectList.projectByPath().compare(i1.project(), i2.project());
+            }
         };
 
         var parentship = new HashMap<PrjInfo, SortedSet<PrjInfo>>();

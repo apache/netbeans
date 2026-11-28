@@ -192,6 +192,30 @@ public class ProjectsRootKeysTest extends NbTestCase {
         depthUpdated.clear();
     }
 
+    public void testDuplicatedNames() throws Exception {
+        this.projects = new Project[] { mainPrj1, mainPrj2, nestedPrj1, nestedPrj2 };
+        mainPrj1.setLookup(Lookups.fixed(new MockInformation(mainPrj1, "Project")));
+        mainPrj2.setLookup(Lookups.fixed(new MockInformation(mainPrj2, "Project")));
+        nestedPrj1.setLookup(Lookups.fixed(new MockInformation(nestedPrj1, "Project")));
+        nestedPrj2.setLookup(Lookups.fixed(new MockInformation(nestedPrj2, "Project")));
+
+        var keys = this.rootKeys.getKeys();
+        assertEquals("Four keys found: " + keys, 4, keys.size());
+
+        var it = keys.iterator();
+        var k1 = it.next();
+        var k2 = it.next();
+        var k3 = it.next();
+        var k4 = it.next();
+        assertFalse("Iterator is empty", it.hasNext());
+
+        assertEquals("prj1 has the first path", mainPrj1, k1.project());
+        assertEquals("then prj1/nested1 path", nestedPrj1, k2.project());
+        assertEquals("then prj1/nested2 path", nestedPrj2, k3.project());
+        assertEquals("prj2/ is lst", mainPrj2, k4.project());
+        depthUpdated.clear();
+    }
+
     private static final class MockInformation implements ProjectInformation {
         private final TestSupport.TestProject prj;
         private final String displayName;

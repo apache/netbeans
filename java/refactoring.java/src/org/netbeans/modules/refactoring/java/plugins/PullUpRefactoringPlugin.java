@@ -18,16 +18,17 @@
  */
 package org.netbeans.modules.refactoring.java.plugins;
 
+import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.util.*;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.*;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
-import org.netbeans.modules.refactoring.api.ProgressEvent;
 import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
@@ -120,7 +121,8 @@ public final class PullUpRefactoringPlugin extends JavaRefactoringPlugin {
 
     
     @Override
-    public Problem fastCheckParameters() {
+    public Problem fastCheckParameters(CompilationController cc) throws IOException {
+        cc.toPhase(JavaSource.Phase.RESOLVED);
         MemberInfo<ElementHandle<? extends Element>>[] info = refactoring.getMembers();
         // #1 - check whether there are any members to pull up
         if (info.length == 0) {
@@ -144,7 +146,8 @@ public final class PullUpRefactoringPlugin extends JavaRefactoringPlugin {
 
         Problem p=null;
         if (refactoring.getTargetType().getKind().isInterface()) {
-            for (MemberInfo i:info) {
+            for (MemberInfo<ElementHandle<? extends Element>> i :info) {
+                Element member = i.getElementHandle().resolve(cc);
                 if (!i.getModifiers().contains(Modifier.PUBLIC)) {
                     p = createProblem(p, false, NbBundle.getMessage(PullUpRefactoringPlugin.class,"ERR_PullupNonPublicToInterface" ,i.getName()));
                 }
@@ -152,7 +155,15 @@ public final class PullUpRefactoringPlugin extends JavaRefactoringPlugin {
                 if (i.getModifiers().contains(Modifier.STATIC)) {
                     p = createProblem(p, true, NbBundle.getMessage(PullUpRefactoringPlugin.class,"ERR_PullupStaticToInterface" ,i.getName()));
                 }
+                if (member.getKind() == ElementKind.FIELD) {
+                    VariableElement variableElement = (VariableElement) member;
+                    VariableTree variableTree = (VariableTree) cc.getTrees().getTree(variableElement);
+                    if (variableTree != null && variableTree.getInitializer() == null) {
+                        return createProblem(p, true, NbBundle.getMessage(PullUpRefactoringPlugin.class, "ERR_PullupNonNotInitializedToInterface", member.getSimpleName()));
+                    }
+                }
             }
+            
         }
         
         for (MemberInfo<ElementHandle<? extends Element>> i : info) {
@@ -237,7 +248,6 @@ public final class PullUpRefactoringPlugin extends JavaRefactoringPlugin {
                     //                            !sourceResource.equals(targetResource),
                     //                            !sourceResource.getPackageName().equals(targetResource.getPackageName()));
                     //                }
-
                     fireProgressListenerStep();
                 }
 

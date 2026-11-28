@@ -26,6 +26,12 @@ import org.openide.util.NbPreferences;
 public class InlineHintsSettings {
     
     private static final String INLINE_HINTS = "InlineHints"; // NOI18N
+    public static final String JAVA_INLINE_HINT_PARAMETER_NAME = "javaInlineHintParameterName"; // NOI18N
+    public static final String JAVA_INLINE_HINT_CHAINED_TYPES = "javaInlineHintChainedTypes"; // NOI18N
+    public static final String JAVA_INLINE_HINT_VAR_TYPE = "javaInlineHintVarType"; // NOI18N
+    public static final String JAVA_INLINE_HINT_REFERENCE_COUNT = "javaInlineHintReferenceCount"; // NOI18N
+    public static final String JAVA_INLINE_HINT_REFERENCE_COUNT_METHODS = "javaInlineHintReferenceCountMethods"; // NOI18N
+    public static final String JAVA_INLINE_HINT_REFERENCE_COUNT_TYPES = "javaInlineHintReferenceCountTypes"; // NOI18N
 
     // see org.netbeans.modules.editor.actions.ShowInlineHintsAction
     private static final String JAVA_INLINE_HINTS_KEY = "enable.inline.hints"; // NOI18N
@@ -51,6 +57,18 @@ public class InlineHintsSettings {
 
     public static void setInlineHintsEnabled(boolean enabled) {
         getJavaEditorPreferences().putBoolean(JAVA_INLINE_HINTS_KEY, enabled);
+    }
+
+    public static boolean isReferenceCountEnabled() {
+        return getCurrentNode().getBoolean(JAVA_INLINE_HINT_REFERENCE_COUNT, true);
+    }
+
+    public static boolean isReferenceCountMethodsEnabled() {
+        return getCurrentNode().getBoolean(JAVA_INLINE_HINT_REFERENCE_COUNT_METHODS, true);
+    }
+
+    public static boolean isReferenceCountTypesEnabled() {
+        return getCurrentNode().getBoolean(JAVA_INLINE_HINT_REFERENCE_COUNT_TYPES, true);
     }
 
     private static String getCurrentProfileId() {

@@ -50,6 +50,7 @@ import org.openide.awt.DynamicMenuContent;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
@@ -95,7 +96,7 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
             OpenProjectList.getDefault().addPropertyChangeListener( WeakListeners.propertyChange( this, OpenProjectList.getDefault() ) );
         }
         putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-        refresh(getLookup(), true);
+        refresh(getLookup());
     }
     
     @Override protected void actionPerformed(Lookup context) {
@@ -116,24 +117,26 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     }
 
     @Messages("LBL_UnSetAsMainProjectAction_Name=Unset as Main Project")
-    @Override public final void refresh(Lookup context, boolean immediate) {
+    @Override
+    public final void refresh(Lookup context) {
         
-        super.refresh(context, immediate);
+        super.refresh(context);
         
-        Project[] projects = ActionsUtil.getProjectsFromLookup( context, null );
-        if ( projects.length != 1 /* Some projects have to be open !OpenProjectList.getDefault().isOpen( projects[0] ) */ ) {
-            setEnabled( false );
-        }
-        else {
-            Project main = OpenProjectList.getDefault().getMainProject();
-            setEnabled(prefs().getBoolean(CONTEXT_MENU_ITEM_ENABLED, main != null));
-            if (projects[0] == main) {
-                putValue("popupText", LBL_UnSetAsMainProjectAction_Name());
+        Project[] projects = ActionsUtil.getProjectsFromLookup(context, null);
+        Mutex.EVENT.writeAccess(() -> {
+            empty = projects.length == 0;
+            if (projects.length != 1 /* Some projects have to be open !OpenProjectList.getDefault().isOpen( projects[0] ) */) {
+                setEnabled(false);
             } else {
-                putValue("popupText", null);
+                Project main = OpenProjectList.getDefault().getMainProject();
+                setEnabled(prefs().getBoolean(CONTEXT_MENU_ITEM_ENABLED, main != null));
+                if (projects[0] == main) {
+                    putValue("popupText", LBL_UnSetAsMainProjectAction_Name());
+                } else {
+                    putValue("popupText", null);
+                }
             }
-        }
-        empty = projects.length == 0;
+        });
     }
     
     @Override public Action createContextAwareInstance(Lookup actionContext) {

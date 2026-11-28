@@ -31,6 +31,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 
 public class SelectNodeAction extends LookupSensitiveAction implements ContextAwareAction {
@@ -77,12 +78,14 @@ public class SelectNodeAction extends LookupSensitiveAction implements ContextAw
             pt.selectNodeAsync( fo );
         }
     }
-    
-    protected @Override void refresh(Lookup context, boolean immediate) {
+
+    @Override
+    protected void refresh(Lookup context) {
         FileObject fo = getFileFromLookup( context );
-        setEnabled( fo != null );        
+        boolean enabled = fo != null;
+        Mutex.EVENT.writeAccess(() -> setEnabled(enabled));
     }
-    
+
     private FileObject getFileFromLookup( Lookup context ) {
    
         FileObject fo = context.lookup(FileObject.class);     

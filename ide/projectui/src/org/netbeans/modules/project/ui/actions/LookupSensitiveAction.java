@@ -35,7 +35,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.Mutex;
+
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -46,12 +46,13 @@ import org.openide.windows.TopComponent;
 /** Action sensitive to current project
  * @author Petr Hrebejk
  */
-abstract class LookupSensitiveAction extends BasicAction implements Runnable, LookupListener, Presenter.Popup, Presenter.Menu {
+abstract class LookupSensitiveAction extends BasicAction implements LookupListener, Presenter.Popup, Presenter.Menu {
     static final Logger UILOG = Logger.getLogger("org.netbeans.ui.actions"); // NOI18N
     private static final Logger LOG = Logger.getLogger(LookupSensitiveAction.class.getName());
     protected static final RequestProcessor RP = new RequestProcessor(LookupSensitiveAction.class);
+    private static final int REFRESH_DELAY = 100;
 
-    private Lookup lookup;
+    private final Lookup lookup;
     private Class<?>[] watch;    
     private boolean needsRefresh = true;
     
@@ -59,7 +60,14 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
     private boolean initialized = false;
     private Lookup.Result results[];
 
-    private boolean refreshing = false;
+    private volatile boolean refreshing = false;
+    private final RequestProcessor.Task pendingRefresh = RP.create(() -> {
+        // a forced refresh (e.g. when a menu is shown) may have already
+        // handled the change; only refresh if the state is still stale
+        if (needsRefresh) {
+            doRefresh();
+        }
+    });
 
     /**
      * Constructor for global actions. E.g. actions in main menu which
@@ -101,7 +109,7 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
     public @Override Object getValue( String key ) {
         init ();
         if ( needsRefresh ) {
-            doRefresh(true);
+            doRefresh();
         }
         return super.getValue( key );
     }
@@ -111,7 +119,7 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
     public @Override boolean isEnabled() {
         init ();
         if ( needsRefresh ) {
-            doRefresh(true);
+            doRefresh();
         }
         return super.isEnabled();
     }
@@ -153,7 +161,7 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
         return lookup;
     }
 
-    private void doRefresh(boolean immediate) {
+    private void doRefresh() {
         if (refreshing) {
             return;
         }
@@ -169,23 +177,42 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
                 r.setLoggerName(LOG.getName());
                 LOG.log(r);
             }
-            refresh(lookup, immediate);
+            refresh(lookup);
         } finally {
             refreshing = false;
         }
         needsRefresh = false;
     }
 
-    // Abstract methods --------------------------------------------------------
-
     /** Called when the action is performed
      */
     protected abstract void actionPerformed( Lookup context );
 
-    /** Place where to change properties (enablement/name) when
-     *  the set of current projects changes.
+    /**
+     * Place where to change properties (enablement/name) when
+     * the set of current projects changes.
+     *
+     * <p>Invoked on a background (request processor) thread for
+     * scheduled refreshes, or synchronously on the calling thread
+     * (usually the EDT) when {@link #isEnabled()} or
+     * {@link #getValue(String)} forces a refresh of stale state.
      */
-    protected abstract void refresh(Lookup context, boolean immediate);
+    protected abstract void refresh(Lookup context);
+
+    /**
+     * Schedules a refresh of this action's state. Invoked automatically when
+     * the watched lookup changes; a subclass may also invoke it when state
+     * observed outside the lookup (e.g. the open projects list) changes.
+     *
+     * <p>The refresh is debounced so that a burst of changes coalesces
+     * into a single one; a state query ({@link #isEnabled()},
+     * {@link #getValue(String)}) that finds stale state refreshes
+     * immediately instead.
+     */
+    protected final void scheduleRefresh() {
+        needsRefresh = true;
+        pendingRefresh.schedule(REFRESH_DELAY);
+    }
 
     // Implementation of LookupListener ----------------------------------------
 
@@ -196,15 +223,13 @@ abstract class LookupSensitiveAction extends BasicAction implements Runnable, Lo
         }
         else if ( getPropertyChangeListeners().length == 0 ) {
             needsRefresh = true;
+            // no one is listening for changes: a scheduled refresh would be
+            // wasted work, a forced refresh on the next query will cover it
+            pendingRefresh.cancel();
         }
         else {
-            Mutex.EVENT.readAccess(this);
+            scheduleRefresh();
         }
-    }
-
-    @Override
-    public void run() {
-        doRefresh(false);
     }
 
     // Implementation of Presenter.Menu and Presenter.Popup --------------------

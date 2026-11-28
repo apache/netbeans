@@ -35,7 +35,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
-import org.openide.util.RequestProcessor.Task;
+
 
 /** An action sensitive to selected node. Used for 1-off actions
  */
@@ -43,9 +43,6 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
     private String command;
     private FileActionPerformer performer;
     private final String namePattern;
-
-    private final Task refreshTask = createRefreshTask(); // #250349
-    private Lookup refreshContext; // Context for which refresh is scheduled.
 
     private static final Logger LOG = Logger.getLogger(FileAction.class.getName());
     
@@ -84,20 +81,13 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
     }
     
     @Override
-    protected void refresh(final Lookup context, final boolean immediate) {
-        if (immediate) {
-            refreshImpl(context);
-        } else {
-            synchronized (this) {
-                refreshContext = context;
-            }
-            refreshTask.schedule(10);
-        }
+    protected void refresh(Lookup context) {
+        refreshImpl(context);
     }
 
     /**
      * Implementation of the refresh operation. It can be called synchronously
-     * (directly from {@link #refresh(Lookup, boolean)}) or asynchronously (from
+     * (directly from {@link #refresh(Lookup)}) or asynchronously (from
      * the {@link #refreshTask}).
      *
      * @param context The current context.
@@ -167,34 +157,6 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                 putValue("menuText", presenterName);
                 putValue(SHORT_DESCRIPTION, Actions.cutAmpersand(presenterName));
                 setEnabled(enable);
-            }
-        });
-    }
-
-    /**
-     * Create task for refreshing of the action. The refresh will be invoked for
-     * the last known context (passed to {@link #refresh(Lookup, boolean)}).
-     *
-     * @return The task.
-     */
-    private Task createRefreshTask() {
-        return RP.create(new Runnable() {
-
-            @Override
-            public void run() {
-                Lookup l;
-                synchronized (FileAction.this) {
-                    l = refreshContext;
-                }
-                if (l != null) {
-                    refreshImpl(l);
-                }
-                synchronized (FileAction.this) {
-                    //check the last context is the one that was just used
-                    if (refreshContext == l) {
-                        refreshContext = null;
-                    }
-                }
             }
         });
     }

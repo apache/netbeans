@@ -24,6 +24,7 @@ import javax.swing.Action;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.ui.OpenProjectList;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
 /** Action for removing project from the open projects tab
@@ -41,7 +42,7 @@ public class CloseProject extends ProjectAction {
     
     public CloseProject( Lookup context ) {
         super( (String)null, namePattern, namePatternPopup, null, context );        
-        refresh(getLookup(), true);
+        refresh(getLookup());
     }
         
     @Override
@@ -61,31 +62,17 @@ public class CloseProject extends ProjectAction {
     }
     
     @Override
-    public void refresh(Lookup context, boolean immediate) {
+    public void refresh(Lookup context) {
         
-        super.refresh(context, immediate);
+        super.refresh(context);
         
         Project[] projects = ActionsUtil.getProjectsFromLookup( context, null );
         // XXX make it work better for mutliple open projects
         if ( projects.length == 0 || !OpenProjectList.getDefault().isOpen( projects[0] ) ) {
-            enable( false );
-        }
-        else {
-            enable( true );
-        }        
-    }
-    
-    private void enable(final boolean enable) {
-        if (!EventQueue.isDispatchThread()) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    setEnabled(enable);
-                }
-            });
+            Mutex.EVENT.writeAccess(() -> setEnabled(false));
         } else {
-            setEnabled(enable);
-        }
+            Mutex.EVENT.writeAccess(() -> setEnabled(true));
+        }        
     }
     
     @Override

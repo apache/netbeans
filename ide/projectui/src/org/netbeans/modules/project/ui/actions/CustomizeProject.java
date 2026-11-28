@@ -38,6 +38,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Mutex;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
@@ -54,28 +55,21 @@ public class CustomizeProject extends ProjectAction implements Presenter.Popup {
     
     public CustomizeProject( Lookup context ) {
         super( (String)null, namePattern, namePatternPopup, null, context );
-        refresh(getLookup(), true);
+        refresh(getLookup());
     }
             
-    
-   
-    protected @Override void refresh(Lookup context, boolean immediate) {
-     
-        super.refresh(context, immediate);
-        
-        Project[] projects = ActionsUtil.getProjectsFromLookup( context, null );
-                            
-        if ( projects.length != 1 || projects[0].getLookup().lookup( CustomizerProvider.class ) == null ) {
-            setEnabled( false );
-            // setDisplayName( ActionsUtil.formatProjectSensitiveName( namePattern, new Project[0] ) );
+    @Override
+    protected void refresh(Lookup context) {
+
+        super.refresh(context);
+
+        Project[] projects = ActionsUtil.getProjectsFromLookup(context, null);
+        if (projects.length != 1 || projects[0].getLookup().lookup(CustomizerProvider.class) == null) {
+            Mutex.EVENT.writeAccess(() -> setEnabled(false));
+        } else {
+            Mutex.EVENT.writeAccess(() -> setEnabled(true));
         }
-        else { 
-            setEnabled( true );
-            // setDisplayName( ActionsUtil.formatProjectSensitiveName( namePattern, projects ) );
-        }
-        
-        
-    }   
+    }
     
     @Override
     public void actionPerformed( Lookup context ) {

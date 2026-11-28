@@ -31,6 +31,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 
 public class LookupSensitiveActionTest extends NbTestCase {
 
@@ -97,6 +98,8 @@ public class LookupSensitiveActionTest extends NbTestCase {
         tlsa.refreshCounter = 0;
         
         lookup.change(d2);
+        // a state query (as done when a menu is displayed) forces the pending refresh
+        assertTrue("Enabled1", isEnabled(tlsa));
         assertEquals( "Refresh should be called once more", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );
         
@@ -105,6 +108,8 @@ public class LookupSensitiveActionTest extends NbTestCase {
         tlsa.clear();
         tpcl.clear();
         lookup.change(d3);
+        // a state query (as done when a menu is displayed) forces the pending refresh
+        assertTrue("Enabled1.1", isEnabled(tlsa));
         assertEquals( "Refresh should be called once", 1, tlsa.refreshCounter );
         assertEquals( "One event should be fired", 1, tpcl.getEvents().size() );        
         
@@ -167,20 +172,22 @@ public class LookupSensitiveActionTest extends NbTestCase {
             performCounter++;
         }
            
-        protected @Override void refresh(Lookup context, boolean immediate) {
+        protected @Override void refresh(Lookup context) {
             refreshCounter++;
             
             DataObject dobj = context.lookup(DataObject.class);
             
-            if (dobj != null) {
-		putValue( Action.NAME, dobj.getName() );
-                setEnabled(true);
-	    } else {
-                setEnabled(false);
-            }
+            boolean enable = dobj != null;
+            String name = dobj != null ? dobj.getName() : null;
+            Mutex.EVENT.writeAccess(() -> {
+                if (name != null) {
+                    putValue( Action.NAME, name );
+                }
+                setEnabled(enable);
+            });
             
         }
-        
+
         public void clear() {
             performCounter = refreshCounter = 0;
         }

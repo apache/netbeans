@@ -66,6 +66,7 @@ import org.openide.util.Utilities;
  */
 public class ProjectChooserAccessory extends javax.swing.JPanel
     implements ActionListener, PropertyChangeListener {
+    private final OpenProjectListSettings opls;
 
     private RequestProcessor.Task updateSubprojectsTask;
     private RequestProcessor.Task displayNameTask;
@@ -76,7 +77,9 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     private Map<Project,Set<? extends Project>> subprojectsCache = new HashMap<Project,Set<? extends Project>>(); // #59098
     /** Creates new form ProjectChooserAccessory */
-    public ProjectChooserAccessory(JFileChooser chooser, boolean isOpenSubprojects, boolean trustAndPrime) {
+    public ProjectChooserAccessory(JFileChooser chooser, OpenProjectListSettings opls) {
+        this.opls = opls;
+
         initComponents();
 
         modelUpdater = new ModelUpdater();
@@ -87,11 +90,15 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         updateSubprojectsTask.setPriority( Thread.MIN_PRIORITY );
 
         // Listen on the subproject checkbox to change the option accordingly
-        jCheckBoxSubprojects.setSelected( isOpenSubprojects );
+        jCheckBoxSubprojects.setSelected(opls.isOpenSubprojects());
         jCheckBoxSubprojects.addActionListener( this );
 
-        jCheckBoxPrime.setSelected(trustAndPrime);
+        jCheckBoxPrime.setSelected(opls.isTrustAndPrime());
         jCheckBoxPrime.addActionListener(this);
+
+        jCheckBoxOpenAsProject.setSelected(opls.isOpenAsProject());
+        jCheckBoxOpenAsProject.setEnabled(false);
+        jCheckBoxOpenAsProject.addActionListener(this);
 
         // Listen on the chooser to update the Accessory
         chooser.addPropertyChangeListener( this );
@@ -116,6 +123,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         jLabelProjectName = new javax.swing.JLabel();
         jTextFieldProjectName = new javax.swing.JTextField();
         jCheckBoxPrime = new javax.swing.JCheckBox();
+        jCheckBoxOpenAsProject = new javax.swing.JCheckBox();
         jCheckBoxSubprojects = new javax.swing.JCheckBox();
         jScrollPaneSubprojects = new javax.swing.JScrollPane();
         jListSubprojects = new javax.swing.JList();
@@ -150,6 +158,16 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         add(jCheckBoxPrime, gridBagConstraints);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxOpenAsProject, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_OpenAsProject_CheckBox")); // NOI18N
+        jCheckBoxOpenAsProject.setToolTipText(org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_OpenAsProject_CheckBoxTooltipText")); // NOI18N
+        jCheckBoxOpenAsProject.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
+        add(jCheckBoxOpenAsProject, gridBagConstraints);
+        jCheckBoxOpenAsProject.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "ACSD_ProjectChooserAccessory_jCheckBoxOpenAsProject")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxSubprojects, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Subprojects_CheckBox")); // NOI18N
         jCheckBoxSubprojects.setMargin(new java.awt.Insets(2, 0, 2, 2));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -176,6 +194,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxOpenAsProject;
     private javax.swing.JCheckBox jCheckBoxPrime;
     private javax.swing.JCheckBox jCheckBoxSubprojects;
     private javax.swing.JLabel jLabelProjectName;
@@ -189,10 +208,13 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
     @Override
     public void actionPerformed( ActionEvent e ) {
         if ( e.getSource() == jCheckBoxSubprojects ) {
-            OpenProjectListSettings.getInstance().setOpenSubprojects( jCheckBoxSubprojects.isSelected() );
+            opls.setOpenSubprojects( jCheckBoxSubprojects.isSelected() );
         }
         if (e.getSource() == jCheckBoxPrime) {
-            OpenProjectListSettings.getInstance().setTrustAndPrime(jCheckBoxPrime.isSelected());
+            opls.setTrustAndPrime(jCheckBoxPrime.isSelected());
+        }
+        if (e.getSource() == jCheckBoxOpenAsProject) {
+            opls.setOpenAsProject(jCheckBoxOpenAsProject.isSelected());
         }
     }
 
@@ -246,6 +268,16 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
             EventQueue.invokeLater(new Runnable() {
                         @Override
                 public void run() {
+
+            // "Open Directory as Project" only makes sense when at least
+            // one of the selected folders is not a project yet:
+            int selectedCount = 0;
+            for (File dir : projectDirs) {
+                if (dir != null) {
+                    selectedCount++;
+                }
+            }
+            jCheckBoxOpenAsProject.setEnabled(selectedCount > projects.size());
 
             if ( !projects.isEmpty() ) {
                 // Enable all components acessory
@@ -337,6 +369,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         else if ( JFileChooser.DIRECTORY_CHANGED_PROPERTY.equals( e.getPropertyName() ) ) {
             // Selection lost => disable accessory
             setAccessoryEnablement(false, 0, 0);
+            jCheckBoxOpenAsProject.setEnabled(false);
         }
     }
 
@@ -359,8 +392,8 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         return cnt;
     }
 
-    private static Project getProject( File dir ) {
-        return OpenProjectList.fileToProject( dir );
+    private static Project getProject(File dir) {
+        return OpenProjectList.fileToProject(dir, false);
     }
 
     private static ProjectManager.Result getProjectResult(File dir) {
@@ -439,7 +472,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         ProjectManager.getDefault().clearNonProjectCache(); // #41882
 
         OpenProjectListSettings opls = OpenProjectListSettings.getInstance();
-        JFileChooser chooser = new ProjectFileChooser();
+        ProjectFileChooser chooser = new ProjectFileChooser(opls);
         chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
 
         if ("GTK".equals(javax.swing.UIManager.getLookAndFeel().getID())) { // NOI18N
@@ -463,7 +496,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
         if ( defaultAccessory ) {
-            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls.isOpenSubprojects(), opls.isTrustAndPrime()));
+            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls));
         }
 
         File currDir = null;
@@ -505,10 +538,12 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
     // Aditional innerclasses for the file chooser -----------------------------
 
     private static class ProjectFileChooser extends JFileChooser {
+        final OpenProjectListSettings opls;
 
         @SuppressWarnings("LeakingThisInConstructor")
-        public ProjectFileChooser() {
-            OpenProjectListSettings.getInstance().restoreComponentSize(this);
+        public ProjectFileChooser(OpenProjectListSettings opls) {
+            this.opls = opls;
+            opls.restoreComponentSize(this);
         }
 
         @Override
@@ -517,10 +552,10 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
             if (selectedFile != null) {
                 File dir = FileUtil.normalizeFile(selectedFile);
                 FileObject fo = FileUtil.toFileObject(dir);
-                if (fo != null && fo.isFolder() && ProjectManager.getDefault().isProject(fo)) {
+                if (fo != null && fo.isFolder()
+                        && (ProjectManager.getDefault().isProject(fo) || opls.isOpenAsProject())) {
                     super.approveSelection();
-                }
-                else {
+                } else {
                     setCurrentDirectory( dir );
                 }
             }
@@ -528,7 +563,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
         @Override
         public void removeNotify() {
-            OpenProjectListSettings.getInstance().storeComponentSize(this);
+            opls.storeComponentSize(this);
             super.removeNotify();
         }
 

@@ -47,7 +47,7 @@ public class ProjectSupport {
         final ProjectListListener listener = new ProjectListListener();
         try {
             // open project
-            final Project project = OpenProjectList.fileToProject(projectDir);
+            final Project project = OpenProjectList.fileToProject(projectDir, false);
             if(project == null) {
                 ErrorManager.getDefault().log(ErrorManager.USER, "Project not found: "+projectDir);
                 return null;

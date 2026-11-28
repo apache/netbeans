@@ -145,10 +145,12 @@ public class DynamicVerifyTest extends NbTestCase {
         StringBuilder sb = new StringBuilder();
         Map<String,String> all = FeatureManager.projectFiles();
 
+        // no project.file.* property in ergonomics/ide.ergonomics/
         all.put("Fine", "org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton");
         all.put("FineToo", "org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory");
         all.put("MostlyOK", "org.netbeans.modules.java.openjdk.project.FilterStandardProjects");
         all.put("NoProjectFileAvailable", "org.netbeans.modules.cpplite.project.CPPLiteProject$FactoryImpl");
+        all.put("NoProjectFileAvailableGp", "org.netbeans.modules.generic.project.GpFactory");
 
         /*
          * The "rust" cluster is not included in all cluster configurations in nbbuild/cluster.properties.

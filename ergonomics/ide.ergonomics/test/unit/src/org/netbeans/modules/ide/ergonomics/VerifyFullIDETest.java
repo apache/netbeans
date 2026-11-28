@@ -64,6 +64,7 @@ public class VerifyFullIDETest extends NbTestCase {
         Map<String,String> all = FeatureManager.projectFiles();
 
         all.put("Fine", "org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton");
+        all.put("NoProjectFileAvailableGp", "org.netbeans.modules.generic.project.GpFactory");
 
         iterateRegistrations(sb, ProjectFactory.class, null, all);
 
@@ -116,6 +117,9 @@ public class VerifyFullIDETest extends NbTestCase {
                 continue;
             }
             if (fo.getPath().equals("Templates/Project/Samples")) {
+                continue;
+            }
+            if (fo.getPath().equals("Templates/Project/Generic")) {
                 continue;
             }
 

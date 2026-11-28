@@ -121,8 +121,9 @@ public class OpenProject extends BasicAction {
                 RP.post(new Runnable() {
                     @Override public void run() {
                         ArrayList<Project> projects = new ArrayList<Project>( projectDirs.length );
+                        boolean openAsProject = OpenProjectListSettings.getInstance().isOpenAsProject();
                         for (File d : projectDirs) {
-                            Project p = OpenProjectList.fileToProject(FileUtil.normalizeFile(d));
+                            Project p = OpenProjectList.fileToProject(FileUtil.normalizeFile(d), openAsProject);
                             if ( p != null ) {
                                 projects.add( p );
                             }

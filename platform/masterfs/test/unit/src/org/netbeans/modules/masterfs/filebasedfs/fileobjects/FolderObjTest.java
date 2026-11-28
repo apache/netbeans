@@ -457,7 +457,7 @@ public class FolderObjTest extends NbTestCase {
         final FileObject testRoot = FileBasedFileSystem.getFileObject(getWorkDir());
         assertNotNull(testRoot);        
         File file2lock = new File(getWorkDir(),"aa.txt");
-        File associatedLock = WriteLockUtils.getAssociatedLockFile(file2lock);//NOI18N
+        File associatedLock = TestUtils.getAssociatedLockFile(file2lock);//NOI18N
         
         try {            
             testRoot.createData(associatedLock.getName());

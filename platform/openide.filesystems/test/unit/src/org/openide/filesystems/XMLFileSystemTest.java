@@ -42,6 +42,7 @@ implements XMLFileSystemTestHid.Factory {
         NbTestSuite suite = new NbTestSuite();
         suite.addTestSuite(FileSystemTestHid.class);
         suite.addTestSuite(FileObjectTestHid.class);
+        suite.addTestSuite(PathTestHid.class);
         suite.addTestSuite(XMLFileSystemTestHid.class);        
                 
         return new XMLFileSystemTest(suite);

@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -63,6 +64,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.modules.openide.filesystems.declmime.MIMEResolverImpl;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.spi.ArchiveRootProvider;
@@ -802,12 +804,21 @@ public final class FileUtil extends Object {
         return data;
     }
 
-    /** Finds appropriate java.io.File to FileObject if possible.
-     * If not possible then null is returned.
+    /** Finds appropriate {@link File} for the provided {@link FileObject}, if possible.
+     * If you need JDK interoperability,
+     * consider using {@link #toPath(FileObject)} for obtaining a {@link Path} instead.
+     * The {@link #toPath(FileObject)} method is <b>guaranteed to never return {@code null}</b>
+     * for a valid {@link FileObject}.
      * This is the inverse operation of {@link #toFileObject}.
+     * <p>
+     * Implementation note: This method checks {@code fo.getAttribute("java.io.File")} first,
+     * before attempting to resolve the file via URL mapping.
+     * 
      * @param fo FileObject whose corresponding File will be looked for
      * @return java.io.File or null if no corresponding File exists.
      * @since 1.29
+     * @see #toFileObject(File)
+     * @see #toPath
      */
     public static File toFile(FileObject fo) {
         File retVal = (File) fo.getAttribute("java.io.File"); // NOI18N;        
@@ -833,16 +844,43 @@ public final class FileUtil extends Object {
         return retVal;
     }
     
-    /** Finds appropriate java.nio.file.Path to FileObject if possible.
-     * If not possible then null is returned.
-     * This is the inverse operation of {@link #toFileObject}.
-     * @param fo FileObject whose corresponding Path will be looked for
-     * @return java.nio.file.Path or null if no corresponding File exists.
+    /** Finds appropriate {@link Path} for given {@code FileObject}.
+     * Since version <em>9.50</em> it is guaranteed that the return value
+     * <em>will never be {@code null}</em> for an object with valid {@link FileObject#getFileSystem()}.
+     * A {@link Path} instance is created even for fully virtual {@code FileObject}s.
+     *
+     * <h4>Emulation of {@link FileChannel} and {@link java.nio.channels.SeekableByteChannel}</h4>
+     *
+     * {@link FileChannel#open(Path, OpenOption...) Opening a writable channel}
+     * for a virtual path acquires a {@link FileObject#lock()}
+     * until the channel closes; another writable
+     * channel cannot be opened while the file is locked. It is recommended to
+     * finish all channel operations before closing it. A writable virtual
+     * channel returns the same exclusive whole-file lock for every lock
+     * request, regardless of the requested range or sharing mode. Releasing it
+     * has no effect; it remains valid until the channel closes.
+     * A virtual channel loads the file content into memory when it opens. Reads
+     * use that in-memory content; writes remain there until {@link FileChannel#force(boolean)}
+     * or close writes the pending content to the {@link FileObject}. Changes are
+     * not visible to other {@code FileObject} readers until then.
+     * Unlike native channels, a read-only virtual channel cannot be locked;
+     * both shared and exclusive lock requests throw
+     * {@link java.nio.channels.NonWritableChannelException}.
+     * Native paths use the native provider's locking instead.
+     *
+     * This is the inverse operation of {@link #toFileObject(java.nio.file.Path) }.
+     * @param fo object to find corresponding Path for
+     * @return {@link Path} for the {@code FileObject} never {@code null}
+     * 
      * @since 9.32
      */
     public static Path toPath(FileObject fo) {
-        File f = toFile(fo);
-        return f != null ? f.toPath() : null;
+        try {
+            Parameters.notNull("fo", fo);
+            return fo.getFileSystem().toPath(fo);
+        } catch (FileStateInvalidException ex) {
+            throw new IllegalStateException("FileObject has no valid filesystem", ex);
+        }
     }
 
     /**
@@ -917,8 +955,12 @@ public final class FileUtil extends Object {
      * @param path the {@link Path} to be converted
      * @return the {@link FileObject} representing the {@code path} or {@code null}
      * @since 9.32
+     * @see #toPath
      */
     public static FileObject toFileObject(Path path) {
+        if (path instanceof NioPathForFileObject nioPath) {
+            return nioPath.getFileObject();
+        }
         try {
             return toFileObject(path.toFile());
         } catch (UnsupportedOperationException ex) {

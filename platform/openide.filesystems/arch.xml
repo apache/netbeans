@@ -21,6 +21,7 @@
 -->
 <!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
   <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+  <!ATTLIST a target CDATA #IMPLIED>
 ]>
 
 <api-answers
@@ -348,7 +349,15 @@ No.
         which provide rollback features. Please see MultiFileSystem class javadoc 
         for more information.
     </p>
- </api>
+  </api>
+  <api name="java.io.File" group="property" type="export" category="stable"
+    url="@TOP@/org/openide/filesystems/FileUtil.html#toFile(org.openide.filesystems.FileObject)"
+  >
+    <a href="@TOP@/org/openide/filesystems/FileUtil.html#toFile(org.openide.filesystems.FileObject)">toFile</a>
+    reads the <code>java.io.File</code> attribute from the <code>FileObject</code> to
+    check for a corresponding <code>java.io.File</code>. If the attribute is
+    <code>null</code>, it may attempt to find a file using URL mapping.
+  </api>
 </answer>
 
 
@@ -857,14 +866,14 @@ No.
 -->
  <answer id="arch-usecases">
   <p>
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a target="_blank" href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
      </a>
     For general overview of the filesystem concepts, related topics, 
     together with code samples, see chapter 3, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a target="_blank" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a>
     by Jason Wexbridge and Walter Nyland.
    Many of the usecases are described at the
    <a href="@TOP@/org/openide/filesystems/doc-files/api.html">overall documentation</a>,

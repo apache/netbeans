@@ -2940,6 +2940,47 @@ public class FileObjectTestHid extends TestBaseHid {
         
     }
 
+    public void testOutputStreamTruncatesOnOpen() throws Exception {
+        checkSetUp();
+        FileObject file = getTestFile1(root);
+        if (fs.isReadOnly() || file.isReadOnly()) {
+            return;
+        }
+        writeStr(file, "original");
+        try (OutputStream output = file.getOutputStream()) {
+            assertEquals("Opening the stream truncates the file", 0L, file.getSize());
+            output.write(new byte[] {1, 2, 3});
+        }
+        assertEquals(3L, file.getSize());
+    }
+
+    public void testOutputStreamRejectsWriteAfterClose() throws Exception {
+        checkSetUp();
+        FileObject file = getTestFile1(root);
+        if (fs.isReadOnly() || file.isReadOnly()) {
+            return;
+        }
+        assertClosedOutputStreamRejectsWrites(file.getOutputStream());
+        try (FileLock lock = file.lock()) {
+            assertClosedOutputStreamRejectsWrites(file.getOutputStream(lock));
+        }
+    }
+
+    private static void assertClosedOutputStreamRejectsWrites(OutputStream output) throws IOException {
+        output.write(1);
+        output.close();
+        try {
+            output.write(2);
+            fail("A closed output stream must reject single-byte writes");
+        } catch (IOException expected) {
+        }
+        try {
+            output.write(new byte[] {3, 4}, 0, 2);
+            fail("A closed output stream must reject array writes");
+        } catch (IOException expected) {
+        }
+    }
+
     public void testGetOutputStream1() throws java.io.IOException {
         checkSetUp();
         

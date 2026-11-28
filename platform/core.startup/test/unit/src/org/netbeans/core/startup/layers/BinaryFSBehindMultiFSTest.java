@@ -27,6 +27,7 @@ import junit.framework.Test;
 import org.netbeans.junit.NbTestSuite;
 import org.openide.filesystems.AttributesTestHidden;
 import org.openide.filesystems.FileObjectTestHid;
+import org.openide.filesystems.PathTestHid;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileSystemFactoryHid;
 import org.openide.filesystems.FileSystemTestHid;
@@ -49,6 +50,7 @@ implements XMLFileSystemTestHid.Factory {
         NbTestSuite suite = new NbTestSuite();
         suite.addTestSuite(FileSystemTestHid.class);
         suite.addTestSuite(FileObjectTestHid.class);
+        suite.addTestSuite(PathTestHid.class);
         suite.addTestSuite(AttributesTestHidden.class);
         suite.addTestSuite(XMLFileSystemTestHid.class);
          

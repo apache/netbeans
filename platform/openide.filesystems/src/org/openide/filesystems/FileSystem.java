@@ -25,9 +25,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,6 +39,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.openide.filesystems.FileUtil.toFile;
 import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
@@ -52,16 +55,16 @@ import org.openide.util.lookup.ServiceProviders;
  * normally includes XML layers created using {@link XMLFileSystem}.</p>
  * <p>Since version 7.1 you can dynamically change the content of the system filesystem.
  * Either by inserting your own implementation of a filesystem directly or by
- * registering so called {@link Repository.LayerProvider}. With the 
- * {@link Repository.LayerProvider provider} you can show a dialog letting the user log in 
+ * registering so called {@link Repository.LayerProvider}. With the
+ * {@link Repository.LayerProvider provider} you can show a dialog letting the user log in
  * to some server and only later make {@link XMLFileSystem additional XML layers}
  * available.
- * <p> 
+ * <p>
  * In case you need to insert a dynamic file system with various definitions (NetBeans Platform menus,
- * toolbars, layout of windows, etc.), you can create a filesystem implementation, 
+ * toolbars, layout of windows, etc.), you can create a filesystem implementation,
  * then register it in default lookup.
- * It is easiest to subclass {@link AbstractFileSystem} and implement 
- * few simple query interfaces ({@link AbstractFileSystem.List}, 
+ * It is easiest to subclass {@link AbstractFileSystem} and implement
+ * few simple query interfaces ({@link AbstractFileSystem.List},
  * {@link AbstractFileSystem.Info}, {@link AbstractFileSystem.Change}).
  * For example:</p>
  * <pre>
@@ -80,16 +83,16 @@ public class LoginFileSystem extends AbstractFileSystem implements
         LoginFileSystem lfs = {@link Lookup}.getDefault().lookup(LoginFileSystem.class);
         lfs.initializeSomehow();
     }
-     
+
     private void initializeSomehow() {
         // do some initialization
         super.refresh();
-    } 
-    
+    }
+
     public String[] children(String path) {
         // compute list of children somehow
     }
-    
+
     // other method implementations follow...
 }
  * </pre>
@@ -124,7 +127,7 @@ public abstract class FileSystem implements Serializable {
     /** Property name giving display name of filesystem.
      * @since 2.1
      */
-    public static final String PROP_DISPLAY_NAME = "displayName"; // NOI18N    
+    public static final String PROP_DISPLAY_NAME = "displayName"; // NOI18N
 
     /** Property name giving root folder of filesystem. */
     public static final String PROP_ROOT = "root"; // NOI18N
@@ -170,6 +173,7 @@ public abstract class FileSystem implements Serializable {
     private transient ListenerList<FileStatusListener> fileStatusList;
     private transient ListenerList<VetoableChangeListener> vetoableChangeList;
     private transient PropertyChangeSupport changeSupport;
+    private transient NioFsForFileSystem nioFs;
 
     /** Default constructor. */
     public FileSystem() {
@@ -276,17 +280,17 @@ public abstract class FileSystem implements Serializable {
             o = systemName;
             n = systemName = name.intern();
         }
-        
+
         firePropertyChange(PROP_SYSTEM_NAME, o, n);
 
         /** backward compatibility for FileSystems that don`t fire
          * PROP_DISPLAY_NAME*/
         firePropertyChange(PROP_DISPLAY_NAME, null, null);
     }
-    
+
     /**
      * Caches the value of 'default' flag. It is extremely costly to call to FileUtil.getConfigRoot()
-     * during startup, as the getter for repository waits for the rapidly changing default Lookup. 
+     * during startup, as the getter for repository waits for the rapidly changing default Lookup.
      * In a multi-context environment, the flag <b>might</b> be inappropriate for the current execution context;
      * an execution "A" could possibly reach an instance of default FS for execution "B". But as the two execution
      * should each operate with a different Repository with distinct instances of FileSystems, such condition
@@ -311,7 +315,7 @@ public abstract class FileSystem implements Serializable {
             Exceptions.printStackTrace(ex);
         }
         if (defFS != null) {
-            // XXX hotfix 
+            // XXX hotfix
             //	    assert defFS == (this == fs) : "Default filesystem used in foreign execution";
         }
         return defFS = (this == fs);
@@ -385,7 +389,7 @@ public abstract class FileSystem implements Serializable {
     /** Returns temporary folder if it is avaliable on this file system.
      * Method never returns null. IOException is thrown instead.
      * @return a file object for temporary folder
-     * @throws IOException 
+     * @throws IOException
      * @since 7.60
      */
     public FileObject getTempFolder() throws IOException {
@@ -399,20 +403,20 @@ public abstract class FileSystem implements Serializable {
      * @param suffix suffix of the name of created file
      * @param deleteOnExit delete file on exit
      * @return new temporary file
-     * @throws IOException 
+     * @throws IOException
      * @since 7.60
      */
     public FileObject createTempFile(FileObject parent, String prefix, String suffix, boolean deleteOnExit) throws IOException {
         throw new IOException("Unsupported operation"); // NOI18N
     }
-        
+
     /** Finds various extensions for set of file objects coming from
      * this file system.
      * For example actions should be obtainable as:<pre>
      * actions = fs.{@link #findExtrasFor(java.util.Set) findExtrasFor}(foSet).{@link Lookup#lookupAll(java.lang.Class) lookupAll}({@link javax.swing.Action});
      * </pre>
      * @param objects the set of objects
-     * @return the lookup providing various extensions (usually visual) 
+     * @return the lookup providing various extensions (usually visual)
      * for these objects
      * @since 8.12
      */
@@ -435,9 +439,9 @@ public abstract class FileSystem implements Serializable {
     public String toString() {
         return getSystemName() + "[" + super.toString() + "]"; // NOI18N
     }
-    
+
     private static volatile Lookup.Result<StatusDecorator> statusResult;
-    
+
     private static StatusDecorator defaultStatus() {
         if (statusResult == null) {
             statusResult = Lookup.getDefault().lookupResult(StatusDecorator.class);
@@ -472,7 +476,7 @@ public abstract class FileSystem implements Serializable {
     public StatusDecorator getDecorator() {
         return isDefault() ? defaultStatus() : STATUS_NONE;
     }
-    
+
     /** Executes atomic action. The atomic action represents a set of
     * operations constituting one logical unit. It is guaranteed that during
     * execution of such an action no events about changes in the filesystem
@@ -737,6 +741,27 @@ public abstract class FileSystem implements Serializable {
     void waitRefreshed() {
     }
 
+    final synchronized Path toVirtualPath(FileObject fo) {
+        if (nioFs == null) {
+            nioFs = new NioFsForFileSystem(this);
+        }
+        return NioPathForFileObject.create(fo, nioFs);
+    }
+
+    /** Convert a fileobject to Path. Internally overridable by {@link MultiFileSystem}.
+     *
+     * @param fo
+     * @return
+     */
+    Path toPath(FileObject fo) {
+        File f = FileUtil.toFile(fo);
+        if (f != null) {
+            return f.toPath();
+        } else {
+            return toVirtualPath(fo);
+        }
+    }
+
     /** An action that it is to be called atomically with respect to filesystem event notification.
     * During its execution (via {@link FileSystem#runAtomicAction runAtomicAction})
     * no events about changes in filesystems are fired.
@@ -758,7 +783,7 @@ public abstract class FileSystem implements Serializable {
         */
         public void run() throws IOException;
     }
-    
+
     static interface AsyncAtomicAction extends AtomicAction {
         boolean isAsynchronous();
     }

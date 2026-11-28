@@ -874,7 +874,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
                                 return accepted;
                             }
                         });
-                        return childs.length == 0;
+                        return childs.length == 0 && file.delete();
                     }
                     return file.delete();
                 }                

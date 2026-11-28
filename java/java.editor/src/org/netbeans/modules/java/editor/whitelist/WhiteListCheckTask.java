@@ -149,7 +149,7 @@ public class WhiteListCheckTask extends JavaParserResultTask<Result> {
         }
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=TaskFactory.class)
+    @MimeRegistration(mimeType = "text/x-java", service = TaskFactory.class, position = 900)
     public static class Factory extends TaskFactory {
         @Override
         public Collection<? extends SchedulerTask> create(Snapshot snapshot) {

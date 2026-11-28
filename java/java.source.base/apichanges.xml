@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="TreeMaker.Record">
+        <api name="javasource_base" />
+        <summary>Added TreeMaker.Record</summary>
+        <version major="1" minor="2.88"/>
+        <date day="11" month="11" year="2026"/>
+        <author login="mbien"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeMaker.Record to create a ClassTree representing a record.
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeMaker.Yield">
         <api name="javasource_base" />
         <summary>Added TreeMaker.Yield</summary>

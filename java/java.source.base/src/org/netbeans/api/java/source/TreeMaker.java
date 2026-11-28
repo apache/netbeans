@@ -471,13 +471,38 @@ public final class TreeMaker {
      *                          empty list.
      * @see com.sun.source.tree.ClassTree
      */
-    public ClassTree Enum(ModifiersTree modifiers, 
+    public ClassTree Enum(ModifiersTree modifiers,
              CharSequence simpleName,
              List<? extends Tree> implementsClauses,
              List<? extends Tree> memberDecls) {
         return delegate.Enum(modifiers, simpleName, implementsClauses, memberDecls);
     }
-    
+
+    /**
+     * Creates a new ClassTree representing a record.
+     * <p>
+     * The record components must be included in {@code memberDecls} as
+     * {@link VariableTree}s created with {@link #RecordComponent}.
+     *
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the record without its package, such
+     *                          as "Point" for the record "java.awt.Point".
+     * @param typeParameters    the list of type parameters, or an empty list.
+     * @param implementsClauses the list of the interfaces this record
+     *                          implements, or an empty list.
+     * @param memberDecls       the list of fields, methods and record
+     *                          components of this record, or an empty list.
+     * @see com.sun.source.tree.ClassTree
+     * @since 2.88
+     */
+    public ClassTree Record(ModifiersTree modifiers,
+             CharSequence simpleName,
+             List<? extends TypeParameterTree> typeParameters,
+             List<? extends Tree> implementsClauses,
+             List<? extends Tree> memberDecls) {
+        return delegate.Record(modifiers, simpleName, typeParameters, implementsClauses, memberDecls);
+    }
+
     /**
      * Creates a new CompilationUnitTree.
      *

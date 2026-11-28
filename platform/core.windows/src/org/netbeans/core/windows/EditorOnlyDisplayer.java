@@ -197,7 +197,7 @@ public class EditorOnlyDisplayer {
         });
     }
 
-    private static boolean setShowEditorToolbar( boolean show ) {
+    public static boolean setShowEditorToolbar( boolean show ) {
         boolean res = true;
         Action toggleEditorToolbar = FileUtil.getConfigObject( "Editors/Actions/toggle-toolbar.instance", Action.class ); //NOI18N
         if( null != toggleEditorToolbar ) {

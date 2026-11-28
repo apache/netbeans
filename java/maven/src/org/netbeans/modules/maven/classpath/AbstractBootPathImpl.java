@@ -95,7 +95,7 @@ public abstract class AbstractBootPathImpl implements ClassPathImplementation, P
         if (activePlatformId == null) {
             return pm.getDefaultPlatform();
         } else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE, null)); //NOI18N
+            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification(CommonProjectUtils.J2SE_PLATFORM_TYPE)); //NOI18N
             for (int i = 0; i < installedPlatforms.length; i++) {
                 String antName = installedPlatforms[i].getProperties().get("platform.ant.name"); //NOI18N
                 if (antName != null && antName.equals(activePlatformId)) {

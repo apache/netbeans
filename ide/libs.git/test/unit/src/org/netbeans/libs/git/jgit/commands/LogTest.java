@@ -27,6 +27,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.filter.AndRevFilter;
 import org.eclipse.jgit.revwalk.filter.MessageRevFilter;
@@ -67,6 +68,41 @@ public class LogTest extends AbstractGitTestCase {
         field.setAccessible(true);
         int available = 32 - (int) field.get(null);
         assertEquals(LogCommand.MAX_REVWALK_FLAGS, available); // if this fails, adjust the value
+    }
+
+    // jgit 7.8.0's TopoSortPendingGenerator consumed 4 application flags per
+    // TOPO walk (and did not release them on reset()); it was reverted in
+    // 7.8.1 (f00dbb27e "StartGenerator: Revert back to TopoSortGenerator").
+    // This is a tripwire to detect the re-introduction of flag-consuming
+    // TOPO generators: if this fails, re-check LogCommand.MAX_REVWALK_FLAGS
+    // and browsing the history of big repositories (many branches).
+    public void testTopoSortDoesNotConsumeApplicationFlags() throws Exception {
+        File f = new File(workDir, "testtopoflags");
+        write(f, "initial content");
+        File[] files = new File[]{f};
+        add(files);
+        GitClient client = getClient(workDir);
+        client.commit(files, "commit1", null, null, NULL_PROGRESS_MONITOR);
+        write(f, "modification");
+        add(files);
+        GitRevisionInfo revision2 = client.commit(files, "commit2", null, null, NULL_PROGRESS_MONITOR);
+
+        try (RevWalk walk = new RevWalk(repository)) {
+            walk.sort(RevSort.TOPO);
+            walk.markStart(walk.parseCommit(repository.resolve(revision2.getRevision())));
+            while (walk.next() != null) {
+                // ignore
+            }
+            int remaining = 0;
+            try {
+                while (walk.newFlag("FLAG" + remaining) != null) { //NOI18N
+                    remaining++;
+                }
+            } catch (IllegalArgumentException ex) {
+                // all flags allocated
+            }
+            assertEquals(LogCommand.MAX_REVWALK_FLAGS, remaining); // if this fails, the walk consumed flags
+        }
     }
 
     public void testLogRevision() throws Exception {

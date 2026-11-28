@@ -252,7 +252,8 @@ public class J2SEPlatformImpl extends JavaPlatform implements PropertyChangeList
             if (cp != null) {
                 return cp;
             }
-            if (Util.JDK9.compareTo(getSpecification().getVersion())<=0) {    //NOI18N
+            Runtime.Version platformVersion = getSpecification().getJdkVersion();
+            if (platformVersion != null && platformVersion.feature() >= 9) {
                 cp = Util.createModulePath(getInstallFolders());
             }
             if (cp == null) {

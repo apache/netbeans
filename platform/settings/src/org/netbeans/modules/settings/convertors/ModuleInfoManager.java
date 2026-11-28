@@ -59,7 +59,7 @@ final class ModuleInfoManager {
         }
         synchronized (this) {
             if (modules == null) fillModules(l);
-            return (ModuleInfo) modules.get(codeBaseName);
+            return  modules.get(codeBaseName);
         }
     }
 
@@ -165,7 +165,7 @@ final class ModuleInfoManager {
      */
     public synchronized void unregisterPropertyChangeListener(SerialDataConvertor sdc, ModuleInfo mi) {
         if (mapOfListeners == null) return;
-        PCL lsnr = (PCL) mapOfListeners.get(mi);
+        PCL lsnr =  mapOfListeners.get(mi);
         if (lsnr != null) {
             lsnr.removePropertyChangeListener(sdc);
             // do not try to discard lsnr to allow to track reloading of a module
@@ -178,7 +178,7 @@ final class ModuleInfoManager {
      */
     public synchronized boolean isReloaded(ModuleInfo mi) {
         if (mapOfListeners == null) return false;
-        PCL lsnr = (PCL) mapOfListeners.get(mi);
+        PCL lsnr =  mapOfListeners.get(mi);
         return lsnr != null && lsnr.isReloaded();
     }
     
@@ -261,7 +261,7 @@ final class ModuleInfoManager {
                     origs = new WeakHashMap<SerialDataConvertor, PropertyChangeListener>();
                 }
                 
-                PropertyChangeListener old = (PropertyChangeListener) origs.get(sdc);
+                PropertyChangeListener old =  origs.get(sdc);
                 if (old != null) return;
                 origs.put(sdc, listener);
             }
@@ -279,7 +279,7 @@ final class ModuleInfoManager {
             synchronized (this) {
                 if (origs == null) return;
                 
-                PropertyChangeListener pcl = (PropertyChangeListener) origs.remove(sdc);
+                PropertyChangeListener pcl =  origs.remove(sdc);
                 if (pcl != null) {
                     removePropertyChangeListener(pcl);
                 }

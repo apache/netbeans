@@ -19,6 +19,9 @@
 package org.netbeans.modules.java.project.ui;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -175,7 +178,6 @@ public final class FixProjectSourceLevel extends javax.swing.JPanel {
         private final String type;
         private final SpecificationVersion minVersion;
 
-
         PlatformModel(
                 @NonNull final String type,
                 @NonNull final SpecificationVersion minVersion) {
@@ -184,16 +186,20 @@ public final class FixProjectSourceLevel extends javax.swing.JPanel {
             refresh();
         }
 
-
         void refresh() {
             removeAllElements();
             final JavaPlatform[] platforms = JavaPlatformManager.getDefault().getPlatforms(
                     null,
-                    new Specification(type, null));
+                    new Specification(type));
+            List<JavaPlatform> filteredPlatforms = new ArrayList<>();
             for (JavaPlatform jp : platforms) {
-                if (minVersion.compareTo(jp.getSpecification().getVersion())<=0) {
-                    addElement(jp);
+                if (minVersion.compareTo(jp.getSpecification().getVersion()) <= 0) {
+                    filteredPlatforms.add(jp);
                 }
+            }
+            filteredPlatforms.sort(Comparator.comparing(JavaPlatform::getSpecification).reversed());
+            for (JavaPlatform jp : filteredPlatforms) {
+                addElement(jp);
             }
         }
     }
@@ -207,8 +213,8 @@ public final class FixProjectSourceLevel extends javax.swing.JPanel {
                 final int index,
                 final boolean isSelected,
                 final boolean cellHasFocus) {
-            if (value instanceof JavaPlatform) {
-                value = ((JavaPlatform)value).getDisplayName();
+            if (value instanceof JavaPlatform javaPlatform) {
+                value = javaPlatform.getDisplayName();
             }
             return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }

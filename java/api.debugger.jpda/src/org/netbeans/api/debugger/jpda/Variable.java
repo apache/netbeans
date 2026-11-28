@@ -21,7 +21,7 @@ package org.netbeans.api.debugger.jpda;
 
 
 /**
- * Represents some variable in debugged JVM.
+ * Represents some variable in the debuggee.
  *
  * <pre style="background-color: rgb(255, 255, 102);">
  * Since JDI interfaces evolve from one version to another, it's strongly recommended
@@ -56,10 +56,25 @@ public interface Variable {
     /**
      * Create an object in this JVM, which mirrors the value of this variable in
      * the target JVM.
-     * 
+     *
      * @return The mirror object, or <code>null</code> when a mirror object can not be created.
      * @since 2.44
      */
     Object createMirrorObject();
-    
+
+    /**
+     * Creates a <em>snapshot</em> of the variable value. It clones the variable
+     * object to assure it <em>sticks to its current debugee value</em>
+     * regardless if the variable state gets re-assigned in the future.
+     *
+     * This is an optional operation. Variables that have no notion of
+     * <em>snapshotting</em> may return {@code this} as the default
+     * implementation of this method does.
+     *
+     * @return a <em>snapshot</em> of the current variable value
+     * @since 3.47
+     */
+    default Variable asValue() {
+        return this;
+    }
 }

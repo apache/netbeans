@@ -79,14 +79,11 @@ public class AuxiliaryConfigImpl implements AuxiliaryConfiguration {
                     FileObject config = dir.getFileObject(AUX_CONFIG_FILENAME);
                     if (config != null) {
                         try {
-                            InputStream is = config.getInputStream();
-                            try {
+                            try (InputStream is = config.getInputStream()) {
                                 InputSource input = new InputSource(is);
                                 input.setSystemId(config.toURL().toString());
-                                Element root = XMLUtil.parse(input, false, true, /*XXX*/null, null).getDocumentElement();
+                                Element root = XMLUtil.parse(input, false, true, true, /*XXX*/null, null).getDocumentElement();
                                 return XMLUtil.findElement(root, elementName, namespace);
-                            } finally {
-                                is.close();
                             }
                         } catch (Exception x) {
                             LOG.log(Level.INFO, "Cannot parse" + config, x);
@@ -97,7 +94,7 @@ public class AuxiliaryConfigImpl implements AuxiliaryConfiguration {
                     Object attr = dir.getAttribute(attrName);
                     if (attr instanceof String) {
                         try {
-                            Element fragment = XMLUtil.parse(new InputSource(new StringReader((String) attr)), false, true,
+                            Element fragment = XMLUtil.parse(new InputSource(new StringReader((String) attr)), false, true, true,
                                                              /*XXX #136595: need utility method*/null, null).getDocumentElement();
                             if (elementName.equals(fragment.getLocalName()) && namespace.equals(fragment.getNamespaceURI())) {
                                 return fragment;
@@ -138,13 +135,10 @@ public class AuxiliaryConfigImpl implements AuxiliaryConfiguration {
                         Document doc;
                         FileObject config = dir.getFileObject(AUX_CONFIG_FILENAME);
                         if (config != null) {
-                            InputStream is = config.getInputStream();
-                            try {
+                            try (InputStream is = config.getInputStream()) {
                                 InputSource input = new InputSource(is);
                                 input.setSystemId(config.toURL().toString());
-                                doc = XMLUtil.parse(input, false, true, /*XXX*/ null, null);
-                            } finally {
-                                is.close();
+                                doc = XMLUtil.parse(input, false, true, true, /*XXX*/ null, null);
                             }
                         } else {
                             config = dir.createData(AUX_CONFIG_FILENAME);
@@ -209,13 +203,10 @@ public class AuxiliaryConfigImpl implements AuxiliaryConfiguration {
                 if (config != null) {
                     try {
                         Document doc;
-                        InputStream is = config.getInputStream();
-                        try {
+                        try (InputStream is = config.getInputStream()) {
                             InputSource input = new InputSource(is);
                             input.setSystemId(config.toURL().toString());
-                            doc = XMLUtil.parse(input, false, true, /*XXX*/ null, null);
-                        } finally {
-                            is.close();
+                            doc = XMLUtil.parse(input, false, true, true, /*XXX*/ null, null);
                         }
                         Element root = doc.getDocumentElement();
                         Element toRemove = XMLUtil.findElement(root, elementName, namespace);

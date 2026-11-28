@@ -20,6 +20,7 @@
 package org.netbeans.modules.git;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -97,4 +98,28 @@ public class GitUtilsTest extends NbTestCase {
         assertEquals(expectedRoots, roots);
     }
 
+
+    public void testGitFileRelativeResolution() throws Exception {
+        clearWorkDir();
+
+        File projectRoot = getWorkDir();
+
+        // Define all required directories
+        File mainGitDir = new File(projectRoot, ".git");
+        File submoduleModulesDir = new File(mainGitDir, "modules/libs/my-submodule");
+        File submoduleWorkingDir = new File(projectRoot, "libs/my-submodule");
+
+        // Create the physical directories on disk
+        assertTrue(submoduleModulesDir.mkdirs());
+        assertTrue(submoduleWorkingDir.mkdirs());
+
+        File submoduleGitFile = new File(submoduleWorkingDir, ".git");
+        try (FileWriter writer = new FileWriter(submoduleGitFile)) {
+            // The trailing newline matches how Git natively writes the file
+            writer.write("gitdir: ../../.git/modules/libs/my-submodule\n");
+        }
+
+        File metaFolder = GitUtils.findMetafolder(submoduleGitFile);
+        assertEquals("Meta folder properly resolved", submoduleModulesDir, metaFolder);
+    }
 }

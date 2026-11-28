@@ -174,8 +174,8 @@ public final class JsfELVariableResolver implements ELVariableResolver {
                     public void run(ResultIterator resultIterator) throws Exception {
                         //one level - works only if xhtml is top level
                         Result parseResult = JsfUtils.getEmbeddedParserResult(resultIterator, "text/html"); //NOI18N
-                        if (parseResult instanceof HtmlParserResult) {
-                            ccModelRef.set((CompositeComponentModel) modelFactory.getModel((HtmlParserResult) parseResult));
+                        if (parseResult instanceof HtmlParserResult htmlParserResult) {
+                            ccModelRef.set((CompositeComponentModel) modelFactory.getModel(htmlParserResult));
                         }
                     }
                 });
@@ -248,9 +248,9 @@ public final class JsfELVariableResolver implements ELVariableResolver {
                 public void run(ResultIterator resultIterator) throws Exception {
                     //one level - works only if xhtml is top level
                     Result parseResult = JsfUtils.getEmbeddedParserResult(resultIterator, "text/html"); //NOI18N
-                    if (parseResult instanceof HtmlParserResult) {
-                        JsfVariablesModel model = JsfVariablesModel.getModel((HtmlParserResult) parseResult, resultIterator.getSnapshot());
-                        List<JsfVariableContext> contexts = model.getAllAvailableVariables(offset, false);
+                    if (parseResult instanceof HtmlParserResult htmlParserResult) {
+                        JsfVariablesModel model = JsfVariablesModel.getModel(htmlParserResult, resultIterator.getSnapshot());
+                        List<JsfVariableContext> contexts = model.getAllAvailableVariables(offset, true);
                         result.addAll(contexts);
                     }
                 }
@@ -319,8 +319,7 @@ public final class JsfELVariableResolver implements ELVariableResolver {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Result parseResult = JsfUtils.getEmbeddedParserResult(resultIterator, "text/html"); //NOI18N
-                    if (parseResult instanceof HtmlParserResult) {
-                        HtmlParserResult result = (HtmlParserResult) parseResult;
+                    if (parseResult instanceof HtmlParserResult result) {
                         Node root = DefaultLibraryInfo.COMPOSITE.getValidNamespaces().stream()
                                     .map(result::root)
                                     .filter(Objects::nonNull)

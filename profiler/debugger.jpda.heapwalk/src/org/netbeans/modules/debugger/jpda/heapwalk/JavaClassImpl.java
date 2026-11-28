@@ -34,6 +34,7 @@ import org.netbeans.api.debugger.jpda.JPDAArrayType;
 import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Super;
+import org.netbeans.lib.profiler.heap.Type;
 
 import org.openide.ErrorManager;
 
@@ -153,10 +154,10 @@ public class JavaClassImpl implements JavaClass {
             FieldValue fieldValue = (FieldValue) fIt.next();
 
             if (fieldValue.getField().getName().equals(name)) {
-                if (fieldValue instanceof ObjectFieldValue) {
-                    return ((ObjectFieldValue) fieldValue).getInstance();
+                if (fieldValue instanceof ObjectFieldValue obj) {
+                    return obj.getInstance();
                 } else {
-                    return fieldValue.getValue();
+                    return FieldImpl.toPrimitiveValue(fieldValue);
                 }
             }
         }

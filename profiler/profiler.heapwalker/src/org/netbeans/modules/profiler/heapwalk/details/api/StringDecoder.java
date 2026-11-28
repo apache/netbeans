@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.profiler.heapwalk.details.api;
 
+import java.nio.ByteOrder;
 import java.util.List;
 import org.netbeans.lib.profiler.heap.Heap;
 import org.netbeans.lib.profiler.heap.JavaClass;
@@ -31,17 +32,31 @@ public final class StringDecoder {
     
     private final byte coder;
     private final List<String> values;
-    private int HI_BYTE_SHIFT;
-    private int LO_BYTE_SHIFT;
+    private final int HI_BYTE_SHIFT;
+    private final int LO_BYTE_SHIFT;
 
     public StringDecoder(Heap heap, byte c, List<String> val) {
         coder = c;
         values = val;
+        int hiShift = -1;
+        int loShift = -1;
         if (coder == 1) {
             JavaClass utf16Class = heap.getJavaClassByName("java.lang.StringUTF16"); // NOI18N
-            HI_BYTE_SHIFT = (Integer) utf16Class.getValueOfStaticField("HI_BYTE_SHIFT"); // NOI18N
-            LO_BYTE_SHIFT = (Integer) utf16Class.getValueOfStaticField("LO_BYTE_SHIFT"); // NOI18N
+            if (utf16Class != null) {
+                hiShift = (Integer) utf16Class.getValueOfStaticField("HI_BYTE_SHIFT"); // NOI18N
+                loShift = (Integer) utf16Class.getValueOfStaticField("LO_BYTE_SHIFT"); // NOI18N
+            } else {
+                if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN) {
+                    hiShift = 8;
+                    loShift = 0;
+                } else {
+                    hiShift = 0;
+                    loShift = 8;
+                }
+            }
         }
+        this.HI_BYTE_SHIFT = hiShift;
+        this.LO_BYTE_SHIFT = loShift;
     }
 
     public int getStringLength() {

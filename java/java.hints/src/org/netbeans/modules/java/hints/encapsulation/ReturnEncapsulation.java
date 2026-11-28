@@ -19,6 +19,9 @@
 
 package org.netbeans.modules.java.hints.encapsulation;
 
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -214,10 +217,27 @@ public class ReturnEncapsulation {
             TreePath decl = ctx.getInfo().getTrees().getPath(exprElement);
 
             if (decl != null && decl.getLeaf().getKind() == Kind.VARIABLE && ((VariableTree) decl.getLeaf()).getInitializer() != null) {
-                TreePath init = new TreePath(decl, ((VariableTree) decl.getLeaf()).getInitializer());
+                ExpressionTree etInit = ((VariableTree) decl.getLeaf()).getInitializer();
+                TreePath init = new TreePath(decl, etInit);
 
                 for (String p : UNMODIFIABLE) {
                     if (MatcherUtilities.matches(ctx, init, p)) {
+                        return null;
+                    }
+                }
+                // check arrays with zero length or empty initializer i.e new int[0] or new int[] {}
+                if (etInit.getKind() == Tree.Kind.NEW_ARRAY) {
+                    NewArrayTree newArray = (NewArrayTree) etInit;
+                    List<? extends ExpressionTree> dimensions = newArray.getDimensions();
+                    if (dimensions != null &&
+                        !dimensions.isEmpty() &&
+                        dimensions.getFirst().getKind() == Tree.Kind.INT_LITERAL &&
+                        Integer.valueOf(0).equals(((LiteralTree)dimensions.getFirst()).getValue())) {
+                        return null;
+                    }
+                    if (newArray.getInitializers() != null &&
+                        newArray.getInitializers().isEmpty() &&
+                        (dimensions == null || dimensions.isEmpty())) {
                         return null;
                     }
                 }

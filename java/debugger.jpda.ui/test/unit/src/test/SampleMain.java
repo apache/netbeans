@@ -18,9 +18,15 @@
  */
 package test;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import org.openide.util.Utilities;
 
 public final class SampleMain {
+
     private SampleMain() {
     }
 
@@ -30,5 +36,17 @@ public final class SampleMain {
         Object[] arr = new String[] { when };
         Object obj = SampleMain.class;
         throw new IllegalStateException(when + Arrays.toString(arr) + obj + i);
+    }
+
+    public static String findSourcePath() throws IOException, URISyntaxException {
+        URI url = SampleMain.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+        File curDir = Utilities.toFile(url);
+        for (;;) {
+            var testSrc = new File(new File(new File(curDir, "test"), "unit"), "src");
+            if (testSrc.isDirectory()) {
+                return testSrc.getPath();
+            }
+            curDir = curDir.getParentFile();
+        }
     }
 }

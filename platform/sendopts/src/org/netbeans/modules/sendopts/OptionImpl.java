@@ -199,7 +199,7 @@ public abstract class OptionImpl implements Cloneable {
             for(;;) {
                 OptionImpl elem = (OptionImpl) it.next();
                 if (elem.equals(this)) {
-                    return (OptionImpl)elem;
+                    return elem;
                 }
             }
         } else {

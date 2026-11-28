@@ -98,9 +98,17 @@ public class PluginPropertyUtils {
      * @param expressionProperty expression property that once defined (and plugin configuration is omitted) is used. only value, no ${}
      */
     public static @CheckForNull String getPluginProperty(@NonNull Project prj, @NonNull String groupId, @NonNull String artifactId, @NonNull String parameter, @NullAllowed String goal, @NullAllowed String expressionProperty) {
-        NbMavenProjectImpl project = prj instanceof NbMavenProjectImpl ? (NbMavenProjectImpl)prj : prj.getLookup().lookup(NbMavenProjectImpl.class);
+        NbMavenProjectImpl project = prj instanceof NbMavenProjectImpl nbp
+                ? nbp : prj.getLookup().lookup(NbMavenProjectImpl.class);
         assert project != null : "Requires a maven project instance"; //NOI18N
-        return getPluginPropertyImpl(project.getOriginalMavenProject(), groupId, artifactId, simpleProperty(parameter), goal, simpleDefaultProperty(expressionProperty));
+        return getPluginPropertyImpl(
+                project.getOriginalMavenProject(),
+                groupId,
+                artifactId,
+                simpleProperty(parameter),
+                goal,
+                simpleDefaultProperty(expressionProperty)
+        );
     }    
 
     /**

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -296,9 +297,7 @@ final class FixPlatform extends javax.swing.JPanel {
 
         private void init () {
             final List<JavaPlatform> newPlatfs = new ArrayList<>();
-            Arrays.stream(this.pm.getPlatforms(null, new Specification(
-                        this.platformType,
-                        null)))
+            Arrays.stream(this.pm.getPlatforms(null, new Specification(this.platformType)))
                     .filter((jp) -> !jp.getInstallFolders().isEmpty())
                     .forEach(newPlatfs::add);
             final Optional<JavaPlatform> resolved = newPlatfs.stream()
@@ -311,16 +310,8 @@ final class FixPlatform extends javax.swing.JPanel {
                 toSelect = broken;
                 newPlatfs.add(broken);
             }
-            newPlatfs.sort((p1,p2) -> {
-                if (p1 == broken) {
-                    return -1;
-                }
-                if (p2 == broken) {
-                    return 1;
-                }
-                return p1.getDisplayName().compareTo(p2.getDisplayName());
-            });
-            platforms  = newPlatfs.toArray(new JavaPlatform[0]);
+            newPlatfs.sort(Comparator.comparing(JavaPlatform::getSpecification).reversed());
+            platforms = newPlatfs.toArray(JavaPlatform[]::new);
             setSelectedItem(toSelect);
         }
 
@@ -405,7 +396,7 @@ final class FixPlatform extends javax.swing.JPanel {
 
         @Override
         public Specification getSpecification() {
-            return new Specification(null, null);
+            return new Specification(null);
         }
 
         @Override

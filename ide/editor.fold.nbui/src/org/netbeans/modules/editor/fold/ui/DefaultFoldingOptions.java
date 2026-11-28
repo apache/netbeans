@@ -293,7 +293,8 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         boolean changed = preferences.getBoolean(SimpleValueNames.CODE_FOLDING_ENABLE, true) != prefs.getBoolean(SimpleValueNames.CODE_FOLDING_ENABLE, true)
                 || preferences.getBoolean(FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS, true) != prefs.getBoolean(FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS, true)
                 || preferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW, true) != prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW, true)
-                || preferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true) != prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true);
+                || preferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true) != prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true)
+                || preferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_TOOLTIP, true) != prefs.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_TOOLTIP, true);
         for (JCheckBox cb : controls) {
             changed |= isFoldTypeChanged((FoldType) cb.getClientProperty("type"), prefs); // NOI18N
         }

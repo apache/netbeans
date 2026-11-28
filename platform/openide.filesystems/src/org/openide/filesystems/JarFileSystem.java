@@ -22,9 +22,7 @@ package org.openide.filesystems;
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -34,6 +32,11 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -72,14 +75,13 @@ public class JarFileSystem extends AbstractFileSystem {
     /** Controlls the LocalFileSystem's automatic refresh.
     * If the refresh time interval is set from the System.property, than this value is used.
     * Otherwise, the refresh time interval is set to 0, which means the refresh is disabled. */
-    private static final int REFRESH_TIME = Integer.getInteger("org.openide.filesystems.JarFileSystem.REFRESH_TIME", 0)
-                                                   .intValue(); // NOI18N
+    private static final int REFRESH_TIME = Integer.getInteger("org.openide.filesystems.JarFileSystem.REFRESH_TIME", 0); // NOI18N
 
     /** maxsize for passing ByteArrayInputStream*/
-    private static final long MEM_STREAM_SIZE = 100000;
+    private static final long MEM_STREAM_SIZE = 200_000;
 
     /** Maximal time for which closing of jar is postponed. */
-    private static final int CLOSE_DELAY_MAX = 5000;
+    private static final int CLOSE_DELAY_MAX = 5_000;
     /** Mininal time for which closing of jar is postponed. */
     private static final int CLOSE_DELAY_MIN = 300;
 
@@ -117,7 +119,7 @@ public class JarFileSystem extends AbstractFileSystem {
     private transient Cache strongCache;
 
     /** The soft part of the cache reference. For simplicity never null*/
-    private transient Reference<Cache> softCache = new SoftReference<Cache>(null);
+    private transient Reference<Cache> softCache = new SoftReference<>(null);
     private transient FileObject foRoot;
     private transient FileChangeListener fcl;
 
@@ -160,7 +162,7 @@ public class JarFileSystem extends AbstractFileSystem {
             // cannot happen, setSystemName can throw the exception only
             // if the filesystem is already in Repository, which this one
             // is not.
-            throw (IOException)new IOException().initCause(ex);
+            throw new IOException(ex);
         }
     }
 
@@ -177,7 +179,7 @@ public class JarFileSystem extends AbstractFileSystem {
             watcherTask = req.post(watcherTask(), checkTime);
         }
 
-        return new Ref<T>(fo);
+        return new Ref<>(fo);
     }
 
     private void freeReference() {
@@ -245,7 +247,7 @@ public class JarFileSystem extends AbstractFileSystem {
             ); // NOI18N
         }
 
-        FileObject newRoot = null;
+        FileObject newRoot;
         String oldDisplayName = getDisplayName();
 
         if (getRefreshTime() > 0) {
@@ -268,16 +270,14 @@ public class JarFileSystem extends AbstractFileSystem {
             throw new FSException(NbBundle.getMessage(JarFileSystem.class, "EXC_NotValidFile", aRoot.getAbsolutePath()));
         }
 
-        String s;
-        s = aRoot.getAbsolutePath();
-        s = s.intern();
+        String s = aRoot.getAbsolutePath().intern();
 
         JarFile tempJar = null;
 
         if (openJar) {
             try {
                 tempJar = new JarFile(s, false);
-                LOGGER.log(Level.FINE, "opened: "+ System.currentTimeMillis()+ "   " + s);//NOI18N
+                LOGGER.log(Level.FINE, "opened: {0}   {1}", new Object[]{System.currentTimeMillis(), s});//NOI18N
             } catch (ZipException e) {
                 throw new FSException(NbBundle.getMessage(JarFileSystem.class, "EXC_NotValidJarFile2", e.getLocalizedMessage(), s));
             }
@@ -326,10 +326,8 @@ public class JarFileSystem extends AbstractFileSystem {
                     if ((f != null) && !f.equals(aRoot)) {
                         try {
                             setJarFile(f, false, true);
-                        } catch (IOException iex) {
+                        } catch (IOException | PropertyVetoException iex) {
                             ExternalUtil.exception(iex);
-                        } catch (PropertyVetoException pvex) {
-                            ExternalUtil.exception(pvex);
                         }
                     }
                 }
@@ -365,6 +363,7 @@ public class JarFileSystem extends AbstractFileSystem {
     * Provides name of the system that can be presented to the user.
     * @return user presentable name of the filesystem
     */
+    @Override
     public String getDisplayName() {
         return root != null ? root.getAbsolutePath() : NbBundle.getMessage(JarFileSystem.class, "JAR_UnknownJar");
     }
@@ -372,6 +371,7 @@ public class JarFileSystem extends AbstractFileSystem {
     /** This filesystem is read-only.
     * @return <code>true</code>
     */
+    @Override
     public boolean isReadOnly() {
         return true;
     }
@@ -423,7 +423,7 @@ public class JarFileSystem extends AbstractFileSystem {
     //
     protected Date lastModified(String name) {
         long t;
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             t = getJarFile().lastModified();
         } else {
             try {
@@ -465,50 +465,30 @@ public class JarFileSystem extends AbstractFileSystem {
         return new ByteArrayInputStream(is.readAllBytes());
     }
 
-    private InputStream getTemporaryInputStream(JarFile jf, JarEntry je, boolean forceRecreate)
-    throws IOException {
-        String filePath = jf.getName();
-        String entryPath = je.getName();
-        StringBuffer jarCacheFolder = new StringBuffer("jarfscache"); //NOI18N
-        jarCacheFolder.append(System.getProperty("user.name")).append("/"); //NOI18N        
+    private InputStream getTemporaryInputStream(JarFile jf, JarEntry je) throws IOException {
 
-        File jarfscache = new File(System.getProperty("java.io.tmpdir"), jarCacheFolder.toString()); //NOI18N
+        // this used to be a time based jar-entry cache, but today it's only remaining
+        // purpose is to detach a jar entry from the lifecycle of the JarFile
 
-        if (!jarfscache.exists()) {
-            jarfscache.mkdirs();
-        }
+        Path jarfscache = Path.of(System.getProperty("java.io.tmpdir"), "nb-jarfscache"); //NOI18N
+        Files.createDirectories(jarfscache);
 
-        File f = new File(jarfscache, temporaryName(filePath, entryPath));
-
-        boolean createContent = !f.exists();
-
-        if (createContent) {
-            f.createNewFile();
-        } else {
-            forceRecreate |= (Math.abs((System.currentTimeMillis() - f.lastModified())) > 10000);
-        }
-
-        if (createContent || forceRecreate) {
+        // Every call copies the entry to a new file of its own. A file shared between calls (or between
+        // JarFileSystems, or between JVMs) would be truncated and rewritten by one caller while another
+        // is still reading it. DELETE_ON_CLOSE removes the file once the stream is closed (on Unix, as
+        // soon as it is opened), so a stream that is never closed leaves no file behind either.
+        Path f = Files.createTempFile(jarfscache, "jarfs", null); //NOI18N
+        try {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = new FileOutputStream(f)) {
-                is.transferTo(os);
+            try (InputStream is = getInputStream4336753(jf, je)) {
+                Files.copy(is, f, StandardCopyOption.REPLACE_EXISTING);
             }
+            return Files.newInputStream(f, StandardOpenOption.DELETE_ON_CLOSE);
+        } catch (IOException | RuntimeException e) {
+            Files.deleteIfExists(f);
+            throw e;
         }
-
-        f.deleteOnExit();
-
-        return new FileInputStream(f);
-    }
-
-    private static String temporaryName(String filePath, String entryPath) {
-        String fileHash = String.valueOf(filePath.hashCode());
-        String entryHash = String.valueOf(entryPath.hashCode());
-
-        StringBuffer sb = new StringBuffer();
-        sb.append("f").append(fileHash).append("e").append(entryHash);
-
-        return sb.toString().replace('-', 'x'); //NOI18N
     }
 
     protected InputStream inputStream(String name) throws java.io.FileNotFoundException {
@@ -525,18 +505,14 @@ public class JarFileSystem extends AbstractFileSystem {
                         if (je.getSize() < MEM_STREAM_SIZE) {
                             is = getMemInputStream(j, je);
                         } else {
-                            is = getTemporaryInputStream(j, je, (strongCache != null));
+                            is = getTemporaryInputStream(j, je);
                         }
                     }
                 }
             }
         } catch (java.io.FileNotFoundException e) {
             throw e;
-        } catch (IOException e) {
-            FileNotFoundException fnfe = new FileNotFoundException(root.getAbsolutePath());
-            fnfe.initCause(e);
-            throw fnfe;
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             FileNotFoundException fnfe = new FileNotFoundException(root.getAbsolutePath());
             fnfe.initCause(e);
             throw fnfe;
@@ -607,6 +583,7 @@ public class JarFileSystem extends AbstractFileSystem {
 
         if (attr1 != null) {
             class ToString implements org.openide.util.Enumerations.Processor<Object, String> {
+                @Override
                 public String process(Object obj, Collection<Object> ignore) {
                     return obj.toString();
                 }
@@ -637,7 +614,7 @@ public class JarFileSystem extends AbstractFileSystem {
         ois.defaultReadObject();
         closeSync = new Object();
         strongCache = null;
-        softCache = new SoftReference<Cache>(null);
+        softCache = new SoftReference<>(null);
         aliveCount = 0;
 
         try {
@@ -685,25 +662,23 @@ public class JarFileSystem extends AbstractFileSystem {
     }
 
     private Runnable realClose() {
-        return new Runnable() {
-                public void run() {
-                    synchronized (closeSync) {
-                    final JarFile jarFile = getJar(false);
-                        if (jarFile != null) {
-                            try {
-                                jarFile.close();
-                                LOGGER.log(Level.FINE, "closed: "+ System.currentTimeMillis()+ "   " + root.getAbsolutePath());//NOI18N
-                            } catch (Exception exc) {
-                                // ignore exception during closing, just log it
-                                ExternalUtil.exception(exc);
-                            } finally {
-                                setJar(null);
-                                closeTask = null;
-                            }
-                        }
+        return () -> {
+            synchronized (closeSync) {
+                final JarFile jarFile = getJar(false);
+                if (jarFile != null) {
+                    try {
+                        jarFile.close();
+                        LOGGER.log(Level.FINE, "closed: {0}   {1}", new Object[]{System.currentTimeMillis(), root.getAbsolutePath()});//NOI18N
+                    } catch (Exception exc) {
+                        // ignore exception during closing, just log it
+                        ExternalUtil.exception(exc);
+                    } finally {
+                        setJar(null);
+                        closeTask = null;
                     }
                 }
-            };
+            }
+        };
     }
 
     private Cache getCache() {
@@ -783,8 +758,8 @@ public class JarFileSystem extends AbstractFileSystem {
                     // #144166 - If duplicate entries found in jar, it is logged
                     // and only unique entries are show. It can happen because
                     // Ant's jar task can produce such jars.
-                    Set<String> duplicateCheck = new HashSet<String>();
-                    Set<JarEntry> uniqueEntries = new HashSet<JarEntry>();
+                    Set<String> duplicateCheck = new HashSet<>();
+                    Set<JarEntry> uniqueEntries = new HashSet<>();
                     boolean duplicateReported = false;
                     while (en.hasMoreElements()) {
                         JarEntry entry = en.nextElement();
@@ -802,7 +777,7 @@ public class JarFileSystem extends AbstractFileSystem {
                     Cache newCache = new Cache(uniqueEntries);
                     lastModification = root.lastModified();
                     strongCache = newCache;
-                    softCache = new SoftReference<Cache>(newCache);
+                    softCache = new SoftReference<>(newCache);
 
                     return newCache;
                 } catch (Throwable t) {
@@ -830,26 +805,24 @@ public class JarFileSystem extends AbstractFileSystem {
      * If JarFile was modified, parsing is invoked.
      */
     private Runnable watcherTask() {
-        return new Runnable() {
-                public void run() {
-                    try {
-                        if (root == null) {
-                            return;
-                        }
-
-                        /** JarFile was modified => parse it and refresh existing FileObjects*/
-                        if (root.lastModified() != lastModification) {
-                            parse(true);
-                        }
-                    } finally {
-                        /** reschedule watcherTask*/
-                        Task w = watcherTask;
-                        if (w != null) {
-                            w.schedule(checkTime);
-                        }
-                    }
+        return () -> {
+            try {
+                if (root == null) {
+                    return;
                 }
-            };
+                
+                /** JarFile was modified => parse it and refresh existing FileObjects*/
+                if (root.lastModified() != lastModification) {
+                    parse(true);
+                }
+            } finally {
+                /** reschedule watcherTask*/
+                Task w = watcherTask;
+                if (w != null) {
+                    w.schedule(checkTime);
+                }
+            }
+        };
     }
     
     @Override
@@ -862,12 +835,11 @@ public class JarFileSystem extends AbstractFileSystem {
 
     /** Getter for entry.
     */
-    private final JarEntry getEntry(String file) {
-        JarFile j = null;
+    private JarEntry getEntry(String file) {
 
         try {
             synchronized (closeSync) {
-                j = reOpenJarFile();
+                JarFile j = reOpenJarFile();
 
                 JarEntry je = null;
                 if (j != null) {
@@ -951,6 +923,7 @@ public class JarFileSystem extends AbstractFileSystem {
         }
 
         // do the cleanup
+        @Override
         public void run() {
             freeReference();
         }
@@ -965,7 +938,7 @@ public class JarFileSystem extends AbstractFileSystem {
         static final long serialVersionUID = -67233308132567232L;
 
         /** the pointer to filesystem */
-        private JarFileSystem fs;
+        private final JarFileSystem fs;
 
         /** Constructor.
         * @param fs the filesystem to delegate to
@@ -978,6 +951,7 @@ public class JarFileSystem extends AbstractFileSystem {
         *
         * Scans children for given name
         */
+        @Override
         public String[] children(String name) {
             return fs.children(name);
         }
@@ -991,6 +965,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name name of folder
         * @throws IOException if operation fails
         */
+        @Override
         public void createFolder(String name) throws java.io.IOException {
             fs.createFolder(name);
         }
@@ -1003,6 +978,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @return the new data file object
         * @exception IOException if the file cannot be created (e.g. already exists)
         */
+        @Override
         public void createData(String name) throws IOException {
             fs.createData(name);
         }
@@ -1013,6 +989,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param oldName old name of the file
         * @param newName new name of the file
         */
+        @Override
         public void rename(String oldName, String newName)
         throws IOException {
             fs.rename(oldName, newName);
@@ -1024,6 +1001,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name name of file
         * @exception IOException if the file could not be deleted
         */
+        @Override
         public void delete(String name) throws IOException {
             fs.delete(name);
         }
@@ -1038,6 +1016,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name the file to test
         * @return the date
         */
+        @Override
         public java.util.Date lastModified(String name) {
             return fs.lastModified(name);
         }
@@ -1047,6 +1026,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name name of the file
         * @return true if the file is folder, false otherwise
         */
+        @Override
         public boolean folder(String name) {
             return fs.folder(name);
         }
@@ -1056,6 +1036,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name the file to test
         * @return <CODE>true</CODE> if file is read-only
         */
+        @Override
         public boolean readOnly(String name) {
             return fs.readOnly(name);
         }
@@ -1067,6 +1048,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name the file to test
         * @return the MIME type textual representation, e.g. <code>"text/plain"</code>
         */
+        @Override
         public String mimeType(String name) {
             return fs.mimeType(name);
         }
@@ -1078,6 +1060,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @return the size of the file in bytes or zero if the file does not contain data (does not
         *  exist or is a folder).
         */
+        @Override
         public long size(String name) {
             return fs.size(name);
         }
@@ -1089,6 +1072,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @return an input stream to read the contents of this file
         * @exception FileNotFoundException if the file does not exists or is invalid
         */
+        @Override
         public InputStream inputStream(String name) throws java.io.FileNotFoundException {
             return fs.inputStream(name);
         }
@@ -1100,6 +1084,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @return output stream to overwrite the contents of this file
         * @exception IOException if an error occures (the file is invalid, etc.)
         */
+        @Override
         public OutputStream outputStream(String name) throws java.io.IOException {
             return fs.outputStream(name);
         }
@@ -1109,6 +1094,7 @@ public class JarFileSystem extends AbstractFileSystem {
         *
         * @param name name of the file
         */
+        @Override
         public void lock(String name) throws IOException {
             fs.lock(name);
         }
@@ -1118,6 +1104,7 @@ public class JarFileSystem extends AbstractFileSystem {
         *
         * @param name name of the file
         */
+        @Override
         public void unlock(String name) {
             fs.unlock(name);
         }
@@ -1127,6 +1114,7 @@ public class JarFileSystem extends AbstractFileSystem {
         *
         * @param name the file to mark
         */
+        @Override
         public void markUnimportant(String name) {
             fs.markUnimportant(name);
         }
@@ -1137,6 +1125,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param attrName name of the attribute
         * @return appropriate (serializable) value or <CODE>null</CODE> if the attribute is unset (or could not be properly restored for some reason)
         */
+        @Override
         public Object readAttribute(String name, String attrName) {
             return fs.readAttribute(name, attrName);
         }
@@ -1148,6 +1137,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param value new value or <code>null</code> to clear the attribute. Must be serializable, although particular filesystems may or may not use serialization to store attribute values.
         * @exception IOException if the attribute cannot be set. If serialization is used to store it, this may in fact be a subclass such as {@link NotSerializableException}.
         */
+        @Override
         public void writeAttribute(String name, String attrName, Object value)
         throws IOException {
             fs.writeAttribute(name, attrName, value);
@@ -1158,6 +1148,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param name the file
         * @return enumeration of keys (as strings)
         */
+        @Override
         public Enumeration<String> attributes(String name) {
             return fs.attributes(name);
         }
@@ -1168,6 +1159,7 @@ public class JarFileSystem extends AbstractFileSystem {
         * @param oldName old name of the file
         * @param newName new name of the file
         */
+        @Override
         public void renameAttributes(String oldName, String newName) {
             fs.renameAttributes(oldName, newName);
         }
@@ -1177,6 +1169,7 @@ public class JarFileSystem extends AbstractFileSystem {
         *
         * @param name name of the file
         */
+        @Override
         public void deleteAttributes(String name) {
             fs.deleteAttributes(name);
         }
@@ -1188,7 +1181,7 @@ public class JarFileSystem extends AbstractFileSystem {
         byte[] names = new byte[1000];
         private int nameOffset = 0;
         int[] EMPTY = new int[0];
-        private Map<String, Folder> folders = new HashMap<String, Folder>();
+        private final Map<String, Folder> folders = new HashMap<>();
 
         public Cache(Set<JarEntry> entries) {
             parse(entries);
@@ -1271,9 +1264,7 @@ public class JarFileSystem extends AbstractFileSystem {
 
         private void trunc() {
             // strip the name array:
-            byte[] newNames = new byte[nameOffset];
-            System.arraycopy(names, 0, newNames, 0, nameOffset);
-            names = newNames;
+            names = Arrays.copyOf(names, nameOffset);
 
             // strip all the indices arrays:
             for (Folder folder : folders.values()) {
@@ -1330,9 +1321,7 @@ public class JarFileSystem extends AbstractFileSystem {
 
             void trunc() {
                 if (indices.length > idx) {
-                    int[] newInd = new int[idx];
-                    System.arraycopy(indices, 0, newInd, 0, idx);
-                    indices = newInd;
+                    indices = Arrays.copyOf(indices, idx);
                 }
             }
         }

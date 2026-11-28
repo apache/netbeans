@@ -80,7 +80,6 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
         if (storage != null) {
             System.setProperty("netbeans.user", storage);
         }
-        System.setProperty("TopSecurityManager.disable", "true");
         NbBundle.setBranding(System.getProperty("branding.token"));
         OSGiMainLookup.initialize(context);
         queue = new DependencyQueue<String,Bundle>();

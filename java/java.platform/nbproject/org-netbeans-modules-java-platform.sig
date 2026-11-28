@@ -1,5 +1,8 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.77
+
+CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
+meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public java.lang.Object
 cons public init()
@@ -65,6 +68,20 @@ supr java.lang.Object
 hfds name,version
 
 CLSS public final org.netbeans.api.java.platform.Specification
+cons public init(java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+cons public init(java.lang.String,java.lang.Runtime$Version)
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+cons public init(java.lang.String,java.lang.Runtime$Version,java.lang.String,org.netbeans.api.java.platform.Profile[])
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
+cons public init(java.lang.String,java.lang.Runtime$Version,org.netbeans.api.java.platform.Profile[])
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
 cons public init(java.lang.String,org.openide.modules.SpecificationVersion)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
@@ -77,16 +94,19 @@ cons public init(java.lang.String,org.openide.modules.SpecificationVersion,org.n
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
+intf java.lang.Comparable<org.netbeans.api.java.platform.Specification>
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.String getName()
 meth public final org.netbeans.api.java.platform.Profile[] getProfiles()
 meth public final org.openide.modules.SpecificationVersion getVersion()
+meth public int compareTo(org.netbeans.api.java.platform.Specification)
 meth public int hashCode()
+meth public java.lang.Runtime$Version getJdkVersion()
 meth public java.lang.String getDisplayName()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds displayName,name,profiles,version
+hfds VERSION_FLOOR,displayName,name,profiles,version
 
 CLSS public abstract interface org.netbeans.modules.java.platform.implspi.JavaPlatformProvider
 fld public final static java.lang.String PROP_INSTALLED_PLATFORMS = "installedPlatforms"

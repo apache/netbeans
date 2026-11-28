@@ -34,7 +34,10 @@ import javax.swing.event.DocumentListener;
 import org.netbeans.lib.terminalemulator.LineDiscipline;
 import org.netbeans.lib.terminalemulator.Term;
 import org.netbeans.lib.terminalemulator.support.TermOptions;
+import org.netbeans.modules.terminal.ioprovider.Terminal;
+
 import static org.netbeans.modules.terminal.nb.Bundle.*;
+
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle.Messages;
@@ -617,6 +620,7 @@ public final class TermOptionsPanel extends JPanel {
 
 	term.setFixedFont(true);
 	term.setFont(termOptions.getFont());
+        term.setRenderingHints(Terminal.getRenderingHints());
 
 	term.setBackground(termOptions.getBackground());
 	term.setForeground(termOptions.getForeground());

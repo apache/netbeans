@@ -37,7 +37,7 @@ import java.util.Map;
 public class CmpRelationshipsTableModel extends InnerTableModel {
 
     private EjbJar ejbJar;
-    private final Map relationshipsHelperMap = new HashMap();
+    private final Map<EjbRelation, RelationshipHelper> relationshipsHelperMap = new HashMap<>();
     private static final String[] COLUMN_NAMES = {Utils.getBundleMessage("LBL_RelationshipName"),
                                                   Utils.getBundleMessage("LBL_Cardinality"),
                                                   Utils.getBundleMessage("LBL_EntityBean"),

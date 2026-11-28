@@ -84,13 +84,13 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.lookup.Lookups;
 
 public final class ModuleActions implements ActionProvider, ExecProject {
     private static final String RUN_ARGS_IDE = "run.args.ide";    // NOI18N
 
     private static final String COMMAND_NBM = "nbm";
+    private static final String COMMAND_MAVEN_INSTALL = "maven-install";
     private static final String MODULE_ACTIONS_TYPE = "org-netbeans-modules-apisupport-project";
     private static final String MODULE_ACTIONS_PATH = "Projects/" + MODULE_ACTIONS_TYPE + "/Actions";
 
@@ -132,6 +132,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         globalCommands.put(JavaProjectConstants.COMMAND_JAVADOC, new String[] {"javadoc-nb"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_TEST, new String[] {"test-unit"}); // NOI18N
         globalCommands.put(COMMAND_NBM, new String[] {COMMAND_NBM});
+        globalCommands.put(COMMAND_MAVEN_INSTALL, new String[] {COMMAND_MAVEN_INSTALL});
         supportedActionsSet.addAll(globalCommands.keySet());
         supportedActionsSet.add(ActionProvider.COMMAND_COMPILE_SINGLE);
         supportedActionsSet.add(JavaProjectConstants.COMMAND_DEBUG_FIX); // #47012
@@ -144,6 +145,9 @@ public final class ModuleActions implements ActionProvider, ExecProject {
             supportedActionsSet.add(ActionProvider.COMMAND_PROFILE_SINGLE);
             supportedActionsSet.add(SingleMethod.COMMAND_RUN_SINGLE_METHOD);
             supportedActionsSet.add(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD);
+        }
+        if (project.getModuleType() == NbModuleType.NETBEANS_ORG) {
+            supportedActionsSet.add(COMMAND_MAVEN_INSTALL);
         }
         supportedActionsSet.add(ActionProvider.COMMAND_RENAME);
         supportedActionsSet.add(ActionProvider.COMMAND_MOVE);
@@ -160,6 +164,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         return project.getProjectDirectory().getFileObject(GeneratedFilesHelper.BUILD_XML_PATH);
     }
     
+    @Override
     public boolean isActionEnabled(String command, Lookup context) {
         if (ActionProvider.COMMAND_DELETE.equals(command) ||
                 ActionProvider.COMMAND_RENAME.equals(command) ||
@@ -208,6 +213,8 @@ public final class ModuleActions implements ActionProvider, ExecProject {
             }
             TestSources testSources = findTestSources(context, false);
             return testSources != null && testSources.isSingle();
+        } else if (command.equals(COMMAND_MAVEN_INSTALL)) {
+            return project.getModuleType() == NbModuleType.NETBEANS_ORG;
         } else {
             // other actions are global
             return true;
@@ -937,6 +944,14 @@ public final class ModuleActions implements ActionProvider, ExecProject {
     @Messages("ACTION_nbm=Create NBM")
     public static Action createNbm() {
         return ProjectSensitiveActions.projectCommandAction(COMMAND_NBM, ACTION_nbm(), null);
+    }
+
+    @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.mavenInstall")
+    @ActionRegistration(displayName="#ACTION_maven_install", lazy=false)
+    @ActionReference(path=MODULE_ACTIONS_PATH, position=1700)
+    @Messages("ACTION_maven_install=Maven Install")
+    public static Action createMavenInstall() {
+        return ProjectSensitiveActions.projectCommandAction(COMMAND_MAVEN_INSTALL, ACTION_maven_install(), null);
     }
 
     @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.arch")

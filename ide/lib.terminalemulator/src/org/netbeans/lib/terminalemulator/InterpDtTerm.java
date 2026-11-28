@@ -29,6 +29,8 @@
 
 package org.netbeans.lib.terminalemulator;
 
+import java.util.List;
+
 
 class InterpDtTerm extends InterpProtoANSIX {
 
@@ -124,8 +126,11 @@ class InterpDtTerm extends InterpProtoANSIX {
      * {@inheritDoc}
      */
     @Override
-    protected boolean dispatchAttr(AbstractInterp ai, int n) {
-        switch (n) {
+    protected boolean dispatchAttr(AbstractInterp ai, List<Integer> n) {
+        if(n.isEmpty()) {
+            return false;
+        }
+        switch (n.getFirst()) {
             case 0:
             case 1:
             case 2:
@@ -179,6 +184,10 @@ class InterpDtTerm extends InterpProtoANSIX {
 	    case 105:
 	    case 106:
 	    case 107:
+
+            // 256 Color palette and true color mode
+            case 38:
+            case 48:
                 ai.ops.op_attr(n);
                 return true;
             default:

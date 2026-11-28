@@ -65,9 +65,9 @@ public final class SettingChildren extends FilterNode.Children {
     protected Node copyNode (Node node) {
         boolean filter = false;
         try {
-            DataObject d = (DataObject) node.getCookie (DataObject.class);
+            DataObject d =  node.getCookie (DataObject.class);
             if (d != null) {
-                InstanceCookie.Of inst = (InstanceCookie.Of)d.getCookie(InstanceCookie.Of.class);
+                InstanceCookie.Of inst = d.getCookie(InstanceCookie.Of.class);
                 if (inst != null && (inst.instanceOf(Node.class) || inst.instanceOf(Node.Handle.class))) {
                     // This is just a node, not a real setting. E.g. ModuleNode, LoaderPoolNode. As such,
                     // it itself should not display any origin information, it would make no sense. However
@@ -75,7 +75,7 @@ public final class SettingChildren extends FilterNode.Children {
                     d = null;
                 }
             }
-            DataFolder folder = (DataFolder) node.getCookie (DataFolder.class);
+            DataFolder folder =  node.getCookie (DataFolder.class);
             FileSystem fs = d == null || folder != null ? null : d.getPrimaryFile ().getFileSystem ();
             filter = fs == null ? false : fs.isDefault();
         } catch (FileStateInvalidException e) {
@@ -265,7 +265,7 @@ public final class SettingChildren extends FilterNode.Children {
 	    // need to keep the values in this FilterNode, not delegates
 	    disableDelegation(DELEGATE_SET_VALUE | DELEGATE_GET_VALUE);
 
-            FileObject pf = ((DataObject) getCookie (DataObject.class)).getPrimaryFile ();
+            FileObject pf = (getCookie (DataObject.class)).getPrimaryFile ();
             weakL = new FSL (this);
             FileStateManager.getDefault ().addFileStatusListener (weakL, pf);
 
@@ -277,7 +277,7 @@ public final class SettingChildren extends FilterNode.Children {
         */
         public String getDisplayName() {
             String retVal = null;
-            DataObject dobj= (DataObject) getCookie (DataObject.class);
+            DataObject dobj=  getCookie (DataObject.class);
             if (dobj instanceof DataShadow) {
                 DataShadow dsh = (DataShadow)dobj;
                 Node origNode = dsh.getOriginal().getNodeDelegate();

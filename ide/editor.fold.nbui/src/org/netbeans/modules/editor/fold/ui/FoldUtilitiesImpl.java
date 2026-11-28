@@ -49,4 +49,9 @@ public class FoldUtilitiesImpl {
      */
     public static final String PREF_CONTENT_SUMMARY = "code-folding-content.summary"; // NOI18N
     
+    /**
+     * Preference key for "Show tooltip" display option (default: true).
+     */
+    public static final String PREF_CONTENT_TOOLTIP = "code-folding-content.tooltip"; // NOI18N
+    
 }

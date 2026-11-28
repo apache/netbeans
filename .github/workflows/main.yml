@@ -135,14 +135,14 @@ jobs:
   base-build:
     name: Build Clusters on JDK ${{ matrix.java }}
     if: contains(github.event.pull_request.labels.*.name, 'ci:no-build') == false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     # write access for cache
     permissions:
       actions: write
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '21', '25', '27' ]
+        java: [ '21', '25', '28-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -204,7 +204,7 @@ jobs:
     name: "NetBeans on nb-javac"
     # Run test job only when the 'nb-javac' label is added
     if: ${{ contains(github.event.pull_request.labels.*.name, 'nb-javac') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     steps:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
@@ -245,11 +245,11 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ ubuntu-26.04-arm, macos-latest, windows-latest ]
         java: [ '21' ]
         include:
-          - os: ubuntu-latest
-            java: 27
+          - os: ubuntu-26.04-arm
+            java: 28-ea
       fail-fast: false
     steps:
 
@@ -303,7 +303,7 @@ jobs:
     name: Check Paperwork on Linux/JDK ${{ matrix.java }}
     needs: base-build
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
@@ -311,6 +311,11 @@ jobs:
       matrix:
         java: [ '21' ]
     steps:
+
+      - name: Print runner info
+        run: |
+          echo "CPU cores: $(nproc)"
+          free
 
       - name: Check PR labels
         if: ${{ github.event_name == 'pull_request' && join(github.event.pull_request.labels.*.name) == '' }}
@@ -385,7 +390,7 @@ jobs:
   build-system-test:
     name: Build-System / Misc Tests on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 100
     strategy:
       matrix:
@@ -451,6 +456,13 @@ jobs:
       - name: Build nbms
         run: ant $OPTS build-nbms
 
+      - name: Maven Install
+        run: |
+          # install all NBMs
+          ant maven-install -Dnbm.install.version=99-SNAPSHOT
+          # check installation of individual modules & co.
+          java -Dnbm.install.version=99-SNAPSHOT .github/scripts/MavenInstallChecker.java
+
       # runs only in PRs if requested; ~18 min
       - name: Build all Tests
         if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
@@ -484,7 +496,7 @@ jobs:
     # equals env.test_platform == 'true' 
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -531,7 +543,7 @@ jobs:
   ide-modules-test:
     name: IDE Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -766,6 +778,9 @@ jobs:
       - name: ide/projectui
         run: ant $OPTS -f ide/projectui test
 
+      - name: ide/properties
+        run: ant $OPTS -f ide/properties test
+
       - name: ide/refactoring.api
         run: ant $OPTS -f ide/refactoring.api test
 
@@ -868,11 +883,11 @@ jobs:
     # label triggers: Ant, Gradle, Maven, MX
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '21', '25', '27' ]
+        java: [ '21', '25', '28-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -994,7 +1009,7 @@ jobs:
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1145,7 +1160,7 @@ jobs:
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 90
     strategy:
       matrix:
@@ -1281,7 +1296,7 @@ jobs:
     # equals env.test_java == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 100
     strategy:
       matrix:
@@ -1471,14 +1486,14 @@ jobs:
     # equals env.test_java == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '27' ]
+        java: [ '21', '28-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '27' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '28-ea' }}
       fail-fast: false
     steps:
 
@@ -1529,11 +1544,11 @@ jobs:
     # equals env.test_java == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'debugger') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '25', '27' ]
+        java: [ '21', '25', '28-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -1574,11 +1589,16 @@ jobs:
       - name: debugger.jpda.projectsui
         run: ant $OPTS -f java/debugger.jpda.projectsui test
 
+      # TODO fails on 28b25
       - name: debugger.jpda.truffle
+        if: ${{ matrix.java == '21' || matrix.java == '25' }}
         run: ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: debugger.jpda.ui
         run: ant $OPTS -f java/debugger.jpda.ui test-unit
+
+      - name: debugger.jpda.heapwalk
+        run: ant $OPTS -f profiler/debugger.jpda.heapwalk test-unit
 
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
@@ -1592,7 +1612,7 @@ jobs:
     # equals env.test_java == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'profiler') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1630,6 +1650,9 @@ jobs:
       - name: profiler.oql
         run: ant $OPTS -f profiler/profiler.oql test
 
+      - name: profiler.heapwalker
+        run: ant $OPTS -f profiler/profiler.heapwalker test
+
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
@@ -1642,7 +1665,7 @@ jobs:
     # equals env.test_web == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'JavaScript') || contains(github.event.pull_request.labels.*.name, 'TypeScript') || contains(github.event.pull_request.labels.*.name, 'HTML') || contains(github.event.pull_request.labels.*.name, 'CSS') || contains(github.event.pull_request.labels.*.name, 'CSL') || contains(github.event.pull_request.labels.*.name, 'web') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1821,7 +1844,7 @@ jobs:
     # equals env.test_javafx == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'JavaFX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1870,7 +1893,7 @@ jobs:
     # equals env.test_groovy == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1924,7 +1947,7 @@ jobs:
     # equals env.test_rust == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -1973,7 +1996,7 @@ jobs:
     # equals env.test_enterprise == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -2219,7 +2242,7 @@ jobs:
     # equals env.test_versioning == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'git') || contains(github.event.pull_request.labels.*.name, 'subversion') || contains(github.event.pull_request.labels.*.name, 'mercurial') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:
@@ -2303,7 +2326,7 @@ jobs:
     # equals env.test_enterprise == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     strategy:
       matrix:
@@ -2371,7 +2394,7 @@ jobs:
     strategy:
       matrix:
         java: [ '21' ]
-        os: [ 'windows-latest', 'ubuntu-latest' ]
+        os: [ 'windows-latest', 'ubuntu-26.04-arm' ]
         exclude:
           - os: ${{ github.event_name == 'pull_request' && 'nothing' || 'windows-latest' }}
       fail-fast: false
@@ -2401,7 +2424,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
           php-version: '8.3'
           tools: pecl
@@ -2523,7 +2546,7 @@ jobs:
     # equals env.test_lsp == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     strategy:
       matrix:

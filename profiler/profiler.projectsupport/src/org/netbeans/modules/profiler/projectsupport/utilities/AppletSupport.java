@@ -23,7 +23,6 @@ import org.netbeans.api.java.classpath.*;
 import org.netbeans.api.java.platform.*;
 import org.openide.*;
 import org.openide.filesystems.*;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.*;
 import java.io.*;
 import java.net.*;
@@ -54,7 +53,7 @@ public class AppletSupport {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
     // JDK issue #6193279: Appletviewer does not accept encoded URLs
-    private static final SpecificationVersion JDK_15 = new SpecificationVersion("1.5"); // NOI18N
+    private static final Runtime.Version JDK_15 = Runtime.Version.parse("1.5"); // NOI18N
 
     /**
      * constant for html extension
@@ -120,7 +119,7 @@ public class AppletSupport {
             if (activePlatform == null) {
                 platform = pm.getDefaultPlatform();
             } else {
-                JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
+                JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se")); //NOI18N
 
                 for (int i = 0; i < installedPlatforms.length; i++) {
                     String antName = installedPlatforms[i].getProperties().get("platform.ant.name"); //NOI18N
@@ -133,8 +132,9 @@ public class AppletSupport {
                 }
             }
 
-            boolean workAround6193279 = (platform != null //In case of nonexisting platform don't use the workaround
-            ) && (platform.getSpecification().getVersion().compareTo(JDK_15) >= 0); //JDK1.5 and higher
+            Runtime.Version platformVersion = platform != null ? platform.getSpecification().getJdkVersion() : null;
+            boolean workAround6193279 = platformVersion != null    //In case of nonexisting platform don't use the workaround
+                    && platformVersion.compareTo(JDK_15) >= 0; //JDK1.5 and higher
 
             if (workAround6193279) {
                 File f = FileUtil.toFile(html);

@@ -33,6 +33,13 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -358,6 +365,73 @@ public class JarFileSystemHidden extends NbTestCase {
             m.clear();
         } finally {
             MockServices.setServices();
+        }
+    }
+
+    /**
+     * Entries over 100000 bytes are read through a temporary file. Two streams
+     * must not share that file: here the two jar paths have the same
+     * {@code String.hashCode()} ("Aa" and "BB" hash alike), and each stream must
+     * still return the content of its own jar.
+     */
+    public void testLargeEntriesOfJarsWithEqualPathHashesAreReadCorrectly() throws Exception {
+        clearWorkDir();
+        File jarA = new File(getWorkDir(), "Aa.jar");
+        File jarB = new File(getWorkDir(), "BB.jar");
+        assertEquals(jarA.getPath().hashCode(), jarB.getPath().hashCode());
+        byte[] contentA = randomBytes(200000, 1);
+        byte[] contentB = randomBytes(200000, 2);
+        writeJar(jarA, "big.bin", contentA);
+        writeJar(jarB, "big.bin", contentB);
+
+        FileObject foA = new JarFileSystem(jarA).findResource("big.bin");
+        FileObject foB = new JarFileSystem(jarB).findResource("big.bin");
+        try (InputStream inA = foA.getInputStream(); InputStream inB = foB.getInputStream()) {
+            assertTrue("Content of Aa.jar", Arrays.equals(contentA, inA.readAllBytes()));
+            assertTrue("Content of BB.jar", Arrays.equals(contentB, inB.readAllBytes()));
+        }
+    }
+
+    /**
+     * Concurrent reads of an entry over 100000 bytes must each return the whole
+     * entry.
+     */
+    public void testConcurrentReadsOfLargeEntry() throws Exception {
+        clearWorkDir();
+        File jar = new File(getWorkDir(), "big.jar");
+        byte[] content = randomBytes(1 << 20, 3);
+        writeJar(jar, "big.bin", content);
+        FileObject fo = new JarFileSystem(jar).findResource("big.bin");
+
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        try {
+            List<Future<?>> futures = new ArrayList<>();
+            for (int t = 0; t < 8; t++) {
+                futures.add(executor.submit(() -> {
+                    for (int i = 0; i < 50; i++) {
+                        assertTrue("Whole entry read", Arrays.equals(content, fo.asBytes()));
+                    }
+                    return null;
+                }));
+            }
+            for (Future<?> future : futures) {
+                future.get();
+            }
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    private static byte[] randomBytes(int length, long seed) {
+        byte[] bytes = new byte[length];
+        new Random(seed).nextBytes(bytes);
+        return bytes;
+    }
+
+    private static void writeJar(File jar, String entryName, byte[] content) throws IOException {
+        try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(jar))) {
+            jos.putNextEntry(new JarEntry(entryName));
+            jos.write(content);
         }
     }
 

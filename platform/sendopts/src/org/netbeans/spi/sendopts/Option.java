@@ -94,8 +94,8 @@ public final class Option {
         this.shortName = old.shortName;
         this.longName = old.longName;
         this.impl = OptionImpl.cloneImpl(old.impl, this, null);
-        this.keys = (String[])old.keys.clone();
-        this.bundles = (String[])old.bundles.clone();
+        this.keys = old.keys.clone();
+        this.bundles = old.bundles.clone();
         
         this.keys[typeOfDescription] = description;
         this.bundles[typeOfDescription] = bundle;

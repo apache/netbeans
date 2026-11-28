@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.34.0
+#Version 1.35.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1066,7 +1066,7 @@ supr org.antlr.v4.runtime.ParserRuleContext
 
 CLSS public org.antlr.v4.runtime.RuntimeMetaData
 cons public init()
-fld public final static java.lang.String VERSION = "4.13.1"
+fld public final static java.lang.String VERSION = "4.13.2"
 meth public static java.lang.String getMajorMinorVersion(java.lang.String)
 meth public static java.lang.String getRuntimeVersion()
 meth public static void checkVersion(java.lang.String,java.lang.String)

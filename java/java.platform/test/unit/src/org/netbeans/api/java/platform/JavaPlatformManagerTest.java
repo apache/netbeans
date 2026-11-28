@@ -141,11 +141,11 @@ public class JavaPlatformManagerTest extends NbTestCase {
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0] == p1);
-        r = manager.getPlatforms("P1", new Specification ("P1", null));
+        r = manager.getPlatforms("P1", new Specification ("P1", (SpecificationVersion) null));
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0] == p1);
-        r = manager.getPlatforms(null, new Specification ("P1", null));
+        r = manager.getPlatforms(null, new Specification ("P1", (SpecificationVersion) null));
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0] == p1);
@@ -162,40 +162,40 @@ public class JavaPlatformManagerTest extends NbTestCase {
         assertNotNull (r);
         assertTrue (r.length == 4);
         assertEquivalent (r, new JavaPlatform[] {p5, p6, p7, p8});
-        r = manager.getPlatforms (null, new Specification ("CDC", null, new Profile[] {                     // CDC with PersonalJava/* and RMI/*
+        r = manager.getPlatforms (null, new Specification ("CDC", (SpecificationVersion) null, new Profile[] {                     // CDC with PersonalJava/* and RMI/*
             new Profile ("PersonalJava",null),
             new Profile ("RMI",null)
         }));
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0]==p5);
-        r = manager.getPlatforms (null, new Specification ("CDC",null,new Profile[] {                       // CDC with any existing profile
+        r = manager.getPlatforms (null, new Specification ("CDC",(SpecificationVersion) null,new Profile[] {                       // CDC with any existing profile
             new Profile (null,null)
         }));
         assertNotNull (r);
         assertTrue (r.length == 3);
         assertEquivalent (r, new JavaPlatform[] {p5,p7,p8});
-        r = manager.getPlatforms (null, new Specification ("CDC",null,new Profile[] {                       // CDC with PersonalJava/* and */*
+        r = manager.getPlatforms (null, new Specification ("CDC",(SpecificationVersion) null,new Profile[] {                       // CDC with PersonalJava/* and */*
             new Profile ("PersonalJava",null),
             new Profile (null,null)
         }));
         assertNotNull (r);
         assertTrue (r.length == 3);
         assertEquivalent (r, new JavaPlatform[] {p5,p7,p8});
-        r = manager.getPlatforms (null, new Specification ("CDC",null,new Profile[] {                       //CDC with PersonalJava/*
+        r = manager.getPlatforms (null, new Specification ("CDC",(SpecificationVersion) null,new Profile[] {                       //CDC with PersonalJava/*
             new Profile ("PersonalJava",null)
         }));
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0] == p7);
-        r = manager.getPlatforms (null, new Specification ("CDC",null,new Profile[] {                       //CDC with RMI/* and */*
+        r = manager.getPlatforms (null, new Specification ("CDC",(SpecificationVersion) null,new Profile[] {                       //CDC with RMI/* and */*
             new Profile ("RMI",null),
             new Profile (null,null)
         }));
         assertNotNull (r);
         assertTrue (r.length == 1);
         assertTrue (r[0] == p5);
-        r = manager.getPlatforms (null, new Specification ("CDC",null,new Profile[] {                       //CDC with Gateway/* and */*
+        r = manager.getPlatforms (null, new Specification ("CDC",(SpecificationVersion) null,new Profile[] {                       //CDC with Gateway/* and */*
             new Profile ("Gateway",null),
             new Profile (null, null)
         }));

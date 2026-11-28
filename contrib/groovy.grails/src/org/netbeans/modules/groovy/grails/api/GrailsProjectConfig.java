@@ -245,7 +245,7 @@ public final class GrailsProjectConfig {
             return JavaPlatform.getDefault();
         }
 
-        JavaPlatform[] platforms = PLATFORM_MANAGER.getPlatforms(null, new Specification("j2se", null)); //NOI18N
+        JavaPlatform[] platforms = PLATFORM_MANAGER.getPlatforms(null, new Specification("j2se")); //NOI18N
         for (JavaPlatform platform : platforms) {
             if (platform.getInstallFolders().size() > 0) {
                 String antName = platform.getProperties().get("platform.ant.name"); //NOI18N

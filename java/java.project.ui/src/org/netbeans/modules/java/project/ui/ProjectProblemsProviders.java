@@ -1524,7 +1524,7 @@ public class ProjectProblemsProviders {
             }
             final JavaPlatform[] installedPlatforms = pm.getPlatforms(
                     null,
-                    new Specification(platformType, null));
+                    new Specification(platformType));
             for (JavaPlatform javaPlatform : installedPlatforms) {
                 final String antName = javaPlatform.getProperties().get(PLAT_PROP_ANT_NAME);
                 if (activePlatformId.equals(antName)) {

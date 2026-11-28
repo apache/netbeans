@@ -138,9 +138,9 @@ NodeActionsProviderFilter, ExtendedNodeModelFilter, TableModelFilter {
     );
         
         
-    private Map             fixedWatches = new LinkedHashMap();
-    private HashSet         listeners;
-    private ContextProvider contextProvider;
+    private Map<KeyWrapper, String> fixedWatches = new LinkedHashMap<>();
+    private HashSet listeners;
+    private final ContextProvider contextProvider;
 
     
     public FixedWatchesManager (ContextProvider contextProvider) {
@@ -148,8 +148,8 @@ NodeActionsProviderFilter, ExtendedNodeModelFilter, TableModelFilter {
     }
 
     public void deleteAllFixedWatches() {
-        Collection nodes = new ArrayList(fixedWatches.keySet());
-        for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+        Collection<KeyWrapper> nodes = new ArrayList<>(fixedWatches.keySet());
+        for (Iterator<KeyWrapper> iter = nodes.iterator(); iter.hasNext();) {
             fixedWatches.remove(iter.next());
             fireModelChanged(new ModelEvent.NodeChanged(FixedWatchesManager.this,
                 TreeModel.ROOT,
@@ -361,18 +361,9 @@ NodeActionsProviderFilter, ExtendedNodeModelFilter, TableModelFilter {
         }
     }
 
-    public void addFixedWatch (String name, Variable variable) {
+    public void addFixedWatch (String name, Variable orig) {
         // Clone the variable to assure that it's unique and sticks to the JDI value.
-        if (variable instanceof Cloneable) {
-            try { // terrible code to invoke the clone() method
-                java.lang.reflect.Method cloneMethod = variable.getClass().getMethod("clone", new Class[] {});
-                cloneMethod.setAccessible(true);
-                Object newVar = cloneMethod.invoke(variable, new Object[] {});
-                if (newVar instanceof Variable) {
-                    variable = (Variable) newVar;
-                }
-            } catch (Exception ex) {} // Ignore any exceptions
-        }
+        Variable variable = orig.asValue();
         fixedWatches.put (new KeyWrapper(variable), name);
         fireModelChanged (new ModelEvent.NodeChanged(
                 this,

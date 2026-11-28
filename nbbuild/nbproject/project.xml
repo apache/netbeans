@@ -189,16 +189,16 @@
                         <target>build-nozip</target>
                     </action>
                     <action>
+                        <label>Maven Install</label>
+                        <target>maven-install</target>
+                    </action>
+                    <action>
                         <label>Clean Everything</label>
                         <target>clean</target>
                     </action>
                     <action>
                         <label>Run Commit Validation</label>
                         <target>commit-validation</target>
-                    </action>
-                    <action>
-                        <label>apisupport</label>
-                        <target>-Dname=apisupport rebuild-cluster</target>
                     </action>
                 </context-menu>
             </view>

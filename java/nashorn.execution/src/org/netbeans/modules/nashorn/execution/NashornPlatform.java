@@ -33,7 +33,6 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.api.common.ui.PlatformFilter;
 import org.netbeans.modules.nashorn.execution.options.Settings;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.WeakListeners;
 
 /**
@@ -43,7 +42,7 @@ import org.openide.util.WeakListeners;
 public class NashornPlatform {
 
     private static final String NASHORN_PLATFORM_VERSION = "1.8";   // NOI18N
-    private static final SpecificationVersion SMALLEST_VERSION = new SpecificationVersion(NASHORN_PLATFORM_VERSION);
+    private static final Runtime.Version SMALLEST_VERSION = Runtime.Version.parse(NASHORN_PLATFORM_VERSION);
 
     private static NashornPlatform INSTANCE;
 
@@ -74,27 +73,30 @@ public class NashornPlatform {
         return nashornPlatform;
     }
 
-    private static SpecificationVersion getPlatformVersion(JavaPlatform p) {
+    private static Runtime.Version getPlatformVersion(JavaPlatform p) {
         if (p == null) {
-            return new SpecificationVersion("1.8"); // NOI18N
+            return Runtime.Version.parse("1.8"); // NOI18N
         }
-        return p.getSpecification().getVersion();
+        return p.getSpecification().getJdkVersion();
     }
 
     public static boolean isNashornSupported(JavaPlatform p) {
-        SpecificationVersion version = getPlatformVersion(p);
+        Runtime.Version version = getPlatformVersion(p);
+        if (version == null) {
+            return false;
+        }
         if (version.equals(SMALLEST_VERSION)) {
             return true;
         }
-        if (version.compareTo(new SpecificationVersion("15")) < 0) { // NOI18N
+        if (version.feature() < 15) {
             return true;
         }
         return false;
     }
 
     public static boolean isGraalJsSupported(JavaPlatform p) {
-        SpecificationVersion version = getPlatformVersion(p);
-        if (version.compareTo(SMALLEST_VERSION) < 0) {
+        Runtime.Version version = getPlatformVersion(p);
+        if (version == null || version.compareTo(SMALLEST_VERSION) < 0) {
             return false;
         }
         return true;
@@ -129,10 +131,9 @@ public class NashornPlatform {
 
     private static JavaPlatform getNashornPlatform(JavaPlatformManager platformManager) {
         String nashornPlatformDisplayName = Settings.getPreferences().get(Settings.PREF_NASHORN_PLATFORM_DISPLAY_NAME, null);
-        SpecificationVersion smallestVersion = new SpecificationVersion(NASHORN_PLATFORM_VERSION);
         JavaPlatform defaultPlatform = platformManager.getDefaultPlatform();
-        SpecificationVersion version = defaultPlatform.getSpecification().getVersion();
-        if (version.compareTo(smallestVersion) >= 0) {
+        Runtime.Version version = defaultPlatform.getSpecification().getJdkVersion();
+        if (version != null && version.compareTo(SMALLEST_VERSION) >= 0) {
             if (nashornPlatformDisplayName == null ||
                 nashornPlatformDisplayName.equals(defaultPlatform.getDisplayName())) {
                 return defaultPlatform;
@@ -140,7 +141,8 @@ public class NashornPlatform {
         }
         // Check the rest:
         for (JavaPlatform jp : platformManager.getInstalledPlatforms()) {
-            if (jp.getSpecification().getVersion().compareTo(smallestVersion) >= 0) {
+            Runtime.Version jpVersion = jp.getSpecification().getJdkVersion();
+            if (jpVersion != null && jpVersion.compareTo(SMALLEST_VERSION) >= 0) {
                 if (nashornPlatformDisplayName == null ||
                     nashornPlatformDisplayName.equals(jp.getDisplayName())) {
 
@@ -153,12 +155,13 @@ public class NashornPlatform {
         if (nashornPlatformDisplayName != null) {
             // Did not find the platform that we have in settings,
             // choose some suitable one instead:
-            if (version.compareTo(smallestVersion) >= 0) {
+            if (version != null && version.compareTo(SMALLEST_VERSION) >= 0) {
                 return defaultPlatform;
             }
             // The default is insufficient, check the rest:
             for (JavaPlatform jp : platformManager.getInstalledPlatforms()) {
-                if (jp.getSpecification().getVersion().compareTo(smallestVersion) >= 0) {
+                Runtime.Version jpVersion = jp.getSpecification().getJdkVersion();
+                if (jpVersion != null && jpVersion.compareTo(SMALLEST_VERSION) >= 0) {
                     if (!jp.getInstallFolders().isEmpty()) { // Check for broken platforms
                         return jp;
                     }
@@ -182,7 +185,8 @@ public class NashornPlatform {
     }
 
     public static boolean isJsJvmPlatform(JavaPlatform platform) {
-        return platform.getSpecification().getVersion().compareTo(SMALLEST_VERSION) >= 0;
+        Runtime.Version version = platform.getSpecification().getJdkVersion();
+        return version != null && version.compareTo(SMALLEST_VERSION) >= 0;
     }
 
     public static PlatformFilter getFilter() {

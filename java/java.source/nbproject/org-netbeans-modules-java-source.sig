@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.198.0
+#Version 0.199.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1806,7 +1806,7 @@ meth public void tag(com.sun.source.tree.Tree,java.lang.Object)
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationController
 hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,invalidateSourceAfter,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
-hcls CommentReplicator,CopyEntry,TreeCollector
+hcls CommentReplicator,TreeCollector
 
 CLSS public org.netbeans.api.java.source.matching.Matcher
 intf org.openide.util.Cancellable

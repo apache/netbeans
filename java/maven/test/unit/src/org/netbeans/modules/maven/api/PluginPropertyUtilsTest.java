@@ -37,6 +37,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 
+@SuppressWarnings("null")
 public class PluginPropertyUtilsTest extends NbTestCase {
 
     public PluginPropertyUtilsTest(String name) {
@@ -302,6 +303,61 @@ public class PluginPropertyUtilsTest extends NbTestCase {
                 </project>
                 """);
         assertEquals("[--enable-preview]", Arrays.toString(PluginPropertyUtils.getPluginPropertyList(ProjectManager.getDefault().findProject(d), "org.apache.maven.plugins", "maven-compiler-plugin", "compilerArgs", "arg", null)));
+    }
+
+    // same as in MavenSourceLevelImplTest but more direct
+    public void testTestSourceLevel() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <build>
+                        <pluginManagement>
+                            <plugins>
+                                <plugin>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>2.3.2</version>
+                                    <configuration>
+                                        <source>1.4</source>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <configuration>
+                                    <source>1.2</source>
+                                </configuration>
+                                <executions>
+                                    <execution>
+                                        <id>test-compile-java5</id>
+                                        <goals>
+                                            <goal>testCompile</goal>
+                                        </goals>
+                                        <configuration>
+                                            <source>1.6</source>
+                                        </configuration>
+                                    </execution>
+                                </executions>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
+        Project project = ProjectManager.getDefault().findProject(d);
+        String value = PluginPropertyUtils.getPluginProperty(
+                project,
+                "org.apache.maven.plugins",
+                "maven-compiler-plugin",
+                "source",
+                "testCompile",
+                null
+        );
+        assertEquals("1.6", value);
     }
 
     public void testDependencyListBuilder() throws Exception {

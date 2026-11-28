@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +35,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.apache.maven.project.MavenProject;
@@ -60,7 +56,6 @@ import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.ProjectReload.Quality;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
 import org.netbeans.modules.project.dependency.reload.ProjectReloadInternal;
-import org.netbeans.modules.project.dependency.reload.Reloader;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ProjectStateData;
 import org.netbeans.spi.project.ActionProgress;
@@ -128,12 +123,14 @@ public class MavenReloadImplementationTest extends NbTestCase {
 
         loggers.add(Logger.getLogger(ProjectReloadInternal.class.getName()));
         loggers.add(Logger.getLogger(Reloader.class.getName()));
+        loggers.add(Logger.getLogger(MavenProjectCache.class.getName()));
         loggers.forEach(logger -> {
-            logger.setLevel(Level.FINER);
+            logger.setLevel(java.util.logging.Level.FINER);
 
-            ConsoleHandler h = new ConsoleHandler();
-            h.setLevel(Level.FINER);
-            if (!Arrays.asList(logger.getHandlers()).stream().anyMatch(x -> x instanceof ConsoleHandler)) {
+            java.util.logging.ConsoleHandler h = new java.util.logging.ConsoleHandler();
+            h.setFormatter(new org.netbeans.core.startup.logging.NbFormatter());
+            h.setLevel(java.util.logging.Level.FINER);
+            if (java.util.stream.Stream.of(logger.getHandlers()).noneMatch(x -> x instanceof java.util.logging.ConsoleHandler)) {
                 logger.addHandler(h);
             }
         });
@@ -957,7 +954,7 @@ public class MavenReloadImplementationTest extends NbTestCase {
         assertEquals(Quality.RESOLVED, ps.getQuality());
         
         oci.getProjectDirectory().getFileObject("pom.xml").delete();
-        FileObject newPom = FileUtil.copyFile(testApp.getFileObject("oci/pom_add_artifact.xml"), oci.getProjectDirectory(), "pom");
+        FileUtil.copyFile(testApp.getFileObject("oci/pom_add_artifact.xml"), oci.getProjectDirectory(), "pom");
         
         // now the project state should be just LOADED, as a new artifact has apepared:
         ProjectState ps2 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh()).get();

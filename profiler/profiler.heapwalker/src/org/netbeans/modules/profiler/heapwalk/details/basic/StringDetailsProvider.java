@@ -18,11 +18,13 @@
  */
 package org.netbeans.modules.profiler.heapwalk.details.basic;
 
-import org.netbeans.modules.profiler.heapwalk.details.api.StringDecoder;
+import java.nio.ByteOrder;
 import java.util.List;
 import org.netbeans.lib.profiler.heap.Heap;
 import org.netbeans.lib.profiler.heap.Instance;
+import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.lib.profiler.heap.PrimitiveArrayInstance;
+import org.netbeans.modules.profiler.heapwalk.details.api.StringDecoder;
 import org.netbeans.modules.profiler.heapwalk.details.spi.DetailsProvider;
 import org.netbeans.modules.profiler.heapwalk.details.spi.DetailsUtils;
 import org.openide.util.lookup.ServiceProvider;
@@ -34,14 +36,14 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=DetailsProvider.class)
 public final class StringDetailsProvider extends DetailsProvider.Basic {
-    
     static final String STRING_MASK = "java.lang.String";                           // NOI18N
     static final String BUILDERS_MASK = "java.lang.AbstractStringBuilder+";         // NOI18N
-    
+
     public StringDetailsProvider() {
         super(STRING_MASK, BUILDERS_MASK);
     }
-    
+
+    @Override
     public String getDetailsString(String className, Instance instance, Heap heap) {
         if (STRING_MASK.equals(className)) {                                        // String
             byte coder = DetailsUtils.getByteFieldValue(instance, "coder", (byte) -1);     // NOI18N
@@ -52,7 +54,7 @@ public final class StringDetailsProvider extends DetailsProvider.Basic {
                         offset, count, null,
                         "...");                // NOI18N
             } else {
-                return getJDK9String(heap, instance, "value", coder, null, "...");          // NOI18N                
+                return getJDK9String(heap, instance, "value", coder, null, "...");          // NOI18N
             }
         } else if (BUILDERS_MASK.equals(className)) {                               // AbstractStringBuilder+
             byte coder = DetailsUtils.getByteFieldValue(instance, "coder", (byte) -1);  // NOI18N
@@ -62,16 +64,17 @@ public final class StringDetailsProvider extends DetailsProvider.Basic {
                         0, count, null,
                         "...");                // NOI18N
             } else {
-                return getJDK9String(heap, instance, "value", coder, null, "...");          // NOI18N                
+                return getJDK9String(heap, instance, "value", coder, null, "...");          // NOI18N
             }
         }
         return null;
     }
-    
+
+    @Override
     public View getDetailsView(String className, Instance instance, Heap heap) {
         return new ArrayValueView(className, instance, heap);
     }
-    
+
     private String getJDK9String(Heap heap, Instance instance, String field, byte coder, String separator, String trailer) {
         Object byteArray = instance.getValueOfField(field);
         if (byteArray instanceof PrimitiveArrayInstance) {
@@ -85,13 +88,13 @@ public final class StringDetailsProvider extends DetailsProvider.Basic {
                 StringBuilder value = new StringBuilder(estimatedSize);
                 int lastValue = valuesCount - 1;
                 for (int i = 0; i <= lastValue; i++) {
-                    value.append(decoder.getValueAt(i));
                     if (value.length() >= DetailsUtils.MAX_ARRAY_LENGTH) {
                         if (trailerLength > 0) {
                             value.append(trailer);
                         }
                         break;
                     }
+                    value.append(decoder.getValueAt(i));
                     if (separator != null && i < lastValue) {
                         value.append(separator);
                     }

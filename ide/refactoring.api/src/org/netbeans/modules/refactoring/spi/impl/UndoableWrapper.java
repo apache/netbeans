@@ -18,9 +18,9 @@
  */
 package org.netbeans.modules.refactoring.spi.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -47,7 +47,7 @@ import org.openide.util.Exceptions;
 public class UndoableWrapper implements UndoableEditWrapper {
 
     private AtomicBoolean active = new AtomicBoolean();
-    private Map<BaseDocument, UndoableEditDelegate> docToFirst = new HashMap<>();
+    private final Map<BaseDocument, UndoableEditDelegate> docToFirst = new ConcurrentHashMap<>();
     private RefactoringSession session;
 
     public UndoableWrapper() {
@@ -75,10 +75,7 @@ public class UndoableWrapper implements UndoableEditWrapper {
             return ed;
         }
         UndoableEditDelegate current = new UndoableEditDelegate(ed, dob, session);
-        UndoableEditDelegate first = docToFirst.get(doc);
-        if (first == null) {
-            docToFirst.put((BaseDocument) doc, current);
-        }
+        docToFirst.putIfAbsent((BaseDocument) doc, current);
         return current;
     }
 

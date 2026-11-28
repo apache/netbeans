@@ -23,7 +23,7 @@ import org.netbeans.jellytools.NbDialogOperator;
 import org.netbeans.jellytools.nodes.Node;import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
-;
+
 import org.netbeans.test.subversion.operators.actions.RelocateAction;
 
 /**

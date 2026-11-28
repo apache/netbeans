@@ -6172,6 +6172,129 @@ public class ServerTest extends NbTestCase {
         assertEquals(new HashSet<>(Arrays.asList(CodeActionKind.RefactorExtract)), presentKinds);
     }
 
+    public void testCodeActionsResolveMismatch() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public Hello list;\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        //first verify that sequence codeActions - codeActions - resolveCodeAction(<action from the first call>) works sensibly:
+        {
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(1, 14)), new CodeActionContext(diags[0]))).get();
+        Optional<CodeAction> generateClass =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Create class \"Hello\" in Test".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(generateClass.isPresent());
+        CodeAction action = generateClass.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+
+        //intervening code action computation:
+        List<Either<Command, CodeAction>> intervening = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(0, 0), new Position(0, 0)), new CodeActionContext(List.of()))).get();
+        assertEquals(List.of(), intervening);
+
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(2, 0),
+                               new Position(2, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "    private static class Hello {\n" +
+                     "\n" +
+                     "        public Hello() {\n" +
+                     "        }\n" +
+                     "    }\n",
+                     fileChanges.get(0).getNewText());
+        }
+        //verify that codeActions-codeActions-codeActions-resolveCodeAction(<action from the first call>) does not resolve, but does not crash:
+        {
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(1, 14)), new CodeActionContext(diags[0]))).get();
+        Optional<CodeAction> generateClass =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Create class \"Hello\" in Test".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(generateClass.isPresent());
+        CodeAction action = generateClass.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+
+        //intervening code action computations:
+        for (int i = 0; i < TextDocumentServiceImpl.MAX_CODE_ACTION_SLOTS; i++) {
+            List<Either<Command, CodeAction>> intervening =
+                    server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(0, 0), new Position(0, 0)), new CodeActionContext(List.of()))).get();
+            assertEquals(List.of(), intervening);
+        }
+
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNull(action.getEdit());
+        }
+    }
+
     static {
         System.setProperty("SourcePath.no.source.filter", "true");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

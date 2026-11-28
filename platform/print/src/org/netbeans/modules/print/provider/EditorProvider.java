@@ -92,7 +92,7 @@ public final class EditorProvider extends ComponentProvider {
     }
 
     private AttributedCharacterIterator[] getIterators(Document document, int start, int end) {
-        ActionListener action = (ActionListener) Lookup.getDefault().lookup(ActionListener.class);
+        ActionListener action =  Lookup.getDefault().lookup(ActionListener.class);
 //out();
 //out("Action: " + action);
 //out();

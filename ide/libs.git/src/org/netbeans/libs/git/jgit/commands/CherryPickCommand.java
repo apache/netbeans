@@ -45,6 +45,7 @@ import org.eclipse.jgit.lib.RebaseTodoLine;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryState;
+import org.eclipse.jgit.merge.MergeAttributes;
 import org.eclipse.jgit.merge.RecursiveMerger;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.merge.StrategyRecursive;
@@ -412,7 +413,6 @@ public class CherryPickCommand extends GitCommand {
         return Collections.<RebaseTodoLine>emptyList();
     }
 
-    private static final Attributes NO_ATTRIBUTES = new Attributes();
     private class FailuresDetectRecursiveStrategy extends StrategyRecursive {
 
         @Override
@@ -430,16 +430,9 @@ public class CherryPickCommand extends GitCommand {
                     boolean hasWorkingTreeIterator = tw.getTreeCount() > T_FILE;
                     boolean hasAttributeNodeProvider = treeWalk.getAttributesNodeProvider() != null;
                     while (treeWalk.next()) {
-                        Attributes[] attributes = hasAttributeNodeProvider ?
-                                new Attributes[] {
-                                    treeWalk.getAttributes(T_BASE),
-                                    treeWalk.getAttributes(T_OURS),
-                                    treeWalk.getAttributes(T_THEIRS)
-                                } : new Attributes[] {
-                                    NO_ATTRIBUTES,
-                                    NO_ATTRIBUTES,
-                                    NO_ATTRIBUTES
-                                };
+                        MergeAttributes attributes = hasAttributeNodeProvider
+                                ? new TreeWalkAttributes(treeWalk)
+                                : MergeAttributes.NO_ATTRIBUTES;
                         if (!processEntry(
                                 treeWalk.getTree(T_BASE, CanonicalTreeParser.class),
                                 treeWalk.getTree(T_OURS, CanonicalTreeParser.class),
@@ -458,6 +451,21 @@ public class CherryPickCommand extends GitCommand {
                         workTreeUpdater.revertModifiedFiles();
                     }
                     return ok;
+                }
+
+                private record TreeWalkAttributes(TreeWalk walk) implements MergeAttributes {
+                    @Override
+                    public Attributes base() {
+                        return walk.getAttributes(T_BASE);
+                    }
+                    @Override
+                    public Attributes ours() {
+                        return walk.getAttributes(T_OURS);
+                    }
+                    @Override
+                    public Attributes theirs() {
+                        return walk.getAttributes(T_THEIRS);
+                    }
                 }
             };
         }

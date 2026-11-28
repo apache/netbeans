@@ -156,7 +156,7 @@ final class ColorUtil {
                 ^ upper.hashCode() ^ (lower.hashCode() * 17)) * (repeats ? 31 : 1);
 
         Integer key = Integer.valueOf(hash);
-        GradientPaint result = (GradientPaint) gpCache.get(key);
+        GradientPaint result =  gpCache.get(key);
         if (result == null) {
             result =
                     new GradientPaint(x1, y1, upper, x2, y2, lower, repeats);

@@ -25,6 +25,8 @@
 
 package org.netbeans.lib.terminalemulator;
 
+import java.util.List;
+
 /**
  * The mnemonics for the ops are _roughly_ based on termcap entries.
  */
@@ -64,6 +66,11 @@ interface Ops {
     public void op_el(int code);        // Erase in Line
 
     public void op_attr(int mode);	// set ANSI attributes
+    default public void op_attr(List<Integer> attributes) {
+        if(attributes.size() != 1) {
+            throw new IllegalArgumentException("op_attr(List<Integer>) not overriden and not exactly one argument provided");
+        }
+    }
     public void op_set_mode(int mode);
     public void op_reset_mode(int mode);
 
@@ -115,4 +122,14 @@ interface Ops {
 
     public void op_ind(int n);          // Index (~= \LF) (scrolls)
     public void op_cud(int n);          // Cursor Down (doesn't scroll)
+
+    default public void op_set_clipboard(String clipboardTarget, String contentBase64) {}
+
+    default public void op_bracketed_paste(boolean enabled) {}
+
+    default public void op_mouse_tracking(boolean clickEvents, boolean motionWhilePressed, boolean motionAll) {}
+
+    default public void op_focus_tracking(boolean enabled) {}
+
+    default public void op_mouse_report_sgr(boolean enabled) {}
 }

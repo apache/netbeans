@@ -204,7 +204,12 @@ public class SourcePath implements ClassPathImplementation, PropertyChangeListen
             final URL[] origRoots = pr.getRoots();
             final List<URL> rootsList = new ArrayList<URL>(origRoots.length);
             for (URL url : origRoots) {
-                if (forcePreferSources || JavaIndex.hasSourceCache(url,true)) {
+                // Use the weaker hasSourceCache variant: it also sees transiently created usages
+                // queries (which ClassIndex.createQueriesForRoots would query anyway) and does
+                // not require State.INITIALIZED (which only means "re-indexed in this session").
+                // The stricter variant silently dropped otherwise searchable source roots from
+                // the source path whenever their index had not been re-indexed in this session.
+                if (forcePreferSources || JavaIndex.hasSourceCache(url, false)) {
                     rootsList.add(url);
                 }
             }

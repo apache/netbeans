@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.web.el;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  *
@@ -27,63 +29,31 @@ import java.util.Map;
  */
 public class CompilationCache {
 
-    private Map<Key, Object> map = new HashMap<>();
-    
-    public synchronized Object getOrCache(Key key, ValueProvider<?> valueProvider) {
+    private static final Object NULL_RESULT = new Object();
+
+    private final Map<Key, Object> map = new ConcurrentHashMap<>();
+
+    @SuppressWarnings("unchecked")
+    public <T> T getOrCache(Key key, Supplier<T> valueProvider) {
+        // computeIfAbsent cannot be used here, it may cause a "java.lang.IllegalStateException: Recursive update"
         Object cached = map.get(key);
-        if(cached == null) {
-            cached = valueProvider.get();
-            map.put(key, cached);
+        if (cached != null) {
+            return cached == NULL_RESULT ? null : (T) cached;
         }
-        return cached;
+
+        T value = valueProvider.get();
+        Object toStore = value == null ? NULL_RESULT : value;
+        Object existing = map.putIfAbsent(key, toStore);
+        if (existing != null) {
+            return existing == NULL_RESULT ? null : (T) existing;
+        }
+        return value;
     }
-    
+
     public static Key createKey(Object... items) {
-        return new Key(items);
+        return new Key(List.of(items));
     }
-    
-    public static interface ValueProvider<T> {
-        public T get();
-    }
-    
-    public static class Key {
 
-        private Object[] keys;
-        
-        private Key(Object... keys) {
-            this.keys = keys;
-        }
+    public static record Key(List<Object> keys) {}
 
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final Key other = (Key) obj;
-
-            if (other.keys.length != keys.length) {
-                return false;
-            }
-
-            for (int i = 0; i < keys.length; i++) {
-                if (!keys[i].equals(other.keys[i])) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 3;
-            for (Object key : keys) {
-                hash = 13 * key.hashCode();
-            }
-            return hash;
-        }
-    }
 }

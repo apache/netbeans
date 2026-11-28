@@ -71,7 +71,7 @@ public class LookupNode extends DataFolder.FolderNode implements NewTemplateActi
     
     /** is this node representing a setting ui category? */
     private boolean isUISettingCategoryNode() {
-        DataFolder df = (DataFolder) super.getCookie (DataFolder.class);
+        DataFolder df =  super.getCookie (DataFolder.class);
         if (df != null) {
             String name = df.getPrimaryFile ().getPath();
             return name.startsWith(PREFIX_SETTING_CATEGORIES);
@@ -186,7 +186,7 @@ public class LookupNode extends DataFolder.FolderNode implements NewTemplateActi
      * @return the string name
      */
     private String findName () {
-        DataFolder df = (DataFolder)getCookie (DataFolder.class);
+        DataFolder df = getCookie (DataFolder.class);
         if (df == null) {
             return "";
         }
@@ -256,7 +256,7 @@ public class LookupNode extends DataFolder.FolderNode implements NewTemplateActi
     }
 
     public Node cloneNode () {
-        return new LookupNode((DataFolder)super.getCookie(DataFolder.class));
+        return new LookupNode(super.getCookie(DataFolder.class));
     }
     
     
@@ -328,7 +328,7 @@ public class LookupNode extends DataFolder.FolderNode implements NewTemplateActi
         */
         @Override
         protected Node[] createNodes(Node node) {
-            DataObject obj = (DataObject)node.getCookie(DataObject.class);
+            DataObject obj = node.getCookie(DataObject.class);
             //System.err.println("obj="+obj+" node="+node+" hidden="+(obj==null?null:obj.getPrimaryFile ().getAttribute (EA_HIDDEN)));
             
             if (

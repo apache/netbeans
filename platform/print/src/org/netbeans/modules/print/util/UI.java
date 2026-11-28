@@ -379,7 +379,7 @@ public final class UI {
         if ( !(object instanceof Node)) {
             return null;
         }
-        return (DataObject) ((Node) object).getLookup().lookup(DataObject.class);
+        return  ((Node) object).getLookup().lookup(DataObject.class);
     }
 
     public static JComponent getResizableX(JPanel panel) {

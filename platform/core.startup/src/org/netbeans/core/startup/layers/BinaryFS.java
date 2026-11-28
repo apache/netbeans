@@ -542,7 +542,7 @@ final class BinaryFS extends FileSystem implements DataInput {
             if (initialized) return;
 
             try {
-                ByteBuffer sub = (ByteBuffer)content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
+                ByteBuffer sub = content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
                 if (!isRoot()) {
                     while (sub.getInt() >= 0) {
                         // skip URL list
@@ -588,7 +588,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                     }
                 }
             } else {
-                ByteBuffer sub = (ByteBuffer) content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
+                ByteBuffer sub =  content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
                 boolean cont = true;
                 while (cont) {
                     int index = sub.getInt();
@@ -851,7 +851,7 @@ final class BinaryFS extends FileSystem implements DataInput {
         private byte[] data() throws IOException {
             if (len == -1) throw new IllegalArgumentException();
             byte[] data = new byte[len];
-            ((ByteBuffer)content.duplicate().position(contentOffset)).get(data);
+            (content.duplicate().position(contentOffset)).get(data);
             return data;
         }
 
@@ -896,7 +896,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                     }
                     conn = new URL(uri).openConnection();
                 } else {
-                    ByteBuffer sub = (ByteBuffer) content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
+                    ByteBuffer sub =  content.duplicate().order(ByteOrder.LITTLE_ENDIAN).position(offset);
                     index = sub.getInt();
                     if (index <= -10) {
                         index = -(index + 10);

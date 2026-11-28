@@ -54,7 +54,7 @@ public class JavaHelpQuickSearchProviderImpl implements SearchProvider {
     private Runnable createAction( final URL url ) {
         return new Runnable() {
             public void run() {
-                Help h = (Help)Lookup.getDefault().lookup(Help.class);
+                Help h = Lookup.getDefault().lookup(Help.class);
                 if (h instanceof JavaHelp) {
                     JavaHelp jh = (JavaHelp)h;
                     jh.showHelp(url);

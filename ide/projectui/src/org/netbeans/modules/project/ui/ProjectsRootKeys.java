@@ -24,10 +24,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.WeakHashMap;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
@@ -86,12 +93,18 @@ abstract class ProjectsRootKeys {
         var projects = Arrays.asList(listProjects());
         projects.sort(OpenProjectList.projectByPath());
 
-        var dirs = new ArrayList<PrjInfo>(projects.size());
-        final java.util.Map<Project,ProjectsRootKeys.PrjInfo> snapshot = new HashMap<>();
-        var nested = new LinkedList<FileObject>();
+        Comparator<PrjInfo> byProjectDisplayName = (i1, i2) -> {
+            String n1 = ProjectUtils.getInformation(i1.project()).getDisplayName();
+            String n2 = ProjectUtils.getInformation(i2.project()).getDisplayName();
+            return n1.compareTo(n2);
+        };
+
+        var parentship = new HashMap<PrjInfo, SortedSet<PrjInfo>>();
+        Map<Project,PrjInfo> snapshot = new HashMap<>();
+        var nested = new LinkedList<PrjInfo>();
         for (Project prj : projects) {
             while (!nested.isEmpty()) {
-                if (FileUtil.isParentOf(nested.peekLast(), prj.getProjectDirectory())) {
+                if (FileUtil.isParentOf(nested.peekLast().project().getProjectDirectory(), prj.getProjectDirectory())) {
                     break;
                 }
                 nested.removeLast();
@@ -111,15 +124,21 @@ abstract class ProjectsRootKeys {
             var nestedSize = nested.size();
             nestedArr[0] = nestedSize;
 
-            var p = new ProjectsRootKeys.PrjInfo(prj, type, nestedArr);
-            nested.add(prj.getProjectDirectory());
-            dirs.add(p);
-            snapshot.put(prj, p);
+            PrjInfo parent = nested.isEmpty() ? null : nested.peekLast();
+            PrjInfo info = new ProjectsRootKeys.PrjInfo(prj, type, nestedArr);
+            nested.add(info);
+            var children = parentship.get(parent);
+            if (children == null) {
+                children = new TreeSet<>(byProjectDisplayName);
+                parentship.put(parent, children);
+            }
+            children.add(info);
+            snapshot.put(prj, info);
             synchronized (this) {
                 projects2Depths.put(prj.getProjectDirectory(), nestedArr);
             }
             if (originalNestedSize != -1 && originalNestedSize != nestedArr[0]) {
-                depthUpdated(p);
+                depthUpdated(info);
             }
         }
         synchronized (this) {
@@ -129,7 +148,7 @@ abstract class ProjectsRootKeys {
                             e.getKey(),
                             new WeakReference<>(e.getValue())));
         }
-        return dirs;
+        return depthFirstCollect(parentship, null, new ArrayList<>());
     }
 
     int type() {
@@ -146,6 +165,17 @@ abstract class ProjectsRootKeys {
             logicalView ? ProjectsRootNode.LOGICAL_VIEW : ProjectsRootNode.PHYSICAL_VIEW,
             depth
         );
+    }
+
+    private static Collection<PrjInfo> depthFirstCollect(Map<PrjInfo, ? extends Iterable<PrjInfo>> parentship, PrjInfo root, List<PrjInfo> collectTo) {
+        Iterable<PrjInfo> it = parentship.get(root);
+        if (it != null) {
+            for (PrjInfo info : it) {
+                collectTo.add(info);
+                depthFirstCollect(parentship, info, collectTo);
+            }
+        }
+        return collectTo;
     }
 
     /**

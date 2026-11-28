@@ -915,7 +915,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             RP.post(new Runnable() {
                 @Override
                 public void run() {
-                    org.apache.maven.shared.dependency.tree.DependencyNode rootnode;
+                    org.netbeans.modules.maven.embedder.tree.DependencyNode rootnode;
                     try {
                         rootnode = DependencyTreeFactory.createDependencyTree(data.getMavenProject(), EmbedderFactory.getOnlineEmbedder(), List.of(Artifact.SCOPE_TEST));
                     } catch (MavenExecutionException ex) {
@@ -924,8 +924,8 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                     }
                     DependencyExcludeNodeVisitor nv = new DependencyExcludeNodeVisitor(data.art.getGroupId(), data.art.getArtifactId(), data.art.getType());
                     rootnode.accept(nv);
-                    final Set<org.apache.maven.shared.dependency.tree.DependencyNode> nds = nv.getDirectDependencies();
-                    Collection<org.apache.maven.shared.dependency.tree.DependencyNode> directs;
+                    final Set<org.netbeans.modules.maven.embedder.tree.DependencyNode> nds = nv.getDirectDependencies();
+                    Collection<org.netbeans.modules.maven.embedder.tree.DependencyNode> directs;
                     if (nds.size() > 1) {
                         final ExcludeDependencyPanel pnl = new ExcludeDependencyPanel(data.getMavenProject(), data.art, nds, rootnode);
                         DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Exclude());
@@ -943,11 +943,11 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             });
         }
 
-        private void runModifyExclusions(final Artifact art, final Collection<org.apache.maven.shared.dependency.tree.DependencyNode> nds) {
+        private void runModifyExclusions(final Artifact art, final Collection<org.netbeans.modules.maven.embedder.tree.DependencyNode> nds) {
             ModelOperation<POMModel> operation = new ModelOperation<POMModel>() {
                 @Override
                 public void performOperation(POMModel model) {
-                    for (org.apache.maven.shared.dependency.tree.DependencyNode nd : nds) {
+                    for (org.netbeans.modules.maven.embedder.tree.DependencyNode nd : nds) {
                         Artifact directArt = nd.getArtifact();
                         org.netbeans.modules.maven.model.pom.Dependency dep = model.getProject().findDependencyById(directArt.getGroupId(), directArt.getArtifactId(), null);
                         if (dep == null) {

@@ -223,7 +223,7 @@ public class OptionsAction extends CallableSystemAction {
         
         private HelpCtx getHelpId (Node node) {
             // it's template, return specific help id
-            DataObject dataObj = (DataObject)node.getCookie (DataObject.class);
+            DataObject dataObj = node.getCookie (DataObject.class);
             if (dataObj != null) {
                 Object o = dataObj.getPrimaryFile ().getAttribute ("helpID"); // NOI18N
                 if (o != null) {
@@ -343,7 +343,7 @@ public class OptionsAction extends CallableSystemAction {
                 return;
             }
             
-            DataObject obj = (DataObject)n.getCookie(DataObject.class);
+            DataObject obj = n.getCookie(DataObject.class);
             if (obj instanceof DataShadow) {
                 obj = ((DataShadow)obj).getOriginal();
             }
@@ -353,7 +353,7 @@ public class OptionsAction extends CallableSystemAction {
                     return;
                 }
 
-                InstanceCookie ic = (InstanceCookie)obj.getCookie (InstanceCookie.class);
+                InstanceCookie ic = obj.getCookie (InstanceCookie.class);
                 if (ic != null) {
 
                     if (ic instanceof InstanceCookie.Of) {

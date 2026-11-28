@@ -497,15 +497,15 @@ public class ServerInstance implements Node.Cookie, Comparable {
     }
     
     public Collection getTargetList() {
-        Map targets = getTargetMap();
+        Map<String, ServerTarget> targets = getTargetMap();
         synchronized (this) {
             return targets.values();
         }
     }
     
     // PENDING use targets final variable?
-    private Map getTargetMap() {
-        Map tmpTargets = null;
+    private Map<String, ServerTarget> getTargetMap() {
+        Map<String, ServerTarget> tmpTargets = null;
         synchronized (this) {
             tmpTargets = targets;
         }

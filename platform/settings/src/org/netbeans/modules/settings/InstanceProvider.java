@@ -270,7 +270,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
 		}
 		return null;
             } else {
-                return ((ClassLoader)Lookup.getDefault().lookup(ClassLoader.class)).loadClass(name);
+                return (Lookup.getDefault().lookup(ClassLoader.class)).loadClass(name);
             }
         }
 
@@ -289,10 +289,10 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
                     inst = getConvertor().read(r);
                 }
             } catch (IOException ex) {
-                throw (IOException) Exceptions.attachLocalizedMessage(ex,
+                throw  Exceptions.attachLocalizedMessage(ex,
                                                   InstanceProvider.this.toString());
             } catch (ClassNotFoundException ex) {
-                throw (ClassNotFoundException) Exceptions.attachLocalizedMessage(ex,
+                throw  Exceptions.attachLocalizedMessage(ex,
                                                   InstanceProvider.this.toString());
             }
             

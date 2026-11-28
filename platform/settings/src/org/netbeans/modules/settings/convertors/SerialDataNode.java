@@ -117,7 +117,7 @@ public final class SerialDataNode extends DataNode {
         if (noBeanInfo) {
             return Children.LEAF;
         }
-        InstanceCookie inst = (InstanceCookie)dobj.getCookie(InstanceCookie.class);
+        InstanceCookie inst = dobj.getCookie(InstanceCookie.class);
         if (inst == null) return Children.LEAF;
         try {
             Class<?> clazz = inst.instanceClass();
@@ -140,7 +140,7 @@ public final class SerialDataNode extends DataNode {
     }
     
     private InstanceCookie.Of ic () {
-        return (InstanceCookie.Of) getDataObject().getCookie(InstanceCookie.Of.class);
+        return  getDataObject().getCookie(InstanceCookie.Of.class);
     }
     
     private SerialDataConvertor getConvertor() {
@@ -876,7 +876,7 @@ public final class SerialDataNode extends DataNode {
         
         private void init() {
             try {
-                InstanceCookie ic = (InstanceCookie) dobj.getCookie(InstanceCookie.class);
+                InstanceCookie ic =  dobj.getCookie(InstanceCookie.class);
                 if (ic == null) {
                     bean = null;
                     return;

@@ -79,14 +79,14 @@ public class DefaultTabDataModel implements TabDataModel {
 
     @Override
     public TabData getTab(int index) {
-        return (TabData) list.get(index);
+        return  list.get(index);
     }
 
     @Override
     public void setTabs(TabData[] data) {
 
         TabData[] oldContents = new TabData[list.size()];
-        oldContents = (TabData[]) list.toArray(oldContents);
+        oldContents =  list.toArray(oldContents);
         
         //No change, Peter says this will be the typical case
         if (Arrays.equals(data, oldContents)) {
@@ -260,7 +260,7 @@ public class DefaultTabDataModel implements TabDataModel {
                     allIndicesToFire.addAll(Arrays.asList(o));
                 }
                 Integer[] all = new Integer[allIndicesToFire.size()];
-                all = (Integer[]) allIndicesToFire.toArray(all);
+                all =  allIndicesToFire.toArray(all);
                 int[] allPrimitive = toPrimitiveArray(all);
                 ComplexListDataEvent clde = new ComplexListDataEvent(this,
                                                                      ComplexListDataEvent.CONTENTS_CHANGED,
@@ -348,7 +348,7 @@ public class DefaultTabDataModel implements TabDataModel {
 
     @Override
     public void removeTab(int index) {
-        TabData[] td = new TabData[]{(TabData) list.get(index)};
+        TabData[] td = new TabData[]{ list.get(index)};
         list.remove(index);
         ComplexListDataEvent lde = new ComplexListDataEvent(this,
                                                             ListDataEvent.INTERVAL_REMOVED,
@@ -400,7 +400,7 @@ public class DefaultTabDataModel implements TabDataModel {
         Arrays.sort(indices);
         TabData[] affected = new TabData[indices.length];
         for (int i = indices.length - 1; i >= 0; i--) {
-            affected[i] = (TabData) list.remove(indices[i]);
+            affected[i] =  list.remove(indices[i]);
         }
         ComplexListDataEvent clde = new ComplexListDataEvent(this,
                                                              ComplexListDataEvent.ITEMS_REMOVED,

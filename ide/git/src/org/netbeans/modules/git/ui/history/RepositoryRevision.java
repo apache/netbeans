@@ -46,6 +46,7 @@ import org.netbeans.modules.git.ui.branch.CherryPickAction;
 import org.netbeans.modules.git.ui.checkout.CheckoutRevisionAction;
 import org.netbeans.modules.git.ui.checkout.RevertChangesAction;
 import org.netbeans.modules.git.ui.diff.ExportCommitAction;
+import org.netbeans.modules.git.ui.rebase.RebaseAction;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.revert.RevertCommitAction;
 import org.netbeans.modules.git.ui.tag.CreateTagAction;
@@ -189,7 +190,8 @@ public class RepositoryRevision {
     
     @NbBundle.Messages({
         "# {0} - revision", "LBL_Action.CheckoutRevision=Checkout {0}",
-        "# {0} - revision", "MSG_CheckoutRevision.progress=Checking out {0}"
+        "# {0} - revision", "MSG_CheckoutRevision.progress=Checking out {0}",
+        "LBL_Action.InteractiveRebase=Interactive Rebase..."
     })
     Action[] getActions () {
         if (RepositoryInfo.getInstance(repositoryRoot) == null) {
@@ -245,7 +247,17 @@ public class RepositoryRevision {
                 });
             }
         }
-        return actions.toArray(new Action[0]);
+        // offered for every commit: the range above the commit is only a
+        // valid rebase range while the commit is on the current branch, the
+        // dialog validates that and the range when it is opened
+        actions.add(new AbstractAction(NbBundle.getMessage(RepositoryRevision.class, "LBL_Action.InteractiveRebase")) { //NOI18N
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String baseRevision = getLog().getRevision();
+                Utils.post(() -> SystemAction.get(RebaseAction.class).rebaseInteractive(repositoryRoot, baseRevision));
+            }
+        });
+        return actions.toArray(Action[]::new);
     }
 
     private String getPreferredRevision () {

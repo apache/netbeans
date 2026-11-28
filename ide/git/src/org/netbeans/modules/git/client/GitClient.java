@@ -43,6 +43,7 @@ import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitMergeResult;
 import org.netbeans.libs.git.GitPullResult;
 import org.netbeans.libs.git.GitPushResult;
+import org.netbeans.libs.git.GitRebaseInteractiveHandler;
 import org.netbeans.libs.git.GitRebaseResult;
 import org.netbeans.libs.git.GitRefUpdateResult;
 import org.netbeans.libs.git.GitRemoteConfig;
@@ -70,7 +71,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author ondra
  */
-public final class GitClient {
+public final class GitClient implements AutoCloseable {
     
     private final org.netbeans.libs.git.GitClient delegate;
     private final GitProgressSupport progressSupport;
@@ -657,6 +658,10 @@ public final class GitClient {
         }, "rebase"); //NOI18N
     }
     
+    public GitRebaseResult rebase(RebaseOperationType operation, String upstream, GitRebaseInteractiveHandler handler, ProgressMonitor monitor) throws GitException.AuthorizationException, GitException {
+        return new CommandInvoker().runMethod(() -> delegate.rebase(operation, upstream, handler, monitor), "rebase"); //NOI18N
+    }
+    
     /**
      * Schedule cleanup of git repository used by this client
      */
@@ -669,6 +674,11 @@ public final class GitClient {
             released = true;
         }
         cleanTask.schedule(CLEANUP_TIME);
+    }
+
+    @Override
+    public void close() {
+        release();
     }
 
     public void remove (final File[] roots, final boolean cached, final ProgressMonitor monitor) throws GitException {

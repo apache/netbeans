@@ -31,14 +31,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitClient.RebaseOperationType;
 import org.netbeans.libs.git.GitException;
+import org.netbeans.libs.git.GitRebaseInteractiveHandler;
 import org.netbeans.libs.git.GitRebaseResult;
+import org.netbeans.libs.git.GitRebaseTodoLine;
 import org.netbeans.libs.git.GitRepositoryState;
 import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.libs.git.SearchCriteria;
@@ -70,6 +74,8 @@ import org.openide.awt.Mnemonics;
 import org.openide.util.Mutex;
 import org.openide.windows.WindowManager;
 
+import static org.netbeans.modules.git.ui.rebase.EdtUtil.await;
+
 /**
  *
  * @author Ondrej Vrabec
@@ -88,6 +94,27 @@ public class RebaseAction extends SingleRepositoryAction {
     private static final String REBASE_MERGE_DIR = "rebase-merge"; //NOI18N
     private static final String REBASE_APPLY_DIR = "rebase-apply"; //NOI18N
     private static final String MESSAGE = "message"; //NOI18N
+    // the todo file name depends on the rebase state: rebase-merge (used for
+    // rebases) keeps it as git-rebase-todo, rebase-apply as todo
+    private static final String TODO = "git-rebase-todo"; //NOI18N
+    private static final String TODO_APPLY = "todo"; //NOI18N
+    private static final String DONE = "done"; //NOI18N
+
+    /**
+     * The handler re-attached when a rebase with pending interactive steps is
+     * continued: it leaves the list of steps and the combined commit messages
+     * untouched.
+     */
+    private static final GitRebaseInteractiveHandler CONTINUE_HANDLER = new GitRebaseInteractiveHandler() {
+        @Override
+        public void prepareSteps(List<GitRebaseTodoLine> steps) {
+        }
+
+        @Override
+        public String modifyCommitMessage(String message) {
+            return message;
+        }
+    };
 
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {
@@ -116,7 +143,7 @@ public class RebaseAction extends SingleRepositoryAction {
             Rebase rebase = new Rebase(repository, info.getBranches(), current);
             if (rebase.showDialog()) {
                 runRebase(repository, RebaseOperationType.BEGIN, rebase.getRevisionSource(), rebase.getRevisionBase(),
-                        rebase.getRevisionDest());
+                        rebase.getRevisionDest(), null);
             }
         } else if (state == GitRepositoryState.REBASING) {
             // abort or continue?
@@ -142,16 +169,131 @@ public class RebaseAction extends SingleRepositoryAction {
                     btnContinue));
             RebaseOperationType op = operations.get(value);
             if (op != null) {
-                runRebase(repository, op, null, null, null);
+                runRebase(repository, op, null, null, null,
+                        op == RebaseOperationType.ABORT ? null : getContinueHandler(repository));
             }
         } else {
             GitClientExceptionHandler.annotate(Bundle.MSG_RebaseAction_rebaseNotAllowed(state));
         }
     }
 
+    /**
+     * Starts an interactive rebase rebasing the commits on top of the given
+     * commit onto the commit itself: the user picks, squashes or fixup-es the
+     * individual commits in a dialog before the rebase runs.
+     */
+    public void rebaseInteractive(File repository, String baseRevision) {
+        RepositoryInfo info = RepositoryInfo.getInstance(repository);
+        info.refresh();
+        GitRepositoryState state = info.getRepositoryState();
+        if (state != GitRepositoryState.SAFE) {
+            GitClientExceptionHandler.annotate(Bundle.MSG_RebaseAction_rebaseNotAllowed(state));
+            return;
+        }
+        String origHead = info.getActiveBranch().getId();
+        CompletableFuture<InteractiveRebaseDialog> dialogFactory = CompletableFuture.supplyAsync(
+                () -> new InteractiveRebaseDialog(repository, baseRevision),
+                SwingUtilities::invokeLater
+        );
+        await(dialogFactory).ifPresent((dialog) -> {
+            dialog.loadRange();
+            if (dialog.showDialog()) {
+                runRebase(repository, RebaseOperationType.BEGIN, origHead, baseRevision, baseRevision, dialog.getHandler());
+            }
+        });
+    }
+
+    /**
+     * The handler required to continue the interrupted rebase, if it has
+     * pending steps that the driver can only process with an interactive
+     * handler, <code>null</code> otherwise.
+     */
+    private static GitRebaseInteractiveHandler getContinueHandler(File repository) {
+        File folder = getRebaseFolder(repository);
+        // steps still to process: a pending squash, fixup or reword step can
+        // only be processed with an interactive handler
+        List<String> todo = readRebaseFile(folder, TODO);
+        if (todo.isEmpty()) {
+            todo = readRebaseFile(folder, TODO_APPLY);
+        }
+        boolean handlerRequired = todoLineRequiresHandler(todo);
+        if (!handlerRequired) {
+            // a step interrupted by a conflict is moved to the done file and
+            // is re-processed when the rebase is continued
+            String lastDone = lastTodoLine(readRebaseFile(folder, DONE));
+            handlerRequired = isSquashLine(lastDone) || isFixupLine(lastDone) || isRewordLine(lastDone);
+        }
+        if (!handlerRequired) {
+            return null;
+        }
+        // a plan persisted by the interactive rebase dialog carries the
+        // settled commit messages, a rebase started from outside carries
+        // none and the messages of the driver are kept
+        RebasePlan plan = RebasePlan.read(folder);
+        if (plan != null) {
+            return new InteractiveRebaseDialog.InteractiveRebaseHandler(repository, plan);
+        }
+        return CONTINUE_HANDLER;
+    }
+
+    private static boolean todoLineRequiresHandler(List<String> lines) {
+        for (String line : lines) {
+            if (isSquashLine(line) || isFixupLine(line) || isRewordLine(line)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquashLine(String line) {
+        return line != null && line.startsWith("squash"); //NOI18N
+    }
+
+    private static boolean isFixupLine(String line) {
+        return line != null && line.startsWith("fixup"); //NOI18N
+    }
+
+    private static boolean isRewordLine(String line) {
+        return line != null && line.startsWith("reword"); //NOI18N
+    }
+
+    private static String lastTodoLine(List<String> lines) {
+        for (int i = lines.size() - 1; i >= 0; i--) {
+            String line = lines.get(i);
+            if (!line.isEmpty() && !line.startsWith("#")) {
+                return line;
+            }
+        }
+        return null;
+    }
+
+    private static List<String> readRebaseFile(File folder, String filename) {
+        List<String> lines = new ArrayList<>();
+        File file = new File(folder, filename);
+        if (!file.canRead()) {
+            return lines;
+        }
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line.strip());
+            }
+        } catch (IOException ex) {
+            LOG.log(Level.FINE, null, ex);
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {}
+            }
+        }
+        return lines;
+    }
+
     @NbBundle.Messages("MSG_RebaseAction_progress=Rebasing...")
-    private void runRebase (final File repository, final RebaseOperationType op, final String source, final String upstream,
-    final String onto) {
+    private void runRebase(File repository, RebaseOperationType op, String source, String upstream, String onto, GitRebaseInteractiveHandler handler) {
         GitProgressSupport supp = new GitProgressSupport() {
 
             @Override
@@ -179,7 +321,9 @@ public class RebaseAction extends SingleRepositoryAction {
                                     progress, getProgressSupport().getLogger());
                             RebaseOperationType nextAction = op;
                             while (nextAction != null && !isCanceled()) {
-                                GitRebaseResult result = client.rebase(nextAction, lOnto, getProgressMonitor());
+                                GitRebaseResult result = handler == null
+                                        ? client.rebase(nextAction, lOnto, getProgressMonitor())
+                                        : client.rebase(nextAction, lOnto, handler, getProgressMonitor());
                                 rrp.processResult(result);
                                 nextAction = rrp.getNextAction();
                             }
@@ -257,7 +401,7 @@ public class RebaseAction extends SingleRepositoryAction {
         return null;
     }
 
-    private static File getRebaseFolder (File repository) {
+    static File getRebaseFolder (File repository) {
         File rebaseFolder = new File(GitUtils.getGitFolderForRoot(repository), REBASE_APPLY_DIR);
         if (!rebaseFolder.exists()) {
             rebaseFolder = new File(GitUtils.getGitFolderForRoot(repository), REBASE_MERGE_DIR);

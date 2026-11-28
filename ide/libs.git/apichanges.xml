@@ -21,7 +21,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -286,6 +286,35 @@ is the proper place.
             <class package="org.netbeans.libs.git" name="GitClient"/>
             <class package="org.netbeans.libs.git" name="GitRevisionInfo"/>
             <issue number="235882"/>
+        </change>
+        <change>
+            <api name="gitlibrary_api"/>
+            <summary>Support for interactive rebase</summary>
+            <version major="1" minor="32"/>
+            <date day="15" month="11" year="2026"/>
+            <author login="mbien"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A new method
+                    <code>GitClient.rebase(RebaseOperationType, String,
+                    GitRebaseInteractiveHandler, ProgressMonitor)</code> allows
+                    customizing a rebase while it runs: the handler is invoked
+                    before the list of rebase steps is processed (the list can
+                    be reordered, steps dropped or re-purposed) and whenever a
+                    sequence of squashed/fixup commits is combined, so the
+                    combined commit message can be reviewed or modified.
+                </p>
+                <p>New classes: <code>GitRebaseInteractiveHandler</code>,
+                    <code>GitRebaseTodoLine</code>. The
+                    <code>GitRebaseTodoLine.RebaseAction</code> enum includes
+                    a <code>DROP</code> action for the commits the client does
+                    not want to apply: implementations handle it by removing
+                    the step from the list of steps.</p>
+            </description>
+            <class package="org.netbeans.libs.git" name="GitClient"/>
+            <class package="org.netbeans.libs.git" name="GitRebaseInteractiveHandler"/>
+            <class package="org.netbeans.libs.git" name="GitRebaseTodoLine"/>
         </change>
         <change>
             <api name="gitlibrary_api"/>

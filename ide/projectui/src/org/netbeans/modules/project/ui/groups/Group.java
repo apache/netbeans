@@ -578,7 +578,10 @@ public abstract class Group {
                 oldOpen.add(real != null ? real : open);
             }
 
+            long then = System.currentTimeMillis();
             Set<Project> newOpen = g != null ? g.getProjects(h, 10, 100) : Collections.emptySet();
+            long now = System.currentTimeMillis();
+            LOG.log(Level.FINE, "Found {0} projects of group {1} in {2} ms", new Object[] { newOpen.size(), g, now - then });
             final Set<Project> toClose = new HashSet<Project>(oldOpen);
             toClose.removeAll(newOpen);
             final Set<Project> toOpen = new HashSet<Project>(newOpen);
@@ -591,12 +594,14 @@ public abstract class Group {
             IndexingBridge.Lock lock = IndexingBridge.getDefault().protectedMode();
             try {
                 h.progress(Group_progress_closing(toClose.size()), 110);
+                Project[] arrClose = toClose.toArray(new Project[0]);
                 //close and remember the last opened files in the old group
-                opl.close(toClose.toArray(new Project[0]), false, oldGroupName);
+                opl.close(arrClose, false, oldGroupName);
                 h.switchToIndeterminate();
                 h.progress(Group_progress_opening(toOpen.size()));
                 //open the projects with current group
-                opl.open(toOpen.toArray(new Project[0]), false, false, h, null);
+                Project[] arrOpen = toOpen.toArray(new Project[0]);
+                opl.open(arrOpen, false, g != null && g.isSubprojects(), h, null);
                 
                 if(!isNewGroup) {
                     //for old and new group project intersection, save the old files list,
@@ -753,4 +758,6 @@ public abstract class Group {
           listener.propertyChange(new PropertyChangeEvent(object, property, oldValue, newValue));
         }
     }
+
+    abstract boolean isSubprojects();
 }

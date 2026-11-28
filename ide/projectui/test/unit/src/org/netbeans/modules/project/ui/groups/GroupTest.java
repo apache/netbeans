@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.project.ui.groups;
 
+import java.util.HashSet;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -70,4 +71,24 @@ public class GroupTest extends NbTestCase {
         assertEquals("Fresh empty group is opened", 0, backToNoGroup.length);
     }
 
+    public void testDirectoryGroupFindsJustRootProjects() throws Exception {
+        var root = FileUtil.toFileObject(getWorkDir());
+        var fo1 =  TestSupport.createTestProject(root, "prj1");
+        var prj1 = ProjectManager.getDefault().findProject(fo1);
+        var fo2 =  TestSupport.createTestProject(root, "prj2");
+        var prj2 = ProjectManager.getDefault().findProject(fo2);
+        var foNested = TestSupport.createTestProject(prj1.getProjectDirectory(), "nested1");
+        var prjNested = ProjectManager.getDefault().findProject(foNested);
+
+        var g = DirectoryGroup.create("Find just two", root);
+
+        var result = new HashSet<Project>();
+        g.findProjects(result, null, 0, 0);
+
+
+        assertTrue("There is prj1 in " + result, result.contains(prj1));
+        assertTrue("There is prj2 in " + result, result.contains(prj2));
+        assertFalse("There is no nested1 in " + result, result.contains(prjNested));
+        assertEquals("Exactly two projects found", 2, result.size());
+    }
 }

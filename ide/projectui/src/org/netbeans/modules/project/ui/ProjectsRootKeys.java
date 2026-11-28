@@ -20,20 +20,27 @@ package org.netbeans.modules.project.ui;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import static org.netbeans.modules.project.ui.OpenProjectList.log;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -86,12 +93,31 @@ abstract class ProjectsRootKeys {
         var projects = Arrays.asList(listProjects());
         projects.sort(OpenProjectList.projectByPath());
 
-        var dirs = new ArrayList<PrjInfo>(projects.size());
-        final java.util.Map<Project,ProjectsRootKeys.PrjInfo> snapshot = new HashMap<>();
-        var nested = new LinkedList<FileObject>();
+        Comparator<Object> COLLATOR = Collator.getInstance();
+        Comparator<PrjInfo> byProjectDisplayName = (i1, i2) -> {
+            String n1 = i1.getDisplayName();
+            String n2 = i2.getDisplayName();
+            if (n1 != null && n2 != null) {
+                int diff = COLLATOR.compare(n1, n2);
+                if (diff != 0) {
+                    return diff;
+                }
+            } else if (n1 == null && n2 != null) {
+                log(Level.WARNING, i1.project() + ": ProjectInformation.getDisplayName() should not return null!");
+                return -1;
+            } else if (n1 != null && n2 == null) {
+                log(Level.WARNING, i1.project() + ": ProjectInformation.getDisplayName() should not return null!");
+                return 1;
+            }
+            return OpenProjectList.projectByPath().compare(i1.project(), i2.project());
+        };
+
+        var parentship = new HashMap<PrjInfo, SortedSet<PrjInfo>>();
+        Map<Project,PrjInfo> snapshot = new HashMap<>();
+        var nested = new LinkedList<PrjInfo>();
         for (Project prj : projects) {
             while (!nested.isEmpty()) {
-                if (FileUtil.isParentOf(nested.peekLast(), prj.getProjectDirectory())) {
+                if (FileUtil.isParentOf(nested.peekLast().project().getProjectDirectory(), prj.getProjectDirectory())) {
                     break;
                 }
                 nested.removeLast();
@@ -111,15 +137,21 @@ abstract class ProjectsRootKeys {
             var nestedSize = nested.size();
             nestedArr[0] = nestedSize;
 
-            var p = new ProjectsRootKeys.PrjInfo(prj, type, nestedArr);
-            nested.add(prj.getProjectDirectory());
-            dirs.add(p);
-            snapshot.put(prj, p);
+            PrjInfo parent = nested.isEmpty() ? null : nested.peekLast();
+            PrjInfo info = new ProjectsRootKeys.PrjInfo(prj, type, nestedArr);
+            nested.add(info);
+            var children = parentship.get(parent);
+            if (children == null) {
+                children = new TreeSet<>(byProjectDisplayName);
+                parentship.put(parent, children);
+            }
+            children.add(info);
+            snapshot.put(prj, info);
             synchronized (this) {
                 projects2Depths.put(prj.getProjectDirectory(), nestedArr);
             }
             if (originalNestedSize != -1 && originalNestedSize != nestedArr[0]) {
-                depthUpdated(p);
+                depthUpdated(info);
             }
         }
         synchronized (this) {
@@ -129,7 +161,7 @@ abstract class ProjectsRootKeys {
                             e.getKey(),
                             new WeakReference<>(e.getValue())));
         }
-        return dirs;
+        return depthFirstCollect(parentship, null, new ArrayList<>());
     }
 
     int type() {
@@ -148,6 +180,17 @@ abstract class ProjectsRootKeys {
         );
     }
 
+    private static Collection<PrjInfo> depthFirstCollect(Map<PrjInfo, ? extends Iterable<PrjInfo>> parentship, PrjInfo root, List<PrjInfo> collectTo) {
+        Iterable<PrjInfo> it = parentship.get(root);
+        if (it != null) {
+            for (PrjInfo info : it) {
+                collectTo.add(info);
+                depthFirstCollect(parentship, info, collectTo);
+            }
+        }
+        return collectTo;
+    }
+
     /**
      * Object that comparers two projects just by their directory. This allows
      * to replace a LazyProject with real one without discarding the nodes.
@@ -158,6 +201,7 @@ abstract class ProjectsRootKeys {
         private Project project;
         private Union2<LogicalViewProvider, org.openide.util.Pair<Sources, SourceGroup[]>> data;
         private final int[] depth;
+        private String displayName;
 
         private PrjInfo(Project project,int type, int[] depth) {
             this.project = project;
@@ -232,6 +276,13 @@ abstract class ProjectsRootKeys {
 
         final Project project() {
             return project;
+        }
+
+        private String getDisplayName() {
+            if (displayName == null) {
+                displayName = ProjectUtils.getInformation(project).getDisplayName();
+            }
+            return displayName;
         }
     }
 }

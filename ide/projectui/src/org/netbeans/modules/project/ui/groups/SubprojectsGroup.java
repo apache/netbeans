@@ -29,9 +29,6 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.spi.project.ProjectContainerProvider;
-import org.netbeans.spi.project.SubprojectProvider;
-import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 
@@ -80,33 +77,7 @@ public class SubprojectsGroup extends Group {
     protected void findProjects(Set<Project> projects, ProgressHandle h, int start, int end) {
         assert !SwingUtilities.isEventDispatchThread();
         Project p = projectForPath(prefs().get(KEY_PATH, null));
-        if (p != null) {
-            visitSubprojects(p, projects, true, h, new int[] {start, end});
-        }
-    }
-
-    private static void visitSubprojects(Project p, Set<Project> projects, boolean main, ProgressHandle h, int[] startEnd) {
-        if ((main || !ProjectConvertors.isConvertorProject(p)) && projects.add(p)) {
-            if (h != null) {
-                h.progress(progressMessage(p), Math.min(++startEnd[0], startEnd[1]));
-            }
-            ProjectContainerProvider pcp = p.getLookup().lookup(ProjectContainerProvider.class);
-            if (pcp != null) {
-                ProjectContainerProvider.Result res = pcp.getContainedProjects();
-                projects.addAll(res.getProjects());
-                if (!res.isRecursive()) {
-                    visitSubprojects(p, projects, false, h, startEnd);
-                }
-            } else {
-                //fallback to semi-deprecated subprojectprovider
-                SubprojectProvider spp = p.getLookup().lookup(SubprojectProvider.class);
-                if (spp != null) {
-                    for (Project p2 : spp.getSubprojects()) {
-                        visitSubprojects(p2, projects, false, h, startEnd);
-                    }
-                }
-            }
-        }
+        projects.add(p);
     }
 
     public FileObject getMasterProjectDirectory() {
@@ -126,4 +97,8 @@ public class SubprojectsGroup extends Group {
         return new SubprojectsGroupEditPanel(this);
     }
 
+    @Override
+    boolean isSubprojects() {
+        return true;
+    }
 }

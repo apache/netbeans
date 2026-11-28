@@ -20,7 +20,6 @@
 package org.netbeans.modules.project.ui.groups;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -157,4 +156,8 @@ public class AdHocGroup extends Group {
         return super.toString(scrubPersonalInfo) + (isAutoSynch() ? "" : "[!autoSynch]");
     }
 
+    @Override
+    boolean isSubprojects() {
+        return false;
+    }
 }

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ import org.netbeans.api.queries.SharabilityQuery;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Enumerations;
 import org.openide.util.Exceptions;
 
 /**
@@ -112,32 +114,42 @@ public class DirectoryGroup extends Group {
     }
 
     private void processFolderChildren(FileObject fo, Set<Project> projects, ProgressHandle h, Counter counter, boolean checkShare) throws IllegalArgumentException {
-        Enumeration<? extends FileObject> e = fo.getFolders(false);
-        while (e.hasMoreElements()) {
-            try {
-                FileObject em = e.nextElement();
-                SharabilityQuery.Sharability share = SharabilityQuery.Sharability.UNKNOWN;
-                if (checkShare) {
-                    share = SharabilityQuery.getSharability(fo);
+        Enumeration<? extends Project> rootProjects = Enumerations.queue(Enumerations.array(fo.getChildren()), (dir, toAdd) -> {
+            if (!dir.isFolder()) {
+                return null;
+            }
+            if (checkShare) {
+                try {
+                    SharabilityQuery.Sharability share = SharabilityQuery.getSharability(dir);
                     if (share == SharabilityQuery.Sharability.NOT_SHARABLE) {
-                        continue;
+                        return null;
                     }
-                }
-                Project p = ProjectManager.getDefault().findProject(em);
-                if (p != null && !ProjectConvertors.isConvertorProject(p)) {
-                    projects.add(p);
-                    if (h != null) {
-                        h.progress(progressMessage(p), Math.min(++counter.start, counter.end));
+                    Project p = ProjectManager.getDefault().findProject(dir);
+                    if (p != null && !ProjectConvertors.isConvertorProject(p)) {
+                        return p;
                     }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return null;
                 }
-                checkShare = share != SharabilityQuery.Sharability.SHARABLE;
-                // don't need to check the sharability if the current folder is marked as recursively sharable
-                
-                processFolderChildren(em, projects, h, counter, checkShare);
-            } catch (IOException x) {
-                Exceptions.printStackTrace(x);
+            }
+            toAdd.addAll(List.of(dir.getChildren()));
+            return null;
+        });
+        while (rootProjects.hasMoreElements()) {
+            Project p = rootProjects.nextElement();
+            if (p != null) {
+                projects.add(p);
+                if (h != null) {
+                    h.progress(progressMessage(p), Math.min(++counter.start, counter.end));
+                }
             }
         }
+    }
+
+    @Override
+    boolean isSubprojects() {
+        return true;
     }
 
     private static class Counter {

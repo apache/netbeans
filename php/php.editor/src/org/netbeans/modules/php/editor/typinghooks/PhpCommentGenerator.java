@@ -114,6 +114,8 @@ public final class PhpCommentGenerator {
 
         if (i.hasReturn) {
             generateDocEntry(doc, toAdd, "@return", indent, null, i.getReturnType()); // NOI18N
+        } else {
+            generateDocEntry(doc, toAdd, "@return", indent, null, Type.VOID); // NOI18N
         }
 
         addVariables(doc, toAdd, "@throws", indent, i.throwsExceptions);

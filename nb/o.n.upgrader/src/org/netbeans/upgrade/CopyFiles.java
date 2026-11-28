@@ -75,6 +75,14 @@ final class CopyFiles {
     private static final Logger LOGGER = Logger.getLogger(CopyFiles.class.getName());
     private static final String ATTRIBUTES_XML_PATH = "var/attributes.xml"; //NOI18N
 
+    /**
+     * FileObject attribute marking a local (marker-less) generic project
+     * directory. Such an entry in var/attributes.xml must survive the
+     * upgrade even though it carries no auxiliary configuration, otherwise
+     * the project would no longer be recognized in the new user directory.
+     */
+    private static final String GENERIC_PROJECT_ATTRIBUTE = "org.netbeans.modules.generic.project"; //NOI18N
+
     private CopyFiles(File source, File target, File patternsFile) {
         this.sourceRoot = source;
         this.targetRoot = target;
@@ -259,7 +267,8 @@ final class CopyFiles {
 
     /**
      * Copies var/attributes.xml, filtering to keep only fileobject entries that
-     * contain an Auxil[i]aryConfiguration attribute.
+     * contain an Auxil[i]aryConfiguration attribute or the attribute marking
+     * a local (marker-less) generic project.
      *
      * @param sourceFile source attributes.xml
      * @param targetFile target attributes.xml
@@ -280,7 +289,7 @@ final class CopyFiles {
             for (int i = 0; i < children.getLength(); i++) {
                 if (children.item(i) instanceof Element el
                         && "fileobject".equals(el.getTagName()) //NOI18N
-                        && !hasAuxiliaryConfiguration(el)) {
+                        && !shouldKeepFileObject(el)) {
                     toRemove.add(el);
                 }
             }
@@ -315,19 +324,23 @@ final class CopyFiles {
     }
 
     /**
-     * Checks whether a fileobject element contains an Auxil[i]aryConfiguration
-     * attribute.
+     * Whether a fileobject element of var/attributes.xml must be kept in the
+     * new user directory: either it contains an Auxil[i]aryConfiguration
+     * attribute (the per-project data of some project type) or the attribute
+     * marking a local (marker-less) generic project, which has no auxiliary
+     * configuration of its own until it is customized.
      *
      * @param fileObject the fileobject element to check
-     * @return true if the element has a Auxil[i]aryConfiguration attribute
+     * @return true if the element must be kept
      */
-    private static boolean hasAuxiliaryConfiguration(Element fileObject) {
+    private static boolean shouldKeepFileObject(Element fileObject) {
         NodeList attrs = fileObject.getElementsByTagName("attr");  //NOI18N
         for (int i = 0; i < attrs.getLength(); i++) {
             Element attr = (Element) attrs.item(i);
             String name = attr.getAttribute("name");
             if (name != null && (name.contains("AuxilaryConfiguration") //NOI18N
-                    || name.contains("AuxiliaryConfiguration"))) { //NOI18N
+                    || name.contains("AuxiliaryConfiguration") //NOI18N
+                    || GENERIC_PROJECT_ATTRIBUTE.equals(name))) {
                 return true;
             }
         }

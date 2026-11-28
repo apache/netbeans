@@ -53,9 +53,11 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
 	assertNotNull(tg);
 	FileObject patterns = FileUtil.createData(fs.getRoot(), "source/foo/etc/patterns.import");
 	assertNotNull(patterns);
-	String pattern = "# ignore comment\n"
-                       + "include foo/.*\n"
-                       + "translate foo=>bar\n";
+	String pattern = """
+                         # ignore comment
+                         include foo/.*
+                         translate foo=>bar
+                         """;
 	writeTo(fs, "source/foo/etc/patterns.import", pattern);
 
 	org.netbeans.upgrade.CopyFiles.copyDeep(FileUtil.toFile(path), FileUtil.toFile(tg), FileUtil.toFile(patterns));
@@ -89,16 +91,21 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
         String pattern = "include var/attributes\\.xml\n";
         writeTo(fs, "source/foo/etc/patterns.import", pattern);
 
-        String attrXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                       + "<!DOCTYPE attributes PUBLIC \"-//NetBeans//DTD DefaultAttributes 1.0//EN\" \"http://www.netbeans.org/dtds/attributes-1_0.dtd\">\n"
-                       + "<attributes version=\"1.0\">\n"
-                       + "    <fileobject name=\"Templates\">\n"
-                       + "        <attr name=\"AuxilaryConfiguration\" stringvalue=\"someValue\"/>\n"
-                       + "    </fileobject>\n"
-                       + "    <fileobject name=\"Cache\">\n"
-                       + "        <attr name=\"CacheTimestamp\" stringvalue=\"12345678\"/>\n"
-                       + "    </fileobject>\n"
-                       + "</attributes>\n";
+        String attrXml = """
+                         <?xml version="1.0" encoding="UTF-8"?>
+                         <!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+                         <attributes version="1.0">
+                             <fileobject name="Templates">
+                                 <attr name="AuxilaryConfiguration" stringvalue="someValue"/>
+                             </fileobject>
+                             <fileobject name="Projects/my-folder">
+                                 <attr name="org.netbeans.modules.generic.project" boolvalue="true"/>
+                             </fileobject>
+                             <fileobject name="Cache">
+                                 <attr name="CacheTimestamp" stringvalue="12345678"/>
+                             </fileobject>
+                         </attributes>
+                         """;
         writeTo(fs, "source/var/attributes.xml", attrXml);
 
         org.netbeans.upgrade.CopyFiles.copyDeep(FileUtil.toFile(path), FileUtil.toFile(tg), FileUtil.toFile(patterns));
@@ -107,6 +114,7 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
         assertNotNull("attributes.xml not copied", targetAttrFo);
         String targetContent = targetAttrFo.asText("UTF-8");
         assertTrue("Templates attribute should be kept", targetContent.contains("Templates"));
+        assertTrue("local generic project marker attribute should be kept", targetContent.contains("org.netbeans.modules.generic.project"));
         assertFalse("CacheTimestamp attribute should be filtered out", targetContent.contains("CacheTimestamp"));
     }
 

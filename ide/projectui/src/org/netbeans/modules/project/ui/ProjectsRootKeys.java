@@ -20,6 +20,7 @@ package org.netbeans.modules.project.ui;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,11 +34,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import static org.netbeans.modules.project.ui.OpenProjectList.log;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -90,15 +93,23 @@ abstract class ProjectsRootKeys {
         var projects = Arrays.asList(listProjects());
         projects.sort(OpenProjectList.projectByPath());
 
+        Comparator<Object> COLLATOR = Collator.getInstance();
         Comparator<PrjInfo> byProjectDisplayName = (i1, i2) -> {
-            String n1 = ProjectUtils.getInformation(i1.project()).getDisplayName();
-            String n2 = ProjectUtils.getInformation(i2.project()).getDisplayName();
-            int diff = n1.compareTo(n2);
-            if (diff != 0) {
-                return diff;
-            } else {
-                return OpenProjectList.projectByPath().compare(i1.project(), i2.project());
+            String n1 = i1.getDisplayName();
+            String n2 = i2.getDisplayName();
+            if (n1 != null && n2 != null) {
+                int diff = COLLATOR.compare(n1, n2);
+                if (diff != 0) {
+                    return diff;
+                }
+            } else if (n1 == null && n2 != null) {
+                log(Level.WARNING, i1.project() + ": ProjectInformation.getDisplayName() should not return null!");
+                return -1;
+            } else if (n1 != null && n2 == null) {
+                log(Level.WARNING, i1.project() + ": ProjectInformation.getDisplayName() should not return null!");
+                return 1;
             }
+            return OpenProjectList.projectByPath().compare(i1.project(), i2.project());
         };
 
         var parentship = new HashMap<PrjInfo, SortedSet<PrjInfo>>();
@@ -190,6 +201,7 @@ abstract class ProjectsRootKeys {
         private Project project;
         private Union2<LogicalViewProvider, org.openide.util.Pair<Sources, SourceGroup[]>> data;
         private final int[] depth;
+        private String displayName;
 
         private PrjInfo(Project project,int type, int[] depth) {
             this.project = project;
@@ -264,6 +276,13 @@ abstract class ProjectsRootKeys {
 
         final Project project() {
             return project;
+        }
+
+        private String getDisplayName() {
+            if (displayName == null) {
+                displayName = ProjectUtils.getInformation(project).getDisplayName();
+            }
+            return displayName;
         }
     }
 }

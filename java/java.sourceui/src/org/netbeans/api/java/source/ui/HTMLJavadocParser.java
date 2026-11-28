@@ -401,7 +401,7 @@ class HTMLJavadocParser {
                             String attrId = (String) a.getAttribute(HTML.Attribute.ID);
                             if (names.contains(attrId)) {
                                 // we have found desired javadoc member info anchor
-                                state[0] = A_OPEN;
+                                state[0] = A_CLOSE;
                             }
                         } else {
                             section_counter++;

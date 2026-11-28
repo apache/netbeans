@@ -28,12 +28,19 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.util.Set;
+import java.util.TreeSet;
+import org.netbeans.api.actions.Openable;
 import org.netbeans.core.output2.FoldingSideBar;
 import org.netbeans.core.output2.Lines;
 import org.netbeans.core.output2.OutputDocument;
 import org.netbeans.core.output2.options.OutputOptions;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -46,22 +53,27 @@ import org.openide.util.NbBundle;
  *
  * @author  Tim Boudreau
  */
-public abstract class AbstractOutputPane extends JScrollPane implements DocumentListener, MouseListener, MouseMotionListener, KeyListener, ChangeListener, MouseWheelListener, Runnable {
+public abstract class AbstractOutputPane extends JScrollPane 
+implements DocumentListener,
+MouseListener, MouseMotionListener, MouseWheelListener, 
+KeyListener, ChangeListener, Runnable {
     private boolean locked = true;
     
     private int fontHeight = -1;
     private int fontWidth = -1;
-    protected JEditorPane textView;
+    protected final JEditorPane textView;
     private FoldingSideBar foldingSideBar;
     int lastCaretLine = 0;
     int caretBlinkRate = 500;
     boolean hadSelection = false;
     boolean recentlyReset = false;
     private static boolean copyingOfLargeParts = false;
+    private final HoverSupport hover;
 
     public AbstractOutputPane() {
         textView = createTextView();
         init();
+        hover = new HoverSupport(textView);
     }
 
     //#114290
@@ -1023,6 +1035,239 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
             if (vis) {
                 super.setSelectionVisible(vis);
             }
+        }
+    }
+    
+    
+    private static class HoverSupport {
+        private final JEditorPane pane;
+
+        private Object hightlightHandle;
+        private int[] highlightRange;
+        private Point lastMouse;            // so key presses can re-evaluate without mouse movement
+
+        public HoverSupport(JEditorPane pane) {
+            this.pane = pane;
+
+            MouseAdapter mouse = new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    lastMouse = e.getPoint();
+                    update(isCtrlDown(e));
+                }
+
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    clear();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    lastMouse = null;
+                    clear();
+                }
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (isCtrlDown(e) && highlightRange != null) {
+                        onActivate(highlightRange[0], highlightRange[1]);
+                        e.consume();
+                    }
+                }
+            };
+            pane.addMouseListener(mouse);
+            pane.addMouseMotionListener(mouse);
+
+            pane.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    update(isCtrlDown(e));
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    update(isCtrlDown(e));
+                }
+            });
+        }
+
+        private static boolean isCtrlDown(InputEvent e) {
+            // Cmd on Mac OS X, Ctrl elsewhere
+            int MOD = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+            return (e.getModifiersEx() & MOD) != 0;
+        }
+
+        private void update(boolean modifierDown) {
+            if (!modifierDown || lastMouse == null) {
+                clear();
+                return;
+            }
+
+            int offset = offsetAt(lastMouse);
+            if (offset < 0) {
+                clear();
+                return;
+            }
+
+            try {
+                int[] startEnd = findPathBoundaries(pane, offset);
+                String path = startEnd == null ? "" : pane.getDocument().getText(startEnd[0], startEnd[1] - startEnd[0]);
+                if (path.isBlank()) {
+                    clear();
+                    return;
+                }
+                if (highlightRange != null && startEnd[0] == highlightRange[0] && startEnd[1] == highlightRange[1]) {
+                    return;   // unchanged, avoid repaint churn
+                }
+                clear();
+                hightlightHandle = pane.getHighlighter().addHighlight(startEnd[0], startEnd[1], UNDERLINE);
+                highlightRange = startEnd;
+                pane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            } catch (BadLocationException ex) {
+                clear();
+            }
+        }
+
+        /**
+         * Document offset under the point, or -1 if the pointer isn't actually
+         * over a character.
+         */
+        private int offsetAt(Point p) {
+            Position.Bias[] bias = new Position.Bias[1];
+            int offset = pane.getUI().viewToModel2D(pane, p, bias);
+            if (offset < 0) {
+                return -1;
+            }
+            // viewToModel returns the *nearest* offset, even in empty space past line end — verify
+            if (bias[0] == Position.Bias.Backward && offset > 0) {
+                offset--;
+            }
+            try {
+                int len = pane.getDocument().getLength();
+                if (offset >= len) {
+                    return -1;
+                }
+                Rectangle2D a = pane.modelToView2D(offset);
+                Rectangle2D b = pane.modelToView2D(Math.min(offset + 1, len));
+                double right = (b.getY() == a.getY()) ? b.getX() : a.getX() + 8; // char box
+                return (p.x >= a.getX() && p.x <= right
+                        && p.y >= a.getY() && p.y <= a.getY() + a.getHeight()) ? offset : -1;
+            } catch (BadLocationException e) {
+                return -1;
+            }
+        }
+
+        private void clear() {
+            if (hightlightHandle != null) {
+                pane.getHighlighter().removeHighlight(hightlightHandle);
+                hightlightHandle = null;
+            }
+            highlightRange = null;
+            pane.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+        }
+
+        private void onActivate(int start, int end) {
+            try {
+                String path = pane.getText(start, end - start);
+                File file = new File(path);
+                if (file.exists()) {
+                    if (FileUtil.toFileObject(file) instanceof FileObject toOpen) {
+                        if (toOpen.getLookup().lookup(Openable.class) instanceof Openable doIt) {
+                            doIt.open();
+                            return;
+                        }
+                    }
+                }
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+            Toolkit.getDefaultToolkit().beep();
+        }
+
+        /**
+         * Painter that draws an underline instead of filling the background.
+         */
+        private static final Highlighter.HighlightPainter UNDERLINE
+                = new LayeredHighlighter.LayerPainter() {
+            @Override
+            public Shape paintLayer(Graphics g, int p0, int p1, Shape bounds,
+                    JTextComponent c, View view) {
+                try {
+                    Shape s = view.modelToView(p0, Position.Bias.Forward,
+                            p1, Position.Bias.Backward, bounds);
+                    Rectangle r = s.getBounds();
+                    g.setColor(new Color(0x2060D0));
+                    int y = r.y + r.height - 2;
+                    g.drawLine(r.x, y, r.x + r.width - 1, y);
+                    return r;
+                } catch (BadLocationException e) {
+                    return null;
+                }
+            }
+
+            @Override
+            public void paint(Graphics g, int p0, int p1, Shape bounds, JTextComponent c) {
+                // not used: DefaultHighlighter calls paintLayer for LayerPainters
+            }
+        };
+
+        private static int[] findPathBoundaries(JEditorPane pane, int offset) throws BadLocationException {
+            int start = Utilities.getWordStart(pane, offset);
+            int end = Utilities.getWordEnd(pane, offset);
+            
+            Set<String> candidates = new TreeSet<>((s1, s2) -> {
+                int lenDiff = s2.length() - s1.length();
+                if (lenDiff != 0) {
+                    return lenDiff;
+                } else {
+                    return s2.compareTo(s1);
+                }
+            });
+            while (start < end) {
+                candidates.add(pane.getText(start, end - start));
+                start--;
+                if (start < 0 || !isPathSeparator(pane.getText(start, 1))) {
+                    break;
+                } else {
+                    candidates.add(pane.getText(start, end - start));
+                    start = Utilities.getPreviousWord(pane, start);
+                }
+            }
+            
+            File existingPrefix = null;
+            for (String path : candidates) {
+                File f = new File(path).getAbsoluteFile();
+                if (f.exists()) {
+                    existingPrefix = f;
+                    start = end - path.length();
+                    break;
+                }
+            }
+            if (existingPrefix == null) {
+                return null;
+            }
+            while (end + 1 < pane.getDocument().getLength()) {
+                if (!isPathSeparator(pane.getText(end, 1))) {
+                    break;
+                }
+                int nextEnd = Utilities.getNextWord(pane, end + 1);
+                if (nextEnd <= end) {
+                    break;
+                }
+                String nextChild = pane.getText(end + 1, nextEnd - end - 1);
+                File nextFile = new File(existingPrefix, nextChild);
+                if (nextFile.exists()) {
+                    existingPrefix = nextFile;
+                    end = nextEnd;
+                } else {
+                    break;
+                }
+            }
+            return new int[] { start, end };
+        }
+        
+        private static boolean isPathSeparator(String str) {
+            return "/".equals(str) || File.pathSeparator.equals(str);
         }
     }
 }

@@ -19,9 +19,10 @@
 
 package org.netbeans.lib.profiler;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.text.MessageFormat;
@@ -369,8 +370,8 @@ public class ProfilerClient implements CommonConstants {
     private final Object instrumentationLock = new Object(); // To make sure all instrumentation-related operations
                                                        // happen serially
     private final Object responseLock = new Object();
-    private ObjectInputStream socketIn;
-    private ObjectOutputStream socketOut;
+    private DataInputStream socketIn;
+    private DataOutputStream socketOut;
     private ProfilerEngineSettings settings;
     private ProfilingSessionStatus status;
     private volatile Response lastResponse;
@@ -770,7 +771,7 @@ public class ProfilerClient implements CommonConstants {
     //  public CPUCallGraphBuilder getCPUCallGraphBuilder() { return ccgb; }
 
     //  public MemoryCallGraphBuilder getMemoryCallGraphBuilder() { return mcgb; }
-    public ObjectInputStream getSocketInputStream() {
+    public DataInputStream getSocketInputStream() {
         return socketIn;
     }
 
@@ -1714,8 +1715,8 @@ public class ProfilerClient implements CommonConstants {
                     clientSocket = new Socket(host, port);
                     clientSocket.setSoTimeout(0); // ATTENTION: timeout may be found useful eventually...
                     clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-                    socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-                    socketIn = new ObjectInputStream(clientSocket.getInputStream());
+                    socketOut = new DataOutputStream(clientSocket.getOutputStream());
+                    socketIn = new DataInputStream(clientSocket.getInputStream());
                     wireIO = new WireIO(socketOut, socketIn);
 
                     targetVMAlive = true; // This is in fact an assumption

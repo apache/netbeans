@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,11 +60,11 @@ public class DumpResultsResponse extends Response {
         return "DumpResultsResponse, timeStamp: " + dumpAbsTimeStamp + ", " + super.toString(); // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    void readObject(DataInputStream in) throws IOException {
         dumpAbsTimeStamp = in.readLong();
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeLong(dumpAbsTimeStamp);
     }
 }

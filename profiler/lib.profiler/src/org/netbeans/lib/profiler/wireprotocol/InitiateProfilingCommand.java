@@ -19,9 +19,9 @@
 
 package org.netbeans.lib.profiler.wireprotocol;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * Request from the client to the back end to initiate TA instrumentation of the given type.
@@ -131,42 +131,58 @@ public class InitiateProfilingCommand extends Command {
         return super.toString() + ", instrType = " + instrType; // NOI18N
     }
 
-    void readObject(ObjectInputStream in) throws IOException {
+    @Override
+    void readObject(DataInputStream in) throws IOException {
         instrType = in.readInt();
-
-        int len = in.readInt();
-        classNames = new String[len];
-
-        for (int i = 0; i < len; i++) {
-            classNames[i] = in.readUTF().intern(); // Interning is important, since checks are through '=='
-        }
-
+        classNames = readStringArr(in, true); // Interning is important, since checks are through '=='
         instrSpawnedThreads = in.readBoolean();
         startProfilingPointsActive = in.readBoolean();
 
-        try {
-            profilingPointIDs = (int[]) in.readObject();
-            profilingPointHandlers = (String[]) in.readObject();
-            profilingPointInfos = (String[]) in.readObject();
-        } catch (ClassNotFoundException e) {
-            IOException ioe = new IOException();
-            ioe.initCause(e);
-            throw ioe;
+        profilingPointIDs = new int[in.readInt()];
+        for (int i = 0; i < profilingPointIDs.length; i++) {
+            profilingPointIDs[i] = in.readInt();
         }
+
+        profilingPointHandlers = readStringArr(in, false);
+        profilingPointInfos = readStringArr(in, false);
     }
 
-    void writeObject(ObjectOutputStream out) throws IOException {
+    @Override
+    void writeObject(DataOutputStream out) throws IOException {
         out.writeInt(instrType);
-        out.writeInt(classNames.length);
 
-        for (int i = 0; i < classNames.length; i++) {
-            out.writeUTF(classNames[i]);
-        }
+        writeStringArr(out, classNames);
 
         out.writeBoolean(instrSpawnedThreads);
         out.writeBoolean(startProfilingPointsActive);
-        out.writeObject(profilingPointIDs);
-        out.writeObject(profilingPointHandlers);
-        out.writeObject(profilingPointInfos);
+
+        out.writeInt(profilingPointIDs.length);
+        for (int i = 0; i < profilingPointIDs.length; i++) {
+            out.writeInt(profilingPointIDs[i]);
+
+        }
+
+        writeStringArr(out, profilingPointHandlers);
+        writeStringArr(out, profilingPointInfos);
     }
+
+    private static void writeStringArr(DataOutputStream out, String[] arr) throws IOException {
+        out.writeInt(arr.length);
+        for (int i = 0; i < arr.length; i++) {
+            out.writeUTF(arr[i]);
+        }
+    }
+    private static String[] readStringArr(DataInputStream in, boolean intern) throws IOException {
+        int len = in.readInt();
+        String[] arr = new String[len];
+        for (int i = 0; i < len; i++) {
+            String value = in.readUTF();
+            if (intern) {
+                value = value.intern();
+            }
+            arr[i] = value;
+        }
+        return arr;
+    }
+
 }

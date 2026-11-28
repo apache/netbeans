@@ -20,7 +20,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -81,6 +81,23 @@ is the proper place.
 
     <!-- ACTUAL CHANGES BEGIN HERE: -->
     <changes>
+        <change id="java-vm-options-customizer-platform">
+            <api name="java-api-common"/>
+            <summary>Added an overload of <code>ProjectUISupport.showVMOptionCustomizer</code> which takes the options' <code>JavaPlatform</code></summary>
+            <version major="1" minor="158"/>
+            <date day="15" month="11" year="2026"/>
+            <author login="mbien"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>showVMOptionCustomizer(Window, String, JavaPlatform)</code> which lists
+                    the options supported by the given platform's <code>java</code> launcher, with their
+                    descriptions. The existing two-argument <code>showVMOptionCustomizer(Window, String)</code>
+                    method now offers the options of the default platform.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.java.api.common.project.ui" name="ProjectUISupport"/>
+        </change>
         <change id="ModuleGroupInfo">
             <api name="java-api-common"/>
             <summary>Added factory method and interface to determine relationships between SourceGroups and modules</summary>

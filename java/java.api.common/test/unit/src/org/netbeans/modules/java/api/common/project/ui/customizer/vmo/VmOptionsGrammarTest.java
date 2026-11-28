@@ -18,15 +18,8 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.BaseTree;
-import org.antlr.runtime.tree.CommonTree;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.gen.CommandLineLexer;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.gen.CommandLineParser;
 
 import java.util.*;
 
@@ -43,12 +36,24 @@ public class VmOptionsGrammarTest extends NbTestCase {
     public static final OptionValue.SimpleString stringOnly = new OptionValue.SimpleString("hello");
     public static final OptionValue.SimpleString memDef = new OptionValue.SimpleString("100M");
     public static final OptionValue.SimpleString classpath = new OptionValue.SimpleString("c:\\hellodolly\\capo-1.3.2_dev.jar:/hello/dolly/common.jar:bla.jar");
-    public static final OptionValue.StringPair sp = new OptionValue.StringPair("simple.human.description", "\"Hello Dolly\"");
 
+    /**
+     * A fresh option of each form the customizer can render.
+     */
+    private static List<JavaVMOption<?>> testOptions() {
+        return new ArrayList<>(List.of(
+                new SwitchNode("server"),
+                new SwitchNode("verbose:gc"),
+                new ParametrizedNode("Xmx", ""),
+                new ParametrizedNode("cp", " "),
+                new ParametrizedNode("splash", ":"),
+                new UserPropertyNode("Dfoo", "bar")
+        ));
+    }
 
     @Test
     public void testIndividualOption() {
-        final List<JavaVMOption<?>> list = CommandLineParser.getAllOptions();
+        final List<JavaVMOption<?>> list = testOptions();
         final List<JavaVMOption<?>> errors = new LinkedList<>();
         for (JavaVMOption<?> option : list) {
             try {
@@ -64,11 +69,11 @@ public class VmOptionsGrammarTest extends NbTestCase {
             }
             fail(sb.toString());
         }
-    }    
+    }
 
-    @Test   
+    @Test
     public void testRandomOptionsSet() {
-        final List<JavaVMOption<?>> list = CommandLineParser.getAllOptions();
+        final List<JavaVMOption<?>> list = testOptions();
         final Set<JavaVMOption<?>> selection = new HashSet<>(10);
         Random r = new Random(System.currentTimeMillis());
         StringBuilder sb = new StringBuilder();
@@ -80,37 +85,14 @@ public class VmOptionsGrammarTest extends NbTestCase {
                 sb = e.print(sb).append(" ");
             }
         }
-        final CommandLineLexer lineLexer = new CommandLineLexer(new ANTLRStringStream(sb.toString()));
-        CommandLineParser parser = new CommandLineParser(new CommonTokenStream(lineLexer));
-        parser.setTreeAdaptor(new VMOptionTreeAdaptor());
-        CommandLineParser.vmOptions_return options_return;
-        try {
-            Set<JavaVMOption<?>> result = new HashSet<>();
-            options_return = parser.vmOptions();
-            CommonTree root = (CommonTree) options_return.getTree();
-            if (root instanceof JavaVMOption<?>) {
-                result.add((JavaVMOption<?>) root);
-            } else if (root != null) {
-                result.addAll((List<JavaVMOption<?>>) (List<?>) root.getChildren());
-            }
-            assertEquals("The result and selection are not same.", result, selection);
-        } catch (RecognitionException e) {
-            fail(e.getMessage());
-        }
-
+        Set<JavaVMOption<?>> result = new HashSet<>(VMOptionParser.parse(sb.toString()));
+        assertEquals("The result and selection are not same.", result, selection);
     }
 
     @Test
-    public void testRecognitionErrors() throws RecognitionException {
+    public void testRecognitionErrors() {
         final String str = "-client -serv hello:dolly -version:hello";
-        final CommandLineLexer lineLexer = new CommandLineLexer(new ANTLRStringStream(str));
-        final CommandLineParser parser = new CommandLineParser(new CommonTokenStream(lineLexer));
-        parser.setTreeAdaptor(new VMOptionTreeAdaptor());
-        final CommandLineParser.vmOptions_return options_return = parser.vmOptions();
-        final BaseTree tree = (BaseTree) options_return.getTree();
-        if (tree == null) fail("The options tree returned from parser is null.");
-        assert tree != null;
-        final List<JavaVMOption<?>> children = (List<JavaVMOption<?>>) tree.getChildren();
+        final List<JavaVMOption<?>> children = VMOptionParser.parse(str);
         if (children.isEmpty()) fail("The list of recognized options is empty");
 
         Set<JavaVMOption<?>> template = new HashSet<>();
@@ -129,10 +111,10 @@ public class VmOptionsGrammarTest extends NbTestCase {
 
         if (!children.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            for (Object child : children) {
-                ((JavaVMOption<?>)child).print(sb).append(" ");
+            for (JavaVMOption<?> child : children) {
+                child.print(sb).append(" ");
             }
-            fail("Following options are not in template: " + sb.toString() + ";\n\t where template is " + template);
+            fail("Following options are not in template: " + sb + ";\n\t where template is " + template);
         }
     }
 
@@ -145,41 +127,64 @@ public class VmOptionsGrammarTest extends NbTestCase {
         }
     }
 
-    @SuppressWarnings("AssignmentToMethodParameter")
-    private void verifyOption(JavaVMOption<?> option) throws Exception {
-        option = setOptionValue(option);
-        StringBuilder sb = new StringBuilder();
-        sb = option.print(sb);
-        final CommandLineLexer lineLexer = new CommandLineLexer(new ANTLRStringStream(sb.toString()));
-        CommandLineParser parser = new CommandLineParser(new CommonTokenStream(lineLexer));
-        parser.setTreeAdaptor(new VMOptionTreeAdaptor());
-        final CommandLineParser.vmOptions_return options_return = parser.vmOptions();
-        final JavaVMOption<?> parsedOption = extractOption(options_return);
-        if (!option.equals(parsedOption)) {
-            throw new Exception("The parsed and origin is not same");
-        }
+    @Test
+    public void testSystemProperty() {
+        List<JavaVMOption<?>> options = VMOptionParser.parse("-Dfoo=bar");
+        assertEquals(1, options.size());
+        UserPropertyNode upn = (UserPropertyNode) options.getFirst();
+        assertEquals("Dfoo", upn.getName());
+        assertEquals("bar", ((OptionValue.StringPair) upn.getValue()).getValue().getValue());
+        assertEquals("-Dfoo=bar", upn.print(new StringBuilder()).toString().strip());
     }
 
-    private JavaVMOption<?> extractOption(CommandLineParser.vmOptions_return options_return) {
-        CommonTree root = (CommonTree) options_return.getTree();
-        if (root instanceof JavaVMOption<?>) {
-            return (JavaVMOption<?>) root;
-        } else if (root != null) {
-            return (JavaVMOption<?>) root.getChildren().get(0);
+    @Test
+    public void testQuotedValue() {
+        assertPropertyValue("-Dfoo='bar'", "bar");
+        assertPropertyValue("-Dfoo=\"bar\"", "bar");
+    }
+
+    @Test
+    public void testMemoryOption() {
+        List<JavaVMOption<?>> options = VMOptionParser.parse("-Xmx512m");
+        assertEquals(1, options.size());
+        ParametrizedNode pn = (ParametrizedNode) options.getFirst();
+        assertEquals("Xmx", pn.getName());
+        assertEquals("512m", pn.getValue().getValue());
+    }
+
+    @Test
+    public void testClasspathOption() {
+        List<JavaVMOption<?>> options = VMOptionParser.parse("-cp a.jar:b.jar");
+        assertEquals(1, options.size());
+        ParametrizedNode pn = (ParametrizedNode) options.getFirst();
+        assertEquals("cp", pn.getName());
+        assertEquals("a.jar:b.jar", pn.getValue().getValue());
+        assert !pn.isValid();
+    }
+
+    @Test
+    public void testSwitchVariants() {
+        final List<JavaVMOption<?>> options = VMOptionParser.parse("-verbose:gc -Xshare:on -Xcheck:jni");
+        assertEquals(3, options.size());
+        for (JavaVMOption<?> option : options) {
+            assert option instanceof SwitchNode : option;
         }
-        return null;
+        assertEquals("verbose:gc", options.get(0).getName());
+        assertEquals("Xshare:on", options.get(1).getName());
+        assertEquals("Xcheck:jni", options.get(2).getName());
     }
 
     private JavaVMOption<?> setOptionValue(JavaVMOption<?> option) {
+        final OptionValue<?> value = option.getValue();
+        if (value != null && value.isPresent()) {
+            return option;
+        }
         /*-version:hello  -splash:hello  -javaagent:hello  -agentlib:hello  -agentpath:hello */
-        if (option instanceof SwitchNode) {
-            SwitchNode switchNode = (SwitchNode) option;
-            switchNode.setValue(so);
-        } else if (option instanceof UserPropertyNode) {
-            UserPropertyNode node = (UserPropertyNode) option;
-            node.setValue(sp);
-        } else if (option instanceof ParametrizedNode) {
-            ParametrizedNode node = (ParametrizedNode) option;
+        if (option instanceof SwitchNode node) {
+            node.setValue(so);
+        } else if (option instanceof UserPropertyNode node) {
+            node.setValue(new OptionValue.StringPair("Dsimple.human.description", "value"));
+        } else if (option instanceof ParametrizedNode node) {
             final String name = node.getName();
             if ("cp".equalsIgnoreCase(name) || "classpath".equalsIgnoreCase(name)) {
                 node.setValue(classpath);
@@ -192,4 +197,23 @@ public class VmOptionsGrammarTest extends NbTestCase {
         }
         return option;
     }
+
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private void verifyOption(JavaVMOption<?> option) throws Exception {
+        option = setOptionValue(option);
+        StringBuilder sb = new StringBuilder();
+        sb = option.print(sb);
+        final List<JavaVMOption<?>> parsed = VMOptionParser.parse(sb.toString());
+        assertEquals(1, parsed.size());
+        if (!option.equals(parsed.getFirst())) {
+            throw new Exception("The parsed and origin is not same");
+        }
+    }
+
+    private void assertPropertyValue(String input, String expected) {
+        final List<JavaVMOption<?>> options = VMOptionParser.parse(input);
+        assertEquals(1, options.size());
+        assertEquals(expected, ((OptionValue.StringPair) ((UserPropertyNode) options.getFirst()).getValue()).getValue().getValue());
+    }
+
 }

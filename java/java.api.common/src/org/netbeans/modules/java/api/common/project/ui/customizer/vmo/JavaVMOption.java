@@ -18,15 +18,25 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
+ * A single Java VM option, e.g. {@code -Xmx512m}, {@code -Dfoo=bar} or
+ * {@code -server}.
+ *
+ * @param <V> type of the option value
  * @author Rastislav Komara
  */
-public class JavaVMOption<V extends OptionValue<?>> extends CommonTree implements Comparable<JavaVMOption<?>>{
+public class JavaVMOption<V extends OptionValue<?>> implements Comparable<JavaVMOption<?>> {
     private String name;
     private V value;
+    /**
+     * The option's description, e.g. obtained from the JDK's help output.
+     */
+    private String description;
+    /**
+     * A placeholder for the option value, e.g. {@code <file>}, as printed
+     * in the JDK's help output.
+     */
+    private String hint;
     /**
      * Indicated that this option should not be specified by user alone (e.g. classpath, bootclasspath)
      */
@@ -34,12 +44,7 @@ public class JavaVMOption<V extends OptionValue<?>> extends CommonTree implement
     protected static final String SPACE = " ";
     protected static final char HYPHEN = '-';
 
-    protected JavaVMOption(Token t) {
-        super(t);
-    }
-
-    protected JavaVMOption(String name) {
-        this.name = name;
+    protected JavaVMOption() {
     }
 
     public String getName() {
@@ -49,11 +54,27 @@ public class JavaVMOption<V extends OptionValue<?>> extends CommonTree implement
     public V getValue() {
         return value;
     }
-    
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setValue(V value) {
         this.value = value;
     }
@@ -86,17 +107,16 @@ public class JavaVMOption<V extends OptionValue<?>> extends CommonTree implement
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final JavaVMOption<V> other = (JavaVMOption<V>) obj;
+        JavaVMOption<?> other = (JavaVMOption<?>) obj;
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
         return true;
     }
-        
+
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        return result;
+        return name.hashCode();
     }
 
     protected void setValid(boolean valid) {
@@ -107,6 +127,7 @@ public class JavaVMOption<V extends OptionValue<?>> extends CommonTree implement
         return valid;
     }
 
+    @Override
     public int compareTo(JavaVMOption<?> o) {
         return getName().compareTo(o.getName());
     }

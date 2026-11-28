@@ -18,11 +18,6 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.gen.CommandLineLexer;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.gen.CommandLineParser;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
 
@@ -48,10 +43,12 @@ public class VMOptionsTableModel extends AbstractTableModel {
         }
     };
 
+    @Override
     public int getRowCount() {
         return rows.size() + 1; //we are providing one additional row for user to insert custom -D properties.
     }
 
+    @Override
     public int getColumnCount() {
         return columns.length;
     }
@@ -64,6 +61,7 @@ public class VMOptionsTableModel extends AbstractTableModel {
         throw new IllegalStateException("Column index out of range."); //NOI18N
     }
 
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowOk(rowIndex)) {
             return rows.get(rowIndex);
@@ -108,14 +106,18 @@ public class VMOptionsTableModel extends AbstractTableModel {
         return 0 <= rowIndex && rowIndex < rows.size();
     }
 
-
-    public void fill(String str) throws Exception {
+    /**
+     * Fills the table with the options parsed from the given string merged
+     * with the given template options.
+     *
+     * @param str the options string to parse
+     * @param templates the template options, may be empty
+     */
+    public void fill(String str, List<JavaVMOption<?>> templates) {
         rows.clear();
-        final CommandLineLexer lexer = new CommandLineLexer(new ANTLRStringStream(str));
-        final CommonTokenStream cts = new CommonTokenStream(lexer);
-        final CommandLineParser parser = new CommandLineParser(cts);
-        parser.setTreeAdaptor(new VMOptionTreeAdaptor());
-        rows.addAll(parser.parse());
+        Set<JavaVMOption<?>> options = new HashSet<>(VMOptionParser.parse(str));
+        options.addAll(templates);
+        rows.addAll(options);
         Collections.sort(rows);
         fireTableDataChanged();
     }

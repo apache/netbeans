@@ -18,26 +18,27 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.antlr.runtime.Token;
-
 import java.util.Map;
 
 /**
+ * A system property option, {@code -D<name>=<value>}.
+ *
  * @author Rastislav Komara
  */
 public class UserPropertyNode extends JavaVMOption<OptionValue<Map.Entry<String, String>>> {
-    
+
     public static final String NAME = "D";
 
-    public UserPropertyNode(Token name, String value, int start) {
-        super(name);
-        setName(name.getText());
-        setValue(new OptionValue.StringPair(name.getText(), value));
+    public UserPropertyNode() {
+        super();
+        setName(NAME);
+        setValue(new OptionValue.StringPair());
     }
 
-    public UserPropertyNode() {
-        super(NAME);
-        setValue(new OptionValue.StringPair());        
+    public UserPropertyNode(String name, String value) {
+        super();
+        setName(name);
+        setValue(new OptionValue.StringPair(name, value));
     }
 
     @Override
@@ -53,5 +54,5 @@ public class UserPropertyNode extends JavaVMOption<OptionValue<Map.Entry<String,
             }
         }
         return sb;
-    }    
+    }
 }

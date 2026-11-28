@@ -25,12 +25,9 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.lang.ref.SoftReference;
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * @author Rastislav Komara
@@ -48,17 +45,12 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
             NbBundle.getMessage(ValueCellEditor.class, "ValueCellEditor.virtualUserProperty.name"); //NOI18N
     private static final String DEFAULT_USER_PROPERTY_TEXT =
             NbBundle.getMessage(ValueCellEditor.class, "ValueCellEditor.virtualUserProperty.text"); //NOI18N
-    private static final ResourceBundle BUNDLE = NbBundle.getBundle(ValueCellEditor.class);
 
     public ValueCellEditor() {
         textEditor = new JTextField();
         booleanEditor = new JCheckBox();
         booleanEditor.setOpaque(false);
-        booleanEditor.getModel().addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                stopCellEditing();
-            }
-        });
+        booleanEditor.getModel().addItemListener(e -> stopCellEditing());
 
         booleanLabel = new JCheckBox();
         booleanLabel.setOpaque(false);
@@ -67,6 +59,7 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
     }
 
     @SuppressWarnings({"unchecked"})
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         String text;
         if (value instanceof JavaVMOption) {
@@ -74,11 +67,14 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
             if (column == 1 && (option instanceof SwitchNode || option.getValue() instanceof OptionValue.SwitchOnly)) {
                 SwitchNode sn = (SwitchNode) option;
                 booleanLabel.setSelected(sn.getValue().getValue());
+                booleanLabel.setToolTipText(option.getDescription());
                 return booleanLabel;
             }
             text = extractText(option, column);
+            label.setToolTipText(option.getDescription());
         } else {
             text = "";      //NOI18N
+            label.setToolTipText(null);
         }
         label.setText(text);
         return label;
@@ -105,14 +101,8 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
             }
         } else {
             switch (column) {
-                case 0: {
-                    final String rawName = option.getName();
-                    final String key = "ValueCellEditor."+rawName+".text."+option.getClass().getSimpleName(); //NOI18N
-                    if (BUNDLE.containsKey(key)) {
-                        return BUNDLE.getString(key);
-                    }
-                    return rawName;
-                }
+                case 0:
+                    return option.getName();
                 case 1: {
                     final Object o = ov.getValue();
                     return o != null ? o.toString() : EMPTY_TEXT;
@@ -124,6 +114,7 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
         return EMPTY_TEXT;
     }
 
+    @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         lastTable = new SoftReference<JTable>(table);
         editedColumn = column;
@@ -145,6 +136,7 @@ public class ValueCellEditor extends AbstractCellEditor implements TableCellRend
         }
     }
 
+    @Override
     public Object getCellEditorValue() {
         if (currentEditor == booleanEditor) {
             return new OptionValue.SwitchOnly(booleanEditor.isSelected());

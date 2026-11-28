@@ -33,7 +33,6 @@ import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -98,8 +97,7 @@ public class ExplorerActionsImplTest extends NbTestCase implements PropertyChang
         }
     }
     
-    @RandomlyFails // NB-Core-Build #9619, #9847, #9998, #10014
-    public void testPasteActionGetDelegatesBlocks() throws Exception {
+    public void testPasteActionGetDelegates() throws Exception {
         N root = new N();
         final N ch1 = new N();
         final N ch2 = new N();
@@ -120,6 +118,9 @@ public class ExplorerActionsImplTest extends NbTestCase implements PropertyChang
         assertNull("No delegates yet", action.getValue("delegates"));
 
         em.setSelectedNodes(new Node[] { ch3 });
+        // "delegates" is a non-blocking read of the current paste types,
+        // so wait for the asynchronous action update to finish first
+        em.waitActionsFinished();
         Object ret = action.getValue("delegates");
         assertNotNull("Delegates are updated", ret);
         Object[] arr = (Object[])ret;

@@ -17,43 +17,10 @@
  * under the License.
  */
 
-var NetBeans_Panel = {};
-
-NetBeans_Panel._backgroundPageConnection = null;
-NetBeans_Panel._propagateChangesCheckbox = null;
-
-NetBeans_Panel.init = function() {
-    if (NetBeans_Panel._backgroundPageConnection !== null) {
-        return;
-    }
-    this._backgroundPageConnection = chrome.runtime.connect();
-    this._propagateChangesCheckbox = document.getElementById('propagateChangesCheckbox');
-    this._registerEvents();
-    this._load();
-};
-// register events
-NetBeans_Panel._registerEvents = function() {
-    var that = this;
-    this._backgroundPageConnection.onMessage.addListener(function(message) {
-        if (message.enabled !== undefined) {
-            that._propagateChangesCheckbox.checked = message.enabled;
-        }
+window.addEventListener('load', async () => {
+    const checkbox = document.getElementById('propagateChangesCheckbox');
+    checkbox.checked = await chrome.runtime.sendMessage({action: 'getWriteBack'});
+    checkbox.addEventListener('change', () => {
+        chrome.runtime.sendMessage({action: 'setWriteBack', value: checkbox.checked});
     });
-    this._propagateChangesCheckbox.addEventListener('change', function() {
-        that._backgroundPageConnection.postMessage({
-            event: 'setChangesPropagated',
-            enabled: that._propagateChangesCheckbox.checked
-        });
-    }, false);
-};
-// load initial state
-NetBeans_Panel._load = function() {
-    this._backgroundPageConnection.postMessage({
-        event: 'areChangesPropagated'
-    });
-};
-
-// run!
-window.addEventListener('load', function() {
-    NetBeans_Panel.init();
-}, false);
+});

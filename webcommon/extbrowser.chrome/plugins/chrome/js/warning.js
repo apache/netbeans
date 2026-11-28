@@ -18,7 +18,6 @@
  */
 
 // references from bg page
-var NetBeans_Warnings = chrome.extension.getBackgroundPage().NetBeans_Warnings;
 
 /**
  * Warning - the content is set by the URL ident (accessible via <code>window.location.hash</code>).
@@ -55,7 +54,11 @@ NetBeans_Warning._close = function() {
     window.close();
 };
 NetBeans_Warning._doNotShowAgain = function() {
-    NetBeans_Warnings.enable(this._ident, !this._doNotShowAgainButton.checked);
+    chrome.runtime.sendMessage({
+        action: 'setWarning',
+        ident: this._ident,
+        value: !this._doNotShowAgainButton.checked
+    });
 };
 
 // run!
